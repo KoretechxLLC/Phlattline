@@ -28,10 +28,10 @@ model users {
   created_at         DateTime?            @default(now()) @db.Timestamp(6)
   organization_id    Int?
   profile_image      String?              @db.VarChar(255)
+  course_assignments course_assignments[]
+  user_courses       user_courses[]
   organizations      organizations?       @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types         user_types           @relation(fields: [user_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_courses       user_courses[]
-  course_assignments course_assignments[]
 }
 
 model organizations {
@@ -43,40 +43,43 @@ model organizations {
   created_at         DateTime?            @default(now()) @db.Timestamptz(6)
   updated_at         DateTime?            @default(now()) @db.Timestamptz(6)
   description        String?
-  users              users[]
   course_assignments course_assignments[]
+  users              users[]
 }
 
 model courses {
   id                 Int                  @id @default(autoincrement())
   course_name        String               @db.VarChar(255)
   description        String?
-  videos             videos[]
   assessments        assessments[]
-  user_courses       user_courses[]
   course_assignments course_assignments[]
+  user_courses       user_courses[]
+  videos             videos[]
 }
 
 model videos {
-  id        Int     @id @default(autoincrement())
-  video_url String  @db.VarChar(255)
-  sequence  Int // Order of the video in the course
-  course_id Int
-  courses   courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  id            Int     @id @default(autoincrement())
+  video_url     String  @db.VarChar(255)
+  sequence      Int
+  title         String? @db.VarChar(255)
+  description   String?
+  thumbnail_url String? @db.VarChar(255)
+  course_id     Int
+  courses       courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
 }
 
 model assessments {
   id        Int         @id @default(autoincrement())
   title     String      @db.VarChar(255)
   course_id Int
-  questions questions[]
   courses   courses     @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  questions questions[]
 }
 
 model questions {
   id             Int         @id @default(autoincrement())
   question_text  String      @db.VarChar(255)
-  answer_options String[] // List of options
+  answer_options String[]
   correct_answer String      @db.VarChar(255)
   assessment_id  Int
   assessments    assessments @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
@@ -86,19 +89,19 @@ model user_courses {
   id        Int     @id @default(autoincrement())
   user_id   Int
   course_id Int
-  status    String  @db.VarChar(20) // e.g., 'in-progress', 'completed'
-  users     users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  status    String  @db.VarChar(20)
+  progress  Int
   courses   courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  progress  Int // Track which video user is currently on
+  users     users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model course_assignments {
   id              Int            @id @default(autoincrement())
   user_id         Int
   course_id       Int
-  assigned_by     Int? // Admin or organization manager ID
+  assigned_by     Int?
   organization_id Int?
+  courses         courses        @relation(fields: [course_id], references: [id], onDelete: Cascade)
   organization    organizations? @relation(fields: [organization_id], references: [id])
   users           users          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  courses         courses        @relation(fields: [course_id], references: [id], onDelete: Cascade)
 }
