@@ -6,21 +6,37 @@ import SplashScreen from "./components/SplashScreen";
 const Page = () => {
   const [isSplashScreen, setIsSplashScreen] = useState<boolean>(true);
 
-  useEffect(() => {
-    // Check if the splash screen has already been shown in this session
-    const hasShownSplashScreen = sessionStorage.getItem("hasShownSplashScreen");
+  const getSplash = async () => {
+    const hasShownSplashScreen = await localStorage.getItem(
+      "hasShownSplashScreen"
+    );
 
-    if (!hasShownSplashScreen) {
+    if (!hasShownSplashScreen || hasShownSplashScreen == "false") {
       // Show the splash screen for 5 seconds initially
-      setTimeout(() => {
+      setTimeout(async () => {
         setIsSplashScreen(false);
-        sessionStorage.setItem("hasShownSplashScreen", "true"); // Mark splash screen as shown
-      }, 5000);
+        await localStorage.setItem("hasShownSplashScreen", "true"); // Mark splash screen as shown
+      }, 3800);
     } else {
-      // If splash screen was already shown in this session, do not show it again
       setIsSplashScreen(false);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    // Check if the splash screen has already been shown in this session
+    getSplash();
+
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("hasShownSplashScreen");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isSplashScreen]);
 
   return (
     <>
