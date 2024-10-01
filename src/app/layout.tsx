@@ -25,13 +25,14 @@ export default function RootLayout({
         <div className="z-20 fixed left-12 top-12">
           <Logo />
         </div>
-        {path !== "/Login" ||
-          "/IndividualSignup" ||
-          ("OrganizationSignup" && (
+        {path !== "/Login" &&
+          path !== "/IndividualSignup" &&
+          path !== "/OrganizationSignup" && (
             <div className="z-20 absolute">
               <SideMenu />
             </div>
-          ))}
+          )}
+
         {children}
       </body>
     </html>
