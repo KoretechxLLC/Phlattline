@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { Input } from "../components/Input";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -49,11 +50,10 @@ const OrganizationSignup = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
               id="org-name"
               type="text"
               placeholder="Organization Name"
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-2.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
             />
@@ -63,11 +63,10 @@ const OrganizationSignup = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
               id="role-input"
               type="text"
               placeholder="Role/Position"
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
             />
@@ -77,11 +76,10 @@ const OrganizationSignup = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
               id="num-emp"
               type="number"
               placeholder="How many employees?"
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
             />
@@ -91,11 +89,10 @@ const OrganizationSignup = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
               id="org-type"
               type="text"
               placeholder="Organization"
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
             />

@@ -5,6 +5,7 @@ import { MdEmail, MdLock } from "react-icons/md";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { Input } from "../components/Input";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -50,14 +51,16 @@ const Login = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative py-2"
           >
-            <input
+            <Input id="email" placeholder="Enter your email" type="text" />
+
+            {/* <input
               id="email-input"
               type="email"
               placeholder="Enter your email"
               className="w-full pl-10 rounded-lg border-[1px] border-gray-600 bg-black text-gray border-grey-300 px-5.5 py-5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            />
+            /> */}
             <MdEmail className="absolute top-8 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -66,14 +69,19 @@ const Login = () => {
             className="mb-2 w-full relative"
           >
             <MdLock className="absolute top-7 right-5 size-5 text-gray-500" />
-            <input
+            <Input
+              id="password"
+              placeholder="Enter your password"
+              type="password"
+            />
+            {/* <input
               id="password-input"
               type="password"
               placeholder="Enter your password"
               className="w-full pl-10 rounded-lg border-[1px] border-gray-600 bg-black text-gray border-grey-300 px-5.5 py-5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            />
+            /> */}
           </motion.div>
           <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-8 py-2 mx-4">
             <div className="group relative inline-block">
