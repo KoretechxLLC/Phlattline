@@ -46,6 +46,7 @@ const navItems = [
   { position: 19, title: "Elijah Martinez", Link: "/ElijahMartinez" },
   { position: 22, title: "Mrs. Nancy", Link: "/Nancy" },
   { position: 25, title: "Mr. Richard", Link: "/Richard" },
+  { position: 28, title: "Portal", Link: "/Login" },
 ];
 
 const SideStaggerNavigation = () => {
@@ -123,38 +124,38 @@ const LinkLine = ({
       linkWidth.set(25);
     }
   }, [isHovered]);
- const router = useRouter()
+  const router = useRouter();
   if (title) {
     return (
-      
-        <motion.div
-          ref={ref}
-          className={`group relative cursor-pointer transition-colors hover:bg-red-500 ${
-            path === "/Richard" || path === "/About" || path === "/"
-              ? "bg-white"
-              : "bg-slate-900"
-          }`}
-          style={{ width: linkWidth, height: 2 }}
-          onClick={() => {router.push(link ?? "")}}
-        >
-          <AnimatePresence>
-            {isHovered && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className={`absolute left-0 top-0 z-10 w-full pt-2 font-bold uppercase  hover:text-red-500 transition-colors group-hover:text-red-500 ${
-                  path == "/Richard" || path === "/About" || path === "/"
-                    ? "text-white"
-                    : "text-slate-900"
-                }`}
-              >
-                {title}
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.div>
-    
+      <motion.div
+        ref={ref}
+        className={`group relative cursor-pointer transition-colors hover:bg-red-500 ${
+          path === "/Richard" || path === "/About" || path === "/"
+            ? "bg-white"
+            : "bg-slate-900"
+        }`}
+        style={{ width: linkWidth, height: 2 }}
+        onClick={() => {
+          router.push(link ?? "");
+        }}
+      >
+        <AnimatePresence>
+          {isHovered && (
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={`absolute left-0 top-0 z-10 w-full pt-2 font-bold uppercase  hover:text-red-500 transition-colors group-hover:text-red-500 ${
+                path == "/Richard" || path === "/About" || path === "/"
+                  ? "text-white"
+                  : "text-slate-900"
+              }`}
+            >
+              {title}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
     );
   } else {
     return (

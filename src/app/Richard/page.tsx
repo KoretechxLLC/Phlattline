@@ -22,24 +22,26 @@ const HorizontalScrollCarousel = () => {
   useEffect(() => {
     // Function to set the transform based on screen width
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      if (typeof window !== "undefined") {
+        const screenWidth = window.innerWidth;
 
-      if (screenWidth <= 1024) {
-        setXTransform(["0%", "-52.5%"]); // For screens <= 1024px
-      } else if (screenWidth <= 1281) {
-        setXTransform(["0%", "-51%"]);
-      } else if (screenWidth <= 1550) {
-        setXTransform(["0%", "-59.7%"]);
-      } else {
-        setXTransform(["0%", "-61.5%"]); // For screens > 1280px
+        if (screenWidth <= 1024) {
+          setXTransform(["0%", "-52.5%"]); // For screens <= 1024px
+        } else if (screenWidth <= 1281) {
+          setXTransform(["0%", "-51%"]);
+        } else if (screenWidth <= 1550) {
+          setXTransform(["0%", "-59.7%"]);
+        } else {
+          setXTransform(["0%", "-61.5%"]); // For screens > 1280px
+        }
       }
-    };
 
-    handleResize(); // Call once on mount to set the initial value
-    window.addEventListener("resize", handleResize); // Listen to window resize
+      handleResize(); // Call once on mount to set the initial value
+      window.addEventListener("resize", handleResize); // Listen to window resize
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup on unmount
+      return () => {
+        window.removeEventListener("resize", handleResize); // Cleanup on unmount
+      };
     };
   }, []);
 
@@ -82,7 +84,7 @@ const Card = ({ card }: { card: CardType }) => {
                   className="text-white uppercase text-[64px] fullHD:text-[64px] 3xl:text-[40px] 4xl:text-[48px] 5xl:text-[52px] 7xl:text-[52px] 8xl:text-[52px] font-bold"
                   style={{ fontFamily: "Sansation" }}
                 >
-                 Mr
+                  Mr
                 </span>
                 <span
                   className="fullHD:text-[64px] uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] 5xl:text-[52px] 7xl:text-[52px] 8xl:text-[52px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#c9b54b] to-[#ffff]"
@@ -96,7 +98,7 @@ const Card = ({ card }: { card: CardType }) => {
                   className="text-white uppercase px-[20px] fullHD:px-[20px] py-[10px] fullHD:py-[10px] text-[24px] fullHD:text-[24px] 3xl:text-[16px] 4xl:text-[20px] 5xl:text-[18px] 8xl:text-[18px] 7xl:text-[18px] flex w-full p-1 justify-center items-center rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#BAA716] to-[#B50D34]"
                   style={{ fontFamily: "Sansation" }}
                 >
-                 Ecologist
+                  Ecologist
                 </button>
               </div>
             </div>
@@ -105,7 +107,12 @@ const Card = ({ card }: { card: CardType }) => {
                 className="text-white text-[24px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal"
                 style={{ fontFamily: "Sansation" }}
               >
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry &apos; standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry &apos; standard
+                dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book. It
+                has survived not only five centuries, but also the leap into
+                electronic typesetting, remaining essentially unchanged.
               </p>
             </div>
           </div>
@@ -144,7 +151,10 @@ const Card = ({ card }: { card: CardType }) => {
                 className="text-white text-[18px] fullHD:text-[18px] 3xl:text-[13px] 4xl:text-[16px] 5xl:text-[14px] 7xl:text-[14px] 8xl:text-[14px] 6xl:text-[19px] font-regular mt-4  fullHD:mt-4 3xl:mt-2 4xl:mt-1"
                 style={{ fontFamily: "Sansation" }}
               >
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry &apos; standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry &apos; standard
+                dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book.
               </p>
             </div>
             <div className="flex flex-col w-[20rem] 3xl:w-[12rem] 4xl:w-[13rem] gap-[5rem] absolute 3xl:fixed left-[55rem] 4xl:left-[48rem] 3xl:left-[108rem] 3xl:gap-[3rem]">
@@ -193,11 +203,17 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-white text-[18px] fullHD:text-[18px] 3xl:text-[12px] 4xl:text-[16px] 5xl:text-[18px] 7xl:text-[18px] 8xl:text-[18px] font-regular 3xl:mt-2"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    Based on nearly a decades worth of Research and Study in Leadership Development, PhlattLine is capable and able to provide Core and Advanced leadership training focused on becoming an Adaptive Leader.
+                    Based on nearly a decades worth of Research and Study in
+                    Leadership Development, PhlattLine is capable and able to
+                    provide Core and Advanced leadership training focused on
+                    becoming an Adaptive Leader.
                   </p>
                 </div>
                 <div className="w-[20rem] fullHD:w-[20rem] 3xl:w-[10rem] 5xl:w-[12rem] 7xl:w-[12rem] 8xl:w-[12rem]  flex flex-col justify-center items-center">
-                  <ButtonWrapper text="Learn More" className="border-red-500 text-white" />
+                  <ButtonWrapper
+                    text="Learn More"
+                    className="border-red-500 text-white"
+                  />
                   <button
                     className="text-white text-[24px] fullHD:text-[24px] 3xl:text-[14px] 4xl:text-[16px] 5xl:text-[17px] 7xl:text-[17px] 8xl:text-[17px] flex flex-row py-[3px] fullHD:py-[3px] px-[10px] fullHD:px-[10px] justify-center items-center rounded bg-gradient-to-b whitespace-nowrap from-[#BAA716] to-[#B50D34] border-2 border-red-700"
                     style={{ fontFamily: "Sansation" }}
@@ -258,7 +274,7 @@ const Card = ({ card }: { card: CardType }) => {
                   </p>
                 </div>
                 <span>
-                <img src="./assets/whiteArrow.png" alt="" />
+                  <img src="./assets/whiteArrow.png" alt="" />
                 </span>
                 <div className="flex flex-col bg-black px-[36px] py-[5px] 3xl:px-[20px] 3xl:py-[3px] 4xl:px-[20px]  4xl:py-[3px] rounded-[38px] fullHD:rounded-[38px] absolute bottom-[7rem]  3xl:bottom-[4.5rem] 4xl:bottom-[6rem] left-[49rem]  3xl:left-[31rem] 4xl:left-[37rem]">
                   <p
@@ -283,7 +299,7 @@ const Card = ({ card }: { card: CardType }) => {
                   </p>
                 </div>
                 <span>
-                <img src="./assets/whiteArrow.png" alt="" />
+                  <img src="./assets/whiteArrow.png" alt="" />
                 </span>
                 <div className="flex flex-col bg-black px-[36px] py-[5px] fullHD:py-[5px] 3xl:px-[20px] 3xl:py-[3px] 4xl:px-[20px]  4xl:py-[3px] rounded-[38px]  absolute bottom-[7rem] 3xl:bottom-[4.5rem] 4xl:bottom-[6rem] left-[73rem] 3xl:left-[47rem] 4xl:left-[55rem]">
                   <p
@@ -336,7 +352,12 @@ const Card = ({ card }: { card: CardType }) => {
                 className="text-white text-[18px] fullHD:text-[18px] 3xl:text-[12px] 4xl:text-[16px] font-regular mt-4 3xl:mt-2 4xl:mt-2"
                 style={{ fontFamily: "Sansation" }}
               >
-               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry &apos; standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry &apos; standard
+                dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book. It
+                has survived not only five centuries, but also the leap into
+                electronic typesetting, remaining essentially unchanged.
               </p>
             </div>
             <div className="flex flex-col gap-[18rem] 3xl:gap-[13rem] 4xl:gap-[15rem] w-[35rem] 3xl:w-[25rem]">
@@ -360,7 +381,7 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-transparent uppercase bg-clip-text  leading-none bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[36px] 3xl:text-[22px] 4xl:text-[28px] font-bold"
                     style={{ fontFamily: "Sansation" }}
                   >
-                  change
+                    change
                   </p>
                   <p
                     className="text-transparent uppercase bg-clip-text  leading-none bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[36px] 3xl:text-[22px] 4xl:text-[28px] font-bold"
