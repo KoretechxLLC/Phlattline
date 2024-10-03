@@ -299,24 +299,26 @@ const HorizontalScrollCarousel = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      if (typeof window !== "undefined") {
+        const screenWidth = window.innerWidth;
 
-      if (screenWidth <= 1024) {
-        setXTransform(["0%", "-37.5%"]); // For screens <= 1024px
-      } else if (screenWidth <= 1280) {
-        setXTransform(["0%", "-34.3%"]);
-      } else if (screenWidth <= 1550) {
-        setXTransform(["0%", "-41.6%"]);
-      } else {
-        setXTransform(["0%", "-44%"]); // For screens > 1280px
+        if (screenWidth <= 1024) {
+          setXTransform(["0%", "-37.5%"]); // For screens <= 1024px
+        } else if (screenWidth <= 1280) {
+          setXTransform(["0%", "-34.3%"]);
+        } else if (screenWidth <= 1550) {
+          setXTransform(["0%", "-41.6%"]);
+        } else {
+          setXTransform(["0%", "-44%"]); // For screens > 1280px
+        }
       }
-    };
 
-    handleResize(); // Call once on mount to set initial value
-    window.addEventListener("resize", handleResize);
+      handleResize(); // Call once on mount to set initial value
+      window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup
+      return () => {
+        window.removeEventListener("resize", handleResize); // Cleanup
+      };
     };
   }, []);
 
@@ -504,8 +506,16 @@ const Card = ({ card }: { card: CardType }) => {
             </div> */}
             <div className="flex flex-col gap-24 ">
               <div className="flex relative left-[100rem] bottom-[13rem] 3xl:bottom-[10rem] 4xl:bottom-[10rem]  3xl:left-[55rem] 4xl:left-[70rem] gap-16 3xl:gap-8 4xl:gap-12 w-[100rem]">
-                <img src="./assets/valueBanner.png" alt="" className="3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[28rem] 4xl:h-[70vh]" />
-                <img src="./assets/behaviorBanner.png" alt="" className="3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[30rem] 4xl:h-[70vh]" />
+                <img
+                  src="./assets/valueBanner.png"
+                  alt=""
+                  className="3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[28rem] 4xl:h-[70vh]"
+                />
+                <img
+                  src="./assets/behaviorBanner.png"
+                  alt=""
+                  className="3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[30rem] 4xl:h-[70vh]"
+                />
               </div>
             </div>
           </div>

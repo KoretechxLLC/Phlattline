@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import GetStarField from '../components/GetStarField'; // Adjust path as necessary
+import { useEffect } from "react";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import GetStarField from "../components/GetStarField"; // Adjust path as necessary
 
 const HomeScreen = () => {
   useEffect(() => {
-    const container: any = document.getElementById('three-container');
+    const container: any = document.getElementById("three-container");
 
     // Clear previous contents if they exist
     if (container) {
-      container.innerHTML = '';
+      container.innerHTML = "";
     }
 
     // Setup scene, camera, and renderer
@@ -39,7 +39,7 @@ const HomeScreen = () => {
     const loader = new THREE.TextureLoader();
     const geometry = new THREE.IcosahedronGeometry(1, detail);
     const material = new THREE.MeshBasicMaterial({
-      map: loader.load('/assets/earth.jpg'),
+      map: loader.load("/assets/earth.jpg"),
     });
     const earthMesh = new THREE.Mesh(geometry, material);
     earthGroup.add(earthMesh);
@@ -57,7 +57,7 @@ const HomeScreen = () => {
       if (stars instanceof THREE.Points) {
         stars.rotation.y -= 0.0002;
       } else {
-        console.warn('Expected stars to be an instance of THREE.Points.');
+        console.warn("Expected stars to be an instance of THREE.Points.");
       }
 
       renderer.render(scene, camera);
@@ -66,17 +66,19 @@ const HomeScreen = () => {
 
     // Handle window resize
     function handleWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-    window.addEventListener('resize', handleWindowResize, false);
+      if (typeof window !== "undefined") {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+      window.addEventListener("resize", handleWindowResize, false);
 
-    // Cleanup function
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-      renderer.dispose(); // Properly dispose of renderer
-    };
+      // Cleanup function
+      return () => {
+        window.removeEventListener("resize", handleWindowResize);
+        renderer.dispose(); // Properly dispose of renderer
+      };
+    }
   }, []);
 
   // Style container to prevent scrolling and hide overflow
@@ -84,15 +86,12 @@ const HomeScreen = () => {
     <div
       id="three-container"
       style={{
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden', // Hide overflow for both X and Y axes
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden", // Hide overflow for both X and Y axes
       }}
     ></div>
   );
 };
 
 export default HomeScreen;
-
-
-

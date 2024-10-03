@@ -21,26 +21,28 @@ const HorizontalScrollCarousel = () => {
 
   useEffect(() => {
     // Function to set the transform based on screen width
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        const screenWidth = window.innerWidth;
 
-      if (screenWidth <= 1024) {
-        setXTransform(["0%", "-52.5%"]); // For screens <= 1024px
-      } else if (screenWidth <= 1281) {
-        setXTransform(["0%", "-51%"]);
-      } else if (screenWidth <= 1550) {
-        setXTransform(["0%", "-59.7%"]);
-      } else {
-        setXTransform(["0%", "-61.5%"]); // For screens > 1280px
-      }
-    };
+        if (screenWidth <= 1024) {
+          setXTransform(["0%", "-52.5%"]); // For screens <= 1024px
+        } else if (screenWidth <= 1281) {
+          setXTransform(["0%", "-51%"]);
+        } else if (screenWidth <= 1550) {
+          setXTransform(["0%", "-59.7%"]);
+        } else {
+          setXTransform(["0%", "-61.5%"]); // For screens > 1280px
+        }
+      };
 
-    handleResize(); // Call once on mount to set the initial value
-    window.addEventListener("resize", handleResize); // Listen to window resize
+      handleResize(); // Call once on mount to set the initial value
+      window.addEventListener("resize", handleResize); // Listen to window resize
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup on unmount
-    };
+      return () => {
+        window.removeEventListener("resize", handleResize); // Cleanup on unmount
+      };
+    }
   }, []);
 
   const x = useTransform(scrollYProgress, [0, 1], xTransform);
@@ -106,10 +108,10 @@ const Card = ({ card }: { card: CardType }) => {
                 style={{ fontFamily: "Sansation" }}
               >
                 Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry &apos; standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
+                industry. Lorem Ipsum has been the industry &apos; standard
+                dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book. It
+                has survived not only five centuries, but also the leap into
                 electronic typesetting, remaining essentially unchanged.
               </p>
             </div>
@@ -150,9 +152,9 @@ const Card = ({ card }: { card: CardType }) => {
                 style={{ fontFamily: "Sansation" }}
               >
                 Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry &apos; standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.
+                industry. Lorem Ipsum has been the industry &apos; standard
+                dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book.
               </p>
             </div>
             <div className="flex flex-col w-[20rem] 3xl:w-[12rem] 4xl:w-[13rem] gap-[5rem] absolute 3xl:fixed left-[55rem] 4xl:left-[48rem] 3xl:left-[108rem] 3xl:gap-[3rem]">
@@ -201,7 +203,10 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-black text-[18px] fullHD:text-[18px] 3xl:text-[12px] 4xl:text-[16px] 5xl:text-[18px] 7xl:text-[18px] 8xl:text-[18px] font-regular 3xl:mt-2"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    Based on nearly a decades worth of Research and Study in Leadership Development, PhlattLine is capable and able to provide Core and Advanced leadership training focused on becoming an Adaptive Leader.
+                    Based on nearly a decades worth of Research and Study in
+                    Leadership Development, PhlattLine is capable and able to
+                    provide Core and Advanced leadership training focused on
+                    becoming an Adaptive Leader.
                   </p>
                 </div>
                 <div className="w-[20rem] fullHD:w-[20rem] 3xl:w-[10rem] 5xl:w-[12rem] 7xl:w-[12rem] 8xl:w-[12rem]  flex flex-col justify-center items-center">
@@ -344,7 +349,12 @@ const Card = ({ card }: { card: CardType }) => {
                 className="text-black text-[18px] fullHD:text-[18px] 3xl:text-[12px] 4xl:text-[16px] font-regular mt-4 3xl:mt-2 4xl:mt-2"
                 style={{ fontFamily: "Sansation" }}
               >
-               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry &apos; standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry &apos; standard
+                dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book. It
+                has survived not only five centuries, but also the leap into
+                electronic typesetting, remaining essentially unchanged.
               </p>
             </div>
             <div className="flex flex-col gap-[18rem] 3xl:gap-[14rem] 4xl:gap-[15rem] w-[35rem] 3xl:w-[25rem]">
