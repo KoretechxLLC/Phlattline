@@ -5,6 +5,7 @@ import { MdEmail, MdLock, MdPerson, MdPhone } from "react-icons/md";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { Input } from "../components/Input";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -54,7 +55,16 @@ const IndividualSignUp = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
+              id="text-input"
+              placeholder="Enter Your Name"
+              type="text"
+              value={name}
+              onChange={(e: any) => setName(e.target.value)}
+              style={{ fontFamily: "Sansation" }}
+              required
+            />
+            {/* <input
               id="text-input"
               type="text"
               placeholder="Enter Your Name"
@@ -63,7 +73,7 @@ const IndividualSignUp = () => {
               className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            />
+            /> */}
             <MdPerson className="absolute top-5 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -71,7 +81,16 @@ const IndividualSignUp = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
+              id="email-input"
+              placeholder="Enter Your Email"
+              type="text"
+              value={email}
+              onChange={(e: any) => setEmail(e.target.value)}
+              style={{ fontFamily: "Sansation" }}
+              required
+            />
+            {/* <input
               id="email-input"
               type="email"
               placeholder="Enter your email"
@@ -80,7 +99,7 @@ const IndividualSignUp = () => {
               className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            />
+            /> */}
             <MdEmail className="absolute top-5 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -88,7 +107,16 @@ const IndividualSignUp = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
+              id="password-input"
+              placeholder="Enter Your Password"
+              type="password"
+              value={password}
+              onChange={(e: any) => setPassword(e.target.value)}
+              style={{ fontFamily: "Sansation" }}
+              required
+            />
+            {/* <input
               id="password-input"
               type="password"
               placeholder="Enter your password"
@@ -97,7 +125,7 @@ const IndividualSignUp = () => {
               className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            />
+            /> */}
             <MdLock className="absolute top-5 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -105,13 +133,12 @@ const IndividualSignUp = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <input
+            <Input
               id="number-input"
               type="tel"
               placeholder="Enter your number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
             />
