@@ -51,37 +51,28 @@ const Login = () => {
             variants={primaryVariants}
             className="mb-2 w-full relative py-2"
           >
-            <Input id="email" placeholder="Enter your email" type="text" />
-
-            {/* <input
+            <Input
               id="email-input"
               type="email"
               placeholder="Enter your email"
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-600 bg-black text-gray border-grey-300 px-5.5 py-5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            /> */}
-            <MdEmail className="absolute top-8 right-5 size-5 text-gray-500" />
+            />
+            <MdEmail className="absolute top-7 right-5 size-5 text-gray-500" />
           </motion.div>
 
           <motion.div
             variants={primaryVariants}
             className="mb-2 w-full relative"
           >
-            <MdLock className="absolute top-7 right-5 size-5 text-gray-500" />
+            <MdLock className="absolute top-5 right-5 size-5 text-gray-500" />
             <Input
-              id="password"
-              placeholder="Enter your password"
-              type="password"
-            />
-            {/* <input
               id="password-input"
               type="password"
               placeholder="Enter your password"
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-600 bg-black text-gray border-grey-300 px-5.5 py-5 my-1 focus:outline-gray-600"
               style={{ fontFamily: "Sansation" }}
               required
-            /> */}
+            />
           </motion.div>
           <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-8 py-2 mx-4">
             <div className="group relative inline-block">
@@ -153,16 +144,16 @@ const Login = () => {
 
 const LoginImage = () => {
   const globeConfig = {
-    pointSize: 6,
+    pointSize: 10,
     globeColor: "#062056",
     showAtmosphere: true,
     atmosphereColor: "#FFFFFF",
     atmosphereAltitude: 0.1,
-    emissive: "#062056",
-    emissiveIntensity: 0.1,
+    emissive: "#0071ca",
+    emissiveIntensity: 0.2,
     shininess: 0.9,
     polygonColor: "rgba(255,255,255,0.7)",
-    ambientLight: "#38bdf8",
+    ambientLight: "#ffffff",
     directionalLeftLight: "#ffffff",
     directionalTopLight: "#ffffff",
     pointLight: "#ffffff",
