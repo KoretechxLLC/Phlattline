@@ -1,20 +1,30 @@
 "use client";
-
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import GetStarField from "../components/GetStarField"; // Adjust path as necessary
 
-const HomeScreen = () => {
+interface HomeScreenProps {
+  onModelLoaded: () => void;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const hasModelLoaded = useRef(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const container: any = document.getElementById("three-container");
+    if (hasModelLoaded.current) return; // Prevent duplicate model loading
+
+    const container = containerRef.current;
 
     // Clear previous contents if they exist
     if (container) {
       container.innerHTML = "";
     }
 
-    // Setup scene, camera, and renderer
+    // Set up scene, camera, and renderer
     const w = window.innerWidth;
     const h = window.innerHeight;
     const scene = new THREE.Scene();
@@ -23,26 +33,47 @@ const HomeScreen = () => {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
-    container.appendChild(renderer.domElement);
+    container?.appendChild(renderer.domElement);
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 
-    // Create Earth and add to scene
-    const earthGroup = new THREE.Group();
-    earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
-    scene.add(earthGroup);
+    // Brightness & lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Increase ambient brightness to 1
+    scene.add(ambientLight);
 
-    new OrbitControls(camera, renderer.domElement);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 3); // Stronger directional light
+    directionalLight.position.set(5, 5, 5).normalize();
+    scene.add(directionalLight);
 
-    const detail = 12;
-    const loader = new THREE.TextureLoader();
-    const geometry = new THREE.IcosahedronGeometry(1, detail);
-    const material = new THREE.MeshBasicMaterial({
-      map: loader.load("/assets/earth.jpg"),
-    });
-    const earthMesh = new THREE.Mesh(geometry, material);
-    earthGroup.add(earthMesh);
+    // Orbit Controls with zoom limits
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enablePan = false; // Disable panning with Ctrl and right-click
+    controls.minDistance = 3; // Limit zoom-in distance
+    controls.maxDistance = 10; // Limit zoom-out distance
+
+    // Load GLB Model
+    const loader = new GLTFLoader();
+    loader.load(
+      "/assets/PhlattlineEarth.glb", // Ensure this path is correct
+      (gltf) => {
+        const earthMesh = gltf.scene;
+        earthMesh.scale.set(1, 1, 1);
+        scene.add(earthMesh);
+
+        if (!hasModelLoaded.current) {
+          setIsModelLoaded(true);
+          onModelLoaded(); // Trigger splash screen to hide
+          hasModelLoaded.current = true;
+        }
+      },
+      undefined,
+      (error) => {
+        console.error("An error occurred while loading the GLB model:", error);
+      }
+    );
 
     // Add stars
     const [stars, milkyWay] = GetStarField({ numStars: 10000 });
@@ -50,45 +81,44 @@ const HomeScreen = () => {
     scene.add(milkyWay);
 
     // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-      earthMesh.rotation.y += 0.002;
+    let lastRenderTime = 0;
+    const animate = () => {
+      const currentTime = Date.now();
 
-      if (stars instanceof THREE.Points) {
+      if (currentTime - lastRenderTime > 16) {
         stars.rotation.y -= 0.0002;
-      } else {
-        console.warn("Expected stars to be an instance of THREE.Points.");
+        renderer.render(scene, camera);
+        lastRenderTime = currentTime;
       }
 
-      renderer.render(scene, camera);
-    }
+      requestAnimationFrame(animate);
+    };
     animate();
 
     // Handle window resize
-    function handleWindowResize() {
-      if (typeof window !== "undefined") {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      }
-      window.addEventListener("resize", handleWindowResize, false);
+    const handleWindowResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
 
-      // Cleanup function
-      return () => {
-        window.removeEventListener("resize", handleWindowResize);
-        renderer.dispose(); // Properly dispose of renderer
-      };
-    }
-  }, []);
+    window.addEventListener("resize", handleWindowResize);
 
-  // Style container to prevent scrolling and hide overflow
+    // Cleanup function
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+      renderer.dispose();
+    };
+  }, [onModelLoaded]);
+
   return (
     <div
       id="three-container"
+      ref={containerRef}
       style={{
         width: "100vw",
         height: "100vh",
-        overflow: "hidden", // Hide overflow for both X and Y axes
+        overflow: "hidden",
       }}
     ></div>
   );
