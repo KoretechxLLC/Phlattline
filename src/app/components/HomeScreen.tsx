@@ -13,6 +13,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const hasModelLoaded = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const earthMeshRef = useRef<THREE.Group | null>(null); // Create a ref for the Earth mesh
 
   useEffect(() => {
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
@@ -39,10 +40,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 
     // Brightness & lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Increase ambient brightness to 1
+    const ambientLight = new THREE.AmbientLight(0xffffff, 4); // Increase ambient brightness
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 3); // Stronger directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 4); // Stronger directional light
     directionalLight.position.set(5, 5, 5).normalize();
     scene.add(directionalLight);
 
@@ -62,6 +63,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
         const earthMesh = gltf.scene;
         earthMesh.scale.set(1, 1, 1);
         scene.add(earthMesh);
+        earthMeshRef.current = earthMesh; // Store reference to Earth mesh
 
         if (!hasModelLoaded.current) {
           setIsModelLoaded(true);
@@ -86,6 +88,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
       const currentTime = Date.now();
 
       if (currentTime - lastRenderTime > 16) {
+        if (earthMeshRef.current) {
+          // Rotate the Earth mesh
+          earthMeshRef.current.rotation.y += 0.002; // Adjust rotation speed as necessary
+        }
         stars.rotation.y -= 0.0002;
         renderer.render(scene, camera);
         lastRenderTime = currentTime;

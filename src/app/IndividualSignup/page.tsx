@@ -11,7 +11,7 @@ const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
 const SignupScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 bg-black-50 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px]">
+    <section className="grid min-h-screen grid-cols-1 bg-black lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px]">
       <IndividualSignUp />
       <SignUpImage />
     </section>
@@ -64,16 +64,6 @@ const IndividualSignUp = () => {
               style={{ fontFamily: "Sansation" }}
               required
             />
-            {/* <input
-              id="text-input"
-              type="text"
-              placeholder="Enter Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
-              style={{ fontFamily: "Sansation" }}
-              required
-            /> */}
             <MdPerson className="absolute top-5 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -90,16 +80,6 @@ const IndividualSignUp = () => {
               style={{ fontFamily: "Sansation" }}
               required
             />
-            {/* <input
-              id="email-input"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
-              style={{ fontFamily: "Sansation" }}
-              required
-            /> */}
             <MdEmail className="absolute top-5 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -116,16 +96,6 @@ const IndividualSignUp = () => {
               style={{ fontFamily: "Sansation" }}
               required
             />
-            {/* <input
-              id="password-input"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 rounded-lg border-[1px] border-gray-500 bg-black text-gray border-grey-300 px-5.5 py-3.5 my-1 focus:outline-gray-600"
-              style={{ fontFamily: "Sansation" }}
-              required
-            /> */}
             <MdLock className="absolute top-5 right-5 size-5 text-gray-500" />
           </motion.div>
 
@@ -202,19 +172,19 @@ const IndividualSignUp = () => {
 
 const SignUpImage = () => {
   const globeConfig = {
-    pointSize: 6,
-    globeColor: "#062056",
+    pointSize: 10,
+    globeColor: "#062056", // Keep this as is for the globe color
     showAtmosphere: true,
-    atmosphereColor: "#FFFFFF",
-    atmosphereAltitude: 0.1,
-    emissive: "#062056",
-    emissiveIntensity: 0.1,
-    shininess: 0.9,
-    polygonColor: "rgba(255,255,255,0.7)",
-    ambientLight: "#38bdf8",
-    directionalLeftLight: "#ffffff",
-    directionalTopLight: "#ffffff",
-    pointLight: "#ffffff",
+    atmosphereColor: "#BAA716", // Atmosphere color
+    atmosphereAltitude: 0.3,
+    emissive: "#0078aa",
+    emissiveIntensity: 0.2,
+    shininess: 1,
+    polygonColor: "rgba(255, 255, 255, 1)", // Change opacity to 1 for bright white land
+    ambientLight: "#ffffff", // Ambient light color
+    directionalLeftLight: "#ffffff", // Left directional light
+    directionalTopLight: "#ffffff", // Top directional light
+    pointLight: "#ffffff", // Point light color
     arcTime: 1000,
     arcLength: 0.9,
     rings: 1,
@@ -223,7 +193,8 @@ const SignUpImage = () => {
     autoRotate: true,
     autoRotateSpeed: 0.5,
   };
-  const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
+
+  const colors = ["#ffffff", "#ffffff", "#ffffff"];
   const sampleArcs = [
     {
       order: 1,
