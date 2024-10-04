@@ -11,7 +11,7 @@ const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
 const LoginScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 bg-black-50 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px]">
+    <section className="grid min-h-screen grid-cols-1 bg-black lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px]">
       <Login />
       <LoginImage />
     </section>
@@ -145,18 +145,18 @@ const Login = () => {
 const LoginImage = () => {
   const globeConfig = {
     pointSize: 10,
-    globeColor: "#062056",
+    globeColor: "#062056", // Keep this as is for the globe color
     showAtmosphere: true,
-    atmosphereColor: "#FFFFFF",
-    atmosphereAltitude: 0.1,
-    emissive: "#0071ca",
+    atmosphereColor: "#BAA716", // Atmosphere color
+    atmosphereAltitude: 0.3,
+    emissive: "#0078aa",
     emissiveIntensity: 0.2,
-    shininess: 0.9,
-    polygonColor: "rgba(255,255,255,0.7)",
-    ambientLight: "#ffffff",
-    directionalLeftLight: "#ffffff",
-    directionalTopLight: "#ffffff",
-    pointLight: "#ffffff",
+    shininess: 1,
+    polygonColor: "rgba(255, 255, 255, 1)", // Change opacity to 1 for bright white land
+    ambientLight: "#ffffff", // Ambient light color
+    directionalLeftLight: "#ffffff", // Left directional light
+    directionalTopLight: "#ffffff", // Top directional light
+    pointLight: "#ffffff", // Point light color
     arcTime: 1000,
     arcLength: 0.9,
     rings: 1,
@@ -165,7 +165,8 @@ const LoginImage = () => {
     autoRotate: true,
     autoRotateSpeed: 0.5,
   };
-  const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
+
+  const colors = ["#ffffff", "#ffffff", "#ffffff"];
   const sampleArcs = [
     {
       order: 1,
