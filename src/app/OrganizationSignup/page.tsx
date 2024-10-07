@@ -128,7 +128,7 @@ const OrganizationSignup = () => {
                 scale: 0.985,
               }}
               type="submit"
-              className="button-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
+              className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
               style={{ fontFamily: "Sansation" }}
             >
               Done
