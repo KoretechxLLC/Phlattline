@@ -5,14 +5,14 @@ import { signAccessToken, signRefreshToken } from "@/helper/jwt_helper";
 
 export async function POST(request: NextRequest) {
   try {
-    let userData = await request.json();
-    let { email, password } = userData;
+    const userData = await request.json();
+    const { email, password } = userData;
 
     if (!email || !password) {
       throw new Error("Required fields are missing");
     }
 
-    let user: any = await prisma.users.findUnique({
+    const user: any = await prisma.users.findUnique({
       where: {
         email: email,
       },
@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       throw new Error("User not found");
+    }
+
+    // Check if the user status is approved
+    if (user.status !== "approved") {
+      throw new Error("Your account is not approved yet. Please contact support.");
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
@@ -62,6 +67,8 @@ export async function POST(request: NextRequest) {
       statusCode = 400; // Bad Request
     } else if (err.message === "User not found") {
       statusCode = 404; // Not Found
+    } else if (err.message === "Your account is not approved yet. Please contact support.") {
+      statusCode = 403; // Forbidden
     }
 
     return NextResponse.json(

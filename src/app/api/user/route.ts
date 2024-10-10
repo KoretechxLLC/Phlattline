@@ -2,6 +2,8 @@ import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { unlink, writeFile } from "fs/promises";
+import bcrypt from "bcryptjs";
+import fs from 'fs/promises';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,6 +20,9 @@ export async function GET(request: NextRequest) {
       where: {
         id: Number(id),
       },
+      include :{
+        organizations : true
+      }
     });
 
     if (!user) {
@@ -40,106 +45,128 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
-  let filename: string | undefined;
-
+export async function PUT(request: NextRequest) {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File | null;
+    const formData = await request.formData();
 
-    // Convert FormData entries to a plain object
-    const formDataObj: { [key: string]: string | File } = Object.fromEntries(
-      formData.entries()
-    );
+    const userId = formData.get('userId') as string | null;
+    const email = formData.get('email') as string | null;
+    const phone_number = formData.get('phone_number') as string | null;
+    const password = formData.get('password') as string | null;
+    const first_name = formData.get('first_name') as string | null;
+    const last_name = formData.get('last_name') as string | null;
+    const profile_image = formData.get('profile_image') as File | null;
 
-    // Validate required fields
-    if (!formDataObj.first_name || !formDataObj.email || !formDataObj.id) {
-      return NextResponse.json({
-        message: "Required fields are missing",
-        success: false,
-      });
-    }
+    const userIdValue = userId ?? undefined;
+    const emailValue = email ?? undefined;
+    const phoneNumberValue = phone_number ?? undefined;
+    const passwordValue = password ?? undefined;
+    const firstNameValue = first_name ?? undefined;
+    const lastNameValue = last_name ?? undefined;
 
-    const userId = Number(formDataObj.id);
-
-    // Fetch existing user
-    const user = await prisma.users.findUnique({ where: { id: userId } });
-    if (!user) {
-      return NextResponse.json({
-        message: "User not found",
-        success: false,
-      });
-    }
-
-    // Handle file upload
-    if (file) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      filename = Math.random() * 0.9854762545 + file.name.replace(/\s+/g, "_"); // Replace all spaces with underscores
-      await writeFile(
-        path.join(process.cwd(), "public", "profile", filename),
-        buffer
+    if (!userIdValue) {
+      return NextResponse.json(
+        { message: "User ID is required.", success: false },
+        { status: 400 }
       );
+    }
 
-      // Delete the previous image if it exists
-      if (user.profile_image) {
-        const oldFilePath = path.join(
-          process.cwd(),
-          "public",
-          "profile",
-          user.profile_image
+    const existingUser = await prisma.users.findUnique({
+      where: { id: Number(userIdValue) },
+    });
+
+    if (!existingUser) {
+      return NextResponse.json(
+        { message: "User not found.", success: false },
+        { status: 404 }
+      );
+    }
+
+    if (emailValue && emailValue !== existingUser.email) {
+      const emailExists = await prisma.users.findUnique({
+        where: { email: emailValue },
+      });
+      if (emailExists) {
+        return NextResponse.json(
+          { message: "Email is already in use.", success: false },
+          { status: 400 }
         );
-        try {
-          await unlink(oldFilePath);
-        } catch (deleteError) {
-          console.error("Failed to delete old file:", deleteError);
-        }
       }
     }
 
-    // Prepare update data
-    const updateData: { [key: string]: any } = {};
-    for (const [key, value] of Object.entries(formDataObj)) {
-      if (key !== "file" && value) updateData[key] = value;
+    let hashedPassword: string | undefined = undefined;
+    if (passwordValue) {
+      hashedPassword = await bcrypt.hash(passwordValue, 10);
     }
 
-    if (filename) updateData.image = filename;
+    let profileImagePath: string | null = existingUser.profile_image; 
+    if (profile_image && profile_image.size > 0) {
+      // Delete the old profile image if it exists
+      if (profileImagePath) {
+        const oldImagePath = path.join(process.cwd(), 'public/users/profileimage', profileImagePath);
+        try {
+          await fs.unlink(oldImagePath); // Remove the old image file
+        } catch (err) {
+          console.error("Error deleting old profile image:", err);
+        }
+      }
+      // Save the new profile image
+      profileImagePath = await saveFile(profile_image, 'public/users/profileimage');
+    }
 
-    // Remove id from update data
-    delete updateData.id;
-
-    // Perform the update
     const updatedUser = await prisma.users.update({
-      where: { id: userId },
-      data: updateData,
+      where: { id: Number(userIdValue) },
+      data: {
+        email: emailValue || existingUser.email,
+        phone_number: phoneNumberValue || existingUser.phone_number,
+        password: hashedPassword || existingUser.password,
+        first_name: firstNameValue || existingUser.first_name,
+        last_name: lastNameValue || existingUser.last_name,
+        profile_image: profileImagePath || existingUser.profile_image, 
+      },
     });
 
     return NextResponse.json({
-      message: "Success",
+      message: "User profile updated successfully",
       success: true,
       data: updatedUser,
     });
-  } catch (error) {
-    // Clean up file if an error occurs
-    if (filename) {
-      try {
-        await unlink(path.join(process.cwd(), "public", "profile", filename));
-      } catch (deleteError) {
-        console.error("Failed to delete file:", deleteError);
-      }
-    }
-
-    return NextResponse.json({
-      message: "Internal Server Error",
-      success: false,
-    });
-  } finally {
-    await prisma.$disconnect(); // Ensure disconnection
+  } catch (error: any) {
+    console.error("Error updating user profile:", error.message);
+    return NextResponse.json(
+      { message: error.message || "Internal Server Error", success: false },
+      { status: 500 }
+    );
   }
+}
+
+async function saveFile(file: File, destination: string): Promise<string> {
+  const dir = path.join(process.cwd(), destination);
+  
+  await fs.mkdir(dir, { recursive: true });
+
+  const originalName = file.name; // Get the original file name
+  let filename = originalName;
+  let filePath = path.join(dir, filename);
+  let counter = 1;
+
+  while (await fs.access(filePath).then(() => true).catch(() => false)) {
+    const nameWithoutExt = path.parse(originalName).name;
+    const ext = path.parse(originalName).ext;
+    filename = `${nameWithoutExt}_${counter}${ext}`; // Append numeric suffix if needed
+    filePath = path.join(dir, filename);
+    counter++;
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await fs.writeFile(filePath, buffer);
+
+  return filename; 
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    let id = request.nextUrl.searchParams.get("id");
+    const id = request.nextUrl.searchParams.get("id");
 
     if (!id) {
       return NextResponse.json({
@@ -148,7 +175,8 @@ export async function DELETE(request: NextRequest) {
       });
     }
 
-    let user = await prisma.users.findFirst({
+    // Find the user with their profile image
+    const user = await prisma.users.findFirst({
       where: { id: Number(id) },
     });
 
@@ -159,22 +187,19 @@ export async function DELETE(request: NextRequest) {
       });
     }
 
-    let deletedUser = await prisma.users.delete({
+    // Delete the user record
+    await prisma.users.delete({
       where: { id: Number(id) },
     });
 
-    if (deletedUser?.profile_image) {
-      if (user.profile_image) {
-        const oldFilePath = path.join(
-          process.cwd(),
-          "public",
-          user.profile_image
-        );
-        try {
-          await unlink(oldFilePath);
-        } catch (deleteError) {
-          console.error("Failed to delete old file:", deleteError);
-        }
+    // If the user has a profile image, delete it from the file system
+    if (user.profile_image) {
+      const imageFilePath = path.join(process.cwd(), "public","users","profileimage",user.profile_image);
+
+      try {
+        await fs.unlink(imageFilePath); // Remove the old image file
+      } catch (deleteError) {
+        console.error("Failed to delete profile image:", deleteError);
       }
     }
 
@@ -183,6 +208,7 @@ export async function DELETE(request: NextRequest) {
       success: true,
     });
   } catch (err: any) {
+    console.error("Error deleting user:", err.message);
     return NextResponse.json({
       message: err.message || "Internal Server Error",
       success: false,
