@@ -1,39 +1,173 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SquarePen, Trash2 } from "lucide-react";
+"use client";
+import { Avatar, AvatarImage } from "@/app/components/avatar";
+import { Card, CardContent } from "@/app/components/Card";
+import { AnimatedTooltip } from "@/app/components/AnimatedTooltip";
+import { useState } from "react";
 
-interface TaskItemProps {
-  task: { image: string; title: string };
-}
-const TaskItem = ({ task }: TaskItemProps) => {
-  const { image, title } = task;
+const TasksTracker = () => {
+  const tooltipItems = [
+    {
+      id: 1,
+      name: "John Doe",
+      designation: "Software Engineer",
+      image: "/assets/User2.png",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      designation: "Product Manager",
+      image: "/assets/User1.png",
+    },
+    {
+      id: 3,
+      name: "Bob Johnson",
+      designation: "UX Designer",
+      image: "/assets/User3.png",
+    },
+  ];
+
+  const pendingTasks = [
+    {
+      id: 1,
+      goal: "Goal 1",
+      percentage: 30,
+      status: "pending",
+      userId: 1,
+    },
+    {
+      id: 2,
+      goal: "Goal 2",
+      percentage: 60,
+      status: "pending",
+      userId: 2,
+    },
+    {
+      id: 3,
+      goal: "Goal 3",
+      percentage: 90,
+      status: "pending",
+      userId: 3,
+    },
+  ];
+
+  const completedTasks = [
+    {
+      id: 4,
+      goal: "Goal 4",
+      status: "completed",
+      userId: 1,
+    },
+    {
+      id: 5,
+      goal: "Goal 5",
+      status: "completed",
+      userId: 2,
+    },
+    {
+      id: 6,
+      goal: "Goal 6",
+      status: "completed",
+      userId: 3,
+    },
+  ];
+
+  const [activeTab, setActiveTab] = useState("pending");
+
+  const handlePendingTasksClick = () => {
+    setActiveTab("pending");
+  };
+
+  const handleCompletedTasksClick = () => {
+    setActiveTab("completed");
+  };
+
   return (
-    <li className="flex items-center gap-2 py-3 px-6">
-      <div className="flex-none w-12">
-        <Checkbox className="dark:bg-default-300" />
+    <div>
+      <div className="flex gap-4 md:gap-4 justify-start md:justify-start">
+        <button
+          className={`text-xs w-24 sm:text-xs sm:w-32 rounded-tl-3xl rounded-tr-3xl ${
+            activeTab === "pending"
+              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+              : "text-default-600"
+          }`}
+          onClick={handlePendingTasksClick}
+        >
+          Pending Tasks
+        </button>
+        <button
+          className={`text-xs w-28 sm:text-xs sm:w-36 h-12 rounded-tl-3xl rounded-tr-3xl ${
+            activeTab === "completed"
+              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+              : "text-default-600"
+          }`}
+          onClick={handleCompletedTasksClick}
+        >
+          Completed Tasks
+        </button>
       </div>
-      <div className="flex-none">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={image} alt={title} />
-          <AvatarFallback>SA</AvatarFallback>
-        </Avatar>
-      </div>
-      <div className="flex-1">
-        <div className="text-sm text-default-600 max-w-[140px] truncate">
-          {title}
-        </div>
-      </div>
-      <button className="text-default-400 me-2">
-        {" "}
-        <SquarePen className="w-4 h-4 " />
-      </button>
-      <button className=" text-default-400 hover:text-destructive">
-        {" "}
-        <Trash2 className="w-4 h-4" />
-      </button>
-    </li>
+      <ul
+        className={`justify-center items-center md:justify-start w-56 sm:w-72 border border-gray-500 rounded-b-3xl relative ${
+          activeTab === "pending" ? "pending-list" : "completed-list"
+        }`}
+      >
+        {activeTab === "pending"
+          ? pendingTasks.map((item) => (
+              <li
+                className={`flex flex-col sm:flex-row justify-center md:justify-start items-center  sm:items-center sm:w-72 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0 ${
+                  activeTab === "pending" ? "pending-item" : "completed-item"
+                }`}
+                key={item.id}
+                style={{ fontFamily: "Sansation" }}
+              >
+                <div className="flex items-center md:ml-5 justify-between sm:w-56">
+                  <div className="flex items-center">
+                    <Avatar className="w-6 h-6">
+                      <AvatarImage
+                        src={"/assets/ongoing.png"}
+                        alt="pending-avatar"
+                        className="w-5 h-5"
+                      />
+                    </Avatar>
+                    <span className="text-xs sm:text-sm">{item.goal}</span>
+                  </div>
+                  <div className="flex justify-center md:items-center ml-3 sm:ml-5">
+                    <AnimatedTooltip items={tooltipItems} />
+                    <span className="mx-10 md:mx-0 lg:ml-14 sm:ml-10">
+                      {item.percentage}%
+                    </span>
+                  </div>
+                </div>
+              </li>
+            ))
+          : completedTasks.map((item) => (
+              <li
+                className={`flex flex-col  sm:flex-row justify-center md:justify-start items-center sm:items-center sm:w-72 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0 ${
+                  activeTab === "completed" ? "completed-item" : "pending-item"
+                }`}
+                key={item.id}
+                style={{ fontFamily: "Sansation" }}
+              >
+                <div className="flex items-center ml-5 md:ml-4 justify-between sm:w-56">
+                  <div className="flex items-center">
+                    <Avatar className="w-6 h-6">
+                      <AvatarImage
+                        src={"/assets/greentick.png"}
+                        alt="completed-avatar"
+                        className="w-5 h-5"
+                      />
+                    </Avatar>
+                    <span className="text-xs sm:text-sm">{item.goal}</span>
+                  </div>
+                  <div className="flex items-center ml-5">
+                    <AnimatedTooltip items={tooltipItems} />
+                    <span className="mx-7 md:mx-0 lg:ml-14 sm:ml-10">100%</span>
+                  </div>
+                </div>
+              </li>
+            ))}
+      </ul>
+    </div>
   );
 };
 
-export default TaskItem;
+export default TasksTracker;

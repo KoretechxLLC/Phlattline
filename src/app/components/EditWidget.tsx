@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/app/components/sheet";
 import { ScrollArea } from "@/app/components/scroll-area";
-import { Icon } from "@/app/components/icon";
+import Icon from "@/app/components/utility-icon";
 import {
   Tabs,
   TabsContent,

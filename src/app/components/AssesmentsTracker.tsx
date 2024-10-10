@@ -8,32 +8,47 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface RevenueBarChartProps {
   height?: number;
   chartType?: "bar" | "area";
-  series?: any[];
-  chartColors?: string[];
+  categories?: string[];
 }
-const defaultSeries = [
-  {
-    name: ["Timing Issues", "Mismanagement", "Lack of Innovation"],
-    data: [44, 55, 57],
-  },
-  {
-    name: [
-      "Ineffective Leadership",
-      "Project Management",
-      "Lack of Innovation",
-    ],
-    data: [76, 85, 101],
-  },
-];
+
+const generateColors = (numFields: number) => {
+  const colors = [];
+  for (let i = 0; i < numFields; i++) {
+    colors.push(i % 2 === 0 ? "#FF0700" : "#FDF53F");
+  }
+  return colors;
+};
+
 const RevenueBarChart = ({
-  height = 400,
+  height = 220,
   chartType = "bar",
-  series = defaultSeries,
-  chartColors = ["#FF0700", "#FDF53F"],
+  categories = [
+    "Timing Issues",
+    "Ineffective Leadership",
+    "Mismanagement",
+    "Project Management",
+    "Lack of Innovation",
+  ],
 }: RevenueBarChartProps) => {
   const [config] = useConfig();
   const { isRtl } = config;
   const { theme: mode } = useTheme();
+
+  const data = [44, 55, 57, 60, 48];
+
+  const chartColors = generateColors(categories.length);
+
+  const series = [
+    {
+      name: "Assessments",
+      data: data.map((value, index) => ({
+        x: categories[index],
+        y: value,
+        fillColor: chartColors[index],
+      })),
+    },
+  ];
+
   const options: any = {
     chart: {
       toolbar: {
@@ -44,15 +59,15 @@ const RevenueBarChart = ({
       bar: {
         horizontal: false,
         endingShape: "rounded",
-        columnWidth: "45%",
+        columnWidth: "5%",
       },
     },
     legend: {
       show: true,
       position: "top",
       horizontalAlign: "right",
-      fontSize: "12px",
-      fontFamily: "Inter",
+      fontSize: "10px",
+      fontFamily: "Sansation",
       offsetY: -30,
       markers: {
         width: 8,
@@ -62,10 +77,10 @@ const RevenueBarChart = ({
         radius: 12,
       },
       labels: {
-        colors: mode === "dark" ? "#CBD5E1" : "#475569",
+        colors: "#62626280",
       },
       itemMargin: {
-        horizontal: 18,
+        horizontal: 15,
         vertical: 0,
       },
     },
@@ -77,8 +92,8 @@ const RevenueBarChart = ({
       style: {
         fontSize: "20px",
         fontWeight: "500",
-        fontFamily: "Inter",
-        color: mode === "dark" ? "#fff" : "#0f172a",
+        fontFamily: "Sansation",
+        color: "#62626280",
       },
     },
     dataLabels: {
@@ -90,26 +105,20 @@ const RevenueBarChart = ({
       colors: ["transparent"],
     },
     yaxis: {
+      percentage: [0, 10, 40, 70, 100],
       labels: {
         style: {
-          colors: mode === "dark" ? "#CBD5E1" : "#475569",
-          fontFamily: "Inter",
+          colors: "#ffffff",
+          fontFamily: "Sansation",
         },
       },
     },
     xaxis: {
-      categories: [
-        "Timing Issues",
-        "Ineffective Leadership",
-        "Mismanagement",
-        "Project Management",
-        "Lack of Innovation",
-        "Lack of Innovation",
-      ],
+      categories: categories,
       labels: {
         style: {
-          colors: mode === "dark" ? "#CBD5E1" : "#475569",
-          fontFamily: "Inter",
+          colors: "#ffffff",
+          fontFamily: "Sansation",
         },
       },
       axisBorder: {
@@ -119,21 +128,23 @@ const RevenueBarChart = ({
         show: false,
       },
     },
-
     fill: {
       opacity: 1,
     },
     tooltip: {
+      theme: "dark",
+      style: {
+        fontFamily: "Sansation",
+      },
       y: {
         formatter: function (val: number) {
-          return "$ " + val + " thousands";
+          return val + "%";
         },
       },
     },
-    colors: chartColors,
     grid: {
       show: false,
-      borderColor: mode === "dark" ? "#334155" : "#E2E8F0",
+      borderColor: "#62626280",
       strokeDashArray: 10,
       position: "back",
     },
@@ -148,13 +159,17 @@ const RevenueBarChart = ({
           },
           plotOptions: {
             bar: {
-              columnWidth: "80%",
+              columnWidth: "30%",
+            },
+            chart: {
+              width: "50%",
             },
           },
         },
       },
     ],
   };
+
   return (
     <Chart
       options={options}

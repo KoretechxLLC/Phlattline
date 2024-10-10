@@ -1,8 +1,9 @@
 import React from "react";
 import SidebarContent from "@/app/components/sidebar-content";
+import { SidebarToggle } from "./sidebar-toggle";
 import { MenuClassic } from "@/app/components/menu";
 
-const DashCodeSidebar = () => {
+const Sidebar = () => {
   return (
     <SidebarContent>
       <MenuClassic />
@@ -10,4 +11,4 @@ const DashCodeSidebar = () => {
   );
 };
 
-export default DashCodeSidebar;
+export default Sidebar;

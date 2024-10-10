@@ -23,7 +23,7 @@ const HeaderContent = ({ children }: { children: React.ReactNode }) => {
     <header className={headerClasses}>
       <div
         className={cn(
-          "flex-none bg-header backdrop-blur-lg md:px-6 px-[15px] py-3 flex items-center justify-between relative",
+          "flex-none bg-header px-14 py-5 flex items-center justify-between relative mb-12 w-screen overflow-hidden",
           headerTheme,
           {
             "xl:ms-[300px]": config.sidebar === "two-column", // Adjust for two-column sidebar

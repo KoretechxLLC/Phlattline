@@ -4,9 +4,7 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/app/lib/utils";
 import { Label } from "@/app/components/label";
-import { Icon } from "@/app/components/icon";
-
-import { Check } from "lucide-react";
+import Icon from "@/app/components/utility-icon";
 
 const allThemes = [
   { key: "light", label: "Light", icon: "heroicons:sun" },

@@ -3,7 +3,7 @@ import React from "react";
 import { cn } from "@/app/lib/utils";
 import { Label } from "@/app/components/label";
 import { useConfig } from "@/app/hooks/use-config";
-import { Icon } from "@/app/components/icon";
+import Icon from "@/app/components/utility-icon";
 import Image from "next/image";
 import { layoutType } from "@/app/lib/type";
 import {

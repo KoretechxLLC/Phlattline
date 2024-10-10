@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
-import { Icon } from "@/app/components/icon";
+import Icon from "@/app/components/utility-icon";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 

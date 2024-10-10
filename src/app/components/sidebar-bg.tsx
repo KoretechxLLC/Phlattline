@@ -1,7 +1,7 @@
 "use client";
 import { useConfig } from "@/app/hooks/use-config";
 import React, { useState } from "react";
-import { Icon } from "@/app/components/icon";
+import Icon from "@/app/components/utility-icon";
 import { cn } from "@/app/lib/utils";
 const SidebarBg = () => {
   const [config, setConfig] = useConfig();

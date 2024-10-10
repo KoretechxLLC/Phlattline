@@ -26,7 +26,14 @@ export default function RootLayout({
         </div>
         {path !== "/Login" &&
           path !== "/IndividualSignup" &&
-          path !== "/OrganizationSignup" && (
+          path !== "/OrganizationSignup" &&
+          path !== "/Dashboard" &&
+          path !== "/Courses" &&
+          path !== "/DailyDose" &&
+          path !== "/PerformanceManagement" &&
+          path !== "/TalentManagement" &&
+          path !== "/SettingsProfile" &&
+          path !== "/OdaasStrategic" && (
             <div className="z-20 absolute">
               <SideMenu />
             </div>
