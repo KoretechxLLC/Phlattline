@@ -2,14 +2,14 @@
 import { Button } from "@/app/components/button-sidebar";
 import { useConfig } from "@/app/hooks/use-config";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
-import { Icon } from "@/app/components/icon";
+import Icon from "@/app/components/utility-icon";
 import { motion } from "framer-motion";
 
 export function SidebarToggle() {
   const [config, setConfig] = useConfig();
   const collapsed = config.collapsed;
   const isDesktop = useMediaQuery("(min-width: 1280px)");
-  if (!isDesktop) return null;
+
   return (
     <Button
       onClick={() => setConfig({ ...config, collapsed: !collapsed })}

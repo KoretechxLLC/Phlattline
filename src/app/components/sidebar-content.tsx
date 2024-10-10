@@ -31,7 +31,7 @@ const SidebarContent = ({ children }: { children: React.ReactNode }) => {
         "h-full start-0":
           config.layout !== "semi-box" && config.layout !== "compact",
         "m-6 bottom-0 top-0 start-0 rounded-md": config.layout === "semi-box",
-        "m-10 bottom-0 top-0": config.layout === "compact",
+        "m-8 bottom-0 top-0": config.layout === "compact",
         "w-28": config.sidebar === "compact",
       })}
     >

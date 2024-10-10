@@ -11,4 +11,5 @@ const Icon = React.forwardRef<
 });
 Icon.displayName = "Icon";
 
-export { Icon };
+// Change this line to default export
+export default Icon; // <-- Change this line to use default export

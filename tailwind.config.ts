@@ -40,7 +40,9 @@ const config: Config = {
         // For 4xl screen: width between 1280px and 1536px, height between 700px and 1100px
         "4xl": { raw: "(min-width: 1281px) and (max-width: 1550px)" },
         // // For 5xl screen: width above 1536px, height between 700px and 1100px
-        // '5xl': { 'raw': '(min-width: 1536px) and (min-height: 700px) and (max-height: 1100px)' },
+        "5xl": {
+          raw: "(min-width: 1600px) and (min-height: 700px) and (max-height: 1100px)",
+        },
       },
     },
   },

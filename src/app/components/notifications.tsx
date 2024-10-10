@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 import { ScrollArea } from "@/app/components/scroll-area";
-import { Icon } from "@/app/components/icon";
+import Icon from "@/app/components/utility-icon";
 
 interface Notification {
   title: string;

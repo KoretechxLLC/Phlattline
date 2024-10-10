@@ -46,7 +46,33 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
               height={20}
               className={"h-6 w-6 mb-1 mr-2"}
             />
-            <p className={"text-[11px] truncate "}>{label}</p>
+            <p className={"text-sm truncate "}>{label}</p>
+          </div>
+        </button>
+      </div>
+    );
+  }
+
+  if (config.sidebar === "compact" && isDesktop) {
+    return (
+      <div
+        className={`flex h-auto py-1.5 px-3.5 capitalize font-semibold ${
+          isSelected ? "bg-black text-white rounded-l-3xl w-56" : ""
+        }`}
+      >
+        <button
+          className={`flex items-center`}
+          onClick={() => router.push(href)}
+        >
+          <div className="flex items-center">
+            <Image
+              src={icon}
+              alt={label}
+              width={20}
+              height={20}
+              className={"h-6 w-6 mb-1 mr-2"}
+            />
+            <p className={"text-sm truncate "}>{label}</p>
           </div>
         </button>
       </div>
@@ -75,7 +101,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
             className={"h-5 w-5 mb-1 mr-3"}
           />
           {(!config.collapsed || hovered) && (
-            <p className={"w-4"} style={{ fontFamily: "Sansation" }}>
+            <p className={"w-28 text-sm"} style={{ fontFamily: "Sansation" }}>
               {label}
             </p>
           )}

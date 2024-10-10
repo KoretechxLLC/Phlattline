@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import HeaderContent from "@/app/components/header-content";
 import HeaderSearch from "@/app/components/header-search";
 import ProfileInfo from "@/app/components/profile-info";
 import Notifications from "@/app/components/notifications";
@@ -14,48 +13,51 @@ interface HeaderProps {
 
 const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
   return (
-    <>
-      <HeaderContent>
-        <div className="flex flex-col gap-3 items-start">
-          <div className="flex items-center gap-3">
+    <div className="w-full px-4 sm:px-8">
+      {/* Full header responsive layout */}
+      <div className="flex flex-wrap items-center justify-between py-4 md:pl-72 gap-5">
+        {/* Heading Section */}
+        <div className="flex items-center gap-3 flex-1">
+          {/* Heading and Description */}
+          <div className="flex flex-col">
             <h1
-              className="text-3xl font-bold"
+              className="text-xl sm:text-2xl md:text-3xl font-bold"
               style={{ fontFamily: "Sansation" }}
             >
               {HeadingText}
             </h1>
-            <Image
-              src={"/assets/proIcon.svg"}
-              alt={"Pro Logo"}
-              width={100}
-              height={100}
-              className="md:block ml-8"
-            />
+            {HeadingDesc && (
+              <h2
+                className="text-sm sm:text-base md:text-lg text-gray-500"
+                style={{ fontFamily: "Sansation" }}
+              >
+                {HeadingDesc}
+              </h2>
+            )}
           </div>
-          {HeadingDesc && (
-            <h2
-              className="text-sm text-gray-500 w-full md:w-80"
-              style={{ fontFamily: "Sansation" }}
-            >
-              {HeadingDesc}
-            </h2>
-          )}
+
+          {/* Pro Logo (visible only on larger screens) */}
+          <Image
+            src={"/assets/proIcon.svg"}
+            alt={"Pro Logo"}
+            width={60}
+            height={60}
+          />
         </div>
 
-        {/* Content below the heading */}
-        <div className="flex justify-between items-center mb-5 px-5 md:px-20 lg:ml-80 md:gap-5 gap-2">
-          {/* SidebarToggle only visible on small screens */}
-          <div className="block lg:hidden">
-            <SidebarToggle />
+        {/* Action buttons: EditWidget, Search, Notifications, Profile */}
+        <div className="flex gap-2 items-start">
+          {/* Show the EditWidget and HeaderSearch only on medium and larger screens */}
+          <div className="hidden md:flex gap-2">
+            <EditWidget />
+            <HeaderSearch />
           </div>
 
-          <EditWidget />
-          <HeaderSearch />
           <Notifications />
           <ProfileInfo />
         </div>
-      </HeaderContent>
-    </>
+      </div>
+    </div>
   );
 };
 
