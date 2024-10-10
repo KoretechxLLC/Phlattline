@@ -1,9 +1,9 @@
-import { promises as fs } from "fs";
-import path from "path";
-import { prisma } from "@/app/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
-import { unlink } from "fs/promises";
-import { error } from "console";
+import { promises as fs } from 'fs';
+import path from 'path';
+import { prisma } from '@/app/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { unlink } from 'fs/promises';
+
 
 async function saveFile(file: File, destination: string): Promise<string> {
   const dir = path.join(process.cwd(), destination);
@@ -136,7 +136,13 @@ export async function POST(req: NextRequest) {
       if (flag) {
         throw new Error("Question fields are required");
       }
-    });
+
+
+
+
+    })
+
+
 
     const course = await prisma.courses.create({
       data: {
@@ -214,7 +220,6 @@ export async function DELETE(req: NextRequest) {
             console.error("Failed to delete file:", deleteError);
           }
         }
-
         // Delete the thumbnail file
         if (video?.thumbnail_url && video?.thumbnail_url.length > 0) {
           try {

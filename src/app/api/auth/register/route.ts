@@ -1,17 +1,16 @@
 import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import fs from "fs/promises";
+import path from "path";
 
-// Utility function to generate a random alphanumeric code
 const generateOrganizationCode = (): string => {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 8 }, () =>
     chars.charAt(Math.floor(Math.random() * chars.length))
   ).join("");
 };
 
-// Function to ensure the generated code is unique
 const generateUniqueOrganizationCode = async (): Promise<string> => {
   let code: string;
   let existingOrganization: any;
@@ -26,79 +25,52 @@ const generateUniqueOrganizationCode = async (): Promise<string> => {
   return code;
 };
 
+const saveFile = async (file: File, folderPath: string): Promise<string> => {
+  const fileName = `${Date.now()}_${file.name}`;
+  const filePath = path.join(process.cwd(), folderPath, fileName);
+
+  const fileData = Buffer.from(await file.arrayBuffer());
+  await fs.writeFile(filePath, fileData);
+
+  return fileName;
+};
+
 export async function POST(request: NextRequest) {
   try {
-    const userData = await request.json();
-    const {
-      email,
-      phone_number,
-      password,
-      first_name,
-      last_name,
-      organization_name,
-      organization_email,
-      profile_image,
-    } = userData;
+    const formData = await request.formData();
 
-    // Validate input data
-    if (
-      !email ||
-      !phone_number ||
-      !password ||
-      !(first_name || last_name || organization_name)
-    ) {
+    const email = formData.get("email") as string | null;
+    const phone_number = formData.get("phone_number") as string | null;
+    const password = formData.get("password") as string | null;
+    const first_name = formData.get("first_name") as string | null;
+    const last_name = formData.get("last_name") as string | null;
+    const organization_code = formData.get("organization_code") as string | null;
+    const profile_image = formData.get("profile_image") as File | null;
+
+    if (!email || !phone_number || !password || !first_name || !last_name) {
       return NextResponse.json(
         { message: "Missing required fields.", success: false },
         { status: 400 }
       );
     }
 
-    let userTypeId: number = 1; // Default to Individual User
     let organizationId: number | undefined = undefined;
 
-    // Organization user logic
-    if (organization_name) {
-      userTypeId = 2; // Organization User
-
-      const existingOrganization = await prisma.organizations.findUnique({
-        where: { email: organization_email || email },
+    if (organization_code) {
+      const organization = await prisma.organizations.findUnique({
+        where: { organization_code },
       });
 
-      if (existingOrganization) {
+      if (!organization) {
         return NextResponse.json(
-          {
-            message: "Organization with this email already exists.",
-            success: false,
-          },
+          { message: "Invalid organization code.", success: false },
           { status: 400 }
         );
       }
 
-      // Generate a unique organization code
-      const organization_code = await generateUniqueOrganizationCode();
-
-      // Create a new organization entry
-      try {
-        const createOrganization = await prisma.organizations.create({
-          data: {
-            organization_name,
-            organization_code,
-            email: organization_email || email,
-            phone_number,
-          },
-        });
-
-        organizationId = createOrganization.id; // Set organizationId to link to the user
-      } catch (error) {
-        console.error("Error creating organization:", error);
-        return NextResponse.json(
-          { message: "Failed to create organization.", success: false },
-          { status: 500 }
-        );
-      }
+      organizationId = organization.id;
     }
 
-    // Check if user with the same email exists
     const existingUser = await prisma.users.findUnique({
       where: { email },
     });
@@ -110,38 +82,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user (either individual or linked to an organization)
+    let profileImagePath: string | null = null;
+    if (profile_image && profile_image.size > 0) {
+      // Validate file type for profile image
+      const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedMimeTypes.includes(profile_image.type)) {
+        return NextResponse.json(
+          { message: "Invalid file type.", success: false },
+          { status: 400 }
+        );
+      }
+
+      profileImagePath = await saveFile(profile_image, "public/users/profileimage");
+    }
+
     const newUser = await prisma.users.create({
       data: {
         email,
         phone_number,
         password: hashedPassword,
-        user_type_id: userTypeId,
-        first_name: first_name || undefined,
-        last_name: last_name || undefined,
-        organization_id: organizationId || undefined, // Link to organization if it exists
-        profile_image: profile_image || undefined, // Optional field
+        first_name,
+        last_name,
+        user_type_id: organizationId ? 2 : 1, 
+        organization_id: organizationId || undefined, 
+        profile_image: profileImagePath || undefined, 
       },
     });
-
-    // Retrieve the created organization to include the organization_code in the response
-    let responseOrganization = null;
-    if (organizationId) {
-      responseOrganization = await prisma.organizations.findUnique({
-        where: { id: organizationId },
-        select: { organization_code: true, organization_name: true },
-      });
-    }
 
     return NextResponse.json({
       message: "User registered successfully",
       success: true,
       data: newUser,
-      organization: responseOrganization,
     });
+
   } catch (error: any) {
     console.error("Error registering user:", error.message);
     return NextResponse.json(
