@@ -6,13 +6,16 @@ import { signAccessToken, signRefreshToken } from "@/helper/jwt_helper";
 export async function POST(request: NextRequest) {
   try {
     const userData = await request.json();
+
+
+
     const { email, password } = userData;
 
     if (!email || !password) {
       throw new Error("Required fields are missing");
     }
 
-    const user: any = await prisma.users.findUnique({
+    const user: any = await prisma.users.findFirst({
       where: {
         email: email,
       },
@@ -58,6 +61,9 @@ export async function POST(request: NextRequest) {
     });
     return response;
   } catch (err: any) {
+
+  
+
     let statusCode = 500; // Default to Internal Server Error
 
     if (
