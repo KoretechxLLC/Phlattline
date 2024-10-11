@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Input } from "../components/Input";
+import { RiTeamFill } from "react-icons/ri";
+import { BiSolidUserBadge } from "react-icons/bi";
+import { ImListNumbered } from "react-icons/im";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -32,14 +35,14 @@ const OrganizationSignup = () => {
       <div className="w-full max-w-lg">
         <motion.h1
           variants={primaryVariants}
-          className="mb-2 text-center text-3xl md:text-4xl font-semibold"
+        className="mb-2 text-center text-3xl md:text-6xl font-semibold text-white uppercase"
           style={{ fontFamily: "Sansation" }}
         >
           SIGNUP
         </motion.h1>
         <motion.p
           variants={primaryVariants}
-          className="mb-8 text-center text-sm md:text-base"
+           className="mb-8 text-center text-sm md:text-[15px] text-white"
           style={{ fontFamily: "Sansation" }}
         >
           Register your Organization
@@ -48,41 +51,47 @@ const OrganizationSignup = () => {
         <form onSubmit={(e) => e.preventDefault()} className="w-full">
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-4 w-full relative"
           >
             <Input
               id="org-name"
               type="text"
               placeholder="Organization Name"
+              className="bg-black border-2 border-[#b74b279d] text-white"
               style={{ fontFamily: "Sansation" }}
               required
             />
+             <RiTeamFill className="absolute top-5 right-5 size-5 text-white" />
           </motion.div>
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-4 w-full relative"
           >
             <Input
               id="role-input"
               type="text"
               placeholder="Role/Position"
               style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
+             <BiSolidUserBadge className="absolute top-5 right-5 size-5 text-white" />
           </motion.div>
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-4 w-full relative"
           >
             <Input
               id="num-emp"
               type="number"
               placeholder="How many employees?"
+              className="bg-black border-2 border-[#b74b279d] text-white"
               style={{ fontFamily: "Sansation" }}
               required
             />
+             <ImListNumbered className="absolute top-5 right-5 size-5 text-white" />
           </motion.div>
 
           <motion.div
@@ -92,13 +101,14 @@ const OrganizationSignup = () => {
             <Input
               id="org-type"
               type="text"
-              placeholder="Organization"
+              placeholder="Organization Type"
+              className="bg-black border-2 border-[#b74b279d] text-white  "
               style={{ fontFamily: "Sansation" }}
               required
             />
           </motion.div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2 mt-6">
             <motion.button
               variants={primaryVariants}
               whileTap={{

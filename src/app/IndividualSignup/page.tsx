@@ -1,11 +1,15 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MdEmail, MdLock, MdPerson, MdPhone } from "react-icons/md";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Input } from "../components/Input";
+import { useDispatch, useSelector } from "react-redux";
+import { Register,setError, setSuccess  } from "@/redux/slices/auth.slice";
+import StackedNotifications from "../components/Stackednotification";
+import { RootState } from "@/redux/store";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -18,12 +22,89 @@ const SignupScreen = () => {
   );
 };
 
+export type NotificationType = {
+  id: number;
+  text: string;
+  type: "error" | "success";
+};
+
 const IndividualSignUp = () => {
   const [name, setName] = React.useState("");
+  const [lastname, setlastname]= React.useState("");
+  const dispatch:any = useDispatch(); 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const {success, error } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
+  
+
+
+  const validate = () => {
+    const newErrors = { email: "", password: "" };
+    let isValid = true;
+
+    if (!email) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (validate()) {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("first_name", name);
+      formData.append("last_name", lastname);
+      formData.append("phone_number", phone);
+    
+      try {
+        await dispatch(Register(formData));
+
+      
+
+      } catch (error) {
+        console.error("Registration failed", error);
+      }
+    }
+  };
+  
+  
+  useEffect(() => {
+    if (success !== null) {
+    setNotification({
+    id: Date.now(),
+    text: success,
+    type: "success",
+    });
+    dispatch(setSuccess());
+    }
+    if (error !== null) {
+    setNotification({
+    id: Date.now(),
+    text: error,
+    type: "error",
+    });
+    dispatch(setError());
+    }
+    }, [success, error]);
+
+
 
   return (
     <motion.div
@@ -35,41 +116,64 @@ const IndividualSignUp = () => {
       viewport={{ once: true }}
       className="flex items-center justify-center px-4 py-10 md:py-20"
     >
+        <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       <div className="w-full max-w-lg">
         <motion.h1
           variants={primaryVariants}
-          className="mb-2 text-center text-3xl md:text-4xl font-semibold"
+          className="mb-2 text-center text-3xl md:text-5xl font-semibold text-white uppercase"
           style={{ fontFamily: "Sansation" }}
         >
           SIGNUP
         </motion.h1>
         <motion.p
           variants={primaryVariants}
-          className="mb-8 text-center text-sm md:text-base"
+           className="mb-8 text-center text-sm md:text-[15px] text-white"
           style={{ fontFamily: "Sansation" }}
         >
           Register to start your career
         </motion.p>
-        <form className="w-full">
+        <form onSubmit={handleSubmit} className="w-full">
+
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-4 w-full relative"
           >
             <Input
               id="text-input"
-              placeholder="Enter Your Name"
+              placeholder="Enter Your First Name"
               type="text"
               value={name}
               onChange={(e: any) => setName(e.target.value)}
               style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdPerson className="absolute top-5 right-5 size-5 text-gray-500" />
+            <MdPerson className="absolute top-5 right-5 size-5 text-white" />
           </motion.div>
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-4 w-full relative"
+          >
+            <Input
+              id="text-input"
+              placeholder="Enter Your Last Name"
+              type="text"
+              value={lastname}
+              onChange={(e: any) => setlastname(e.target.value)}
+              style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
+              required
+            />
+            <MdPerson className="absolute top-5 right-5 size-5 text-white" />
+          </motion.div>
+
+          <motion.div
+            variants={primaryVariants}
+            className="mb-4 w-full relative"
           >
             <Input
               id="email-input"
@@ -78,15 +182,36 @@ const IndividualSignUp = () => {
               value={email}
               onChange={(e: any) => setEmail(e.target.value)}
               style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdEmail className="absolute top-5 right-5 size-5 text-gray-500" />
+            <MdEmail className="absolute top-5 right-5 size-5 text-white" />
           </motion.div>
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-4 w-full relative"
           >
+           <Input
+              id="number-input"
+              type="tel"
+              placeholder="Enter your number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
+              required
+            />
+            <MdPhone className="absolute top-5 right-5 size-5 text-white" />
+          </motion.div>
+
+          <motion.div
+            variants={primaryVariants}
+            className="mb-4 w-full relative"
+          >
+            
+
+
             <Input
               id="password-input"
               placeholder="Enter Your Password"
@@ -94,25 +219,10 @@ const IndividualSignUp = () => {
               value={password}
               onChange={(e: any) => setPassword(e.target.value)}
               style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdLock className="absolute top-5 right-5 size-5 text-gray-500" />
-          </motion.div>
-
-          <motion.div
-            variants={primaryVariants}
-            className="mb-2 w-full relative"
-          >
-            <Input
-              id="number-input"
-              type="tel"
-              placeholder="Enter your number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              style={{ fontFamily: "Sansation" }}
-              required
-            />
-            <MdPhone className="absolute top-5 right-5 size-5 text-gray-500" />
+            <MdLock className="absolute top-5 right-5 size-5 text-white" />
           </motion.div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2">
@@ -137,7 +247,7 @@ const IndividualSignUp = () => {
               className="button-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
               style={{ fontFamily: "Sansation" }}
             >
-              Done
+              Sign up
             </motion.button>
           </div>
 

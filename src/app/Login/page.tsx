@@ -1,11 +1,16 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MdEmail, MdLock } from "react-icons/md";
-import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux"; 
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { RootState } from "@/redux/store";
 import { Input } from "../components/Input";
+import {login,setError, setSuccess } from "../../redux/slices/auth.slice"
+import StackedNotifications from "../components/Stackednotification";
+
+
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -18,124 +23,174 @@ const LoginScreen = () => {
   );
 };
 
+export type NotificationType = {
+  id: number;
+  text: string;
+  type: "error" | "success";
+};
+
 const Login = () => {
-  const router: any = useRouter();
+  const router = useRouter();
+  const dispatch:any = useDispatch(); // Use the useDispatch hook
+  const {success, error } = useSelector((state: RootState) => state.auth);
+  const [email, setEmail] = useState<any>(""); // State for email
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [password, setPassword] = useState<any>(""); // State for password
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
+  
+
+  const validate = () => {
+    const newErrors = { email: "", password: "" };
+    let isValid = true;
+
+    if (!email) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (validate()) {
+      dispatch(login({ email: email, password: password }));
+    }
+  };
+
+  useEffect(() => {
+    if (success !== null) {
+    setNotification({
+    id: Date.now(),
+    text: success,
+    type: "success",
+    });
+    dispatch(setSuccess());
+    }
+    if (error !== null) {
+    setNotification({
+    id: Date.now(),
+    text: error,
+    type: "error",
+    });
+    dispatch(setError());
+    }
+    }, [success, error]);
+
+
   return (
+ 
     <motion.div
       initial="initial"
       whileInView="animate"
-      transition={{
-        staggerChildren: 0.05,
-      }}
+      transition={{ staggerChildren: 0.05 }}
       viewport={{ once: true }}
       className="flex items-center justify-center px-4 py-10 md:py-20"
     >
+       <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       <div className="w-full max-w-lg">
         <motion.h1
           variants={primaryVariants}
-          className="mb-2 text-center text-3xl md:text-4xl font-semibold"
+          className="mb-2 text-center text-3xl md:text-6xl font-semibold text-white uppercase"
           style={{ fontFamily: "Sansation" }}
         >
           Login
         </motion.h1>
         <motion.p
           variants={primaryVariants}
-          className="mb-8 text-center text-sm md:text-base"
+          className="mb-8 text-center text-sm md:text-[15px] text-white"
           style={{ fontFamily: "Sansation" }}
         >
           Login To Start Your Journey
         </motion.p>
 
-        <form onSubmit={(e) => e.preventDefault()} className="w-full">
-          <motion.div
-            variants={primaryVariants}
-            className="mb-2 w-full relative py-2"
-          >
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="w-full">
+          {/* Email Input */}
+          <motion.div variants={primaryVariants} className="mb-2 w-full relative py-2">
             <Input
               id="email-input"
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Set the email state
               style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdEmail className="absolute top-7 right-5 size-5 text-gray-500" />
+            <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
           </motion.div>
 
-          <motion.div
-            variants={primaryVariants}
-            className="mb-2 w-full relative"
-          >
-            <MdLock className="absolute top-5 right-5 size-5 text-gray-500" />
+          {/* Password Input */}
+          <motion.div variants={primaryVariants} className="mb-2 w-full relative py-2">
             <Input
               id="password-input"
               type="password"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Set the password state
               style={{ fontFamily: "Sansation" }}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
+            <MdLock className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
           </motion.div>
-          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-8 py-2 mx-4">
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-8 py-2 mx-4 mt-10">
+            {/* Register Button */}
             <div className="group relative inline-block">
               <motion.div
                 variants={primaryVariants}
-                whileTap={{
-                  scale: 0.985,
-                }}
-                className="cursor-pointer mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium text-red transition-colors"
+                whileTap={{ scale: 0.985 }}
+                className="cursor-pointer mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium"
                 style={{ fontFamily: "Sansation" }}
               >
                 Register
               </motion.div>
+
+              {/* Register Dropdown */}
               <div
-                className="hidden group-hover:block rounded absolute z-10 w-40 bg-white text-red-500 py-2 px-4"
+                className="hidden group-hover:block absolute z-10 w-40 bg-white text-red-500 py-2 px-4"
                 style={{ fontFamily: "Sansation" }}
               >
                 <ul>
-                  <div
-                    className="cursor-pointer pl-1 rounded-lg hover:bg-red-500 hover:text-white hover:duration-300 ease-in-out"
+                  <li
+                    className="cursor-pointer rounded-lg hover:bg-red-500 hover:text-white transition-colors pl-1"
                     onClick={() => router.push("/IndividualSignup")}
                   >
-                    <li>Individual</li>
-                  </div>
-                  <div
-                    className="cursor-pointer pl-1  rounded-lg hover:bg-red-500 hover:text-white hover:duration-300 ease-in-out"
+                    Individual
+                  </li>
+                  <li
+                    className="cursor-pointer rounded-lg hover:bg-red-500 hover:text-white transition-colors pl-1"
                     onClick={() => router.push("/OrganizationSignup")}
                   >
-                    <li>Organization</li>
-                  </div>
+                    Organization
+                  </li>
                 </ul>
               </div>
             </div>
+
+            {/* Login Button */}
             <button
               style={{ fontFamily: "Sansation" }}
-              className="mb-1.5 w-full sm:w-40 rounded-lg  px-4 py-2 text-center font-medium transition-color bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-lg text-zinc-50 transition-all hover:scale-[1.02] hover:ring-transparent active:scale-[0.98]"
+              className="w-full sm:w-40 rounded-lg bg-gradient-to-b from-[#BAA716] to-[#B50D34] px-4 py-2 text-center font-medium text-white text-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              type="submit"
             >
               Login
             </button>
           </div>
-          <motion.div className="text-center">
-            <h1 className="text-xl py-5" style={{ fontFamily: "Sansation" }}>
-              OR
-            </h1>
-            <div className="flex justify-center gap-4">
-              <motion.button className="w-12 mx-4 sm:w-16">
-                <Image
-                  src="/assets/FbIcon.png"
-                  alt="Facebook"
-                  width={55}
-                  height={55}
-                />
-              </motion.button>
-              <motion.button className="w-12 sm:w-16">
-                <Image
-                  src="/assets/GoogleIcon.png"
-                  alt="Google"
-                  width={50}
-                  height={50}
-                />
-              </motion.button>
-            </div>
-          </motion.div>
         </form>
       </div>
     </motion.div>
