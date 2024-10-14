@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { MdEmail, MdLock } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux"; 
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { RootState } from "@/redux/store";
 import { Input } from "../components/Input";
 import {login,setError, setSuccess } from "../../redux/slices/auth.slice"
 import StackedNotifications from "../components/Stackednotification";
-
-
+import Image from "next/image";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -74,6 +74,7 @@ const Login = () => {
     type: "success",
     });
     dispatch(setSuccess());
+    router.push("/Dashboard");
     }
     if (error !== null) {
     setNotification({
@@ -84,6 +85,25 @@ const Login = () => {
     dispatch(setError());
     }
     }, [success, error]);
+
+    const { data: session } = useSession();
+
+    const handleGoogleSignIn = async (e: any) => {
+      e.preventDefault();
+  
+      if (session) {
+        setNotification({
+          id: Date.now(),
+          text: "Already Signed In",
+          type: "success",
+        });
+        router.push("/Dashboard");
+      } else {
+        await signIn("google", {
+          callbackUrl: "/",
+        });
+      }
+    };
 
 
   return (
@@ -190,7 +210,35 @@ const Login = () => {
             >
               Login
             </button>
+
+
+            
           </div>
+
+          <motion.div className="text-center">
+            <h1 className="text-xl py-5" style={{ fontFamily: "Sansation" }}>
+              OR
+            </h1>
+            <div className="flex justify-center gap-4">
+              <motion.button className="w-12 mx-4 sm:w-16">
+                <Image
+                  src="/assets/FbIcon.png"
+                  alt="Facebook"
+                  width={55}
+                  height={55}
+                />
+              </motion.button>
+              <motion.button className="w-12 sm:w-16">
+                <Image
+                  src="/assets/GoogleIcon.png"
+                  alt="Google"
+                  width={50}
+                  height={50}
+                  onClick={handleGoogleSignIn}
+                />
+              </motion.button>
+            </div>
+          </motion.div>
         </form>
       </div>
     </motion.div>
