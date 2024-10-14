@@ -7,8 +7,6 @@ export async function POST(request: NextRequest) {
   try {
     const userData = await request.json();
 
-
-
     const { email, password } = userData;
 
     if (!email || !password) {

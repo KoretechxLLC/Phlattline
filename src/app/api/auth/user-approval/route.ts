@@ -2,7 +2,7 @@ import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/helper/send-email";
 
-export async function PATCH(request: NextRequest) {
+export async function PUT(request: NextRequest) {
   try {
     const { userId } = await request.json(); 
 
@@ -25,7 +25,6 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Check if the current status is "pending"
     if (user.status !== "pending") {
       return NextResponse.json(
         { message: "User status is not pending.", success: false },
@@ -33,7 +32,11 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Update user status to "approved"
+    // const updatedUser = await prisma.users.update({
+    //   where: { id: userId },
+    //   data: { status: user.status == "approved"? "pending":"approved"},
+    // });
+
     const updatedUser = await prisma.users.update({
       where: { id: userId },
       data: { status: "approved" },

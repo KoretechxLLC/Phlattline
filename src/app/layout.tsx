@@ -2,6 +2,7 @@
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "@/redux/store";
+import { SessionProvider } from "next-auth/react"
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SideMenu from "./components/SideMenu";
@@ -38,8 +39,10 @@ export default function RootLayout({
               <SideMenu />
             </div>
           )}
-
-        {children}
+ <SessionProvider>
+ {children}
+ </SessionProvider>
+       
         </PersistGate>
           </Provider>
       </body>
