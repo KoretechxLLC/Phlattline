@@ -7,19 +7,19 @@ const LiveButton = () => {
   const router = useRouter();
   return (
     <div
-      className="w-72 h-10 rounded-lg bg-red-600 flex items-center"
+      className="w-full h-10 rounded-lg bg-red-600 flex items-center justify-between pr-4 cursor-pointer"
       onClick={() => router.push("")}
     >
-      <Image
-        width={25}
-        height={25}
-        src={"/assets/LiveIcon.png"}
-        alt={""}
-        className="ml-5"
-      />
-      <span className="ml-2" style={{ fontFamily: "Sansation" }}>
-        Training-On demand
-      </span>
+      <div className="flex items-center">
+        <Image
+          width={100}
+          height={100}
+          src={"/assets/LiveIcon.png"}
+          alt={"live image"}
+          className="ml-5 h-5 w-6"
+        />
+        <span className="ml-2 text-base">Training-On demand</span>
+      </div>
       <Image
         width={25}
         height={25}

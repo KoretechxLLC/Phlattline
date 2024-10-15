@@ -81,8 +81,10 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
 
   return (
     <div
-      className={`justify-start text-sm font-medium capitalize h-auto py-3 md:px-3 px-3 hover:ring-transparent hover:ring-offset-0 ${
-        isSelected ? "bg-black text-white rounded-l-3xl w-l-54" : ""
+      className={`justify-start text-sm font-medium capitalize h-auto py-3 md:px-3 px-3 transition-all duration-300  ${
+        isSelected
+          ? "bg-black text-white rounded-l-3xl w-l-54"
+          : "hover:bg-black hover:text-white hover:rounded-l-3xl hover:rounded-r-none hover:pl-5"
       }`}
     >
       <button
@@ -90,7 +92,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
           setMobileMenuConfig({ ...mobileMenuConfig, isOpen: false });
           router.push(href);
         }}
-        className={`flex items-center ml-5`}
+        className={`flex items-center ml-2`}
       >
         <div className="flex items-center">
           <Image
@@ -101,7 +103,10 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
             className={"h-5 w-5 mb-1 mr-3"}
           />
           {(!config.collapsed || hovered) && (
-            <p className={"w-28 text-sm"} style={{ fontFamily: "Sansation" }}>
+            <p
+              className={"w-28 text-sm flex items-start text-start"}
+              style={{ fontFamily: "Sansation" }}
+            >
               {label}
             </p>
           )}

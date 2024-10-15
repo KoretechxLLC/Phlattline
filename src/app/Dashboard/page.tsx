@@ -17,7 +17,7 @@ import NotesCalendar from "../components/NotesCalendar";
 const Dashboard = () => {
   const router = useRouter();
   return (
-    <div className="p-3 grid grid-cols-1 md:grid-cols-[80%_20%] gap-6 w-full h-full space-y-5 lg:space-y-24 5xl:space-y-0 overflow-hidden items-end">
+    <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-6 w-full h-full space-y-5 lg:space-y-24 5xl:space-y-0 overflow-hidden items-end">
       {/* Left side: Assessments */}
       <div className="space-y-4 md:space-y-6">
         <div>
@@ -41,38 +41,38 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="space-y-8 md:space-y-3">
+      <div className="space-y-8 md:space-y-3 w-full px-5">
         <div>
           <Card
             className="shadow-md rounded-3xl h-full"
             style={{ fontFamily: "Sansation" }}
           >
             <CardHeader>
-              <div className="flex justify-start gap-3 items-center">
+              <div className="flex justify-between gap-3 items-center">
                 <CardTitle className="text-sm">
                   Upcoming Videos and Blogs
                 </CardTitle>
                 <p
-                  className="text-xs underline cursor-pointer"
+                  className="text-sm underline cursor-pointer"
                   onClick={() => router.push("")}
                 >
-                  View all
+                  View
                 </p>
               </div>
             </CardHeader>
-            <CardContent className="w-full sm:w-72 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white rounded-2xl p-4">
+            <CardContent className="w-full bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white rounded-3xl p-4">
               <NotesCalendar />
             </CardContent>
           </Card>
         </div>
 
-        <div style={{ fontFamily: "Sansation" }}>
+        <div className="w-full" style={{ fontFamily: "Sansation" }}>
           <TasksTracker />
         </div>
 
         <div>
           <Card
-            className="border border-gray-500 rounded-3xl shadow-md w-72 h-full"
+            className="border border-gray-500 rounded-3xl shadow-md w-full h-full"
             style={{ fontFamily: "Sansation" }}
           >
             <CardHeader>
