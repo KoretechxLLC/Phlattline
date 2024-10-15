@@ -20,12 +20,11 @@ const PersonalGoals = () => {
 
   return (
     <div>
-      <ul className="space-y-1 w-32 justify-center">
+      <ul className="space-y-1 w-full justify-center">
         {activity.map((item) => (
           <li
-            className="flex w-60 items-center gap-2 border-b border-gray-500 border-default-100 dark:border-default-300 last:border-b-0 pb-2 last:pb-0"
+            className="flex w-full items-center gap-2 border-b border-gray-500 border-default-100 dark:border-default-300 last:border-b-0 pb-2 last:pb-0"
             key={item.id}
-            style={{ fontFamily: "Sansation" }}
           >
             <Avatar className="w-6 h-6">
               <AvatarImage
@@ -35,7 +34,7 @@ const PersonalGoals = () => {
               />
             </Avatar>
             <div className="flex-1 text-start overflow-hidden text-ellipsis whitespace-nowrap">
-              <div className="text-xs text-default-600 overflow-hidden text-ellipsis whitespace-nowrap">
+              <div className="text-base text-default-600 overflow-hidden text-ellipsis whitespace-nowrap">
                 {item.goal}
               </div>
             </div>

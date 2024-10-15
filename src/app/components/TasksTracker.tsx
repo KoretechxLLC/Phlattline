@@ -83,9 +83,9 @@ const TasksTracker = () => {
 
   return (
     <div>
-      <div className="flex gap-4 md:gap-4 justify-start md:justify-start">
+      <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-[100%]">
         <button
-          className={`text-xs w-24 sm:text-xs sm:w-32 rounded-tl-3xl rounded-tr-3xl ${
+          className={`text-xs sm:text-xs w-full rounded-tl-3xl rounded-tr-3xl ${
             activeTab === "pending"
               ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
               : "text-default-600"
@@ -95,7 +95,7 @@ const TasksTracker = () => {
           Pending Tasks
         </button>
         <button
-          className={`text-xs w-28 sm:text-xs sm:w-36 h-12 rounded-tl-3xl rounded-tr-3xl ${
+          className={`text-xs  sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
             activeTab === "completed"
               ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
               : "text-default-600"
@@ -106,20 +106,20 @@ const TasksTracker = () => {
         </button>
       </div>
       <ul
-        className={`justify-center items-center md:justify-start w-56 sm:w-72 border border-gray-500 rounded-b-3xl relative ${
+        className={`justify-center items-center md:justify-start w-full border border-gray-500 rounded-b-3xl relative ${
           activeTab === "pending" ? "pending-list" : "completed-list"
         }`}
       >
         {activeTab === "pending"
           ? pendingTasks.map((item) => (
               <li
-                className={`flex flex-col sm:flex-row justify-center md:justify-start items-center  sm:items-center sm:w-72 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0 ${
+                className={`flex flex-col sm:flex-row justify-center md:justify-start items-center  sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0 ${
                   activeTab === "pending" ? "pending-item" : "completed-item"
                 }`}
                 key={item.id}
                 style={{ fontFamily: "Sansation" }}
               >
-                <div className="flex items-center md:ml-5 justify-between sm:w-56">
+                <div className="flex items-center md:mx-5 justify-between w-full">
                   <div className="flex items-center">
                     <Avatar className="w-6 h-6">
                       <AvatarImage
@@ -128,11 +128,11 @@ const TasksTracker = () => {
                         className="w-5 h-5"
                       />
                     </Avatar>
-                    <span className="text-xs sm:text-sm">{item.goal}</span>
+                    <span className="text-xs sm:text-sm px-2">{item.goal}</span>
                   </div>
                   <div className="flex justify-center md:items-center ml-3 sm:ml-5">
                     <AnimatedTooltip items={tooltipItems} />
-                    <span className="mx-10 md:mx-0 lg:ml-14 sm:ml-10">
+                    <span className="mx-10  md:mx-0 lg:ml-14 sm:ml-10">
                       {item.percentage}%
                     </span>
                   </div>
@@ -141,13 +141,13 @@ const TasksTracker = () => {
             ))
           : completedTasks.map((item) => (
               <li
-                className={`flex flex-col  sm:flex-row justify-center md:justify-start items-center sm:items-center sm:w-72 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0 ${
+                className={`flex flex-col  sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0 ${
                   activeTab === "completed" ? "completed-item" : "pending-item"
                 }`}
                 key={item.id}
                 style={{ fontFamily: "Sansation" }}
               >
-                <div className="flex items-center ml-5 md:ml-4 justify-between sm:w-56">
+                <div className="flex items-center md:mx-5 justify-between w-full">
                   <div className="flex items-center">
                     <Avatar className="w-6 h-6">
                       <AvatarImage
@@ -156,7 +156,7 @@ const TasksTracker = () => {
                         className="w-5 h-5"
                       />
                     </Avatar>
-                    <span className="text-xs sm:text-sm">{item.goal}</span>
+                    <span className="text-xs px-2 sm:text-sm">{item.goal}</span>
                   </div>
                   <div className="flex items-center ml-5">
                     <AnimatedTooltip items={tooltipItems} />

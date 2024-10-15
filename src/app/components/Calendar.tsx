@@ -23,16 +23,16 @@ function Calendar({
       }}
       showOutsideDays={showOutsideDays}
       className={cn(
-        "p-0 border-default-200 border-[1px] border-gray-200 rounded-3xl dark:border-default-300 md:p-3",
+        "p-0 border-default-200 rounded-3xl dark:border-default-300 md:p-3",
         className
       )}
       classNames={{
         months:
-          "w-full md:w-60 border-default-200 px-5 space-y-2 sm:gap-x-2 sm:space-y-0",
-        month: "w-full md:w-56 -mx-3 p-2  mt-2 h-[100px] overflow-hidden",
+          "w-full border-default-200 px-5 space-y-2 sm:gap-x-2 sm:space-y-0",
+        month: "w-full -mx-3 p-2  mt-2 h-[100px] overflow-hidden",
         caption: "flex justify-center  py-1 relative items-center",
         caption_label: "text-base border-b  border-gray-400 font-medium",
-        table: "w-64 border-collapse",
+        table: "w-full border-collapse",
         head_row: "flex",
         nav: "hidden",
         head_cell:

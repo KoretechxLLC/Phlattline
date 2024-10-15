@@ -54,7 +54,7 @@ export function MenuClassic() {
 
   return (
     <nav className="theme-gradient hidden md:block rounded-3xl h-full w-full transition-all duration-300 z-40">
-      <div className="flex justify-center items-center mt-4 mb-4">
+      <div className="flex justify-center items-center mt-4 mb-28">
         <div className="flex justify-center">
           <Image
             src="/assets/WhiteLogo.png"
@@ -66,10 +66,10 @@ export function MenuClassic() {
         </div>
       </div>
 
-      <ul className="flex flex-col h-[calc(90vh-80px)] justify-between space-y-0 px-4">
+      <ul className="flex flex-col h-[calc(80vh-80px)] justify-between space-y-0 pl-8 py-0 w-[17em] ">
         {menus.map((menu, index) => (
           <li className="w-full" key={index}>
-            <div className="w-full mb-1 last:mb-0">
+            <div className="w-[90%] mb-1 last:mb-0">
               <MenuItem label={menu.label} href={menu.href} icon={menu.icon} />
             </div>
           </li>
