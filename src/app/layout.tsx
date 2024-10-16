@@ -7,9 +7,21 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SideMenu from "./components/SideMenu";
 import Logo from "./components/Logo";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const sideMenuPaths = [
+  "/",
+  "/Contact",
+  "/About",
+  "/WilliamJames",
+  "/JordanLee",
+  "/SophiaRodriguez",
+  "/ElijahMartinez",
+  "/Nancy",
+  "/Richard",
+];
 
 export default function RootLayout({
   children,
@@ -17,6 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const path = usePathname();
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -27,20 +40,11 @@ export default function RootLayout({
                 <Logo />
               </div>
             )}
-            {path !== "/Login" &&
-              path !== "/IndividualSignup" &&
-              path !== "/OrganizationSignup" &&
-              path !== "/Dashboard" &&
-              path !== "/Courses" &&
-              path !== "/DailyDose" &&
-              path !== "/PerformanceManagement" &&
-              path !== "/TalentManagement" &&
-              path !== "/SettingsProfile" &&
-              path !== "/OdaasStrategic" && (
-                <div className="z-20 absolute">
-                  <SideMenu />
-                </div>
-              )}
+            {sideMenuPaths.includes(path) && (
+              <div className="z-20 absolute">
+                <SideMenu />
+              </div>
+            )}
             <SessionProvider>{children}</SessionProvider>
           </PersistGate>
         </Provider>
