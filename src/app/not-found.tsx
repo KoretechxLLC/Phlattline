@@ -15,7 +15,7 @@ const PageNotFound = () => {
             width={100}
             src="/assets/404.svg"
             className="h-full w-full"
-            alt="pone picture"
+            alt="404 error - page not found on PhlattLine"
           />
           <p className="mb-4 text-lg font-light text-white dark:text-white">
             Sorry, we can&apos;t find that page. You&apos;ll find lots to
