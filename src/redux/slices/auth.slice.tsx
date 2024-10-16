@@ -97,6 +97,12 @@ const authSlice = createSlice({
     setError: (state) => {
       state.error = null;
     },
+    setAssessmentUpdate: (state) => {
+      state.userData.assessment_status = true;
+      if (typeof window !== "undefined") {
+        window.location.href = "/Dashboard"
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -112,9 +118,7 @@ const authSlice = createSlice({
         state.success = action.payload.message;
         localforage.setItem("access_token", action.payload.accessToken);
         localforage.setItem("refresh_Token", action.payload.refreshToken);
-        if (typeof window !== "undefined") {
-          window.location.href = "/"
-        }
+      
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -135,6 +139,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLogin, setLogOut, setSuccess, setLoading, setError } =
+export const { setLogin, setLogOut, setSuccess, setLoading, setError, setAssessmentUpdate } =
   authSlice.actions;
 export default authSlice.reducer;

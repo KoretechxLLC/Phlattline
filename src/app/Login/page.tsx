@@ -84,7 +84,7 @@ const Login = () => {
     });
     dispatch(setError());
     }
-    }, [success, error]);
+    }, [success,router, error]);
 
     const { data: session } = useSession();
 

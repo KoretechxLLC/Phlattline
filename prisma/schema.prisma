@@ -31,6 +31,7 @@ model users {
   organization_id    Int?
   app_provider       String               @default("App")
   profile_image      String?              @db.VarChar(255)
+  assessment_status  Boolean    @default(false) 
   course_assignments  course_assignments[]
   user_courses       user_courses[]
   organizations      organizations?       @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
@@ -180,14 +181,13 @@ model individual_assessment_options {
 }
 
 model user_assessment_responses {
-  id                      Int                          @id @default(autoincrement())
+  id                      Int                             @id @default(autoincrement())
   user_id                 Int
   assessment_id           Int
   question_id             Int
-  selected_option         String                       @db.VarChar(255)
-  created_at              DateTime?                    @default(now()) @db.Timestamp(6)
-
+  selected_option         String                          @db.VarChar(255)
+  created_at              DateTime?                       @default(now()) @db.Timestamp(6)
   user                     users                          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  assessment              individual_assessments        @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
+  assessment              individual_assessments          @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
   question                individual_assessment_questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
 }

@@ -6,8 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const MostSales = () => {
+  const router = useRouter();
+  const { userData } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   return (
     <Card className="w-full rounded-3xl  bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-5 md:h-full">
       <CardHeader className="flex flex-col md:flex-row">
@@ -34,12 +42,19 @@ const MostSales = () => {
 
             {/* Button */}
             <div className="mt-5 md:mt-20">
+
+      
               <button
+              disabled={userData.assessment_status}
+                onClick={() => {
+                  router.push("/Individualassessment");
+                }}
                 className="text-white px-5 text-sm md:text-base lg:text-base flex w-72 h-11 justify-center items-center rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716]"
                 style={{ fontFamily: "Sansation" }}
               >
                 Take the Assessment
               </button>
+
             </div>
           </div>
 
