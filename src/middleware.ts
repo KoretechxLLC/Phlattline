@@ -17,6 +17,8 @@ export async function middleware(request: NextRequest) {
     const headers = request.headers;
     const authHeader = headers.get("authorization");
 
+    
+
     if (!authHeader) {
       return NextResponse.redirect(new URL("/", request.url));
     }

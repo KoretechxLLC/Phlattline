@@ -4,20 +4,26 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const { userId, assessmentId, responses } = body;
 
-    const { userId, assessmentId, responses } = body; 
-
-
+    // Validate inputs
     if (!userId || !assessmentId || !Array.isArray(responses)) {
       return NextResponse.json({ error: 'User ID, assessment ID, and responses are required.' }, { status: 400 });
+    }
+
+    const parsedUserId = parseInt(userId, 10);
+    const parsedAssessmentId = parseInt(assessmentId, 10);
+
+    if (isNaN(parsedUserId) || isNaN(parsedAssessmentId)) {
+      return NextResponse.json({ error: 'User ID and Assessment ID must be valid integers.' }, { status: 400 });
     }
 
     for (const response of responses) {
       const existingResponse = await prisma.user_assessment_responses.findFirst({
         where: {
-          user_id: userId,
-          assessment_id: assessmentId,
-          question_id: response.questionId,
+          user_id: parsedUserId, // Use the parsed integer userId
+          assessment_id: parsedAssessmentId, // Use the parsed integer assessmentId
+          question_id: Number(response.questionId),
         },
       });
 
@@ -30,16 +36,29 @@ export async function POST(req: NextRequest) {
         );
       }
     }
+
+    const userResponses = responses.map((response: any) => {
     
-    const userResponses = responses.map((response: any) => ({
-      user_id: userId,
-      assessment_id: assessmentId,
-      question_id: response.questionId,
-      selected_option: response.selectedOption,
-    }));
+      return  {
+      user_id: parsedUserId, 
+      assessment_id: parsedAssessmentId, 
+      question_id: Number(response.questionId),
+      selected_option: response.answer,
+    }
+  }
+);
 
     const savedResponses = await prisma.user_assessment_responses.createMany({
       data: userResponses,
+    });
+
+    await prisma.users.update({
+      where: {
+        id: parsedUserId,
+      },
+      data: {
+        assessment_status: true,  
+      },
     });
 
     return NextResponse.json({ success: true, message: 'Responses submitted successfully.', data: savedResponses }, { status: 201 });
@@ -56,7 +75,7 @@ export async function GET(req: NextRequest) {
   try {
     // Extract user_id from query parameters
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('user_id');
+    const userId = searchParams.get('id');
 
     if (!userId) {
       return NextResponse.json(
@@ -127,7 +146,6 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 
 export async function DELETE(req: NextRequest) {
   try {
