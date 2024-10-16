@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MdEmail, MdLock } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux"; 
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { RootState } from "@/redux/store";
 import { Input } from "../components/Input";
-import {login,setError, setSuccess } from "../../redux/slices/auth.slice"
+import { login, setError, setSuccess } from "../../redux/slices/auth.slice";
 import StackedNotifications from "../components/Stackednotification";
 import Image from "next/image";
+import { SparklesCore } from "../components/sparkles";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -31,15 +32,14 @@ export type NotificationType = {
 
 const Login = () => {
   const router = useRouter();
-  const dispatch:any = useDispatch(); // Use the useDispatch hook
-  const {success, error } = useSelector((state: RootState) => state.auth);
+  const dispatch: any = useDispatch(); // Use the useDispatch hook
+  const { success, error } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState<any>(""); // State for email
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [password, setPassword] = useState<any>(""); // State for password
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
-  
 
   const validate = () => {
     const newErrors = { email: "", password: "" };
@@ -68,46 +68,44 @@ const Login = () => {
 
   useEffect(() => {
     if (success !== null) {
-    setNotification({
-    id: Date.now(),
-    text: success,
-    type: "success",
-    });
-    dispatch(setSuccess());
-    router.push("/Dashboard");
+      setNotification({
+        id: Date.now(),
+        text: success,
+        type: "success",
+      });
+      dispatch(setSuccess());
+      router.push("/Dashboard");
     }
     if (error !== null) {
-    setNotification({
-    id: Date.now(),
-    text: error,
-    type: "error",
-    });
-    dispatch(setError());
+      setNotification({
+        id: Date.now(),
+        text: error,
+        type: "error",
+      });
+      dispatch(setError());
     }
-    }, [success,router, error]);
+  }, [success, router, error]);
 
-    const { data: session } = useSession();
+  const { data: session } = useSession();
 
-    const handleGoogleSignIn = async (e: any) => {
-      e.preventDefault();
-  
-      if (session) {
-        setNotification({
-          id: Date.now(),
-          text: "Already Signed In",
-          type: "success",
-        });
-        router.push("/Dashboard");
-      } else {
-        await signIn("google", {
-          callbackUrl: "/",
-        });
-      }
-    };
+  const handleGoogleSignIn = async (e: any) => {
+    e.preventDefault();
 
+    if (session) {
+      setNotification({
+        id: Date.now(),
+        text: "Already Signed In",
+        type: "success",
+      });
+      router.push("/Dashboard");
+    } else {
+      await signIn("google", {
+        callbackUrl: "/",
+      });
+    }
+  };
 
   return (
- 
     <motion.div
       initial="initial"
       whileInView="animate"
@@ -115,30 +113,51 @@ const Login = () => {
       viewport={{ once: true }}
       className="flex items-center justify-center px-4 py-10 md:py-20"
     >
-       <StackedNotifications
+      <StackedNotifications
         notification={notification}
         setNotification={setNotification}
       />
       <div className="w-full max-w-lg">
-        <motion.h1
-          variants={primaryVariants}
-          className="mb-2 text-center text-3xl md:text-6xl font-semibold text-white uppercase"
-          style={{ fontFamily: "Sansation" }}
-        >
-          Login
-        </motion.h1>
-        <motion.p
-          variants={primaryVariants}
-          className="mb-8 text-center text-sm md:text-[15px] text-white"
-          style={{ fontFamily: "Sansation" }}
-        >
-          Login To Start Your Journey
-        </motion.p>
+        <div className="w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+          <h1 className="md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
+            LOGIN
+          </h1>
+          <div className="w-[40rem] relative">
+            {/* Gradients */}
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#B50D34] to-transparent h-[2px] w-3/4 blur-sm" />
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-3/4" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#B50D34]  to-transparent h-[5px] w-1/4 blur-sm" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-1/4" />
+
+            {/* Core component */}
+            <SparklesCore
+              background="transparent"
+              minSize={0.4}
+              maxSize={1}
+              particleDensity={1200}
+              className="w-full h-full flex justify-center"
+              particleColor="#FFFFFF"
+            />
+
+            {/* Radial Gradient to prevent sharp edges */}
+            <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+            <motion.p
+              variants={primaryVariants}
+              className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
+              style={{ fontFamily: "Sansation" }}
+            >
+              Login To Start Your Journey
+            </motion.p>
+          </div>
+        </div>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="w-full">
           {/* Email Input */}
-          <motion.div variants={primaryVariants} className="mb-2 w-full relative py-2">
+          <motion.div
+            variants={primaryVariants}
+            className="mb-2 w-full relative py-2"
+          >
             <Input
               id="email-input"
               type="email"
@@ -153,7 +172,10 @@ const Login = () => {
           </motion.div>
 
           {/* Password Input */}
-          <motion.div variants={primaryVariants} className="mb-2 w-full relative py-2">
+          <motion.div
+            variants={primaryVariants}
+            className="mb-2 w-full relative py-2"
+          >
             <Input
               id="password-input"
               type="password"
@@ -210,9 +232,6 @@ const Login = () => {
             >
               Login
             </button>
-
-
-            
           </div>
 
           <motion.div className="text-center">

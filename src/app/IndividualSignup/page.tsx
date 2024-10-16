@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Input } from "../components/Input";
 import { useDispatch, useSelector } from "react-redux";
-import { Register,setError, setSuccess  } from "@/redux/slices/auth.slice";
+import { Register, setError, setSuccess } from "@/redux/slices/auth.slice";
 import StackedNotifications from "../components/Stackednotification";
 import { RootState } from "@/redux/store";
+import { SparklesCore } from "../components/sparkles";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -30,19 +31,17 @@ export type NotificationType = {
 
 const IndividualSignUp = () => {
   const [name, setName] = React.useState("");
-  const [lastname, setlastname]= React.useState("");
-  const dispatch:any = useDispatch(); 
+  const [lastname, setlastname] = React.useState("");
+  const dispatch: any = useDispatch();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phone, setPhone] = React.useState("");
-  const {success, error } = useSelector((state: RootState) => state.auth);
+  const { success, error } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
-  
-
 
   const validate = () => {
     const newErrors = { email: "", password: "" };
@@ -62,7 +61,6 @@ const IndividualSignUp = () => {
     return isValid;
   };
 
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (validate()) {
@@ -72,39 +70,33 @@ const IndividualSignUp = () => {
       formData.append("first_name", name);
       formData.append("last_name", lastname);
       formData.append("phone_number", phone);
-    
+
       try {
         await dispatch(Register(formData));
-
-      
-
       } catch (error) {
         console.error("Registration failed", error);
       }
     }
   };
-  
-  
+
   useEffect(() => {
     if (success !== null) {
-    setNotification({
-    id: Date.now(),
-    text: success,
-    type: "success",
-    });
-    dispatch(setSuccess());
+      setNotification({
+        id: Date.now(),
+        text: success,
+        type: "success",
+      });
+      dispatch(setSuccess());
     }
     if (error !== null) {
-    setNotification({
-    id: Date.now(),
-    text: error,
-    type: "error",
-    });
-    dispatch(setError());
+      setNotification({
+        id: Date.now(),
+        text: error,
+        type: "error",
+      });
+      dispatch(setError());
     }
-    }, [success, error]);
-
-
+  }, [success, error]);
 
   return (
     <motion.div
@@ -116,27 +108,44 @@ const IndividualSignUp = () => {
       viewport={{ once: true }}
       className="flex items-center justify-center px-4 py-10 md:py-20"
     >
-        <StackedNotifications
+      <StackedNotifications
         notification={notification}
         setNotification={setNotification}
       />
       <div className="w-full max-w-lg">
-        <motion.h1
-          variants={primaryVariants}
-          className="mb-2 text-center text-3xl md:text-5xl font-semibold text-white uppercase"
-          style={{ fontFamily: "Sansation" }}
-        >
-          SIGNUP
-        </motion.h1>
-        <motion.p
-          variants={primaryVariants}
-           className="mb-8 text-center text-sm md:text-[15px] text-white"
-          style={{ fontFamily: "Sansation" }}
-        >
-          Register to start your career
-        </motion.p>
-        <form onSubmit={handleSubmit} className="w-full">
+        <div className="w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+          <h1 className="md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
+            SIGNUP
+          </h1>
+          <div className="w-[40rem] relative">
+            {/* Gradients */}
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#B50D34] to-transparent h-[2px] w-3/4 blur-sm" />
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-3/4" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#B50D34]  to-transparent h-[5px] w-1/4 blur-sm" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-1/4" />
 
+            {/* Core component */}
+            <SparklesCore
+              background="transparent"
+              minSize={0.4}
+              maxSize={1}
+              particleDensity={1200}
+              className="w-full h-full flex justify-center"
+              particleColor="#FFFFFF"
+            />
+
+            {/* Radial Gradient to prevent sharp edges */}
+            <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+            <motion.p
+              variants={primaryVariants}
+              className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
+              style={{ fontFamily: "Sansation" }}
+            >
+              Register to start your career
+            </motion.p>
+          </div>
+        </div>
+        <form onSubmit={handleSubmit} className="w-full">
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
@@ -192,7 +201,7 @@ const IndividualSignUp = () => {
             variants={primaryVariants}
             className="mb-4 w-full relative"
           >
-           <Input
+            <Input
               id="number-input"
               type="tel"
               placeholder="Enter your number"
@@ -209,9 +218,6 @@ const IndividualSignUp = () => {
             variants={primaryVariants}
             className="mb-4 w-full relative"
           >
-            
-
-
             <Input
               id="password-input"
               placeholder="Enter Your Password"
