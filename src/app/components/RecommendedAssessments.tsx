@@ -3,7 +3,7 @@ import Image from "next/image";
 import { FiArrowUpRight } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 
-const LiveButton = () => {
+const RecommendedAssessments = () => {
   const router = useRouter();
   return (
     <div
@@ -23,12 +23,12 @@ const LiveButton = () => {
       <Image
         width={25}
         height={25}
-        src={"/assets/ArrowRightUp.png"}
+        src={"/assets/BlackArrowRU.png"}
         alt={""}
-        className="ml-10"
+        className="mx-10"
       />
     </div>
   );
 };
 
-export default LiveButton;
+export default RecommendedAssessments;

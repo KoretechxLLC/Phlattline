@@ -30,10 +30,10 @@ const MostSales = () => {
           style={{ fontFamily: "Sansation" }}
         >
           <div className="flex-none md:w-1/2">
-            <h4 className="text-default-600 text-base md:text-xl font-normal mb-1.5">
+            <h4 className="text-default-600 text-base md:text-xl font-normal mx-1.5">
               Identify Your Strengths and Weaknesses
             </h4>
-            <div className="text-xs md:text-lg font-medium mb-1.5 text-default-900">
+            <div className="text-xs md:text-lg font-medium mx-1.5 text-default-900">
               Preach almost the soup tap close child scratch ago <br /> invite
               tower best everywhere calculator.
             </div>
@@ -54,7 +54,7 @@ const MostSales = () => {
           </div>
 
           {/* Image Container */}
-          <div className="flex justify-center items-center md:mt-0 md:w-full">
+          <div className="flex justify-center items-center md:mx-0 md:w-full">
             <Image
               src={"/assets/AssessmentBanner.svg"}
               width={400}

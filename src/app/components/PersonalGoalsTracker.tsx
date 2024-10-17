@@ -1,10 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-} from "@/app/components/Card";
 
 const PersonalGoals = () => {
   const activity = [

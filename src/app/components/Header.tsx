@@ -3,8 +3,9 @@ import Image from "next/image";
 import HeaderSearch from "@/app/components/header-search";
 import ProfileInfo from "@/app/components/profile-info";
 import Notifications from "@/app/components/notifications";
-import { SidebarToggle } from "@/app/components/sidebar-toggle";
 import EditWidget from "@/app/components/EditWidget";
+import { Badge } from "@/app/components/badge";
+import RedBadge from "@/app/components/RedBadge";
 
 interface HeaderProps {
   HeadingText: string;
@@ -28,7 +29,7 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
             </h1>
             {HeadingDesc && (
               <h2
-                className="text-sm sm:text-base md:text-lg text-gray-500"
+                className="text-sm sm:text-base text-gray-500"
                 style={{ fontFamily: "Sansation" }}
               >
                 {HeadingDesc}
@@ -36,13 +37,7 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
             )}
           </div>
 
-          {/* Pro Logo (visible only on larger screens) */}
-          <Image
-            src={"/assets/proIcon.svg"}
-            alt={"Pro Logo"}
-            width={60}
-            height={60}
-          />
+          <RedBadge text={"Pro"} />
         </div>
 
         {/* Action buttons: EditWidget, Search, Notifications, Profile */}
