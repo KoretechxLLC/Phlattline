@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
+import {
+  Color,
+  Scene,
+  Fog,
+  PerspectiveCamera,
+  Vector3,
+  DirectionalLight,
+  PointLight,
+} from "three";
 import ThreeGlobe from "three-globe";
 import { useThree, Object3DNode, Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -257,11 +265,11 @@ const World = (props: WorldProps) => {
         position={new Vector3(-400, 100, 400)}
       />
       <directionalLight
-        color={globeConfig.directionalTopLight}
+        color={globeConfig?.directionalTopLight}
         position={new Vector3(-200, 500, 200)}
       />
       <pointLight
-        color={globeConfig.pointLight}
+        color={globeConfig?.pointLight}
         position={new Vector3(-200, 500, 200)}
         intensity={0.8}
       />
