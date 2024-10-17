@@ -11,7 +11,7 @@ import AssessmentsBanner from "@/app/components/AssessmentsBanner";
 import AssessmentsTracker from "@/app/components/AssesmentsTracker";
 import PersonalGoals from "@/app/components/PersonalGoalsTracker";
 import TasksTracker from "@/app/components/TasksTracker";
-import LiveButton from "@/app/components/LiveButton";
+import TabButton from "@/app/components/TabButton";
 import NotesCalendar from "../components/NotesCalendar";
 
 const Dashboard = () => {
@@ -44,7 +44,7 @@ const Dashboard = () => {
       <div className="space-y-8 md:space-y-3 w-full px-5">
         <div>
           <Card
-            className="shadow-md rounded-3xl h-full"
+            className="shadow-md rounded-3xl w-full h-full"
             style={{ fontFamily: "Sansation" }}
           >
             <CardHeader>
@@ -85,7 +85,13 @@ const Dashboard = () => {
         </div>
 
         <div>
-          <LiveButton />
+          <TabButton
+            backgroundColor="#FF0000"
+            text="Training-On Demand"
+            imageSrc="/assets/LiveIcon.png"
+            textColor="#FFFFFF"
+            arrowImageSrc="/assets/ArrowRightUp.png"
+          />
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ function Calendar({
           "flex-1 text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full gap-1 mt-2 ",
         cell: "flex-1 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-default [&:has([aria-selected])]:rounded-md focus-within:relative focus-within:z-20",
-        day: "w-64 h-9 rounded  p-0 font-normal aria-selected:opacity-100 bg-transparent text-current hover:text-default",
+        day: "w-60 h-9 rounded  p-0 font-normal aria-selected:opacity-100 bg-transparent text-current hover:text-default",
         day_selected:
           "bg-default text-default-foreground hover:bg-default hover:text-default-foreground focus:bg-default focus:text-default-foreground",
         day_today: "bg-accent text-accent-foreground",
