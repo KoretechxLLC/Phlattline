@@ -16,7 +16,7 @@ const HorizontalScrollCarousel = () => {
     target: targetRef,
   });
 
-  const [xTransform, setXTransform] = useState(["0%", "-17.5%"]); // default for larger screens
+  const [xTransform, setXTransform] = useState(["0%", "-50%"]); // default for larger screens
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,7 +29,7 @@ const HorizontalScrollCarousel = () => {
       } else if (screenWidth <= 1550) {
         setXTransform(["0%", "-52.3%"]);
       } else {
-        setXTransform(["0%", "-52%"]); // For screens > 1280px
+        setXTransform(["0%", "-50%"]); // For screens > 1280px
       }
     };
 

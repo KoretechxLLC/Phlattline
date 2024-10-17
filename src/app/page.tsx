@@ -5,11 +5,6 @@ import SplashScreen from "./components/SplashScreen";
 
 const Page = () => {
   const [isSplashScreen, setIsSplashScreen] = useState<boolean>(true);
-
-  /**
-   * Sets isSplashScreen to false, effectively hiding the splash screen, when the
-   * 3D model has finished loading.
-   */
   const handleModelLoaded = () => {
     setIsSplashScreen(false);
   };

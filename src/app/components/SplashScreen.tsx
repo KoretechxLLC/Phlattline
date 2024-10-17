@@ -11,6 +11,7 @@ const splashScreen = () => {
         width={100} // Adjust the width as per your requirement
         height={100} // Adjust the height as per your requirement
         className="w-[30rem]"
+        unoptimized={true}
       />
     </div>
   );

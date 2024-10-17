@@ -12,9 +12,7 @@ import { RootState } from "@/redux/store";
 
 const MostSales = () => {
   const router = useRouter();
-  const { userData } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { userData } = useSelector((state: RootState) => state.auth);
 
   return (
     <Card className="w-full rounded-3xl  bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-5 md:h-full">
@@ -42,10 +40,8 @@ const MostSales = () => {
 
             {/* Button */}
             <div className="mt-5 md:mt-20">
-
-      
               <button
-              disabled={userData.assessment_status}
+                disabled={userData?.assessment_status}
                 onClick={() => {
                   router.push("/Individualassessment");
                 }}
@@ -54,7 +50,6 @@ const MostSales = () => {
               >
                 Take the Assessment
               </button>
-
             </div>
           </div>
 
