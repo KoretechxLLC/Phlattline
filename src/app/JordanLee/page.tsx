@@ -1,5 +1,6 @@
 "use client";
 import { motion, useTransform, useScroll } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 
 const JordanLee = () => {
@@ -19,6 +20,7 @@ const HorizontalScrollCarousel = () => {
   const [xTransform, setXTransform] = useState(["0%", "-50%"]); // default for larger screens
 
   useEffect(() => {
+    if(typeof window !== "undefined") {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
 
@@ -39,6 +41,7 @@ const HorizontalScrollCarousel = () => {
     return () => {
       window.removeEventListener("resize", handleResize); // Cleanup
     };
+  }
   }, []);
 
   const x = useTransform(scrollYProgress, [0, 1], xTransform);
@@ -68,10 +71,12 @@ const Card = ({ card }: { card: CardType }) => {
         <div className="absolute flex justify-center items-center inset-0 z-10 w-[75rem] 3xl:w-[45rem] 4xl:w-[60rem] bg-cover bg-center">
           <div className="relative leading-none 3xl:left-[12rem] 4xl:left-[13.5rem] left-[17rem] top-[-4rem] w-[100%] inset-0 flex justify-center  items-center gap-16 3xl:gap-8 4xl:gap-8 ">
             <div className="">
-              <img
-                src="./assets/jordanProfile.png"
+              <Image
+                src="/assets/jordanProfile.png"
                 alt="Jordan Profile"
                 className="w-[48vw] 3xl:w-[85vw] 4xl:w-[55vw]"
+                width={1000}
+                height={1000}
               />
             </div>
             <div className="flex flex-col gap-8">
@@ -127,7 +132,12 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row  gap-4 3xl:gap-2"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    <img src="./assets/goalIcon.png" alt="" />
+                    <Image
+                      src="/assets/goalIcon.png"
+                      alt="Goal Icon"
+                      width={48}
+                      height={40}
+                    />
                     <span
                       className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold"
                       style={{ fontFamily: "Sansation" }}
@@ -151,7 +161,12 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] fullHD:text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    <img src="./assets/ChallengesIcon.png" alt="" />
+                    <Image
+                      src="/assets/ChallengesIcon.png"
+                      alt="Challenges Icon"
+                      width={50}
+                      height={50}
+                    />
                     <span
                       className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold"
                       style={{ fontFamily: "Sansation" }}
@@ -173,9 +188,11 @@ const Card = ({ card }: { card: CardType }) => {
               </div>
             </div>
             <div className="">
-              <img
-                src="./assets/Window.png"
-                alt=""
+              <Image
+                src="/assets/Window.png"
+                alt="Window Image"
+                width={1000}
+                height={1000}
                 className="absolute top-0 3xl:absolute left-[38rem] 3xl:left-[6rem] 4xl:left-[42rem] w-[30vw] 3xl:w-[35vw] 3xl:h-[77.5vh] 4xl:h-[77.5vh] h-[77.5vh]"
               />
             </div>

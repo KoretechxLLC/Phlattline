@@ -61,7 +61,7 @@ const IndividualAssessmentForm = () => {
       });
       dispatch(setError());
     }
-  }, [success, router, error]);
+  }, [success, router, error,dispatch]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();

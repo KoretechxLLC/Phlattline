@@ -6,7 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import GetStarField from "../components/GetStarField"; // Adjust path as necessary
 import { useRouter } from "next/navigation"; // Import useRouter for routing
 import gsap from "gsap";
-import Image from "next/image";
+import { useCallback } from 'react';
 
 interface HomeScreenProps {
   onModelLoaded: () => void;
@@ -39,8 +39,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
     }
 
     // Set up scene, camera, and renderer
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+  
+    const w : any =  typeof window !== "undefined" && window.innerWidth;
+    const h : any  = typeof window !== "undefined" && window.innerHeight;
     const scene = new THREE.Scene();
     camera.current = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
     camera.current.position.z = 5;
@@ -82,45 +83,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
 
         const clickableMeshes = [
           {
-            position: [0.03, 0.9, 0.9],
-            route: "/WilliamJames",
-            name: "William James",
-            picture: "/assets/williamProfile.png",
+            position: [0.3, 0.4, 0.6],
+            name: "Cooperate",
+            size: 0.85, // Unique size for "Cooperate"
           },
           {
-            position: [0.55, 0.9, 0.7],
-            route: "/JordanLee",
-            name: "Jordan Lee",
-            picture: "/assets/jordanProfile.png",
+            position: [-1, 0.1, 0.05],
+            name: "Construction",
+            size: 0.7, // Unique size for "Construction"
           },
           {
-            position: [1, 0.48, 0.9],
-            route: "/SophiaRodriguez",
-            name: "Sophia Rodriguez",
-            picture: "/assets/sophiaProfile.png",
-          },
-          {
-            position: [-1.2, -0.1, 0.1],
-            route: "/Nancy",
-            name: "Nancy",
-            picture: "/assets/nancyProfile.png",
-          },
-          {
-            position: [-1.2, -0.3, -0.4],
-            route: "/ElijahMartinez",
-            name: "Elijah Martinez",
-            picture: "/assets/ElijahProfile.png",
-          },
-          {
-            position: [-0.0, 0.1, -1.1],
-            route: "/Richard",
-            name: "Richard",
-            picture: "/assets/richardProfile.png",
+            position: [0.3, 0.1, -0.7],
+            name: "Agriculture",
+            size: 0.75, // Unique size for "Agriculture"
           },
         ];
-
-        clickableMeshes.forEach(({ position, route, name, picture }) => {
-          const geometry = new THREE.SphereGeometry(0.25, 32, 32); // Geometry for the clickable mesh
+        
+        clickableMeshes.forEach(({ position, name, size }) => {
+          const geometry = new THREE.SphereGeometry(size, 32, 32); // Use size for geometry
           const material = new THREE.MeshStandardMaterial({
             color: "red",
             transparent: true,
@@ -128,7 +108,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
           });
           const sphere = new THREE.Mesh(geometry, material);
           sphere.position.set(position[0], position[1], position[2]);
-          sphere.userData = { route, name, picture }; // Assign the route, name, and picture to userData
+          sphere.userData = { name }; // Assign the name to userData
           earthMesh.add(sphere); // Add the mesh to the Earth model
         });
       },
@@ -147,15 +127,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
+
+      // Earth ka rotation sirf tab chale jab mouse mesh pr hover nahi ho raha
       if (earthMeshRef.current && !isHovering.current) {
-        earthMeshRef.current.rotation.y += 0.002; // Only rotate if not hovering
+        earthMeshRef.current.rotation.y += 0.002;
       }
+
       renderer.render(scene, camera.current!);
     };
     animate();
 
     // Handle window resize
     const handleWindowResize = () => {
+      if(typeof window !== "undefined") {
       if (camera.current) {
         camera.current.aspect = window.innerWidth / window.innerHeight;
         camera.current.updateProjectionMatrix();
@@ -170,6 +154,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
       window.removeEventListener("resize", handleWindowResize);
       renderer.dispose();
     };
+  };
   }, [onModelLoaded]);
 
   // Function to handle mouse hover
@@ -187,17 +172,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
       );
 
       if (intersects.length > 0) {
-        const hoveredObject = intersects[0].object;
-        // Check if the intersected object has a profile (is a clickable mesh)
-        if (hoveredObject.userData.route) {
+        const hoveredObject : any = intersects[0].object;
+        // Check if the intersected object is a clickable mesh
+        if (hoveredObject.userData.name) {
           isHovering.current = true; // Set hover state
 
           // Set the profile info for the hovered object
           setHoveredProfile({
             name: hoveredObject.userData.name,
-            picture: hoveredObject.userData.picture,
+            picture: "", // Add picture URL if needed
             position: { x: event.clientX, y: event.clientY }, // Set the position for the floating div
           });
+
+          // Set opacity for visual feedback on hover
+          hoveredObject.material.opacity = 0
         } else {
           isHovering.current = false;
           setHoveredProfile(null); // Hide the profile info when not hovering
@@ -206,49 +194,58 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
         isHovering.current = false;
         setHoveredProfile(null); // Hide the profile info when no intersections
       }
-    }
+    };
   };
 
-  // Function to handle click event with animation
-  const onClick = (event: MouseEvent) => {
-    mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ // Function to handle click event with animation
+const onClick = useCallback((event: MouseEvent) => {
+  mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    if (earthMeshRef.current) {
-      raycaster.current.setFromCamera(mouse.current, camera.current!);
-      const intersects = raycaster.current.intersectObjects(
-        earthMeshRef.current.children,
-        true
-      );
+  if (earthMeshRef.current) {
+    raycaster.current.setFromCamera(mouse.current, camera.current!);
+    const intersects = raycaster.current.intersectObjects(
+      earthMeshRef.current.children,
+      true
+    );
 
-      if (intersects.length > 0) {
-        const clickedObject = intersects[0].object;
-        // Check if the clicked object has a route
-        if (clickedObject.userData.route) {
-          // Animation: Rotate Earth to center the clicked mesh and zoom in
-          const targetPosition = clickedObject.position.clone();
+    if (intersects.length > 0) {
+      const clickedObject = intersects[0].object;
+      // Check if the clicked object has a route
+      if (clickedObject.userData.route) {
+        // Animation: Rotate Earth to center the clicked mesh and zoom in
+        const targetPosition = clickedObject.position.clone();
 
-          // Use GSAP to animate the camera and Earth rotation
-          gsap.to(earthMeshRef.current.rotation, {
-            duration: 1,
-            y: Math.atan2(targetPosition.x, targetPosition.z),
-            ease: "power2.inOut",
-          });
+        // Use GSAP to animate the camera and Earth rotation
+        gsap.to(earthMeshRef.current.rotation, {
+          duration: 1,
+          y: Math.atan2(targetPosition.x, targetPosition.z),
+          ease: "power2.inOut",
+        });
 
-          gsap.to(camera.current.position, {
-            duration: 1,
-            z: 4, // Zoom in by reducing the z position
-            ease: "power2.inOut",
-            onComplete: () => {
-              router.push(clickedObject.userData.route); // Route after the animation completes
-            },
-          });
-        }
+        gsap.to(camera.current.position, {
+          duration: 1,
+          z: 4, // Zoom in by reducing the z position
+          ease: "power2.inOut",
+          onComplete: () => {
+            router.push(clickedObject.userData.route); // Route after the animation completes
+          },
+        });
       }
     }
+  }
+}, [mouse, earthMeshRef, raycaster, camera, router]);
+
+useEffect(() => {
+  window.addEventListener('click', onClick);
+
+  return () => {
+    window.removeEventListener('click', onClick);
   };
+}, [onClick]);
 
   useEffect(() => {
+    if(typeof window !== "undefined") {
     // Add event listeners for mouse move and click
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("click", onClick);
@@ -258,7 +255,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("click", onClick);
     };
-  }, []);
+  }
+  }, [onClick]);
 
   return (
     <div ref={containerRef}>
@@ -267,24 +265,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
           style={{
             position: "absolute",
             top: hoveredProfile.position.y + 20, // Offset the div 20px below the mouse pointer
-            left: hoveredProfile.position.x + 20, // Offset the div 20px to the right of the mouse pointer
-            backgroundColor: "white",
-            border: "1px solid black",
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-            borderRadius: "10px",
-            width: "7%",
-            padding: "4px",
-            pointerEvents: "none", // Disable pointer events so it won't block mouse interactions
+            left: hoveredProfile.position.x + 20,
+            background: "rgba(0, 0, 0, 0.7)",
+            color: "black",
+            padding: "10px",
+            borderRadius: "8px",
+            backgroundColor:"white",
           }}
         >
-          <img
-            src={hoveredProfile.picture}
-            alt={hoveredProfile.name}
-            style={{ height: "50px", borderRadius: "50%" }}
-          />
-          <p className="text-black">{hoveredProfile.name}</p>
+          <div>{hoveredProfile.name}</div>
         </div>
       )}
     </div>

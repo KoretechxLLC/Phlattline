@@ -84,7 +84,7 @@ const Login = () => {
       });
       dispatch(setError());
     }
-  }, [success, router, error]);
+  }, [success, router, error,dispatch]);
 
   const { data: session } = useSession();
 
@@ -656,13 +656,6 @@ const LoginImage = () => {
       {typeof window !== "undefined" && (
         <World data={sampleArcs} globeConfig={globeConfig} />
       )}
-      {/* <Image
-        alt="A Login image"
-        src="/assets/LoginImg.png"
-        width={600}
-        height={600}
-        objectFit="cover"
-      /> */}
     </div>
   );
 };

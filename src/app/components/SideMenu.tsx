@@ -123,7 +123,7 @@ const LinkLine = ({
     } else {
       linkWidth.set(25);
     }
-  }, [isHovered]);
+  }, [isHovered,linkWidth]);
   const router = useRouter();
   if (title) {
     return (

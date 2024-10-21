@@ -96,7 +96,7 @@ const IndividualSignUp = () => {
       });
       dispatch(setError());
     }
-  }, [success, error]);
+  }, [success, error,dispatch]);
 
   return (
     <motion.div
@@ -678,13 +678,6 @@ const SignUpImage = () => {
       {typeof window !== "undefined" && (
         <World data={sampleArcs} globeConfig={globeConfig} />
       )}
-      {/* <Image
-        alt="An example image"
-        src="/assets/SignUpImg.png"
-        width={600}
-        height={600}
-        objectFit="cover"
-      /> */}
     </div>
   );
 };

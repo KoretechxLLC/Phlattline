@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Color,
   Scene,
@@ -82,7 +82,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
 
   const globeRef = useRef<ThreeGlobe | null>(null);
 
-  const defaultProps = {
+  const defaultProps = useMemo(() => ({
     pointSize: 1,
     atmosphereColor: "#ffffff",
     showAtmosphere: true,
@@ -96,17 +96,9 @@ export function Globe({ globeConfig, data }: WorldProps) {
     arcLength: 0.9,
     rings: 1,
     maxRings: 3,
-    ...globeConfig,
-  };
-
-  useEffect(() => {
-    if (globeRef.current) {
-      _buildData();
-      _buildMaterial();
-    }
-  }, [globeRef.current]);
-
-  const _buildMaterial = () => {
+    ...globeConfig, // Spread the incoming globeConfig to override defaults
+  }), [globeConfig]);
+  const _buildMaterial = useCallback(() => {
     if (!globeRef.current) return;
 
     const globeMaterial = globeRef.current.globeMaterial() as unknown as {
@@ -119,9 +111,14 @@ export function Globe({ globeConfig, data }: WorldProps) {
     globeMaterial.emissive = new Color(globeConfig.emissive);
     globeMaterial.emissiveIntensity = globeConfig.emissiveIntensity || 0.1;
     globeMaterial.shininess = globeConfig.shininess || 0.9;
-  };
+  }, [
+    globeConfig.globeColor,
+    globeConfig.emissive,
+    globeConfig.emissiveIntensity,
+    globeConfig.shininess,
+  ]);
 
-  const _buildData = () => {
+  const _buildData = useCallback(() => {
     const arcs = data;
     let points = [];
     for (let i = 0; i < arcs.length; i++) {
@@ -142,20 +139,49 @@ export function Globe({ globeConfig, data }: WorldProps) {
         lng: arc.endLng,
       });
     }
+  }, [data, defaultProps.pointSize]);
 
-    // remove duplicates for same lat and lng
-    const filteredPoints = points.filter(
-      (v, i, a) =>
-        a.findIndex((v2) =>
-          ["lat", "lng"].every(
-            (k) => v2[k as "lat" | "lng"] === v[k as "lat" | "lng"]
-          )
-        ) === i
-    );
+  useEffect(() => {
+    if (globeRef.current) {
+      _buildData();
+      _buildMaterial();
+    }
+  }, [_buildData, _buildMaterial]);
 
-    setGlobeData(filteredPoints);
-  };
-
+  const startAnimation = useCallback(() => {
+    if (!globeRef.current || !globeData) return;
+  
+    globeRef.current
+      .arcsData(data)
+      .arcStartLat((d) => (d as { startLat: number }).startLat * 1)
+      .arcStartLng((d) => (d as { startLng: number }).startLng * 1)
+      .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
+      .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
+      .arcColor((e: any) => (e as { color: string }).color)
+      .arcAltitude((e) => (e as { arcAlt: number }).arcAlt * 1)
+      .arcStroke((e) => [0.32, 0.28, 0.3][Math.round(Math.random() * 2)])
+      .arcDashLength(defaultProps.arcLength)
+      .arcDashInitialGap((e) => (e as { order: number }).order * 1)
+      .arcDashGap(15)
+      .arcDashAnimateTime(() => defaultProps.arcTime);
+  
+    globeRef.current
+      .pointsData(data)
+      .pointColor((e) => (e as { color: string }).color)
+      .pointsMerge(true)
+      .pointAltitude(0.0)
+      .pointRadius(2);
+  
+    globeRef.current
+      .ringsData([])
+      .ringColor((e: any) => (t: any) => e.color(t))
+      .ringMaxRadius(defaultProps.maxRings)
+      .ringPropagationSpeed(RING_PROPAGATION_SPEED)
+      .ringRepeatPeriod(
+        (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
+      );
+  }, [globeRef, globeData, data, defaultProps]);
+  
   useEffect(() => {
     if (globeRef.current && globeData) {
       globeRef.current
@@ -165,50 +191,19 @@ export function Globe({ globeConfig, data }: WorldProps) {
         .showAtmosphere(defaultProps.showAtmosphere)
         .atmosphereColor(defaultProps.atmosphereColor)
         .atmosphereAltitude(defaultProps.atmosphereAltitude)
-        .hexPolygonColor((e) => {
-          return defaultProps.polygonColor;
-        });
+        .hexPolygonColor(() => defaultProps.polygonColor);
+  
       startAnimation();
     }
-  }, [globeData]);
-
-  const startAnimation = () => {
-    if (!globeRef.current || !globeData) return;
-
-    globeRef.current
-      .arcsData(data)
-      .arcStartLat((d) => (d as { startLat: number }).startLat * 1)
-      .arcStartLng((d) => (d as { startLng: number }).startLng * 1)
-      .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
-      .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
-      .arcColor((e: any) => (e as { color: string }).color)
-      .arcAltitude((e) => {
-        return (e as { arcAlt: number }).arcAlt * 1;
-      })
-      .arcStroke((e) => {
-        return [0.32, 0.28, 0.3][Math.round(Math.random() * 2)];
-      })
-      .arcDashLength(defaultProps.arcLength)
-      .arcDashInitialGap((e) => (e as { order: number }).order * 1)
-      .arcDashGap(15)
-      .arcDashAnimateTime((e) => defaultProps.arcTime);
-
-    globeRef.current
-      .pointsData(data)
-      .pointColor((e) => (e as { color: string }).color)
-      .pointsMerge(true)
-      .pointAltitude(0.0)
-      .pointRadius(2);
-
-    globeRef.current
-      .ringsData([])
-      .ringColor((e: any) => (t: any) => e.color(t))
-      .ringMaxRadius(defaultProps.maxRings)
-      .ringPropagationSpeed(RING_PROPAGATION_SPEED)
-      .ringRepeatPeriod(
-        (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
-      );
-  };
+  }, [
+    globeData,
+    defaultProps.showAtmosphere,
+    defaultProps.atmosphereColor,
+    defaultProps.atmosphereAltitude,
+    defaultProps.polygonColor,
+    startAnimation,
+  ]);
+  
 
   useEffect(() => {
     if (!globeRef.current || !globeData) return;
@@ -229,7 +224,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
     return () => {
       clearInterval(interval);
     };
-  }, [globeRef.current, globeData]);
+  }, [globeData, data.length]);
 
   return (
     <>
@@ -247,7 +242,7 @@ export function WebGLRendererConfig() {
       gl.setSize(size.width, size.height);
       gl.setClearColor(0xffaaff, 0);
     }
-  }, []);
+  }, [gl, size.width, size.height]);
 
   return null;
 }

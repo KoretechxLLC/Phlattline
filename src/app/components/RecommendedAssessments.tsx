@@ -23,9 +23,9 @@ const RecommendedAssessments = () => {
       <Image
         width={25}
         height={25}
-        src={"/assets/BlackArrowRU.png"}
-        alt={""}
-        className="mx-10"
+        src={"/assets/ArrowRightUp.png"}
+        alt={"Arrow Right Up"}
+        className="ml-10"
       />
     </div>
   );
