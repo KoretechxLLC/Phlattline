@@ -3,7 +3,8 @@ import { motion, useTransform, useScroll } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import ButtonWrapper from "../components/Button";
 import ReactPlayer from "react-player";
-import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const About = () => {
   return (
@@ -19,29 +20,31 @@ const HorizontalScrollCarousel = () => {
     target: targetRef,
   });
 
-  const [xTransform, setXTransform] = useState(["0%", "-17.5%"]); // default for larger screens
+  const [xTransform, setXTransform] = useState(["0%", "-63%"]); // default for larger screens
 
   useEffect(() => {
     // Function to set the transform based on screen width
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      if (typeof window !== "undefined") {
+        const screenWidth = window.innerWidth;
 
-      if (screenWidth <= 1024) {
-        setXTransform(["0%", "-13.1%"]); // For screens <= 1024px
-      } else if (screenWidth <= 1280) {
-        setXTransform(["0%", "-13.3%"]);
-      } else if (screenWidth <= 1550) {
-        setXTransform(["0%", "-15.5%"]);
-      } else {
-        setXTransform(["0%", "-16%"]); // For screens > 1280px
+        if (screenWidth <= 1024) {
+          setXTransform(["0%", "-13.1%"]); // For screens <= 1024px
+        } else if (screenWidth <= 1280) {
+          setXTransform(["0%", "-13.3%"]);
+        } else if (screenWidth <= 1550) {
+          setXTransform(["0%", "-15.5%"]);
+        } else {
+          setXTransform(["0%", "-63%"]); // For screens > 1280px
+        }
       }
-    };
 
-    handleResize(); // Call once on mount to set initial value
-    window.addEventListener("resize", handleResize); // Listen to window resize
+      handleResize(); // Call once on mount to set initial value
+      window.addEventListener("resize", handleResize); // Listen to window resize
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup on unmount
+      return () => {
+        window.removeEventListener("resize", handleResize); // Cleanup on unmount
+      };
     };
   }, []); // Empty dependency array ensures this runs only on mount
 
@@ -62,6 +65,7 @@ const HorizontalScrollCarousel = () => {
 
 const Card = ({ card }: { card: CardType }) => {
   const [isPlaying, setIsPlaying] = useState(true);
+  const router = useRouter();
   const [client, setClient] = useState(false);
 
   useEffect(() => {
@@ -122,9 +126,13 @@ const Card = ({ card }: { card: CardType }) => {
               Your
             </span>
             <span className="w-[20%] absolute left-[10rem] bottom-[12rem] 3xl:left-[7.5rem] 3xl:bottom-[9rem] 4xl:left-[8rem] 4xl:bottom-[9.5rem] flex items-center">
-              <Link href="/Contact">
-                <img src="/assets/MobileAnimation.gif" alt="" />
-              </Link>
+              <Image
+                src="/assets/MobileAnimation.gif"
+                alt="Mobile Animation"
+                height={1000}
+                width={1000}
+                onClick={() => router.push("/Contact")}
+              />
             </span>
           </div>
 
@@ -178,13 +186,15 @@ const Card = ({ card }: { card: CardType }) => {
                   className="!w-[640px] !h-[360px] 3xl:!w-[420px] 3xl:!h-[235px] 4xl:!w-[480px] 4xl:!h-[270px]"
                 />
                 <div>
-                  <img
+                  <Image
                     src={
                       isPlaying ? "/assets/PauseBtn.png" : "/assets/PlayBtn.png"
                     }
-                    className="cursor-pointer absolute right-[2rem] top-[16rem] 3xl:top-[9rem] 3xl:!w-[18%] 4xl:top-[11rem] 4xl:!w-[16%]"
+                    className="cursor-pointer absolute right-[2rem] w-[13%] top-[16rem] 3xl:top-[9rem] 3xl:!w-[18%] 4xl:top-[11rem] 4xl:!w-[16%]"
                     onClick={() => setIsPlaying(!isPlaying)}
-                    alt=""
+                    alt="Play Pause Button"
+                    height={1000}
+                    width={1000}
                   />
                 </div>
               </div>
@@ -230,27 +240,35 @@ const Card = ({ card }: { card: CardType }) => {
                   </div>
                   <div className="flex flex-col gap-2 3xl:gap-0 relative bottom-[3rem] 3xl:bottom-[1rem] 4xl:bottom-[1rem]">
                     <div className="flex flex-start gap-4 3xl:gap-0 4xl:gap-0">
-                      <img
+                      <Image
                         src="/assets/AboutBanner1.png"
-                        alt=""
-                        className="3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
+                        height={1000}
+                        width={1000}
+                        alt="About Banner"
+                        className="w-[48%] h-[95%] 3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
                       />
-                      <img
+                      <Image
                         src="/assets/AboutBanner2.png"
-                        alt=""
-                        className="3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
+                        alt="About Banner"
+                        height={1000}
+                        width={1000}
+                        className="w-[48%] h-[95%] 3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
                       />
                     </div>
                     <div className="flex flex-end relative left-[10rem] gap-4 3xl:left-[4rem] 4xl:left-[4rem] 3xl:gap-0 4xl:gap-0">
-                      <img
+                      <Image
                         src="/assets/AboutBanner3.png"
-                        alt=""
-                        className="3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
+                        alt="About Banner"
+                        height={1000}
+                        width={1000}
+                        className="w-[48%] h-[95%] 3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
                       />
-                      <img
+                      <Image
                         src="/assets/AboutBanner4.png"
-                        alt=""
-                        className="3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
+                        alt="About Banner"
+                        height={1000}
+                        width={1000}
+                        className="w-[48%] h-[95%] 3xl:w-[48%] 3xl:h-[95%] 4xl:w-[48%] 4xl:h-[95%]"
                       />
                     </div>
                   </div>
@@ -328,21 +346,27 @@ const Card = ({ card }: { card: CardType }) => {
                       Studios
                     </p>
                   </div>
-                  <div className="flex gap-80 3xl:gap-28 4xl:gap-40">
-                    <img
+                  <div className="flex gap-72 3xl:gap-28 4xl:gap-40">
+                    <Image
                       src="/assets/AboutDoor.png"
-                      alt=""
-                      className=" 3xl:w-[21%] 4xl:w-[18%]"
+                      alt="About Door"
+                      height={1000}
+                      width={1000}
+                      className="h-[460px] w-[290px] 3xl:w-[21%] 4xl:w-[18%]"
                     />
-                    <img
+                    <Image
                       src="/assets/AboutDoor.png"
-                      alt=""
-                      className=" 3xl:w-[21%] 4xl:w-[18%]"
+                      height={1000}
+                      width={1000}
+                      alt="About Door"
+                      className="h-[460px] w-[290px] 3xl:w-[21%] 4xl:w-[18%]"
                     />
-                    <img
+                    <Image
                       src="/assets/AboutDoor.png"
-                      alt=""
-                      className=" 3xl:w-[21%] 4xl:w-[18%]"
+                      alt="About Door"
+                      className="h-[460px] w-[290px] 3xl:w-[21%] 4xl:w-[18%]"
+                      height={1000}
+                      width={1000}
                     />
                   </div>
                 </div>
@@ -394,44 +418,5 @@ const cards: CardType[] = [
     heading3: "IN",
     heading4: " TROUBLE",
     id: 1,
-  },
-  {
-    url: "",
-    ProUrl: "",
-    name: "",
-    name2: "",
-    designation: "",
-    description: "",
-    heading1: "",
-    heading2: "",
-    heading3: "",
-    heading4: "",
-    id: 2,
-  },
-  {
-    url: "",
-    ProUrl: "",
-    name: "",
-    name2: "",
-    designation: "",
-    description: "",
-    heading1: "",
-    heading2: "",
-    heading3: "",
-    heading4: "",
-    id: 3,
-  },
-  {
-    url: "",
-    ProUrl: "",
-    name: "",
-    name2: "",
-    designation: "",
-    description: "",
-    heading1: "",
-    heading2: "",
-    heading3: "",
-    heading4: "",
-    id: 4,
   },
 ];

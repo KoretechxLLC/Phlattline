@@ -1,6 +1,7 @@
 import React from "react";
 import ButtonWrapper from "../components/Button";
 import Map from "../components/Map";
+import Image from "next/image";
 
 const Page = () => {
   return (
@@ -13,7 +14,7 @@ const Page = () => {
         height: "100vh", // Ensures the div covers the full viewport height
       }}
     >
-      <div className="flex justify-center items-center gap-12 relative top-32 3xl:left-[7rem] 4xl:left-[5rem]">
+      <div className="flex justify-center items-center gap-24 relative top-32 3xl:left-[7rem] 4xl:left-[5rem]">
         <div className="flex flex-col ">
           <h1
             className="uppercase text-transparent bg-clip-text 4xl:text-[38px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[48px] 3xl:text-[38px] font-bold mb-8"
@@ -88,10 +89,12 @@ const Page = () => {
         <div className="flex flex-col gap-14 3xl:gap-10 4xl:gap-12 relative 3xl:right-[8rem] 4xl:right-[6rem]">
           <div className="flex items-center gap-6 3xl:gap-4 4xl:gap-2">
             <span>
-              <img
+              <Image
                 src="/assets/PhoneIcon.png"
-                alt=""
-                className="3xl:w-[85%] 4xl:w-[85%]"
+                alt="Phone Icon"
+                height={1000}
+                width={1000}
+                className="w-[100%] 3xl:w-[85%] 4xl:w-[85%]"
               />
             </span>
             <span className="flex flex-col leading-normal">
@@ -105,10 +108,12 @@ const Page = () => {
           </div>
           <div className="flex items-center gap-6 3xl:gap-4 4xl:gap-4">
             <span>
-              <img
+              <Image
                 src="/assets/EmailIcon.png"
-                alt=""
-                className="3xl:w-[85%] 4xl:w-[85%]"
+                alt="Email Icon"
+                height={1000}
+                width={1000}
+                className="w-[100%] 3xl:w-[85%] 4xl:w-[85%]"
               />
             </span>
             <span className="flex flex-col leading-normal">
@@ -122,10 +127,12 @@ const Page = () => {
           </div>
           <div className="flex items-center gap-6 3xl:gap-4 4xl:gap-5">
             <span>
-              <img
+              <Image
                 src="/assets/LocationIcon.png"
-                alt=""
-                className="3xl:w-[85%] 4xl:w-[85%]"
+                alt="Location Icon"
+                height={1000}
+                width={1000}
+                className="w-[100%] 3xl:w-[85%] 4xl:w-[85%]"
               />
             </span>
             <span className="flex flex-col leading-normal">

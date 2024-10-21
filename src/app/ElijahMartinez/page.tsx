@@ -1,5 +1,6 @@
 "use client";
 import { motion, useTransform, useScroll } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 
 const ElijahMartinez = () => {
@@ -70,9 +71,11 @@ const Card = ({ card }: { card: CardType }) => {
         <div className="absolute flex justify-center items-center inset-0 z-10 w-[75rem] 3xl:w-[45rem] 4xl:w-[60rem] bg-cover bg-center">
           <div className="relative leading-none 3xl:left-[12rem] 4xl:left-[13.5rem] left-[17rem] top-[-3rem] w-[100%] inset-0 flex justify-center  items-center gap-16 3xl:gap-8 4xl:gap-8 ">
             <div className="">
-              <img
-                src="./assets/ElijahProfile.png"
-                alt="Jordan Profile"
+              <Image
+                src="/assets/ElijahProfile.png"
+                alt="Elijah Profile"
+                width={1000}
+                height={1000}
                 className="w-[48vw] 3xl:w-[85vw] 4xl:w-[55vw]"
               />
             </div>
@@ -128,7 +131,12 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row  gap-4 3xl:gap-2"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    <img src="./assets/goalIcon.png" alt="" />
+                    <Image
+                      src="/assets/goalIcon.png"
+                      alt="Goal Icon"
+                      width={42}
+                      height={48}
+                    />
                     <span
                       className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold"
                       style={{ fontFamily: "Sansation" }}
@@ -152,7 +160,12 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] fullHD:text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    <img src="./assets/ChallengesIcon.png" alt="" />
+                    <Image
+                      src="/assets/ChallengesIcon.png"
+                      alt="  Challenges Icon"
+                      width={50}
+                      height={50}
+                    />
                     <span
                       className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold"
                       style={{ fontFamily: "Sansation" }}
@@ -174,23 +187,29 @@ const Card = ({ card }: { card: CardType }) => {
               </div>
             </div>
             <div className="">
-              <img
-                src="./assets/Window2.png"
-                alt=""
+              <Image
+                src="/assets/Window2.png"
+                alt="Window Image"
+                width={1000}
+                height={1000}
                 className="absolute top-0 left-[38rem] 3xl:left-[-12rem] 4xl:left-[22rem] w-[30vw] 3xl:w-[35vw] 3xl:h-[77.5vh] 4xl:h-[77.5vh] h-[77.5vh]"
               />
             </div>
             <div className="flex flex-col gap-24 ">
               <div className="flex relative left-[100rem] bottom-[13rem] 3xl:bottom-[10rem] 4xl:bottom-[10rem]  3xl:left-[55rem] 4xl:left-[70rem] gap-16 3xl:gap-8 4xl:gap-12 w-[100rem]">
-                <img
-                  src="./assets/valueBanner.png"
-                  alt=""
-                  className="3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[28rem] 4xl:h-[70vh]"
+                <Image
+                  src="/assets/valueBanner.png"
+                  alt="Value Bannner"
+                  width={1000}
+                  height={1000}
+                  className="w-[40rem] h-[70vh] 3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[28rem] 4xl:h-[70vh]"
                 />
-                <img
-                  src="./assets/behaviorBanner.png"
-                  alt=""
-                  className="3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[30rem] 4xl:h-[70vh]"
+                <Image
+                  src="/assets/behaviorBanner.png"
+                  alt="Behavior Banner"
+                  width={1000}
+                  height={1000}
+                  className="w-[40rem] h-[70vh] 3xl:w-[25rem] 3xl:h-[70vh] 4xl:w-[30rem] 4xl:h-[70vh]"
                 />
               </div>
             </div>
