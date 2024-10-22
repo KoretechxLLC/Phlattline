@@ -46,8 +46,8 @@ const CoursesTab: React.FC<CourseTabProps> = ({
       <div className="relative bg-default-200 dark:bg-default-900 h-48 flex flex-col justify-center items-center mb-3 rounded-md">
         <div className="h-full">
           <Image
-            width={100}
-            height={100}
+            width={1000}
+            height={1000}
             className="rounded-2xl h-full w-full object-contain"
             src={thumbnail}
             alt={title}

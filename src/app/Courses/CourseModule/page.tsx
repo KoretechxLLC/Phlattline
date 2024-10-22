@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   Card,
@@ -31,35 +31,38 @@ const CourseModule: React.FC<CourseModuleProps> = ({ params: { id } }) => {
     { id: "5", title: "Practical Branding Exercise" },
   ];
 
-  const coursesData = [
-    {
-      id: 1,
-      thumbnail: "/assets/framepic2.png",
-      title: "AI and Virtual",
-      type: "Basic",
-      subscribers: 1014,
-      rating: 3.4,
-      instructorname: "Jack Edwards",
-      instructorimage: "/assets/userProfile.png",
-      Lessons: 14,
-      Hours: 12,
-      Price: 40,
-    },
-    {
-      id: 2,
-      thumbnail: "/assets/framepic2.png",
-      title: "Data Science Fundamentals",
-      type: "Premium",
-      subscribers: 850,
-      rating: 4.2,
-      instructorname: "Sarah Johnson",
-      instructorimage: "/assets/userProfile.png",
-      Lessons: 20,
-      Hours: 25,
-      Price: 60,
-    },
-    // ... other courses
-  ];
+  const coursesData = useMemo(
+    () => [
+      {
+        id: 1,
+        thumbnail: "/assets/framepic2.png",
+        title: "AI and Virtual",
+        type: "Basic",
+        subscribers: 1014,
+        rating: 3.4,
+        instructorname: "Jack Edwards",
+        instructorimage: "/assets/userProfile.png",
+        Lessons: 14,
+        Hours: 12,
+        Price: 40,
+      },
+      {
+        id: 2,
+        thumbnail: "/assets/framepic2.png",
+        title: "Data Science Fundamentals",
+        type: "Premium",
+        subscribers: 850,
+        rating: 4.2,
+        instructorname: "Sarah Johnson",
+        instructorimage: "/assets/userProfile.png",
+        Lessons: 20,
+        Hours: 25,
+        Price: 60,
+      },
+      // ... other courses
+    ],
+    []
+  );
 
   // Author data
   const author = {
@@ -87,7 +90,7 @@ const CourseModule: React.FC<CourseModuleProps> = ({ params: { id } }) => {
       });
       setData(filteredCourseData);
     }
-  }, [courseId]);
+  }, [courseId, coursesData]);
 
   return (
     <div
@@ -132,26 +135,30 @@ const CourseModule: React.FC<CourseModuleProps> = ({ params: { id } }) => {
                 <CardContent>
                   <div className="flex items-center justify-between text-default-900 text-sm lg:text-base font-normal">
                     <h1 className="text-3xl font-bold">About this course</h1>
-                    <div className="flex items-center gap-1.5">
-                      <Icon icon="ph:star-fill" className="text-red-600" />
-                      <Icon icon="ph:star-fill" className="text-red-600" />
-                      <Icon icon="ph:star-fill" className="text-red-600" />
-                      <Icon icon="ph:star-fill" className="text-red-600" />
-                      <Icon
-                        icon="ph:star-fill"
-                        className="text-default-300/80"
-                      />
-                      <span className="ltr:pl-2 rtl:pr-2 text-default-500">
-                        {data && data?.rating}
-                      </span>
-                      <p className="text-gray-500 mx-5">|</p>
-                      <Icon
-                        icon="heroicons-solid:users"
-                        className="text-yellow-600"
-                      />
-                      <span className="text-default-500">
-                        {data && data?.subscribers}
-                      </span>
+                    <div className="flex items-center">
+                      <div className="flex items-center gap-1.5">
+                        <Icon icon="ph:star-fill" className="text-red-600" />
+                        <Icon icon="ph:star-fill" className="text-red-600" />
+                        <Icon icon="ph:star-fill" className="text-red-600" />
+                        <Icon icon="ph:star-fill" className="text-red-600" />
+                        <Icon
+                          icon="ph:star-fill"
+                          className="text-default-300/80"
+                        />
+                        <span className="text-default-500 ltr:pl-2 rtl:pr-2">
+                          {data && data?.rating}
+                        </span>
+                      </div>
+                      <p className="text-gray-500 mx-2">|</p>
+                      <div className="flex items-center gap-1.5">
+                        <Icon
+                          icon="heroicons-solid:users"
+                          className="text-yellow-600"
+                        />
+                        <span className="text-default-500">
+                          {data && data?.subscribers}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -223,7 +230,7 @@ const CourseModule: React.FC<CourseModuleProps> = ({ params: { id } }) => {
             </div>
           </CardHeader>
           <CardContent>
-            <ModuleList />
+            <ModuleList textColor="text-white" />
           </CardContent>
         </Card>
       </div>
