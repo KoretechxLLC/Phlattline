@@ -12,7 +12,7 @@ import AssessmentsTracker from "@/app/components/AssesmentsTracker";
 import PersonalGoals from "@/app/components/PersonalGoalsTracker";
 import TasksTracker from "@/app/components/TasksTracker";
 import TabButton from "@/app/components/TabButton";
-import NotesCalendar from "../components/NotesCalendar";
+import NotesCalendar from "../../components/NotesCalendar";
 
 const Dashboard = () => {
   const router = useRouter();

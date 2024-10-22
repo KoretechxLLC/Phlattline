@@ -24,8 +24,9 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
   const [mobileMenuConfig, setMobileMenuConfig] = useMobileMenuConfig();
   const router = useRouter();
   const pathname = usePathname();
-
-  const isSelected = pathname === href;
+  const pathWithoutPortal =
+    typeof pathname === "string" ? pathname.replace("/Portal", "") : "";
+  const isSelected = pathWithoutPortal === href;
 
   if (config.sidebar === "compact" && isDesktop) {
     return (
@@ -36,7 +37,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
       >
         <button
           className={`flex items-center`}
-          onClick={() => router.push(href)}
+          onClick={() => router.push(`/Portal/${href}`)}
         >
           <div className="flex items-center">
             <Image
@@ -62,7 +63,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
       >
         <button
           className={`flex items-center`}
-          onClick={() => router.push(href)}
+          onClick={() => router.push(`/Portal/${href}`)}
         >
           <div className="flex items-center">
             <Image
@@ -90,7 +91,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
       <button
         onClick={() => {
           setMobileMenuConfig({ ...mobileMenuConfig, isOpen: false });
-          router.push(href);
+          router.push(`/Portal/${href}`);
         }}
         className={`flex items-center ml-2`}
       >

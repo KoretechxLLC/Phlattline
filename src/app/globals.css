@@ -84,17 +84,24 @@ body {
   background-color: #1f2937; /* Dark gray corner */
 }
 input[type="radio"] {
-  accent-color: #B85F24;
+  accent-color: #b85f24;
 }
 
 * {
   font-family: "Sansation", sans-serif !important;
 }
 
-
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  -webkit-appearance: none;
 }
 
 
