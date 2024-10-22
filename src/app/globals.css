@@ -96,3 +96,44 @@ input[type="radio"] {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+.dashcode-app-calendar .fc .fc-button-primary {
+  @apply bg-transparent;
+}
+
+
+.dashcode-app-calendar .fc-theme-standard td,
+.dashcode-app-calendar .fc-theme-standard th,
+.dashcode-app-calendar .fc-scrollgrid,
+.dashcode-app-calendar .fc-col-header-cell .fc-scrollgrid-sync-inner {
+  @apply border-none;
+}
+
+
+
+.dashcode-app-calendar .fc-daygrid-day-top,
+.dashcode-app-calendar .fc-toolbar-title {
+  @apply flex justify-center items-center text-3xl px-2 py-1 text-center;
+}
+
+
+.dashcode-app-calendar .fc-col-header-cell {
+  @apply border-none;
+}
+
+.dashcode-app-calendar .fc-daygrid-event-harness{
+  @apply -z-0;
+}
+
+.dashcode-app-calendar .fc-event-main{
+  @apply absolute -bottom-6 -my-7;
+}
+
+.dashcode-app-calendar .fc-daygrid-day-number{
+  @apply py-2
+}
+
+
+
+

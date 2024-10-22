@@ -1,8 +1,13 @@
-"use client";
 import React from "react";
 import { Badge } from "@/app/components/badge";
 
-const ModuleList: React.FC = () => {
+interface ModuleListProps {
+  textColor?: string; // Optional textColor prop
+}
+
+const ModuleList: React.FC<ModuleListProps> = ({
+  textColor = "text-black",
+}) => {
   const modules = [
     { id: "1", title: "Introduction to Branding" },
     { id: "2", title: "Logo Design Basics" },
@@ -19,7 +24,9 @@ const ModuleList: React.FC = () => {
           <Badge className="font-bold rounded-full text-sm bg-red-800 text-white w-8 h-8 flex items-center justify-center mr-4">
             {module.id}
           </Badge>
-          <span className="text-xl font-bold">{module.title}</span>
+          <span className={`text-xl font-bold ${textColor}`}>
+            {module.title}
+          </span>
         </div>
       ))}
     </>
