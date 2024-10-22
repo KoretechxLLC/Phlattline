@@ -11,15 +11,20 @@ import { Register, setError, setSuccess } from "@/redux/slices/auth.slice";
 import StackedNotifications from "../components/Stackednotification";
 import { RootState } from "@/redux/store";
 import { SparklesCore } from "../components/sparkles";
+import { AuroraBackground } from "../components/AuroraBackground";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
 const SignupScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 bg-black lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px]">
-      <IndividualSignUp />
-      <SignUpImage />
-    </section>
+    <AuroraBackground>
+      <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
+        <div className="flex items-center justify-center">
+          <IndividualSignUp />
+        </div>
+        <SignUpImage />
+      </section>
+    </AuroraBackground>
   );
 };
 
@@ -106,14 +111,14 @@ const IndividualSignUp = () => {
         staggerChildren: 0.05,
       }}
       viewport={{ once: true }}
-      className="flex items-center justify-center px-4 py-10 md:py-20"
+      className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
     >
       <StackedNotifications
         notification={notification}
         setNotification={setNotification}
       />
       <div className="w-full max-w-lg">
-        <div className="w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+        <div className="w-full bg-transparent flex flex-col items-center justify-center overflow-hidden rounded-md">
           <h1 className="md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
             SIGNUP
           </h1>
@@ -135,7 +140,7 @@ const IndividualSignUp = () => {
             />
 
             {/* Radial Gradient to prevent sharp edges */}
-            <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+            <div className="absolute inset-0 w-full h-full [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
             <motion.p
               variants={primaryVariants}
               className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
@@ -156,7 +161,6 @@ const IndividualSignUp = () => {
               type="text"
               value={name}
               onChange={(e: any) => setName(e.target.value)}
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -173,7 +177,6 @@ const IndividualSignUp = () => {
               type="text"
               value={lastname}
               onChange={(e: any) => setlastname(e.target.value)}
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -190,7 +193,6 @@ const IndividualSignUp = () => {
               type="text"
               value={email}
               onChange={(e: any) => setEmail(e.target.value)}
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -207,7 +209,6 @@ const IndividualSignUp = () => {
               placeholder="Enter your number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -224,7 +225,6 @@ const IndividualSignUp = () => {
               type="password"
               value={password}
               onChange={(e: any) => setPassword(e.target.value)}
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -239,8 +239,7 @@ const IndividualSignUp = () => {
               }}
               type="submit"
               onClick={() => router.push("/Login")}
-              className="mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-4 py-2 my-1 text-center font-medium text-red transition-colors"
-              style={{ fontFamily: "Sansation" }}
+              className="mb-1.5 w-full cursor-pointer sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-4 py-2 my-1 text-center font-medium text-red transition-colors"
             >
               Login
             </motion.button>
@@ -250,14 +249,13 @@ const IndividualSignUp = () => {
                 scale: 0.985,
               }}
               type="submit"
-              className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
-              style={{ fontFamily: "Sansation" }}
+              className="theme-gradient cursor-pointer mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
             >
               Sign up
             </motion.button>
           </div>
 
-          <motion.div className="text-center">
+          <motion.div className="text-center text-white">
             <h1 className="text-xl py-5" style={{ fontFamily: "Sansation" }}>
               OR
             </h1>
@@ -291,8 +289,8 @@ const SignUpImage = () => {
     pointSize: 10,
     globeColor: "#062056", // Keep this as is for the globe color
     showAtmosphere: true,
-    atmosphereColor: "#BAA716", // Atmosphere color
-    atmosphereAltitude: 0.3,
+    atmosphereColor: "#ffffff", // Atmosphere color
+    atmosphereAltitude: 0.1,
     emissive: "#0078aa",
     emissiveIntensity: 0.2,
     shininess: 1,
@@ -674,7 +672,7 @@ const SignUpImage = () => {
     },
   ];
   return (
-    <div className="hidden lg:block">
+    <div className="hidden lg:flex  items-end w-[100%] ml-28">
       {typeof window !== "undefined" && (
         <World data={sampleArcs} globeConfig={globeConfig} />
       )}

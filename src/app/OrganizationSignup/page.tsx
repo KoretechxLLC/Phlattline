@@ -9,15 +9,20 @@ import { RiTeamFill } from "react-icons/ri";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { ImListNumbered } from "react-icons/im";
 import { SparklesCore } from "../components/sparkles";
+import { AuroraBackground } from "../components/AuroraBackground";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
 const SignupScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 bg-black lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px]">
-      <OrganizationSignup />
-      <SignUpImage />
-    </section>
+    <AuroraBackground>
+      <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
+        <div className="flex items-center justify-center">
+          <OrganizationSignup />
+        </div>
+        <SignUpImage />
+      </section>
+    </AuroraBackground>
   );
 };
 
@@ -31,10 +36,10 @@ const OrganizationSignup = () => {
         staggerChildren: 0.05,
       }}
       viewport={{ once: true }}
-      className="flex items-center justify-center px-4 py-10 md:py-20"
+      className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
     >
       <div className="w-full max-w-lg">
-        <div className="w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+        <div className="w-full flex flex-col items-center justify-center overflow-hidden rounded-md">
           <h1 className="md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
             SIGNUP
           </h1>
@@ -56,11 +61,10 @@ const OrganizationSignup = () => {
             />
 
             {/* Radial Gradient to prevent sharp edges */}
-            <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+            <div className="absolute inset-0 w-full h-full  [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
             <motion.p
               variants={primaryVariants}
               className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
-              style={{ fontFamily: "Sansation" }}
             >
               Register your Organization
             </motion.p>
@@ -76,7 +80,6 @@ const OrganizationSignup = () => {
               type="text"
               placeholder="Organization Name"
               className="bg-black border-2 border-[#b74b279d] text-white"
-              style={{ fontFamily: "Sansation" }}
               required
             />
             <RiTeamFill className="absolute top-5 right-5 size-5 text-white" />
@@ -90,7 +93,6 @@ const OrganizationSignup = () => {
               id="role-input"
               type="text"
               placeholder="Role/Position"
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -106,7 +108,6 @@ const OrganizationSignup = () => {
               type="number"
               placeholder="How many employees?"
               className="bg-black border-2 border-[#b74b279d] text-white"
-              style={{ fontFamily: "Sansation" }}
               required
             />
             <ImListNumbered className="absolute top-5 right-5 size-5 text-white" />
@@ -121,7 +122,6 @@ const OrganizationSignup = () => {
               type="text"
               placeholder="Organization Type"
               className="bg-black border-2 border-[#b74b279d] text-white  "
-              style={{ fontFamily: "Sansation" }}
               required
             />
           </motion.div>
@@ -135,7 +135,6 @@ const OrganizationSignup = () => {
               onClick={() => router.push("/Login")}
               type="submit"
               className="mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-4 py-2 my-1 text-center font-medium text-red transition-color"
-              style={{ fontFamily: "Sansation" }}
             >
               Login
             </motion.button>
@@ -147,16 +146,13 @@ const OrganizationSignup = () => {
               }}
               type="submit"
               className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
-              style={{ fontFamily: "Sansation" }}
             >
               Done
             </motion.button>
           </div>
         </form>
         <motion.div className="text-center">
-          <h1 className="text-xl py-5" style={{ fontFamily: "Sansation" }}>
-            OR
-          </h1>
+          <h1 className="text-xl py-5 text-white">OR</h1>
           <div className="flex justify-center gap-4">
             <motion.button className="w-12 mx-4 sm:w-16">
               <Image
@@ -186,8 +182,8 @@ const SignUpImage = () => {
     pointSize: 10,
     globeColor: "#062056", // Keep this as is for the globe color
     showAtmosphere: true,
-    atmosphereColor: "#BAA716", // Atmosphere color
-    atmosphereAltitude: 0.3,
+    atmosphereColor: "#ffffff", // Atmosphere color
+    atmosphereAltitude: 0.1,
     emissive: "#0078aa",
     emissiveIntensity: 0.2,
     shininess: 1,
@@ -569,7 +565,7 @@ const SignUpImage = () => {
     },
   ];
   return (
-    <div className="hidden lg:block">
+    <div className="hidden lg:flex  items-end w-[100%] ml-28">
       {typeof window !== "undefined" && (
         <World data={sampleArcs} globeConfig={globeConfig} />
       )}

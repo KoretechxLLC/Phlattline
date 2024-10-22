@@ -26,6 +26,14 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       keyframes: {
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
         arrow: {
           "0%": { opacity: "0", transform: "translateX(100%)" },
           "40%": { opacity: "1", transform: "translateX(0)" },
@@ -33,7 +41,9 @@ const config: Config = {
           "100%": { opacity: "0", transform: "translateX(-100%)" },
         },
       },
-      animation: {},
+      animation: {
+        aurora: "aurora 60s linear infinite",
+      },
       screens: {
         // For 3xl screen: width between 1024px and 1280px, height between 700px and 1100px
         "3xl": { raw: "(min-width: 1023px) and (max-width: 1280px)" },
