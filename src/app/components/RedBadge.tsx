@@ -9,9 +9,7 @@ interface BadgeProps {
 const RedBadge: React.FC<BadgeProps> = ({ text }) => {
   return (
     <Badge className="font-bold rounded-2xl text-md bg-red-600 text-white ">
-      <span className="px-6 py-1" style={{ fontFamily: "Sansation" }}>
-        {text}
-      </span>
+      <span className="px-6 py-1">{text}</span>
     </Badge>
   );
 };

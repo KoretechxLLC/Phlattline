@@ -20,28 +20,28 @@ const HorizontalScrollCarousel = () => {
   const [xTransform, setXTransform] = useState(["0%", "-50%"]); // default for larger screens
 
   useEffect(() => {
-    if(typeof window !== "undefined") {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        const screenWidth = window.innerWidth;
 
-      if (screenWidth <= 1024) {
-        setXTransform(["0%", "-41.5%"]); // For screens <= 1024px
-      } else if (screenWidth <= 1280) {
-        setXTransform(["0%", "-41.3%"]);
-      } else if (screenWidth <= 1550) {
-        setXTransform(["0%", "-52.3%"]);
-      } else {
-        setXTransform(["0%", "-50%"]); // For screens > 1280px
-      }
-    };
+        if (screenWidth <= 1024) {
+          setXTransform(["0%", "-41.5%"]); // For screens <= 1024px
+        } else if (screenWidth <= 1280) {
+          setXTransform(["0%", "-41.3%"]);
+        } else if (screenWidth <= 1550) {
+          setXTransform(["0%", "-52.3%"]);
+        } else {
+          setXTransform(["0%", "-50%"]); // For screens > 1280px
+        }
+      };
 
-    handleResize(); // Call once on mount to set initial value
-    window.addEventListener("resize", handleResize);
+      handleResize(); // Call once on mount to set initial value
+      window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup
-    };
-  }
+      return () => {
+        window.removeEventListener("resize", handleResize); // Cleanup
+      };
+    }
   }, []);
 
   const x = useTransform(scrollYProgress, [0, 1], xTransform);
@@ -81,10 +81,7 @@ const Card = ({ card }: { card: CardType }) => {
             </div>
             <div className="flex flex-col gap-8">
               <div className="flex flex-col">
-                <span
-                  className="text-black uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
-                  style={{ fontFamily: "Sansation" }}
-                >
+                <span className="text-black uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                   Jordan
                 </span>
                 <span

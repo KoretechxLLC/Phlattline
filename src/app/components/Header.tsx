@@ -21,17 +21,11 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
         <div className="flex items-center gap-3 flex-1">
           {/* Heading and Description */}
           <div className="flex flex-col">
-            <h1
-              className="text-xl sm:text-2xl md:text-3xl font-bold"
-              style={{ fontFamily: "Sansation" }}
-            >
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
               {HeadingText}
             </h1>
             {HeadingDesc && (
-              <h2
-                className="text-sm sm:text-base text-gray-500"
-                style={{ fontFamily: "Sansation" }}
-              >
+              <h2 className="text-sm sm:text-base text-gray-500">
                 {HeadingDesc}
               </h2>
             )}

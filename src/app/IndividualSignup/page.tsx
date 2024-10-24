@@ -101,7 +101,7 @@ const IndividualSignUp = () => {
       });
       dispatch(setError());
     }
-  }, [success, error,dispatch]);
+  }, [success, error, dispatch]);
 
   return (
     <motion.div
@@ -144,7 +144,6 @@ const IndividualSignUp = () => {
             <motion.p
               variants={primaryVariants}
               className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
-              style={{ fontFamily: "Sansation" }}
             >
               Register to start your career
             </motion.p>
@@ -256,9 +255,7 @@ const IndividualSignUp = () => {
           </div>
 
           <motion.div className="text-center text-white">
-            <h1 className="text-xl py-5" style={{ fontFamily: "Sansation" }}>
-              OR
-            </h1>
+            <h1 className="text-xl py-5">OR</h1>
             <div className="flex justify-center gap-4">
               <motion.button className="w-12 mx-4 sm:w-16">
                 <Image

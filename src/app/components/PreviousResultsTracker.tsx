@@ -5,38 +5,28 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-interface AssessmentTrackerProps {
+interface PrevResultsTrackerProps {
   height?: number;
   chartType?: "bar" | "area";
   categories?: string[];
 }
 
-const generateColors = (numFields: number) => {
-  const colors = [];
-  for (let i = 0; i < numFields; i++) {
-    colors.push(i % 2 === 0 ? "#FF0700" : "#FDF53F");
-  }
-  return colors;
-};
-
-const AsessmentTracker = ({
-  height = 220,
+const PreviousResultsTracker = ({
+  height = 215,
   chartType = "bar",
   categories = [
-    "Timing Issues",
-    "Ineffective Leadership",
-    "Mismanagement",
-    "Project Management",
-    "Lack of Innovation",
+    "Lack of Interest",
+    "Focus Problem",
+    "Time Management",
+    "Operational",
+    "Role Specification",
   ],
-}: AssessmentTrackerProps) => {
+}: PrevResultsTrackerProps) => {
   const [config] = useConfig();
   const { isRtl } = config;
   const { theme: mode } = useTheme();
 
   const data = [44, 55, 57, 60, 48];
-
-  const chartColors = generateColors(categories.length);
 
   const series = [
     {
@@ -44,7 +34,7 @@ const AsessmentTracker = ({
       data: data.map((value, index) => ({
         x: categories[index],
         y: value,
-        fillColor: chartColors[index],
+        fillColor: "#FFFFFF", // Bar fill color
       })),
     },
   ];
@@ -59,8 +49,15 @@ const AsessmentTracker = ({
       bar: {
         horizontal: false,
         endingShape: "rounded",
-        columnWidth: "5%",
+        columnWidth: "15%",
+        borderRadius: 5, // Adds rounded corners to the bars
       },
+    },
+    // Adds stroke (border) to each bar
+    stroke: {
+      show: true,
+      width: 2, // Border thickness
+      colors: ["#000000"], // Border color (black)
     },
     legend: {
       show: true,
@@ -97,11 +94,6 @@ const AsessmentTracker = ({
     dataLabels: {
       enabled: false,
     },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ["transparent"],
-    },
     yaxis: {
       percentage: [0, 10, 40, 70, 100],
       labels: {
@@ -125,7 +117,7 @@ const AsessmentTracker = ({
       },
     },
     fill: {
-      opacity: 1,
+      opacity: 1, // Ensures the bars are fully filled
     },
     tooltip: {
       theme: "dark",
@@ -175,4 +167,4 @@ const AsessmentTracker = ({
   );
 };
 
-export default AsessmentTracker;
+export default PreviousResultsTracker;

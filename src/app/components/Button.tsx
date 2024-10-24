@@ -1,11 +1,12 @@
-
-
 interface RoundedSlideButtonProps {
   text: string;
-  className:string;
+  className: string;
 }
 
-const ButtonWrapper: React.FC<RoundedSlideButtonProps> = ({ text ,className}) => {
+const ButtonWrapper: React.FC<RoundedSlideButtonProps> = ({
+  text,
+  className,
+}) => {
   return (
     <div className="flex min-h-[80px] 3xl:min-h-[70px] 4xl:min-h-[60px]   items-center justify-center">
       <RoundedSlideButton text={text} className={className} />
@@ -13,7 +14,10 @@ const ButtonWrapper: React.FC<RoundedSlideButtonProps> = ({ text ,className}) =>
   );
 };
 
-const RoundedSlideButton: React.FC<RoundedSlideButtonProps> = ({ text,className }) => {
+const RoundedSlideButton: React.FC<RoundedSlideButtonProps> = ({
+  text,
+  className,
+}) => {
   return (
     <button
       className={`
@@ -32,7 +36,11 @@ const RoundedSlideButton: React.FC<RoundedSlideButtonProps> = ({ text,className 
         hover:before:translate-y-[0%]
         active:scale-95 ${className}`}
     >
-      <span className={`text-[18px] 3xl:text-[12px] 4xl:text-[12px] font-bold `} style={{ fontFamily: "Sansation" }}>{text}</span>
+      <span
+        className={`text-[18px] 3xl:text-[12px] 4xl:text-[12px] font-bold `}
+      >
+        {text}
+      </span>
     </button>
   );
 };

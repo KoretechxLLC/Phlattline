@@ -49,7 +49,6 @@ const MenuWidget: React.FC<MenuWidgetProps> = ({ isActive, onClick }) => {
               className={`text-sm font-bold transition-colors duration-300 ${
                 isActive ? "text-white" : "text-black"
               }`}
-              style={{ fontFamily: "Sansation" }}
             >
               ODaas Strategic Platform
             </div>

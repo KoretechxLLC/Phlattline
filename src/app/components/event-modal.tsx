@@ -199,7 +199,7 @@ const EventModal = ({
               color="primary"
               className="w-full text-white px-4 py-2 rounded-3xl"
               onClick={() =>
-                router.push(`/Courses/CourseModule?courseId=${event.id}`)
+                router.push(`/Portal/Courses/CourseModule?courseId=${event.id}`)
               }
             >
               Get Started
@@ -211,10 +211,7 @@ const EventModal = ({
         <div className="flex-shrink-0 md:w-1/3 my-4 md:ml-5">
           <div className="my-5">
             <Card className="border border-gray-500 rounded-xl p-5">
-              <CardHeader
-                className="rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] p-2"
-                style={{ fontFamily: "Sansation" }}
-              >
+              <CardHeader className="rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] p-2">
                 <div className="text-sm flex justify-center items-center text-white">
                   <CardTitle>Course Modules</CardTitle>
                 </div>

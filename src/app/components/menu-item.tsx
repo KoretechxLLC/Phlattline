@@ -104,10 +104,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
             className={"h-5 w-5 mb-1 mr-3"}
           />
           {(!config.collapsed || hovered) && (
-            <p
-              className={"w-28 text-sm flex items-start text-start"}
-              style={{ fontFamily: "Sansation" }}
-            >
+            <p className={"w-28 text-sm flex items-start text-start"}>
               {label}
             </p>
           )}

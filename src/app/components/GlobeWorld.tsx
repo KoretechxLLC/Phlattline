@@ -156,21 +156,6 @@ export function Globe({ globeConfig, data }: WorldProps) {
     }
   }, [_buildData, _buildMaterial]);
 
-  useEffect(() => {
-    if (globeRef.current && globeData) {
-      globeRef.current
-        .hexPolygonsData(countries.features)
-        .hexPolygonResolution(3)
-        .hexPolygonMargin(0.7)
-        .showAtmosphere(defaultProps.showAtmosphere)
-        .atmosphereColor(defaultProps.atmosphereColor)
-        .atmosphereAltitude(defaultProps.atmosphereAltitude)
-        .hexPolygonColor(() => defaultProps.polygonColor);
-
-      startAnimation();
-    }
-  }, [globeData, defaultProps]);
-
   const startAnimation = useCallback(() => {
     if (!globeRef.current || !globeData) return;
 
@@ -202,6 +187,21 @@ export function Globe({ globeConfig, data }: WorldProps) {
         (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
       );
   }, [globeData, defaultProps, data]);
+
+  useEffect(() => {
+    if (globeRef.current && globeData) {
+      globeRef.current
+        .hexPolygonsData(countries.features)
+        .hexPolygonResolution(3)
+        .hexPolygonMargin(0.7)
+        .showAtmosphere(defaultProps.showAtmosphere)
+        .atmosphereColor(defaultProps.atmosphereColor)
+        .atmosphereAltitude(defaultProps.atmosphereAltitude)
+        .hexPolygonColor(() => defaultProps.polygonColor);
+
+      startAnimation();
+    }
+  }, [globeData, defaultProps, globeRef, startAnimation]);
 
   useEffect(() => {
     if (!globeRef.current || !globeData) return;

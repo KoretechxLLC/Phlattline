@@ -149,7 +149,6 @@ const Login = () => {
             <motion.p
               variants={primaryVariants}
               className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
-              style={{ fontFamily: "Sansation" }}
             >
               Login To Start Your Journey
             </motion.p>
@@ -186,7 +185,6 @@ const Login = () => {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)} // Set the password state
-              style={{ fontFamily: "Sansation" }}
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
@@ -201,16 +199,12 @@ const Login = () => {
                 variants={primaryVariants}
                 whileTap={{ scale: 0.985 }}
                 className="cursor-pointer mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium"
-                style={{ fontFamily: "Sansation" }}
               >
                 Register
               </motion.div>
 
               {/* Register Dropdown */}
-              <div
-                className="hidden group-hover:block absolute z-10 w-40 bg-white text-red-500 py-2 px-4"
-                style={{ fontFamily: "Sansation" }}
-              >
+              <div className="hidden group-hover:block absolute z-10 w-40 bg-white text-red-500 py-2 px-4">
                 <ul>
                   <li
                     className="cursor-pointer rounded-lg hover:bg-red-500 hover:text-white transition-colors pl-1"

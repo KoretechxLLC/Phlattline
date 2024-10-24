@@ -6,15 +6,15 @@ import { color, shadow, rounded } from "@/app/lib/type";
 import { cn } from "@/app/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center px-4 md:px-6 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 hover:ring-2 hover:ring-offset-2 ring-offset-background transition-all focus-visible:outline-none focus-visible:hidden focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "inline-flex items-center justify-center px-4 md:px-6 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300  disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       color: {
         default: "bg-default-300 text-default-foreground ",
         primary:
-          "bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-primary-foreground hover:bg-primary/90  hover:ring-primary",
+          "bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-primary-foreground ",
         secondary:
-          "bg-secondry border-[1px] border-red-500 text-red-500 bg-black  text-secondary-foreground  hover:ring-secondary",
+          "bg-secondry border-[1px] border-red-500 text-red-500 bg-black  text-secondary-foreground ",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:ring-destructive",
         warning:

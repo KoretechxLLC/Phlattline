@@ -164,18 +164,13 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   }, [courseId]);
 
   return (
-    <div
-      className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full space-y-6 rounded-lg"
-      style={{ fontFamily: "Sansation" }}
-    >
+    <div className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full space-y-6 rounded-lg">
       {/* Left Column: Course Details */}
       <div>
         <div className="flex items-center px-5 py-1 space-x-4">
           <h1 className="text-3xl font-bold">{data && data?.title}</h1>
           <Badge className="font-bold rounded-2xl text-md bg-gradient-to-b whitespace-nowrap from-[#B50D34] to-[#BAA716] text-white">
-            <span className="px-5" style={{ fontFamily: "Sansation" }}>
-              {data && data?.type}
-            </span>
+            <span className="px-5">{data && data?.type}</span>
           </Badge>
         </div>
 
@@ -245,7 +240,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
               className="text-white px-5 text-sm md:text-base lg:text-base flex w-full  justify-center items-center rounded-3xl"
               size="default"
               color="primary"
-              style={{ fontFamily: "Sansation" }}
               onClick={handleBuyClick} // Open modal when the Buy button is clicked
             >
               Buy now for $50
@@ -256,9 +250,10 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                 className="text-white px-5 text-sm md:text-base lg:text-base flex w-full  justify-center items-center rounded-3xl"
                 size="default"
                 color="primary"
-                style={{ fontFamily: "Sansation" }}
                 onClick={() =>
-                  router.push(`/Courses/CourseModule?courseId=${data?.id}`)
+                  router.push(
+                    `/Portal/Courses/CourseModule?courseId=${data?.id}`
+                  )
                 }
               >
                 Get Started
