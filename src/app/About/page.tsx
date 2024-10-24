@@ -139,10 +139,7 @@ const Card = ({ card }: { card: CardType }) => {
           <div className="absolute flex items-center inset-0 z-20 left-[120rem] 3xl:left-[85rem] 3xl:gap-10 4xl:left-[100rem] w-[100rem] 3xl:w-[21rem]">
             <div className="w-[100rem] 3xl:w-[25rem] 4xl:w-[27rem] relative">
               <div className="flex flex-col w-[40rem] 3xl:w-[27rem] 4xl:w-[34rem] leading-none gap-2 ">
-                <p
-                  className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
-                  style={{ fontFamily: "Sansation" }}
-                >
+                <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                   About
                 </p>
                 <p
@@ -154,10 +151,7 @@ const Card = ({ card }: { card: CardType }) => {
                 >
                   PhlattLine
                 </p>
-                <p
-                  className="text-white text-[18px] leading-6  3xl:text-[13px] 4xl:text-[16px] font-regular mt-4 3xl:mt-2"
-                  style={{ fontFamily: "Sansation" }}
-                >
+                <p className="text-white text-[18px] leading-6  3xl:text-[13px] 4xl:text-[16px] font-regular mt-4 3xl:mt-2">
                   At PhlattLine, we believe in the transformative power of
                   adaptive leadership. Our mission is to equip leaders with the
                   tools and strategies necessary to drive meaningful change and
@@ -204,10 +198,7 @@ const Card = ({ card }: { card: CardType }) => {
               <div className="flex items-center relative  left-[85rem] 3xl:left-[54rem] 4xl:left-[70rem] gap-12 3xl:gap-8 4xl:gap-8 w-[100rem]">
                 <div className="w-[100rem] flex gap-32 3xl:gap-12 4xl:gap-12 3xl:w-[55rem] 4xl:w-[60rem] relative ">
                   <div className="flex flex-col w-[40rem] leading-none gap-2 relative top-[4rem] 3xl:top-[2rem] 4xl:top-[1rem]">
-                    <p
-                      className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px]  font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px]  font-bold">
                       How
                     </p>
                     <p
@@ -219,16 +210,10 @@ const Card = ({ card }: { card: CardType }) => {
                     >
                       PhlattLine
                     </p>
-                    <p
-                      className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                       Can Work
                     </p>
-                    <p
-                      className="text-white text-[18px] leading-6 3xl:text-[13px] 4xl:text-[16px] font-regular mt-4 3xl:mt-2"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <p className="text-white text-[18px] leading-6 3xl:text-[13px] 4xl:text-[16px] font-regular mt-4 3xl:mt-2">
                       Lorem Ipsum is simply dummy text of the printing and
                       typesetting industry. Lorem Ipsum has been the industry
                       &apos; s standard dummy text ever since the 1500s, when an
@@ -278,10 +263,7 @@ const Card = ({ card }: { card: CardType }) => {
             <div className="flex items-center relative left-[112rem] 3xl:left-[4rem] 4xl:left-[42rem] gap-12 3xl:gap-8 w-[100rem]">
               <div className="w-[100rem] flex flex-col gap-20 justify-center items-center relative bottom-[3rem]">
                 <div className="flex  leading-none gap-2 ">
-                  <p
-                    className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
-                    style={{ fontFamily: "Sansation" }}
-                  >
+                  <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                     Our
                   </p>
                   <p
@@ -296,10 +278,7 @@ const Card = ({ card }: { card: CardType }) => {
                 </div>
                 <div className="flex ">
                   <div className="flex flex-col absolute left-[15rem] top-[15rem] 3xl:left-[27rem] 4xl:top-[14rem] 4xl:left-[27rem] 3xl:top-[14rem] leading-none gap-2 3xl:gap-0">
-                    <p
-                      className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px] font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <p className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px] font-bold">
                       Organizational
                     </p>
                     <p
@@ -313,10 +292,7 @@ const Card = ({ card }: { card: CardType }) => {
                     </p>
                   </div>
                   <div className="flex flex-col absolute left-[50rem] top-[15rem] 3xl:left-[48rem] 3xl:top-[14rem] 4xl:left-[48rem] 4xl:top-[14rem] leading-none gap-2 3xl:gap-0">
-                    <p
-                      className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px]  font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <p className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px]  font-bold">
                       Digital Media
                     </p>
                     <p
@@ -330,10 +306,7 @@ const Card = ({ card }: { card: CardType }) => {
                     </p>
                   </div>
                   <div className="flex flex-col absolute left-[88rem] top-[15rem] 3xl:left-[68rem] 3xl:top-[14rem] 4xl:left-[68rem] 4xl:top-[14rem]  leading-none gap-2 3xl:gap-0 ">
-                    <p
-                      className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px] font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <p className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px] font-bold">
                       PhlattLine
                     </p>
                     <p

@@ -16,10 +16,7 @@ const Page = () => {
     >
       <div className="flex justify-center items-center gap-24 relative top-32 3xl:left-[7rem] 4xl:left-[5rem]">
         <div className="flex flex-col ">
-          <h1
-            className="uppercase text-transparent bg-clip-text 4xl:text-[38px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[48px] 3xl:text-[38px] font-bold mb-8"
-            style={{ fontFamily: "Sansation" }}
-          >
+          <h1 className="uppercase text-transparent bg-clip-text 4xl:text-[38px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[48px] 3xl:text-[38px] font-bold mb-8">
             Fill OUt To Reach Us
           </h1>
           <div className="flex flex-col gap-4 4xl:gap-2  3xl:w-[100%] 4xl:w-[100%]">

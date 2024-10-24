@@ -53,7 +53,7 @@ export function MenuClassic() {
   };
 
   return (
-    <nav className="theme-gradient hidden md:block rounded-3xl h-full w-full transition-all duration-300 z-40">
+    <nav className="theme-gradient block rounded-3xl h-full w-full transition-all duration-300 z-40">
       <div className="flex justify-center items-center mt-4 mb-28">
         <div className="flex justify-center">
           <Image

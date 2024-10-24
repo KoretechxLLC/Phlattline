@@ -67,7 +67,13 @@ const Dashboard = () => {
         </div>
 
         <div className="w-full" style={{ fontFamily: "Sansation" }}>
-          <TasksTracker />
+          <TasksTracker
+            showPending={true}
+            showCompleted={true}
+            showSaved={false}
+            showTooltip={true}
+            label={"Tasks"}
+          />
         </div>
 
         <div>

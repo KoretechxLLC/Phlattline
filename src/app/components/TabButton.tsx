@@ -35,12 +35,7 @@ const TabButton: React.FC<TabButtonProps> = ({
           alt={""}
           className="mx-5"
         />
-        <span
-          className="text-xl mx-2"
-          style={{ fontFamily: "Sansation", color: textColor }} // Set text color from props
-        >
-          {text}
-        </span>
+        <span className="text-xl mx-2">{text}</span>
       </div>
       <Image
         width={25}

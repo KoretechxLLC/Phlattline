@@ -20,7 +20,14 @@ const PerformanceManagement = () => {
           <SmartGoalForm />
         </div>
         <div>
-          <TasksTracker />
+          <TasksTracker
+            showPending={true}
+            showCompleted={true}
+            showSaved={false}
+            showTooltip={false}
+            label={"Goals"}
+            isClickable={false}
+          />
         </div>
         <div>
           <TimeManagement />

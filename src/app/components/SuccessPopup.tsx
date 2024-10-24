@@ -22,7 +22,6 @@ const SucessPopup = () => {
             className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-12 justify-center items-center rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716]"
             size="default"
             variant="default"
-            style={{ fontFamily: "Sansation" }}
           >
             Continue
           </Button>

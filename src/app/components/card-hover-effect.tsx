@@ -3,32 +3,34 @@ import Link from "next/link";
 import { useState } from "react";
 import { cn } from "../lib/utils";
 import Image from "next/image";
+import { Button } from "@/app/components/button-sidebar";
 
 export const HoverEffect = ({
   items,
-  className,
+  className, // Accept a className prop
 }: {
   items: {
     title: string;
     imageLink: string;
     link: string;
+    price: number;
   }[];
-  className?: string;
+  className?: string; // Optional className prop
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4  py-10",
-        className
+        className, // Apply the custom className last to ensure it takes precedence
+        "grid" // Default classes
       )}
     >
       {items.map((item, idx) => (
         <Link
           href={item?.link}
           key={item?.link}
-          className="relative group  block p-2 h-full w-full"
+          className="relative group block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
@@ -60,6 +62,18 @@ export const HoverEffect = ({
               />
             </div>
             <CardTitle>{item.title}</CardTitle>
+            <div className="flex items-center justify-between w-full my-2">
+              <span className="text-default-900 group-hover:text-white font-bold text-2xl">
+                ${item.price}
+              </span>
+              <Button
+                className="text-white px-5 text-sm md:text-base lg:text-base flex justify-center items-center rounded-3xl ml-4"
+                size="default"
+                color="primary"
+              >
+                Buy Now
+              </Button>
+            </div>
           </Card>
         </Link>
       ))}
@@ -95,7 +109,7 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+    <h4 className={cn("text-zinc-100 font-bold tracking-wide my-4", className)}>
       {children}
     </h4>
   );

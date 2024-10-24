@@ -39,8 +39,7 @@ const CoursesTab: React.FC<CourseTabProps> = ({
   return (
     <Card
       className="p-4 w-full border-[1px] rounded-3xl hover:bg-red-700 transition-colors duration-500 cursor-pointer group"
-      style={{ fontFamily: "Sansation" }}
-      onClick={() => router.push(`/Courses/CourseDetail?courseId=${id}`)}
+      onClick={() => router.push(`/Portal/Courses/CourseDetail?courseId=${id}`)}
     >
       {/* Thumbnail container */}
       <div className="relative bg-default-200 dark:bg-default-900 h-48 flex flex-col justify-center items-center mb-3 rounded-md">

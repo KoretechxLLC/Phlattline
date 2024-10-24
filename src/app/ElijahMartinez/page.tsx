@@ -81,41 +81,26 @@ const Card = ({ card }: { card: CardType }) => {
             </div>
             <div className="flex flex-col gap-8">
               <div className="flex flex-col">
-                <span
-                  className="text-black uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
-                  style={{ fontFamily: "Sansation" }}
-                >
+                <span className="text-black uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                   Elijah
                 </span>
-                <span
-                  className="uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#B50D34]"
-                  style={{ fontFamily: "Sansation" }}
-                >
+                <span className="uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#B50D34]">
                   Martinez
                 </span>
               </div>
               <div>
-                <button
-                  className="text-white uppercase px-[20px] py-[10px] text-[24px] 3xl:text-[16px] 4xl:text-[20px] flex w-full p-1 justify-center items-center rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#BAA716] to-[#B50D34]"
-                  style={{ fontFamily: "Sansation" }}
-                >
+                <button className="text-white uppercase px-[20px] py-[10px] text-[24px] 3xl:text-[16px] 4xl:text-[20px] flex w-full p-1 justify-center items-center rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#BAA716] to-[#B50D34]">
                   Founder and CEO
                 </button>
               </div>
             </div>
             <div className="">
-              <p
-                className="text-black text-[24px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal"
-                style={{ fontFamily: "Sansation" }}
-              >
+              <p className="text-black text-[24px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal">
                 33 years old, based in Ogden, Utah. Founder and CEO of an
                 eco-friendly construction startup.
               </p>
               <br />
-              <p
-                className="text-black text-[24px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal"
-                style={{ fontFamily: "Sansation" }}
-              >
+              <p className="text-black text-[24px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal">
                 Degree in Environmental Science and Civil Engineering. Launched
                 the startup 7 years ago, growing it from a small team to a
                 notable player in sustainable construction in Utah.
@@ -127,27 +112,18 @@ const Card = ({ card }: { card: CardType }) => {
             <div className="w-[35rem] 3xl:w-[25rem] 4xl:w-[27rem] relative">
               <div className="flex flex-col items-center leading-none gap-4  w-[60rem]  3xl:w-[38rem] 4xl:w-[44rem]">
                 <div>
-                  <p
-                    className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row  gap-4 3xl:gap-2"
-                    style={{ fontFamily: "Sansation" }}
-                  >
+                  <p className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row  gap-4 3xl:gap-2">
                     <Image
                       src="/assets/goalIcon.png"
                       alt="Goal Icon"
                       width={42}
                       height={48}
                     />
-                    <span
-                      className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <span className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold">
                       GOAL
                     </span>
                   </p>
-                  <p
-                    className="text-black text-[22px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal ml-20 3xl:ml-12  3xl:mt-1"
-                    style={{ fontFamily: "Sansation" }}
-                  >
+                  <p className="text-black text-[22px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal ml-20 3xl:ml-12  3xl:mt-1">
                     Seeks to lead his company to the forefront of sustainable
                     building practices, expanding the business while maintaining
                     a strong focus on sustainability and innovation. Aims to
@@ -156,27 +132,18 @@ const Card = ({ card }: { card: CardType }) => {
                   </p>
                 </div>
                 <div>
-                  <p
-                    className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] fullHD:text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2"
-                    style={{ fontFamily: "Sansation" }}
-                  >
+                  <p className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] fullHD:text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2">
                     <Image
                       src="/assets/ChallengesIcon.png"
                       alt="  Challenges Icon"
                       width={50}
                       height={50}
                     />
-                    <span
-                      className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold"
-                      style={{ fontFamily: "Sansation" }}
-                    >
+                    <span className="text-transparent bg-clip-text 4xl:text-[48px] bg-gradient-to-b from-[#BAA716] to-[#B50D34] text-[64px] 3xl:text-[40px] font-bold">
                       CHALLENGES
                     </span>
                   </p>
-                  <p
-                    className="text-black text-[22px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal ml-20 3xl:ml-12   3xl:mt-1"
-                    style={{ fontFamily: "Sansation" }}
-                  >
+                  <p className="text-black text-[22px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal ml-20 3xl:ml-12   3xl:mt-1">
                     Struggles with balancing the operational demands of a
                     growing business with the strategic focus needed to stay
                     ahead in a competitive and rapidly evolving industry. Faces
