@@ -85,7 +85,13 @@ const Dashboard = () => {
               <CardTitle>Personal Goals</CardTitle>
             </CardHeader>
             <CardContent>
-              <PersonalGoals />
+              <PersonalGoals
+                goals={[
+                  { id: 1, goal: "Implement the strategy" },
+                  { id: 2, goal: "Conduct a situational analysis." },
+                ]}
+                showAvatar={true}
+              />
             </CardContent>
           </Card>
         </div>

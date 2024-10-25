@@ -5,7 +5,7 @@ import { colors } from "@/app/lib/colors";
 import { useTheme } from "next-themes";
 import { useConfig } from "@/app/hooks/use-config";
 
-const CoursesResults = ({ height = 400 }) => {
+const CoursesResults = ({ height = 280 }) => {
   const [config] = useConfig();
   const { theme: mode } = useTheme();
 
@@ -28,7 +28,7 @@ const CoursesResults = ({ height = 400 }) => {
       pie: {
         startAngle: -90,
         endAngle: 90,
-        offsetY: 60,
+        offsetY: 10,
       },
     },
     dataLabels: {
