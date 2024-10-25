@@ -25,10 +25,7 @@ const Dashboard = () => {
         </div>
         <div>
           <Card className="border-[1px] border-gray-500 rounded-3xl h-full">
-            <CardHeader
-              className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]"
-              style={{ fontFamily: "Sansation" }}
-            >
+            <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <div className="text-sm mb-16 flex justify-between">
                 <CardTitle>Assessments Reports</CardTitle>
                 <CardTitle>Total Employees: 115</CardTitle>
@@ -43,10 +40,7 @@ const Dashboard = () => {
 
       <div className="space-y-8 md:space-y-3 w-full px-5">
         <div>
-          <Card
-            className="shadow-md rounded-3xl w-full h-full"
-            style={{ fontFamily: "Sansation" }}
-          >
+          <Card className="shadow-md rounded-3xl w-full h-full">
             <CardHeader>
               <div className="flex justify-between gap-3 items-center">
                 <CardTitle className="text-sm">
@@ -66,21 +60,19 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <div className="w-full" style={{ fontFamily: "Sansation" }}>
+        <div className="w-full">
           <TasksTracker
             showPending={true}
             showCompleted={true}
             showSaved={false}
-            showTooltip={true}
-            label={"Tasks"}
+            showTooltip={false}
+            label={"Assessments"}
+            isClickable={false}
           />
         </div>
 
         <div>
-          <Card
-            className="border border-gray-500 rounded-3xl shadow-md w-full h-full"
-            style={{ fontFamily: "Sansation" }}
-          >
+          <Card className="border border-gray-500 rounded-3xl shadow-md w-full h-full">
             <CardHeader>
               <CardTitle>Personal Goals</CardTitle>
             </CardHeader>

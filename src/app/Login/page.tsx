@@ -79,7 +79,7 @@ const Login = () => {
         type: "success",
       });
       dispatch(setSuccess());
-      router.push("/Dashboard");
+      router.push("/Portal/Dashboard");
     }
     if (error !== null) {
       setNotification({

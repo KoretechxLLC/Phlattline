@@ -3,16 +3,18 @@ import authReducer from "./slices/auth.slice";
 import assessmentReducer from "./slices/individualassessment.slice";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PerformanceManagementReducer from "./slices/performanceManagement.slice";
 
 const persistConfig = {
   key: "root",
-  whitelist: ["auth"], 
+  whitelist: ["auth"],
   storage: AsyncStorage,
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  assessment: assessmentReducer, 
+  assessment: assessmentReducer,
+  PerformanceManagement: PerformanceManagementReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

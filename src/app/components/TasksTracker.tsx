@@ -3,6 +3,18 @@ import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { AnimatedTooltip } from "@/app/components/AnimatedTooltip";
 import { useEffect, useState } from "react";
 import { Button } from "@/app/components/button-sidebar";
+import { FiPlus, FiTrash2 } from "react-icons/fi";
+import { SlCalender } from "react-icons/sl";
+import Deletemodel from "./DeleteModal";
+import { AiOutlineCheckCircle } from "react-icons/ai";
+import SaveModal from "./SaveModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  completeGoal,
+  deleteGoal,
+  fetchGoals,
+} from "@/redux/slices/performanceManagement.slice";
+import { RootState } from "@/redux/store";
 
 interface TasksTrackerProps {
   showPending?: boolean;
@@ -10,7 +22,7 @@ interface TasksTrackerProps {
   showSaved?: boolean;
   showTooltip?: boolean;
   label: string;
-  isClickable?: boolean; // New prop to control cursor style
+  isClickable?: boolean;
 }
 
 const TasksTracker = ({
@@ -19,7 +31,7 @@ const TasksTracker = ({
   showSaved = true,
   showTooltip = true,
   label,
-  isClickable = true, // Default to true for cursor-pointer
+  isClickable = true,
 }: TasksTrackerProps) => {
   const tooltipItems = [
     {
@@ -41,7 +53,11 @@ const TasksTracker = ({
       image: "/assets/User3.png",
     },
   ];
-
+  const { goals } = useSelector(
+    (state: RootState) => state.PerformanceManagement
+  );
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const dispatch: any = useDispatch();
   const pendingTasks = [
     { id: 1, goal: "Goal 1", percentage: 30, userId: 1 },
     { id: 2, goal: "Goal 2", percentage: 60, userId: 2 },
@@ -62,12 +78,27 @@ const TasksTracker = ({
 
   const [activeTab, setActiveTab] = useState("pending");
 
+  useEffect(() => {
+    if (userData?.id) {
+      const id = userData?.id;
+      dispatch(fetchGoals(id));
+    }
+  }, [dispatch, userData]);
+
   // Update activeTab based on visible buttons
   useEffect(() => {
     if (showPending) setActiveTab("pending");
     else if (showCompleted) setActiveTab("completed");
     else if (showSaved) setActiveTab("saved");
   }, [showPending, showCompleted, showSaved]);
+
+  const handleDeleteGoal = (id: any) => {
+    dispatch(deleteGoal(id));
+  };
+
+  const handleCompleteGoal = (id: any) => {
+    dispatch(completeGoal(id));
+  };
 
   const handlePendingTasksClick = () => setActiveTab("pending");
   const handleCompletedTasksClick = () => setActiveTab("completed");
@@ -78,7 +109,7 @@ const TasksTracker = ({
       <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-full">
         {showPending && (
           <button
-            className={`text-sm sm:text-xl font-semibold h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
+            className={`text-xs sm:text-xs h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "pending"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
@@ -90,7 +121,7 @@ const TasksTracker = ({
         )}
         {showCompleted && (
           <button
-            className={`text-sm sm:text-xl font-semibold w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "completed"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
@@ -102,7 +133,7 @@ const TasksTracker = ({
         )}
         {showSaved && (
           <button
-            className={`text-sm sm:text-xl font-semibold w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "saved"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
@@ -114,83 +145,181 @@ const TasksTracker = ({
         )}
       </div>
       <ul
-        className={`justify-center items-center md:justify-start w-full border border-gray-500 rounded-b-3xl relative`}
+        className={`overflow-y-auto h-64 justify-center items-center md:justify-start w-full border border-gray-500 rounded-b-3xl relative`}
       >
-        {activeTab === "pending"
-          ? pendingTasks.map((item) => (
-              <li
-                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 py-2 px-2 last:pb-0 last:border-b-0"
-                key={item.id}
-              >
-                <div className="flex items-center md:mx-5 justify-between w-full">
-                  <div className="flex items-center">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage
-                        src="/assets/ongoing.png"
-                        alt="pending-avatar"
-                        className="w-5 h-5"
-                      />
-                    </Avatar>
-                    <span className="text-xs sm:text-sm px-2">{item.goal}</span>
-                  </div>
-                  <div className="flex justify-center md:items-center ml-3 sm:ml-5">
-                    {showTooltip && <AnimatedTooltip items={tooltipItems} />}
-                    <span className="mx-10 md:mx-0 lg:ml-14 sm:ml-10">
-                      {item.percentage}%
-                    </span>
-                  </div>
+        {activeTab === "pending" ? (
+          goals && goals.length > 0 ? (
+            goals.filter((item: any) => item.status === false).length > 0 ? (
+              goals
+                .filter((item: any) => item.status === false)
+                .map((item: any) => (
+                  <li
+                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                    key={item.id}
+                  >
+                    <div className="flex items-center md:mx-5 justify-between w-full">
+                      <div className="flex items-center">
+                        <Avatar className="w-6 h-6">
+                          <AvatarImage
+                            src="/assets/ongoing.png"
+                            alt="pending-avatar"
+                            className="w-5 h-5"
+                          />
+                        </Avatar>
+                        <span className="text-xs sm:text-sm px-2">
+                          {item.goal_name}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
+                        {showTooltip && (
+                          <AnimatedTooltip items={tooltipItems} />
+                        )}
+                        <button
+                          className={`inline-block w-[70px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
+                            new Date(item?.completion_date).toDateString() ===
+                            new Date().toDateString()
+                              ? "bg-green-800 text-green-400" // Green for today's completion date
+                              : new Date(item?.completion_date) < new Date()
+                              ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
+                              : "bg-zinc-800 text-zinc-400" // Default for future dates
+                          }`}
+                          title="Completion Date"
+                        >
+                          <div className="flex justify-center items-center">
+                            <div className="w-5">
+                              <SlCalender />
+                            </div>
+                            <span>
+                              {new Date(item?.completion_date)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "short",
+                                })
+                                .replace(" ", "-")
+                                .toUpperCase()}
+                            </span>
+                          </div>
+                        </button>
+
+                        <SaveModal
+                          trigger={(onClick: any) => (
+                            <button
+                              onClick={onClick}
+                              className="rounded bg-green-300/20 px-1.5 py-1 text-sm text-green-300 transition-colors hover:bg-green-600 hover:text-green-200"
+                            >
+                              <AiOutlineCheckCircle />
+                            </button>
+                          )}
+                          confirmAction={() => handleCompleteGoal(item?.id)}
+                        />
+
+                        <Deletemodel
+                          trigger={(onClick: any) => (
+                            <button
+                              onClick={onClick}
+                              className="rounded bg-red-300/20 px-1.5 py-1 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                            >
+                              <FiTrash2 />
+                            </button>
+                          )}
+                          confirmAction={() => handleDeleteGoal(item?.id)}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                ))
+            ) : (
+              <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
+                No pending goals found
+              </li> // Fallback for no pending goals
+            )
+          ) : (
+            <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
+              No pending goals found
+            </li> // Fallback if no goals exist at all
+          )
+        ) : activeTab === "completed" ? (
+          goals && goals.length > 0 ? (
+            goals.filter((item: any) => item.status === true).length > 0 ? (
+              goals
+                .filter((item: any) => item.status === true)
+                .map((item: any) => (
+                  <li
+                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                    key={item.id}
+                  >
+                    <div className="flex items-center md:mx-5 justify-between w-full">
+                      <div className="flex items-center">
+                        <Avatar className="w-6 h-6">
+                          <AvatarImage
+                            src="/assets/greentick.png"
+                            alt="completed-avatar"
+                            className="w-5 h-5"
+                          />
+                        </Avatar>
+                        <span className="text-xs px-2 sm:text-sm">
+                          {item.goal_name}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center ml-5">
+                        {showTooltip && (
+                          <AnimatedTooltip items={tooltipItems} />
+                        )}
+                        <Deletemodel
+                          trigger={(onClick: any) => (
+                            <button
+                              onClick={onClick}
+                              className="rounded bg-red-300/20 px-1.5 py-1 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                            >
+                              <FiTrash2 />
+                            </button>
+                          )}
+                          confirmAction={() => handleDeleteGoal(item?.id)}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                ))
+            ) : (
+              <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
+                No completed goals found
+              </li> // Fallback for no completed goals
+            )
+          ) : (
+            <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
+              {" "}
+              No completed goals found
+            </li> // Fallback if no goals exist at all
+          )
+        ) : (
+          savedTasks.map((item) => (
+            <li
+              className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+              key={item.id}
+            >
+              <div className="flex items-center md:mx-5 justify-between w-full">
+                <div className="flex items-center">
+                  <Avatar className="w-6 h-6">
+                    <AvatarImage
+                      src="/assets/saved.png"
+                      alt="saved-avatar"
+                      className="w-5 h-5"
+                    />
+                  </Avatar>
+                  <span className="text-xs px-2 sm:text-sm">{item.goal}</span>
                 </div>
-              </li>
-            ))
-          : activeTab === "completed"
-          ? completedTasks.map((item) => (
-              <li
-                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 px-2 last:py-0 last:border-b-0"
-                key={item.id}
-              >
-                <div className="flex items-center md:mx-5 justify-between w-full">
-                  <div className="flex items-center">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage
-                        src="/assets/greentick.png"
-                        alt="completed-avatar"
-                        className="w-5 h-5"
-                      />
-                    </Avatar>
-                    <span className="text-xs px-2 sm:text-sm">{item.goal}</span>
-                  </div>
-                  <div className="flex items-center ml-5">
-                    {showTooltip && <AnimatedTooltip items={tooltipItems} />}
-                    <span className="mx-7 md:mx-0 lg:ml-14 sm:ml-10">100%</span>
-                  </div>
+                <div className="flex items-center ml-5">
+                  {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                  <Button color="primary" className="rounded-3xl">
+                    Take
+                  </Button>
                 </div>
-              </li>
-            ))
-          : savedTasks.map((item) => (
-              <li
-                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 py-2 px-2 last:py-0 last:border-b-0"
-                key={item.id}
-              >
-                <div className="flex items-center md:mx-5 justify-between w-full">
-                  <div className="flex items-center">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage
-                        src="/assets/saved.png"
-                        alt="saved-avatar"
-                        className="w-5 h-5"
-                      />
-                    </Avatar>
-                    <span className="text-xs px-2 sm:text-sm">{item.goal}</span>
-                  </div>
-                  <div className="flex items-center ml-5">
-                    {showTooltip && <AnimatedTooltip items={tooltipItems} />}
-                    <Button color="primary" className="rounded-3xl">
-                      Take
-                    </Button>
-                  </div>
-                </div>
-              </li>
-            ))}
+              </div>
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );
