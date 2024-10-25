@@ -20,7 +20,7 @@ const HorizontalScrollCarousel = () => {
     target: targetRef,
   });
 
-  const [xTransform, setXTransform] = useState(["0%", "-63%"]); // default for larger screens
+  const [xTransform, setXTransform] = useState(["0%", "-63.4%"]); // default for larger screens
 
   useEffect(() => {
     // Function to set the transform based on screen width
@@ -29,13 +29,13 @@ const HorizontalScrollCarousel = () => {
         const screenWidth = window.innerWidth;
 
         if (screenWidth <= 1024) {
-          setXTransform(["0%", "-13.1%"]); // For screens <= 1024px
+          setXTransform(["0%", "-55.1%"]); // For screens <= 1024px
         } else if (screenWidth <= 1280) {
-          setXTransform(["0%", "-13.3%"]);
+          setXTransform(["0%", "-43.4%"]);
         } else if (screenWidth <= 1550) {
           setXTransform(["0%", "-15.5%"]);
         } else {
-          setXTransform(["0%", "-63%"]); // For screens > 1280px
+          setXTransform(["0%", "-63.4%"]); // For screens > 1280px
         }
       }
 
@@ -125,7 +125,15 @@ const Card = ({ card }: { card: CardType }) => {
             >
               Your
             </span>
-            <span className="w-[20%] absolute left-[10rem] bottom-[12rem] 3xl:left-[7.5rem] 3xl:bottom-[9rem] 4xl:left-[8rem] 4xl:bottom-[9.5rem] flex items-center">
+            <span className="w-[10%] absolute left-[11.2rem] bottom-[20rem] 3xl:left-[8.5rem] 3xl:bottom-[15rem] 4xl:left-[9.2rem] 4xl:bottom-[15.5rem] flex items-center">
+              <Image
+                src="/assets/arrowGif.gif"
+                alt="Arrow Gif"
+                height={1000}
+                width={1000}
+              />
+            </span>
+            <span className="w-[20%] absolute left-[10rem] bottom-[12rem] 3xl:left-[7.5rem] 3xl:bottom-[7rem] 4xl:left-[8rem] 4xl:bottom-[7.5rem] flex items-center">
               <Image
                 src="/assets/MobileAnimation.gif"
                 alt="Mobile Animation"
@@ -195,7 +203,7 @@ const Card = ({ card }: { card: CardType }) => {
             </div>
 
             <div className="flex flex-col gap-24">
-              <div className="flex items-center relative  left-[85rem] 3xl:left-[54rem] 4xl:left-[70rem] gap-12 3xl:gap-8 4xl:gap-8 w-[100rem]">
+              <div className="flex items-center relative  left-[85rem] 3xl:left-[57rem] 4xl:left-[70rem] gap-12 3xl:gap-8 4xl:gap-8 w-[100rem]">
                 <div className="w-[100rem] flex gap-32 3xl:gap-12 4xl:gap-12 3xl:w-[55rem] 4xl:w-[60rem] relative ">
                   <div className="flex flex-col w-[40rem] leading-none gap-2 relative top-[4rem] 3xl:top-[2rem] 4xl:top-[1rem]">
                     <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px]  font-bold">
@@ -223,7 +231,7 @@ const Card = ({ card }: { card: CardType }) => {
                       remaining essentially unchanged.
                     </p>
                   </div>
-                  <div className="flex flex-col gap-2 3xl:gap-0 relative bottom-[3rem] 3xl:bottom-[1rem] 4xl:bottom-[1rem]">
+                  <div className="flex flex-col gap-2 3xl:gap-0 relative bottom-[3rem] 3xl:bottom-[0rem] 4xl:bottom-[0rem]">
                     <div className="flex flex-start gap-4 3xl:gap-0 4xl:gap-0">
                       <Image
                         src="/assets/AboutBanner1.png"
@@ -290,6 +298,15 @@ const Card = ({ card }: { card: CardType }) => {
                     >
                       Development
                     </p>
+                    <span className="w-[24%] relative left-[8rem] 3xl:left-[6rem] top-[3rem] 4xl:left-[6rem] 4xl:top-[1rem]">
+                      <Image
+                        src="/assets/arrowGif.gif"
+                        alt="Arrow Gif"
+                        height={100}
+                        width={100}
+                        style={{ transform: "rotate(-270deg)" }}
+                      />
+                    </span>
                   </div>
                   <div className="flex flex-col absolute left-[50rem] top-[15rem] 3xl:left-[48rem] 3xl:top-[14rem] 4xl:left-[48rem] 4xl:top-[14rem] leading-none gap-2 3xl:gap-0">
                     <p className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px]  font-bold">
@@ -304,6 +321,15 @@ const Card = ({ card }: { card: CardType }) => {
                     >
                       Solutions
                     </p>
+                    <span className="w-[30%] relative left-[10rem] 3xl:left-[6rem] top-[3rem] 4xl:left-[6rem] 4xl:top-[1rem]">
+                      <Image
+                        src="/assets/arrowGif.gif"
+                        alt="Arrow Gif"
+                        height={100}
+                        width={100}
+                        style={{ transform: "rotate(-270deg)" }}
+                      />
+                    </span>
                   </div>
                   <div className="flex flex-col absolute left-[88rem] top-[15rem] 3xl:left-[68rem] 3xl:top-[14rem] 4xl:left-[68rem] 4xl:top-[14rem]  leading-none gap-2 3xl:gap-0 ">
                     <p className="text-white uppercase text-[30px] 3xl:text-[20px] 4xl:text-[20px] font-bold">
@@ -318,6 +344,15 @@ const Card = ({ card }: { card: CardType }) => {
                     >
                       Studios
                     </p>
+                    <span className="w-[38%] relative left-[8rem] 3xl:left-[5rem] top-[3rem] 4xl:left-[3rem] 4xl:top-[1rem]">
+                      <Image
+                        src="/assets/arrowGif.gif"
+                        alt="Arrow Gif"
+                        height={100}
+                        width={100}
+                        style={{ transform: "rotate(-270deg)" }}
+                      />
+                    </span>
                   </div>
                   <div className="flex gap-72 3xl:gap-28 4xl:gap-40">
                     <Image
@@ -325,19 +360,19 @@ const Card = ({ card }: { card: CardType }) => {
                       alt="About Door"
                       height={1000}
                       width={1000}
-                      className="h-[460px] w-[290px] 3xl:w-[21%] 4xl:w-[18%]"
+                      className="h-[460px] w-[290px] 3xl:h-[371px] 4xl:h-[358px] 3xl:w-[25%] 4xl:w-[25%]"
                     />
                     <Image
                       src="/assets/AboutDoor.png"
                       height={1000}
                       width={1000}
                       alt="About Door"
-                      className="h-[460px] w-[290px] 3xl:w-[21%] 4xl:w-[18%]"
+                      className="h-[460px] w-[290px] 3xl:h-[371px] 4xl:h-[358px] 3xl:w-[25%] 4xl:w-[25%]"
                     />
                     <Image
                       src="/assets/AboutDoor.png"
                       alt="About Door"
-                      className="h-[460px] w-[290px] 3xl:w-[21%] 4xl:w-[18%]"
+                      className="h-[460px] w-[290px] 3xl:h-[371px] 4xl:h-[358px] 3xl:w-[25%] 4xl:w-[25%]"
                       height={1000}
                       width={1000}
                     />
