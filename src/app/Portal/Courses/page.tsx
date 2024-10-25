@@ -216,10 +216,7 @@ const Courses = () => {
         </div>
 
         <div>
-          <div
-            className="border border-gray-500 rounded-3xl shadow-md w-full h-full"
-            style={{ fontFamily: "Sansation" }}
-          >
+          <div className="border border-gray-500 rounded-3xl shadow-md w-full h-full">
             <h1 className="text-center text-3xl font-bold mb-4">
               Course Results
             </h1>

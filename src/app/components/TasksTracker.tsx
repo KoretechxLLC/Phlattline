@@ -78,7 +78,7 @@ const TasksTracker = ({
       <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-full">
         {showPending && (
           <button
-            className={`text-sm sm:text-lg h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
+            className={`text-sm sm:text-xl font-semibold h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "pending"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
@@ -90,7 +90,7 @@ const TasksTracker = ({
         )}
         {showCompleted && (
           <button
-            className={`text-sm sm:text-lg w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+            className={`text-sm sm:text-xl font-semibold w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "completed"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
@@ -102,7 +102,7 @@ const TasksTracker = ({
         )}
         {showSaved && (
           <button
-            className={`text-sm sm:text-lg w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+            className={`text-sm sm:text-xl font-semibold w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "saved"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
