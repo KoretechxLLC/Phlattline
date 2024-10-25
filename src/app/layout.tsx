@@ -8,6 +8,7 @@ import "./globals.css";
 import SideMenu from "./components/SideMenu";
 import Logo from "./components/Logo";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
