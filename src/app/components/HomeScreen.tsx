@@ -44,7 +44,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
     const h: any = typeof window !== "undefined" && window.innerHeight;
     const scene = new THREE.Scene();
     camera.current = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-    camera.current.position.z = 5;
+    camera.current.position.z = 4.4;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
@@ -228,7 +228,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
               onComplete: () => {
                 gsap.to(camera.current.position, {
                   duration: 0.5,
-                  z: 4, // Zoom in by reducing the z position
+                  z:6, // Zoom in by reducing the z position
                   ease: "power2.inOut",
                   onComplete: () => {
                     router.push(clickedObject.userData.route); // Route after the animation completes
