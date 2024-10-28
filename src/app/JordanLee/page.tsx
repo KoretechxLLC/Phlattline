@@ -113,10 +113,7 @@ const Card = ({ card }: { card: CardType }) => {
                 className="text-black text-[24px] 3xl:text-[14px] 4xl:text-[18px] font-regular leading-normal"
                 style={{ fontFamily: "Sansation" }}
               >
-                Bachelor &apos; s degree in Computer Science, with an MBA. Over
-                16 years of experience in the tech industry, with a rapid
-                transition from technical roles to leadership positions in the
-                last 5 years.
+                Director in a fast-growing software startup with a Bachelor &apos degree in Computer Science and an MBA. Over 16 years of experience, with a rapid transition from technical roles to leadership positions in the last 5 years.
               </p>
             </div>
           </div>

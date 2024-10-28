@@ -5,11 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useRouter } from "next/navigation";
 
-// interface HomeScreenProps {
-//   onModelLoaded: () => void;
-// }
-
-const Construction = ({ onModelLoaded }:any) => {
+const Construction = ({ onModelLoaded }: any) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const hasModelLoaded = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -26,23 +22,25 @@ const Construction = ({ onModelLoaded }:any) => {
     position: { x: number; y: number };
   } | null>(null);
 
-  // Define clickable mesh identifiers
   const clickableMeshNames = ["Home Screen", "Elijah Martinez", "Mrs. Nancy"];
+
+  // Use refs to store the rotation functions
+  const rotateArrow1 = useRef<() => void>(null!);
+  const rotateArrow2 = useRef<() => void>(null!);
+  const rotateArrow3 = useRef<() => void>(null!);
 
   useEffect(() => {
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
 
-    const container = containerRef.current;
+    const container: any = containerRef.current;
     if (container) {
       container.innerHTML = "";
     }
 
-    // Set up scene, camera, and renderer
     const w = window.innerWidth;
     const h = window.innerHeight;
     const scene = new THREE.Scene();
 
-    // Initialize the camera
     camera.current = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
     camera.current.position.z = 3;
 
@@ -50,14 +48,12 @@ const Construction = ({ onModelLoaded }:any) => {
     renderer.setSize(w, h);
     container?.appendChild(renderer.domElement);
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
     directionalLight.position.set(5, 5, 5).normalize();
     scene.add(directionalLight);
 
-    // Orbit Controls
     const controls = new OrbitControls(camera.current, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
@@ -65,8 +61,7 @@ const Construction = ({ onModelLoaded }:any) => {
     controls.minDistance = 3;
     controls.maxDistance = 5;
 
-    // Restrict rotation to X-axis only
-    controls.maxPolarAngle = Math.PI / 2.5; // Lock camera to X-axis rotation only
+    controls.maxPolarAngle = Math.PI / 2.5;
     controls.minPolarAngle = Math.PI / 2.5;
 
     // Load GLB Model
@@ -75,21 +70,17 @@ const Construction = ({ onModelLoaded }:any) => {
       "/assets/Construction.glb", // Path to your construction model
       (gltf) => {
         const earthMesh = gltf.scene;
-
-        // Center the model based on bounding box
         const box = new THREE.Box3().setFromObject(earthMesh);
         const center = box.getCenter(new THREE.Vector3());
-        earthMesh.position.sub(center); // Reposition the model to center at (0, 0, 0)
+        earthMesh.position.sub(center);
         const height = box.getSize(new THREE.Vector3()).y;
-        earthMesh.position.y += height / 2; // Vertically center the model
+        earthMesh.position.y += height / 2;
 
-        // Create a pivot group for model rotation
         const pivot = new THREE.Group();
         pivot.add(earthMesh);
         scene.add(pivot);
-        earthMeshRef.current = pivot; // Store reference for rotation
+        earthMeshRef.current = pivot;
 
-        // Add clickable cylinder meshes with different sizes
         const clickableMeshes = [
           {
             position: [1.3, 0.5, -0.6],
@@ -98,13 +89,13 @@ const Construction = ({ onModelLoaded }:any) => {
             size: [0.18, 0.18, 0.85],
           },
           {
-            position: [0.1, 0.4, 0.62],
+            position: [0.1, 0.35, 0.62],
             route: "/ElijahMartinez",
             name: "Elijah Martinez",
             size: [0.1, 0.1, 0.3],
           },
           {
-            position: [1.05, 0.4, 0.72],
+            position: [1.05, 0.33, 0.72],
             route: "/Nancy",
             name: "Mrs. Nancy",
             size: [0.1, 0.1, 0.3],
@@ -126,8 +117,54 @@ const Construction = ({ onModelLoaded }:any) => {
           const cylinder = new THREE.Mesh(geometry, material);
           cylinder.position.set(position[0], position[1], position[2]);
           cylinder.userData = { route, name };
-          earthMesh.add(cylinder); // Add the cylinder to the model
+          earthMesh.add(cylinder);
         });
+
+        // Function to create and add an arrow with up-and-down animation
+        const addArrow = (position: THREE.Vector3, imageUrl: string) => {
+          const textureLoader = new THREE.TextureLoader();
+          const imageTexture = textureLoader.load(imageUrl);
+
+          const planeGeometry = new THREE.PlaneGeometry(0.13, 0.13); // Adjust size as needed
+          const planeMaterial = new THREE.MeshStandardMaterial({
+            map: imageTexture,
+            transparent: true,
+            opacity: 1.5,
+            side: THREE.DoubleSide,
+          });
+
+          const arrowPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+          arrowPlane.position.copy(position);
+          arrowPlane.scale.set(0.5, 0.5, 0.5); // Adjust scale for visibility
+          earthMesh.add(arrowPlane); // Add arrowPlane to the earthMesh
+
+          // Store the original y-position to oscillate around it
+          const initialY = position.y;
+          let time = 0;
+
+          // Return a function to animate the arrow
+          return () => {
+            arrowPlane.rotation.y += 0.1; // Rotate around the Y-axis
+
+            // Update time and calculate new y-position using a sine wave for up-and-down motion
+            time += 0.2;
+            arrowPlane.position.y = initialY + Math.sin(time) * 0.05; // Adjust amplitude as needed
+          };
+        };
+
+        // Store the rotate functions with up-and-down animation in refs
+        rotateArrow1.current = addArrow(
+          new THREE.Vector3(0.07, 0.6, 0.61),
+          "/assets/ProfileArrow.png"
+        );
+        rotateArrow2.current = addArrow(
+          new THREE.Vector3(1.05, 0.58, 0.71),
+          "/assets/ProfileArrow.png"
+        );
+        rotateArrow3.current = addArrow(
+          new THREE.Vector3(1.32, 1.05, -0.62),
+          "/assets/ProfileArrow.png"
+        );
 
         if (!hasModelLoaded.current) {
           setIsModelLoaded(true);
@@ -141,20 +178,21 @@ const Construction = ({ onModelLoaded }:any) => {
       }
     );
 
-    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-
+      // Stop rotation if hovering over a mesh
       if (earthMeshRef.current && !isHovering.current) {
-        earthMeshRef.current.rotation.y -= 0.007; // Continuous rotation on Y-axis
+        earthMeshRef.current.rotation.y -= 0.007; // Continuous rotation of the model
       }
-
       renderer.render(scene, camera.current!);
+      // Call the rotate functions for arrows if they are defined
+      if (rotateArrow1.current) rotateArrow1.current();
+      if (rotateArrow2.current) rotateArrow2.current();
+      if (rotateArrow3.current) rotateArrow3.current();
     };
     animate();
 
-    // Handle window resize
     const handleWindowResize = () => {
       if (camera.current) {
         camera.current.aspect = window.innerWidth / window.innerHeight;
@@ -164,7 +202,6 @@ const Construction = ({ onModelLoaded }:any) => {
     };
     window.addEventListener("resize", handleWindowResize);
 
-    // Function to handle mouse hover
     const onMouseMove = (event: MouseEvent) => {
       event.preventDefault();
       mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -180,48 +217,41 @@ const Construction = ({ onModelLoaded }:any) => {
         if (intersects.length > 0) {
           const hoveredObject: any = intersects[0].object;
 
-          // Check if the intersected object is a clickable mesh
           if (
             hoveredObject.userData.name &&
             clickableMeshNames.includes(hoveredObject.userData.name)
           ) {
-            isHovering.current = true; // Set hover state
-
-            // Set the profile info for the hovered object
+            isHovering.current = true;
             setHoveredProfile({
               name: hoveredObject.userData.name,
-              picture: "", // Add picture URL if needed
-              position: { x: event.clientX, y: event.clientY }, // Set the position for the floating div
+              picture: "",
+              position: { x: event.clientX, y: event.clientY },
             });
 
-            // Set opacity for visual feedback on hover
-            hoveredObject.material.opacity = 0; // Change opacity for hover effect
+            hoveredObject.material.opacity = 0;
           }
         } else {
-          isHovering.current = false; // Reset hover state
-          setHoveredProfile(null); // Hide the profile info when not hovering
+          isHovering.current = false;
+          setHoveredProfile(null);
         }
       }
     };
 
-    // Handle mouse leaving the meshes
     const onMouseLeave = () => {
-      isHovering.current = false; // Reset hover state
-      setHoveredProfile(null); // Hide the profile info
+      isHovering.current = false;
+      setHoveredProfile(null);
     };
 
-    // Helper function for smooth zoom out animation
     const zoomOutOnClick = (callback: () => void) => {
-      const duration = 400; // Animation duration in milliseconds
+      const duration = 400;
       const start = performance.now();
       const initialPosition = camera.current?.position.clone();
-      const targetPosition = new THREE.Vector3(0, 0, 5); // Zoom out to z = 5
+      const targetPosition = new THREE.Vector3(0, 0, 5);
 
       const animateZoom = (time: number) => {
         const elapsed = time - start;
-        const t = Math.min(elapsed / duration, 1); // Calculate interpolation factor
+        const t = Math.min(elapsed / duration, 1);
 
-        // Linear interpolation for smooth zooming out
         camera.current?.position.lerpVectors(
           initialPosition!,
           targetPosition,
@@ -229,22 +259,21 @@ const Construction = ({ onModelLoaded }:any) => {
         );
 
         if (t < 1) {
-          requestAnimationFrame(animateZoom); // Continue animation
+          requestAnimationFrame(animateZoom);
         } else {
-          callback(); // Trigger callback (e.g., route) after animation completes
+          callback();
         }
       };
       requestAnimationFrame(animateZoom);
     };
 
-    // Handle mouse clicks for mesh selection
     const onMouseClick = (event: MouseEvent) => {
       event.preventDefault();
       mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
       raycaster.current.setFromCamera(mouse.current, camera.current!);
       const intersects = raycaster.current.intersectObjects(
-        earthMeshRef.current.children, // children is now correctly recognized
+        earthMeshRef.current.children,
         true
       );
 
@@ -252,32 +281,26 @@ const Construction = ({ onModelLoaded }:any) => {
         const clickedObject: any = intersects[0].object;
         if (clickedObject.userData.route) {
           zoomOutOnClick(() => {
-            router.push(clickedObject.userData.route); // Route to the corresponding page
+            router.push(clickedObject.userData.route);
           });
         }
       }
     };
 
-    // Event listeners
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("click", onMouseClick);
-    window.addEventListener("mouseleave", onMouseLeave); // Handle mouse leave event
+    window.addEventListener("mouseleave", onMouseLeave);
 
     return () => {
-      // Clean up
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("click", onMouseClick);
-      window.removeEventListener("mouseleave", onMouseLeave); // Clean up event listener
+      window.removeEventListener("mouseleave", onMouseLeave);
+      container.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [onModelLoaded, router]);
+  }, [onModelLoaded, router,clickableMeshNames]);
 
-  return (
-    <div
-      ref={containerRef}
-      style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
-    ></div>
-  );
+  return <div ref={containerRef} style={{ height: "100vh", width: "100%" }} />;
 };
 
 export default Construction;
