@@ -126,6 +126,9 @@ const authSlice = createSlice({
       })
       .addCase(Register.pending, (state) => {
         state.isLoading = true;
+        if (typeof window !== "undefined") {
+          window.location.href = "/Login"
+        }
         state.error = null;
       })
       .addCase(Register.fulfilled, (state, action) => {

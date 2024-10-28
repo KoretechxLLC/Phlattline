@@ -1,6 +1,7 @@
 interface RoundedSlideButtonProps {
   text: string;
-  className: string;
+  className?: string;
+  disabled?: boolean;
 }
 
 const ButtonWrapper: React.FC<RoundedSlideButtonProps> = ({

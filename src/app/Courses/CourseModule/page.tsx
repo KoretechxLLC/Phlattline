@@ -270,7 +270,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <ModuleList  />
+            <ModuleList />
           </CardContent>
 
         </Card>

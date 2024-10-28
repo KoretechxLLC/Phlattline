@@ -68,7 +68,7 @@ const IndividualAssessmentForm = () => {
     const newErrors: { [key: string]: string } = {};
 
     // Validate that all questions are answered
-    assessments.forEach((assessment) => {
+    assessments.forEach((assessment:any) => {
       assessment.individual_assessment_questions.forEach((question:any) => {
         if (!responses[question.id]) {
           newErrors[question.id] = "This question is required.";
