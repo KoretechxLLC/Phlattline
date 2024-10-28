@@ -4,7 +4,6 @@ import { prisma } from '@/app/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { unlink } from 'fs/promises';
 
-
 async function saveFile(file: File, destination: string): Promise<string> {
   const dir = path.join(process.cwd(), destination);
   await fs.mkdir(dir, { recursive: true }); // Ensure the directory exists
@@ -40,6 +39,7 @@ export async function POST(req: NextRequest) {
 
     const course_name = String(body.get("course_name")).trim();
     const description = String(body.get("description")).trim();
+    const price = parseFloat(body.get("price"));
     let assessments = body.get("assessments");
     assessments = JSON.parse(assessments);
 
@@ -53,6 +53,12 @@ export async function POST(req: NextRequest) {
     if (!description) {
       return NextResponse.json(
         { error: "Description is required." },
+        { status: 400 }
+      );
+    }
+    if (isNaN(price)) {
+      return NextResponse.json(
+        { error: "Price is required and must be a valid number." },
         { status: 400 }
       );
     }
@@ -136,18 +142,12 @@ export async function POST(req: NextRequest) {
       if (flag) {
         throw new Error("Question fields are required");
       }
-
-
-
-
     })
-
-
-
     const course = await prisma.courses.create({
       data: {
         course_name,
         description,
+        price,
         videos: {
           create: videosData,
         },
@@ -294,6 +294,7 @@ export async function PUT(req: NextRequest) {
 
     const course_name = String(body.get("course_name")).trim();
     const description = String(body.get("description")).trim();
+    const price = parseFloat(body.get("price")); // Extract the price
     let assessments = body.get("assessments");
     assessments = JSON.parse(assessments);
 
@@ -307,6 +308,12 @@ export async function PUT(req: NextRequest) {
     if (!description) {
       return NextResponse.json(
         { error: "Description is required." },
+        { status: 400 }
+      );
+    }
+    if (isNaN(price)) {
+      return NextResponse.json(
+        { error: "Price is required and must be a valid number." },
         { status: 400 }
       );
     }
@@ -400,6 +407,7 @@ export async function PUT(req: NextRequest) {
       data: {
         course_name,
         description,
+        price, // Include the price in the update
         videos: {
           // Update existing videos
           update: videoUpdates,
@@ -503,3 +511,4 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+

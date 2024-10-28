@@ -25,7 +25,7 @@ const PerformanceManagement = () => {
     null
   );
   const { success, error, goals } = useSelector(
-    (state: RootState) => state.PerformanceManagement
+    (state: RootState) => state.performance
   );
   const { userData } = useSelector((state: RootState) => state.auth);
 

@@ -217,7 +217,7 @@ const EventModal = ({
                 </div>
               </CardHeader>
               <CardContent>
-                <ModuleList textColor="text-black" />
+                <ModuleList  />
               </CardContent>
             </Card>
           </div>

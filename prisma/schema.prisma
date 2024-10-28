@@ -14,30 +14,31 @@ model user_types {
 }
 
 model users {
-  id                 Int                  @id @default(autoincrement())
-  user_type_id       Int
-  email              String               @unique @db.VarChar(255)
-  phone_number       String?               @db.VarChar(20)
-  password           String?               @db.VarChar(255)
-  first_name         String?              @db.VarChar(100)
-  last_name          String?              @db.VarChar(100)
-  designation        String?              @db.VarChar(100)
-  date_of_birth      DateTime?            @db.Date
-  provider           String?              @default("app") @db.VarChar(50)
-  status             String?              @default("pending") @db.VarChar(20)
-  created_at         DateTime?            @default(now()) @db.Timestamp(6)
-  isLoggedIn         Boolean              @default(false)
-  logout_at          DateTime?            @default(now()) @db.Timestamptz(6)       
-  organization_id    Int?
-  app_provider       String               @default("App")
-  profile_image      String?              @db.VarChar(255)
-  assessment_status  Boolean    @default(false) 
-  course_assignments  course_assignments[]
-  user_goals         user_goal[] 
-  user_courses       user_courses[]
-  organizations      organizations?       @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
-  user_types         user_types           @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
-  user_assessment_responses user_assessment_responses[] 
+  id                        Int                         @id @default(autoincrement())
+  user_type_id              Int
+  email                     String                      @unique @db.VarChar(255)
+  phone_number              String?                     @db.VarChar(20)
+  password                  String?                     @db.VarChar(255)
+  first_name                String?                     @db.VarChar(100)
+  last_name                 String?                     @db.VarChar(100)
+  designation               String?                     @db.VarChar(100)
+  date_of_birth             DateTime?                   @db.Date
+  provider                  String?                     @default("app") @db.VarChar(50)
+  status                    String?                     @default("pending") @db.VarChar(20)
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  isLoggedIn                Boolean                     @default(false)
+  logout_at                 DateTime?                   @default(now()) @db.Timestamptz(6)
+  organization_id           Int?
+  app_provider              String                      @default("App")
+  profile_image             String?                     @db.VarChar(255)
+  assessment_status         Boolean                     @default(false)
+  course_assignments        course_assignments[]
+  user_goals                user_goal[]
+  user_courses              user_courses[]
+  organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
+  user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
+  user_assessment_responses user_assessment_responses[]
+  user_video_progress       user_video_progress[]
 }
 
 model organizations {
@@ -49,29 +50,33 @@ model organizations {
   created_at         DateTime?            @default(now()) @db.Timestamptz(6)
   updated_at         DateTime?            @default(now()) @db.Timestamptz(6)
   description        String?
-  course_assignments  course_assignments[]
+  course_assignments course_assignments[]
   users              users[]
 }
 
 model courses {
-  id                 Int                  @id @default(autoincrement())
-  course_name        String               @db.VarChar(255)
-  description        String?
-  assessments        assessments[]
+  id                  Int                   @id @default(autoincrement())
+  course_name         String                @db.VarChar(255)
+  description         String?
+  price               Float
+  assessments         assessments[]
   course_assignments  course_assignments[]
-  user_courses       user_courses[]
-  videos             videos[]
+  user_courses        user_courses[]
+  videos              videos[]
+  user_video_progress user_video_progress[]
+  VideoProgress       VideoProgress[]
 }
 
 model videos {
-  id            Int     @id @default(autoincrement())
-  video_url     String  @db.VarChar(255)
-  sequence      Int
-  title         String? @db.VarChar(255)
-  description   String?
-  thumbnail_url String? @db.VarChar(255)
-  course_id     Int
-  courses       courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  id                  Int                   @id @default(autoincrement())
+  video_url           String                @db.VarChar(255)
+  sequence            Int
+  title               String?               @db.VarChar(255)
+  description         String?
+  thumbnail_url       String?               @db.VarChar(255)
+  course_id           Int
+  courses             courses               @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  user_video_progress user_video_progress[] // This relation now links to the user_video_progress
 }
 
 model assessments {
@@ -129,7 +134,7 @@ model assessmentsform {
   type                     String                     @db.VarChar(255)
   created_at               DateTime?                  @default(now()) @db.Timestamp(6)
   assessmentform_responses assessmentform_responses[]
-  assessmentsquestions     assessmentsquestions[]      @relation("FormQuestions")  // Define relation name
+  assessmentsquestions     assessmentsquestions[]     @relation("FormQuestions") // Define relation name
 }
 
 model assessmentsformoptions {
@@ -148,7 +153,8 @@ model assessmentsquestions {
   assessmentform_responses assessmentform_responses[]
   assessmentsformoptions   assessmentsformoptions[]
   assessmentsform          assessmentsform?           @relation("FormQuestions", fields: [assessment_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  @@index([category])      // Add index to optimize querying by category
+
+  @@index([category]) // Add index to optimize querying by category
 }
 
 enum Category {
@@ -157,58 +163,83 @@ enum Category {
 }
 
 model individual_assessments {
-  id                         Int                          @id @default(autoincrement())
-  title                      String                       @db.VarChar(255)
-  created_at                 DateTime?                    @default(now()) @db.Timestamp(6)
+  id                              Int                               @id @default(autoincrement())
+  title                           String                            @db.VarChar(255)
+  created_at                      DateTime?                         @default(now()) @db.Timestamp(6)
   individual_assessment_questions individual_assessment_questions[]
-  user_assessment_responses   user_assessment_responses[]   // Add this line
+  user_assessment_responses       user_assessment_responses[] // Add this line
 }
 
 model individual_assessment_questions {
-  id                          Int                          @id @default(autoincrement())
-  question_text               String                       @db.VarChar(255)
-  individual_assessment_id     Int
-  individual_assessment        individual_assessments       @relation(fields: [individual_assessment_id], references: [id], onDelete: Cascade)
+  id                            Int                             @id @default(autoincrement())
+  question_text                 String                          @db.VarChar(255)
+  individual_assessment_id      Int
+  individual_assessment         individual_assessments          @relation(fields: [individual_assessment_id], references: [id], onDelete: Cascade)
   individual_assessment_options individual_assessment_options[]
-  user_assessment_responses    user_assessment_responses[]   // Add this line
+  user_assessment_responses     user_assessment_responses[] // Add this line
 }
 
 model individual_assessment_options {
-  id                          Int                          @id @default(autoincrement())
-  option_text                 String                       @db.VarChar(255)
-  is_correct                  Boolean                      @default(false)
+  id                                Int                             @id @default(autoincrement())
+  option_text                       String                          @db.VarChar(255)
+  is_correct                        Boolean                         @default(false)
   individual_assessment_question_id Int
   individual_assessment_questions   individual_assessment_questions @relation(fields: [individual_assessment_question_id], references: [id], onDelete: Cascade)
 }
 
 model user_assessment_responses {
-  id                      Int                             @id @default(autoincrement())
-  user_id                 Int
-  assessment_id           Int
-  question_id             Int
-  selected_option         String                          @db.VarChar(255)
-  created_at              DateTime?                       @default(now()) @db.Timestamp(6)
-  user                     users                          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  assessment              individual_assessments          @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
-  question                individual_assessment_questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  id              Int                             @id @default(autoincrement())
+  user_id         Int
+  assessment_id   Int
+  question_id     Int
+  selected_option String                          @db.VarChar(255)
+  created_at      DateTime?                       @default(now()) @db.Timestamp(6)
+  user            users                           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  assessment      individual_assessments          @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
+  question        individual_assessment_questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
 }
 
 model user_goal {
-  id                Int       @id @default(autoincrement())
-  goal_name         String    @db.VarChar(255)
-  start_date        DateTime  @db.Date
-  completion_date   DateTime  @db.Date
-  goal_type         GoalType  @default(Personal)
-  description       String?   @db.Text
-  user_id           Int
-  user              users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  status            Boolean   @default(false)
-  created_at        DateTime  @default(now()) @db.Timestamp(6)
-  updated_at        DateTime  @default(now()) @db.Timestamp(6)
+  id              Int      @id @default(autoincrement())
+  goal_name       String   @db.VarChar(255)
+  start_date      DateTime @db.Date
+  completion_date DateTime @db.Date
+  goal_type       GoalType @default(Personal)
+  description     String?  @db.Text
+  user_id         Int
+  user            users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  status          Boolean  @default(false)
+  created_at      DateTime @default(now()) @db.Timestamp(6)
+  updated_at      DateTime @default(now()) @db.Timestamp(6)
 }
 
 enum GoalType {
   Personal
   Performance
   Professional
+}
+
+model user_video_progress {
+  id            Int             @id @default(autoincrement())
+  user_id       Int
+  assessment    Boolean         @default(false) // Assessment field
+  videoProgress VideoProgress[] // Relation to VideoProgress model
+  videos        videos[] // Relation to videos
+  course_id     Int? // Foreign key to courses
+  courses       courses?        @relation(fields: [course_id], references: [id], onDelete: Cascade) // Relation to courses
+  users         users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  updated_at    DateTime        @default(now()) @db.Timestamptz(6) // Track when the progress was last updated
+}
+
+model VideoProgress {
+  id                     Int                 @id @default(autoincrement())
+  user_video_progress_id Int // Foreign key relation to user_video_progress
+  video_id               String // Change to String if needed
+  progressDuration       Float // Progress duration in seconds
+  totalDuration          Float // Total video duration in seconds
+  completed              Boolean             @default(false)
+  course_id              Int? // Foreign key to courses
+  courses                courses?            @relation(fields: [course_id], references: [id], onDelete: Cascade) // Relation to courses
+  updated_at             DateTime            @default(now()) @db.Timestamptz(6) // Track when the progress was last updated
+  user_video_progress    user_video_progress @relation(fields: [user_video_progress_id], references: [id], onDelete: Cascade)
 }

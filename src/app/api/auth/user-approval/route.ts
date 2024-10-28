@@ -17,7 +17,7 @@ export async function PUT(request: NextRequest) {
       where: { id: userId },
     });
 
-    // Check if the user exists
+   
     if (!user) {
       return NextResponse.json(
         { message: "User not found.", success: false },
