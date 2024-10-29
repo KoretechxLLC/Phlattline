@@ -298,7 +298,7 @@ const Construction = ({ onModelLoaded }: any) => {
       container.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [onModelLoaded, router,clickableMeshNames]);
+  }, [onModelLoaded, router]);
 
   return <div ref={containerRef} style={{ height: "100vh", width: "100%" }} />;
 };

@@ -1,63 +1,62 @@
-"use client";
+"use client"
 import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import GetStarField from "../components/GetStarField"; // Adjust path as necessary
-import { useRouter } from "next/navigation"; // Import useRouter for routing
+import GetStarField from "../components/GetStarField";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
-import { useCallback } from "react";
+import ButtonWrapper from "./Button";
 
 interface HomeScreenProps {
   onModelLoaded: () => void;
 }
 
+interface ProfileData {
+  name: string;
+  picture: string;
+  position: { x: number; y: number };
+  route: string;
+}
+
 const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
-  const hasModelLoaded = useRef(false);
+  const [hoveredProfile, setHoveredProfile] = useState<ProfileData | null>(
+    null
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const earthMeshRef: any = useRef<THREE.Group | null>(null);
-  const camera: any = useRef<THREE.PerspectiveCamera | null>(null);
+  const earthMeshRef = useRef<THREE.Group | null>(null);
+  const camera:any = useRef<THREE.PerspectiveCamera | null>(null);
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = useRef(new THREE.Vector2());
-  const router = useRouter(); // Initialize the router
-  const isHovering = useRef(false); // Ref to track mouse hover state
-
-  // New state to hold hovered profile info
-  const [hoveredProfile, setHoveredProfile] = useState<{
-    name: string;
-    picture: string;
-    position: { x: number; y: number };
-  } | null>(null);
+  const router = useRouter();
+  const isHovering = useRef(false);
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+  const profileRef = useRef<HTMLDivElement | null>(null);
+  const hasModelLoaded = useRef(false);
 
   useEffect(() => {
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
 
     const container = containerRef.current;
-    if (container) {
-      container.innerHTML = "";
-    }
+    if (container) container.innerHTML = ""; // Clear previous renders
 
-    // Set up scene, camera, and renderer
-
-    const w: any = typeof window !== "undefined" && window.innerWidth;
-    const h: any = typeof window !== "undefined" && window.innerHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
     const scene = new THREE.Scene();
     camera.current = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-    camera.current.position.z = 4.4;
+    camera.current.position.z = 4.8;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
     container?.appendChild(renderer.domElement);
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 4);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 4);
     directionalLight.position.set(5, 5, 5).normalize();
     scene.add(directionalLight);
 
-    // Orbit Controls
     const controls = new OrbitControls(camera.current, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
@@ -65,10 +64,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
     controls.minDistance = 3;
     controls.maxDistance = 10;
 
-    // Load GLB Model
     const loader = new GLTFLoader();
     loader.load(
-      "/assets/Earth.glb", // Ensure this path is correct
+      "/assets/Earth.glb",
       (gltf) => {
         const earthMesh = gltf.scene;
         earthMesh.scale.set(1, 1, 1);
@@ -86,24 +84,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
             position: [0.3, 0.4, 0.6],
             name: "Corporate",
             size: 0.85,
-            route: "/WilliamJames", // Make sure to add the route here
+            route: "/WilliamJames",
           },
           {
             position: [-1, 0.1, 0.05],
             name: "Construction",
             size: 0.7,
-            route: "/Construction", // Add route here as well
+            route: "/Construction",
           },
           {
             position: [0.3, 0.1, -0.7],
             name: "Agriculture",
             size: 0.75,
-            route: "/SophiaRodriguez", // Add route here as well
+            route: "/SophiaRodriguez",
           },
         ];
 
         clickableMeshes.forEach(({ position, name, size, route }) => {
-          const geometry = new THREE.SphereGeometry(size, 32, 32); // Use size for geometry
+          const geometry = new THREE.SphereGeometry(size, 32, 32);
           const material = new THREE.MeshStandardMaterial({
             color: "red",
             transparent: true,
@@ -111,62 +109,46 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
           });
           const sphere = new THREE.Mesh(geometry, material);
           sphere.position.set(position[0], position[1], position[2]);
-          sphere.userData = { name, route }; // Add route to userData
-          earthMesh.add(sphere); // Add the mesh to the Earth model
+          sphere.userData = { name, route };
+          earthMesh.add(sphere);
         });
       },
       undefined,
-      (error) => {
-        console.error("An error occurred while loading the GLB model:", error);
-      }
+      (error) =>
+        console.error("An error occurred while loading the GLB model:", error)
     );
 
-    // Add stars
     const [stars, milkyWay] = GetStarField({ numStars: 10000 });
-    scene.add(stars);
-    scene.add(milkyWay);
+    scene.add(stars, milkyWay);
 
-    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-
-      // Earth ka rotation sirf tab chale jab mouse mesh pr hover nahi ho raha
-      if (earthMeshRef.current && !isHovering.current) {
+      if (earthMeshRef.current && !isHovering.current)
         earthMeshRef.current.rotation.y += 0.002;
-      }
-
       renderer.render(scene, camera.current!);
     };
     animate();
 
-    // Handle window resize
     const handleWindowResize = () => {
-      if (typeof window !== "undefined") {
-        if (camera.current) {
-          camera.current.aspect = window.innerWidth / window.innerHeight;
-          camera.current.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+      if (camera.current) {
+        camera.current.aspect = window.innerWidth / window.innerHeight;
+        camera.current.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
       }
+    };
 
-      window.addEventListener("resize", handleWindowResize);
-
-      // Cleanup function
-      return () => {
-        window.removeEventListener("resize", handleWindowResize);
-        renderer.dispose();
-      };
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+      renderer.dispose();
     };
   }, [onModelLoaded]);
 
-  // Function to handle mouse hover
   const onMouseMove = (event: MouseEvent) => {
-    event.preventDefault();
     mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    // Check if earthMeshRef.current is defined before raycasting
     if (earthMeshRef.current) {
       raycaster.current.setFromCamera(mouse.current, camera.current!);
       const intersects = raycaster.current.intersectObjects(
@@ -176,111 +158,91 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
 
       if (intersects.length > 0) {
         const hoveredObject: any = intersects[0].object;
-        // Check if the intersected object is a clickable mesh
         if (hoveredObject.userData.name) {
-          isHovering.current = true; // Set hover state
+          isHovering.current = true;
+          if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
 
-          // Set the profile info for the hovered object
           setHoveredProfile({
             name: hoveredObject.userData.name,
-            picture: "", // Add picture URL if needed
-            position: { x: event.clientX, y: event.clientY }, // Set the position for the floating div
+            picture: "",
+            position: { x: event.clientX, y: event.clientY },
+            route: hoveredObject.userData.route,
           });
 
-          // Set opacity for visual feedback on hover
-          hoveredObject.material.opacity = 0;
-        } else {
-          isHovering.current = false;
-          setHoveredProfile(null); // Hide the profile info when not hovering
+          hoverTimeout.current = setTimeout(
+            () => setHoveredProfile(null),
+            5000
+          );
         }
       } else {
         isHovering.current = false;
-        setHoveredProfile(null); // Hide the profile info when no intersections
+        if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+        hoverTimeout.current = setTimeout(() => setHoveredProfile(null), 8000);
       }
     }
   };
 
-  // Function to handle click event with animation
-  const onClick = useCallback(
-    (event: MouseEvent) => {
-      mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-      if (earthMeshRef.current) {
-        raycaster.current.setFromCamera(mouse.current, camera.current!);
-        const intersects = raycaster.current.intersectObjects(
-          earthMeshRef.current.children,
-          true
-        );
-
-        if (intersects.length > 0) {
-          const clickedObject = intersects[0].object;
-          // Check if the clicked object has a route
-          if (clickedObject.userData.route) {
-            // Animation: Rotate Earth to center the clicked mesh and zoom in
-            const targetPosition = clickedObject.position.clone();
-
-            // Use GSAP to animate the camera and Earth rotation
-            gsap.to(earthMeshRef.current.rotation, {
-              duration: 0.6,
-              y: Math.atan2(targetPosition.x, targetPosition.z),
-              ease: "power2.inOut",
-              onComplete: () => {
-                gsap.to(camera.current.position, {
-                  duration: 0.5,
-                  z:6, // Zoom in by reducing the z position
-                  ease: "power2.inOut",
-                  onComplete: () => {
-                    router.push(clickedObject.userData.route); // Route after the animation completes
-                  },
-                });
-              },
-            });
-          }
-        }
-      }
-    },
-    [mouse, earthMeshRef, raycaster, camera, router]
-  );
-
   useEffect(() => {
-    window.addEventListener("click", onClick);
-
+    window.addEventListener("mousemove", onMouseMove);
     return () => {
-      window.removeEventListener("click", onClick);
+      window.removeEventListener("mousemove", onMouseMove);
+      if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
     };
-  }, [onClick]);
+  }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Add event listeners for mouse move and click
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("click", onClick);
-
-      // Cleanup event listeners on unmount
-      return () => {
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("click", onClick);
-      };
+    if (hoveredProfile && profileRef.current) {
+      gsap.to(profileRef.current, { opacity: 1, duration: 0.5 });
+    } else if (profileRef.current) {
+      gsap.to(profileRef.current, { opacity: 0, duration: 0.5 });
     }
-  }, [onClick]);
+  }, [hoveredProfile]);
+
+  const handleExploreClick = () => {
+    if (hoveredProfile?.route && earthMeshRef.current) {
+      const meshToAnimate = earthMeshRef.current.children.find(
+        (child: any) => child.userData.name === hoveredProfile.name
+      );
+
+      if (meshToAnimate) {
+        gsap.to(meshToAnimate.position, { x: 0, y: 0, z: 0, duration: 1 });
+        gsap.to(camera.current.position, {
+          z: 3.5,
+          duration: 1,
+          onComplete: () => router.push(hoveredProfile.route),
+        });
+      }
+    }
+  };
 
   return (
     <div ref={containerRef}>
       {hoveredProfile && (
         <div
+          ref={profileRef}
           style={{
             position: "absolute",
-            top: hoveredProfile.position.y + 20, // Offset the div 20px below the mouse pointer
-            left: hoveredProfile.position.x + 20,
-            background: "rgba(0, 0, 0, 0.7)",
-            color: "black",
-            padding: "10px",
-            borderRadius: "8px",
-            backgroundColor: "white",
+            bottom: "60px",
+            left: "80px",
+            zIndex: 10,
+            opacity: 0, // Initial opacity
+            transition: "opacity 0.5s ease",
           }}
         >
-          <div>{hoveredProfile.name}</div>
+          <div className="flex flex-col">
+            <p className="text-[44px] uppercase">{hoveredProfile.name}</p>
+            <p>
+              Explore the area of {hoveredProfile.name} & read our client
+              stories.
+            </p>
+            <div className="flex flex-start">
+              <ButtonWrapper
+                text="Explore"
+                className="text-white flex justify-center border-red-500 w-[130px]"
+                onClick={handleExploreClick}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
