@@ -8,10 +8,10 @@ import "./globals.css";
 import SideMenu from "./components/SideMenu";
 import Logo from "./components/Logo";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import localforage from "localforage";
 
 const inter = Inter({ subsets: ["latin"] });
-
 const sideMenuPaths = [
   "/",
   "/Contact",
@@ -29,7 +29,56 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [showTime, setShowTime] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
   const path = usePathname();
+
+  // Load time from localforage on component mount
+  useEffect(() => {
+    async function loadTime() {
+      const storedTime = await localforage.getItem("performanceTimer");
+      if (storedTime) {
+        setShowTime(storedTime as typeof showTime);
+      }
+    }
+    loadTime();
+  }, []);
+
+  // Start or stop timer based on the current path
+  useEffect(() => {
+    if (path === "/Portal/PerformanceManagement" && showTime.seconds > 0) {
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(() => {
+          setShowTime((prev) => {
+            const newSeconds = prev.seconds + 1;
+            const newMinutes =
+              newSeconds >= 60 ? prev.minutes + 1 : prev.minutes;
+            const newHours = newMinutes >= 60 ? prev.hours + 1 : prev.hours;
+
+            const updatedTime = {
+              hours: newHours,
+              minutes: newMinutes % 60,
+              seconds: newSeconds % 60,
+            };
+
+            // Store updated time in localforage
+            localforage.setItem("performanceTimer", updatedTime);
+            return updatedTime;
+          });
+        }, 1000);
+      }
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+  }, [path]);
 
   return (
     <html lang="en">
