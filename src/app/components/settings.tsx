@@ -34,7 +34,6 @@ import FooterStyle from "./footer-style";
 import ResetConfig from "./reset-config";
 import FullScreenToggle from "./full-screen";
 import CopyCustomizer from "./copy-cutomizer";
-import BuyButton from "./buy-button";
 
 const ThemeCustomize = ({}) => {
   return (
@@ -128,9 +127,6 @@ const ThemeCustomize = ({}) => {
             </Tabs>
           </div>
         </ScrollArea>
-        <SheetFooter className="lg:py-4 lg:gap-3 gap-2 flex justify-between    ">
-          <BuyButton />
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

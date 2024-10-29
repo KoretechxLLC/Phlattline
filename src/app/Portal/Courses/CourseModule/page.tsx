@@ -15,7 +15,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import ReactPlayer from "react-player";
-import { resetVideoProgressStatus, updateVideoProgress } from "@/redux/slices/courses.slice";
+import {
+  resetVideoProgressStatus,
+  updateVideoProgress,
+} from "@/redux/slices/courses.slice";
 import ButtonWrapper from "@/app/components/Button";
 
 interface CourseModuleProps {
@@ -27,7 +30,9 @@ interface CourseModuleProps {
 const CourseModule: React.FC<CourseModuleProps> = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { courses, videoProgressSuccess } = useSelector((state: RootState) => state.courses);
+  const { courses, videoProgressSuccess } = useSelector(
+    (state: RootState) => state.courses
+  );
   const { userData } = useSelector((state: RootState) => state.auth);
   const [filteredData, setFilteredData] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -35,14 +40,8 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
   const [videoDuration, setVideoDuration] = useState<number>(0);
   const [totalDuration, setTotalDuration] = useState<number>(0);
 
-
-
   const courseId = searchParams.get("courseId");
   const videoId = searchParams.get("videoId");
-
-
-
-
 
   useEffect(() => {
     if (courseId && courses?.length > 0) {
@@ -56,37 +55,23 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
     }
   }, [courseId, courses]);
 
-
-  const [videoData, setVideoData] = useState<any>({})
-
-
+  const [videoData, setVideoData] = useState<any>({});
 
   useEffect(() => {
-
     if (filteredData && filteredData?.videos?.length > 0) {
-
-      setVideoData(filteredData?.videos.find(
-        (video: any) => video?.sequence == 1
-      ))
-
+      setVideoData(
+        filteredData?.videos.find((video: any) => video?.sequence == 1)
+      );
     }
-
-
-  }, [filteredData, courseId])
-
+  }, [filteredData, courseId]);
 
   useEffect(() => {
-
     if (filteredData && filteredData?.videos?.length > 0 && videoId) {
-      setVideoData(filteredData?.videos.find(
-        (video: any) => video?.id == videoId
-      ))
-
+      setVideoData(
+        filteredData?.videos.find((video: any) => video?.id == videoId)
+      );
     }
-
-  }, [videoId])
-
-
+  }, [videoId, filteredData]);
 
   const dispatch: any = useDispatch();
 
@@ -98,20 +83,15 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
       progressDuration: state.playedSeconds,
       course_id: Number(courseId),
       totalDuration,
-    }
-    dispatch(
-      updateVideoProgress(data)
-    );
+    };
+    dispatch(updateVideoProgress(data));
   };
 
   useEffect(() => {
-    if (  videoProgressSuccess) {
-      dispatch(resetVideoProgressStatus())
+    if (videoProgressSuccess) {
+      dispatch(resetVideoProgressStatus());
     }
-  }, [videoProgressSuccess]);
-
-
-
+  }, [videoProgressSuccess, dispatch]);
 
   const handleDuration = (duration: number) => {
     setTotalDuration(duration);
@@ -131,8 +111,6 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
     rating: 4.9,
     designation: "Senior Designer",
   };
-
-
 
   return (
     <div
@@ -156,7 +134,9 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             {!videoRun ? (
               <>
                 <Image
-                  src={`/courses/thumbnails/${videoData?.thumbnail_url || "default-thumbnail.jpg"}`}
+                  src={`/courses/thumbnails/${
+                    videoData?.thumbnail_url || "default-thumbnail.jpg"
+                  }`}
                   alt="Course Thumbnail"
                   className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
                   width={1000}
@@ -179,7 +159,6 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                 onPause={handlePause}
                 onPlay={handlePlay}
                 controls={true}
-
                 onProgress={handleProgress}
                 onDuration={handleDuration}
                 progressInterval={10000}
@@ -236,7 +215,10 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                   </Badge>
                   <p className="text-gray-400">{author.designation}</p>
                   <div className="flex items-center space-x-1 text-yellow-400 mx-4">
-                    <Icon icon="ph:star-fill" className="text-xl text-red-600" />
+                    <Icon
+                      icon="ph:star-fill"
+                      className="text-xl text-red-600"
+                    />
                     <span className="text-lg text-white">{author.rating}</span>
                   </div>
                 </div>
@@ -270,11 +252,13 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <ModuleList  />
+            <ModuleList />
           </CardContent>
-
         </Card>
-        <ButtonWrapper text="Start Assessment" className="border-red-500 text-white pl-[10em] pr-[10em] items-center justify-center flex" />
+        <ButtonWrapper
+          text="Start Assessment"
+          className="border-red-500 text-white pl-[10em] pr-[10em] items-center justify-center flex"
+        />
       </div>
     </div>
   );

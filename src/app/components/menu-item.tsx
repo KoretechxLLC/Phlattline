@@ -93,7 +93,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
           setMobileMenuConfig({ ...mobileMenuConfig, isOpen: false });
           router.push(`/Portal/${href}`);
         }}
-        className={`flex items-center ml-2`}
+        className={`flex items-center mr-2`}
       >
         <div className="flex items-center">
           <Image

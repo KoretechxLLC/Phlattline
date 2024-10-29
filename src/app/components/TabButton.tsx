@@ -11,6 +11,8 @@ interface TabButtonProps {
   imageSrc: string;
   textColor: string;
   arrowImageSrc: string;
+  showModalOnClick: boolean; // Prop to control modal visibility on click
+  isClickable: boolean; // New prop to control cursor-pointer styling
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
@@ -19,18 +21,24 @@ const TabButton: React.FC<TabButtonProps> = ({
   imageSrc,
   textColor,
   arrowImageSrc,
+  showModalOnClick,
+  isClickable, // Destructure new prop
 }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = () => {
-    setIsOpen(true);
+    if (showModalOnClick) {
+      setIsOpen(true); // Open modal only if showModalOnClick is true
+    }
   };
 
   return (
     <div>
       <div
-        className="w-full py-3 rounded-lg flex items-center justify-between cursor-pointer"
+        className={`w-full py-3 rounded-lg flex items-center justify-between ${
+          isClickable ? "cursor-pointer" : ""
+        }`} // Apply cursor-pointer based on isClickable
         style={{ backgroundColor }}
         onClick={handleButtonClick}
       >
@@ -39,16 +47,18 @@ const TabButton: React.FC<TabButtonProps> = ({
             width={25}
             height={25}
             src={imageSrc}
-            alt={""}
+            alt=""
             className="mx-5"
           />
-          <span className="text-xl mx-2">{text}</span>
+          <span className="text-xl mx-2" style={{ color: textColor }}>
+            {text}
+          </span>
         </div>
         <Image
           width={25}
           height={25}
           src={arrowImageSrc}
-          alt={""}
+          alt=""
           className="mx-5"
         />
       </div>

@@ -17,17 +17,17 @@ const ProfileInfo = () => {
   return (
     <div className="md:block hidden">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className=" cursor-pointer">
-          <div className=" flex items-center gap-3  text-default-800 ">
+        <DropdownMenuTrigger asChild className="cursor-pointer">
+          <div className="flex items-center gap-3 text-default-800">
             <Image
               src={"/assets/userProfile.png"}
-              alt={"User  "}
+              alt={"User"}
               width={36}
               height={36}
               className="rounded-full"
             />
-            <span className="text-base  me-2.5 lg:inline-block hidden">
-              <Icon icon="heroicons-outline:chevron-down"></Icon>
+            <span className="text-base me-2.5 lg:inline-block hidden">
+              <Icon icon="heroicons-outline:chevron-down" />
             </span>
           </div>
         </DropdownMenuTrigger>
@@ -62,20 +62,20 @@ const ProfileInfo = () => {
                   {item.name}
                 </DropdownMenuItem>
                 {index < 3 && (
-                  <div className="h-1 w-40 ml-6 bg-gray-300 my-1 "></div>
+                  <div className="h-px w-full bg-gray-400 my-1"></div>
                 )}
               </div>
             ))}
           </DropdownMenuGroup>
           <DropdownMenuItem
             className="flex items-center ml-6 gap-2 text-sm font-medium text-default-600 capitalize my-1 px-3 cursor-pointer"
-            onClick={() => router.push("/login")} // Update the href to the login page
+            onClick={() => router.push("/login")}
           >
             <div>
-              <form className="">
+              <form>
                 <button
                   type="submit"
-                  className=" w-full   flex  items-center gap-2"
+                  className="w-full flex items-center gap-2"
                 >
                   <Icon
                     icon="heroicons:arrow-right-on-rectangle"
@@ -91,4 +91,5 @@ const ProfileInfo = () => {
     </div>
   );
 };
+
 export default ProfileInfo;

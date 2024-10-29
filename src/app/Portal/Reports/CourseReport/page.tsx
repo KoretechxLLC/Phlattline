@@ -133,6 +133,8 @@ const CourseReport = () => {
         imageSrc="/assets/LiveIcon.png"
         textColor="#FFFFFF"
         arrowImageSrc="/assets/ArrowRightUp.png"
+        showModalOnClick={true}
+        isClickable={true}
       />
 
       <Card className="border h-full border-gray-500 rounded-3xl">

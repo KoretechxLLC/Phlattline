@@ -25,6 +25,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       heading: "Reports",
       description: "View detailed reports and insights to track your progress.",
     },
+    "/Portal/Settings": {
+      heading: "Settings",
+      description: "",
+    },
+    "/Portal/Settings/PurchaseHistory": {
+      heading: "Purchase History",
+      description: "",
+    },
     // Add more paths as needed
   };
 
