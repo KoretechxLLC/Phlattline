@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import {
   Card,
   CardContent,
@@ -18,7 +17,6 @@ import TabButton from "@/app/components/TabButton";
 import NotesCalendar from "@/app/components/NotesCalendar";
 import { Button } from "@/app/components/button-sidebar";
 import { fetchcourses } from "@/redux/slices/courses.slice";
-import { div } from "three/webgpu";
 import Spinner from "@/app/components/Spinner";
 
 const Courses = () => {
@@ -27,16 +25,20 @@ const Courses = () => {
 
   const [showAll, setShowAll] = useState(false);
 
-  const { courses, loading, error } = useSelector((state: any) => state.courses);
+  const { courses, loading, error } = useSelector(
+    (state: any) => state.courses
+  );
 
   useEffect(() => {
     dispatch(fetchcourses());
   }, [dispatch]);
 
-
-
   if (loading) {
-    return <div className="text-center text-gray-300"><Spinner /></div>;
+    return (
+      <div className="text-center text-gray-300">
+        <Spinner />
+      </div>
+    );
   }
 
   if (error) {
@@ -61,7 +63,6 @@ const Courses = () => {
                 videos={course.videos}
                 assessments={course.assessments}
                 key={course.id}
-                
               />
             ))}
           </div>
@@ -85,11 +86,19 @@ const Courses = () => {
         {/* Right side: Additional Content */}
         <div className="space-y-8 md:space-y-3">
           <div>
-            <Card className="shadow-md rounded-3xl h-full" style={{ fontFamily: "Sansation" }}>
+            <Card
+              className="shadow-md rounded-3xl h-full"
+              style={{ fontFamily: "Sansation" }}
+            >
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm">Upcoming Videos and Blogs</CardTitle>
-                  <p className="text-xs underline cursor-pointer" onClick={() => router.push("/videos")}>
+                  <CardTitle className="text-sm">
+                    Upcoming Videos and Blogs
+                  </CardTitle>
+                  <p
+                    className="text-xs underline cursor-pointer"
+                    onClick={() => router.push("/videos")}
+                  >
                     View all
                   </p>
                 </div>
@@ -102,17 +111,21 @@ const Courses = () => {
 
           <div className="w-full" style={{ fontFamily: "Sansation" }}>
             <TabButton
-              backgroundColor="#fff"
-              text="Recommended Assessments"
+              backgroundColor="#fff" // Set your desired color
+              text="Recommended Assessments" // Set the desired button text
               imageSrc="/assets/BlackAssessments.png"
               textColor="#000"
               arrowImageSrc="/assets/BlackArrowRU.png"
+              showModalOnClick={false}
+              isClickable={false}
             />
           </div>
 
           <div>
-            <div className="border border-gray-500 rounded-3xl shadow-md w-full h-full" style={{ fontFamily: "Sansation" }}>
-              <h1 className="text-center text-3xl font-bold mb-4">Course Results</h1>
+            <div className="border border-gray-500 rounded-3xl shadow-md w-full h-full">
+              <h1 className="text-center text-3xl font-bold mb-4">
+                Course Results
+              </h1>
               <CoursesResults />
             </div>
           </div>
@@ -124,6 +137,8 @@ const Courses = () => {
               imageSrc="/assets/LiveIcon.png"
               textColor="#FFFFFF"
               arrowImageSrc="/assets/ArrowRightUp.png"
+              showModalOnClick={true}
+              isClickable={true}
             />
           </div>
         </div>

@@ -17,7 +17,7 @@ import NotesCalendar from "../../components/NotesCalendar";
 const Dashboard = () => {
   const router = useRouter();
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full  lg:space-y-24 5xl:-space-y-5 overflow-hidden items-end">
+    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full lg:space-y-5 5xl:-space-y-7 overflow-hidden items-end">
       {/* Left side: Assessments */}
       <div className="space-y-4 md:space-y-6">
         <div>
@@ -43,9 +43,7 @@ const Dashboard = () => {
           <Card className="shadow-md rounded-3xl w-full h-full">
             <CardHeader>
               <div className="flex justify-between gap-3 items-center">
-                <CardTitle className="text-sm">
-                  Upcoming Videos and Blogs
-                </CardTitle>
+                <h1 className="text-xs">Upcoming Videos and Blogs</h1>
                 <p
                   className="text-sm underline cursor-pointer"
                   onClick={() => router.push("")}
@@ -95,6 +93,8 @@ const Dashboard = () => {
             imageSrc="/assets/LiveIcon.png"
             textColor="#FFFFFF"
             arrowImageSrc="/assets/ArrowRightUp.png"
+            showModalOnClick={true}
+            isClickable={true}
           />
         </div>
       </div>

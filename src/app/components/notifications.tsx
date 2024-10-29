@@ -101,7 +101,7 @@ const Notifications = () => {
                   </div>
                 </DropdownMenuItem>
                 {index < notifications.length - 1 && (
-                  <div className="h-1 w-60 ml-8 rounded-lg bg-gray-200 my-1"></div>
+                  <div className="h-px w-full  bg-gray-400 my-1"></div>
                 )}
               </div>
             ))}

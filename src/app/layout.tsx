@@ -78,14 +78,14 @@ export default function RootLayout({
         intervalRef.current = null;
       }
     }
-  }, [path]);
+  }, [path, showTime.seconds]);
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            {path !== "/Dashboard" && (
+            {path !== "/Portal" && (
               <div className="z-20 fixed left-12 top-12">
                 <Logo />
               </div>

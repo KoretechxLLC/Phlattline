@@ -22,14 +22,13 @@ const Construction = ({ onModelLoaded }: any) => {
     position: { x: number; y: number };
   } | null>(null);
 
-  const clickableMeshNames = ["Home Screen", "Elijah Martinez", "Mrs. Nancy"];
-
   // Use refs to store the rotation functions
   const rotateArrow1 = useRef<() => void>(null!);
   const rotateArrow2 = useRef<() => void>(null!);
   const rotateArrow3 = useRef<() => void>(null!);
 
   useEffect(() => {
+    const clickableMeshNames = ["Home Screen", "Elijah Martinez", "Mrs. Nancy"];
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
 
     const container: any = containerRef.current;
@@ -298,7 +297,7 @@ const Construction = ({ onModelLoaded }: any) => {
       container.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [onModelLoaded, router,clickableMeshNames]);
+  }, [onModelLoaded, router]);
 
   return <div ref={containerRef} style={{ height: "100vh", width: "100%" }} />;
 };

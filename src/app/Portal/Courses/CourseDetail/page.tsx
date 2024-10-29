@@ -9,7 +9,7 @@ import { Badge } from "@/app/components/badge";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 import { RootState } from "@/redux/store";
 
 interface CourseDetailsProps {
@@ -24,14 +24,16 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   const [showComments, setShowComments] = useState<Boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>();
-  const [isPlaying, setIsPlaying] = useState(false); 
+  const [isPlaying, setIsPlaying] = useState(false);
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId");
   const { courses } = useSelector((state: RootState) => state.courses);
 
   useEffect(() => {
     if (courseId) {
-      const filteredCourseData = courses.find((e: any) => Number(e.id) === Number(courseId));
+      const filteredCourseData = courses.find(
+        (e: any) => Number(e.id) === Number(courseId)
+      );
       setData(filteredCourseData);
     }
   }, [courseId, courses]);
@@ -44,11 +46,10 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
     setShowComments(true);
   };
 
-
-  
-
   // Find the video with sequence 1
-  const videoWithSequenceOne = data?.videos.find((video: any) => video.sequence === 1);
+  const videoWithSequenceOne = data?.videos.find(
+    (video: any) => video.sequence === 1
+  );
 
   // Function to toggle video play state
   const handlePlayVideo = () => {
@@ -56,13 +57,18 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   };
 
   return (
-    <div className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full space-y-6 rounded-lg" style={{ fontFamily: "Sansation" }}>
+    <div
+      className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full space-y-6 rounded-lg"
+      style={{ fontFamily: "Sansation" }}
+    >
       {/* Left Column: Course Details */}
       <div>
         <div className="flex items-center px-5 py-1 space-x-4">
           <h1 className="text-3xl font-bold">{data && data?.course_name}</h1>
           <Badge className="font-bold rounded-2xl text-md bg-gradient-to-b whitespace-nowrap from-[#B50D34] to-[#BAA716] text-white">
-            <span className="px-5" style={{ fontFamily: "Sansation" }}>Basic</span>
+            <span className="px-5" style={{ fontFamily: "Sansation" }}>
+              Basic
+            </span>
           </Badge>
         </div>
 
@@ -70,7 +76,9 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
           {!isPlaying ? (
             <>
               <Image
-                src={`/courses/thumbnails/${videoWithSequenceOne?.thumbnail_url || 'default-thumbnail.jpg'}`}
+                src={`/courses/thumbnails/${
+                  videoWithSequenceOne?.thumbnail_url || "default-thumbnail.jpg"
+                }`}
                 alt="Course Thumbnail"
                 className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
                 width={1000}
@@ -92,15 +100,15 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
               autoPlay
               className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
             >
-              <source src={`/courses/videos/${videoWithSequenceOne?.video_url}`} type="video/mp4" />
+              <source
+                src={`/courses/videos/${videoWithSequenceOne?.video_url}`}
+                type="video/mp4"
+              />
               Your browser does not support the video tag.
             </video>
-
           )}
-
-        
         </div>
-        
+
         {/* Course Details Section */}
         <div className="space-y-5 w-full my-2 mx-2">
           <div className="rounded-2xl">
@@ -118,7 +126,10 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                       {data?.rating}
                     </span>
                     <p className="text-gray-500 mx-5">|</p>
-                    <Icon icon="heroicons-solid:users" className="text-yellow-600" />
+                    <Icon
+                      icon="heroicons-solid:users"
+                      className="text-yellow-600"
+                    />
                     <span className="text-default-500">
                       {data?.subscribers}
                     </span>
@@ -151,7 +162,9 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
               size="default"
               color="primary"
               style={{ fontFamily: "Sansation" }}
-              onClick={() => router.push(`/Portal/Courses/CourseModule?courseId=${data?.id}`)}
+              onClick={() =>
+                router.push(`/Portal/Courses/CourseModule?courseId=${data?.id}`)
+              }
             >
               Get Started
             </Button>
@@ -166,6 +179,8 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             imageSrc="/assets/LiveIcon.png"
             textColor="#FFFFFF"
             arrowImageSrc="/assets/ArrowRightUp.png"
+            showModalOnClick={true}
+            isClickable={true}
           />
         </div>
       </div>
@@ -174,7 +189,10 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
       <div className="overflow-x-scroll h-[60em]">
         <div className="grid my-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
           {data?.videos.map((video: any) => (
-            <div key={video.id} className="relative border border-gray-500 rounded-lg">
+            <div
+              key={video.id}
+              className="relative border border-gray-500 rounded-lg"
+            >
               <Image
                 src={`/courses/thumbnails/${video.thumbnail_url}`}
                 alt={`Video Thumbnail ${video.id}`}
@@ -231,9 +249,16 @@ const SpringModal = ({
             className="bg-white rounded-lg p-6"
           >
             <h2 className="text-lg font-bold text-black">Confirm Purchase</h2>
-            <p className="mt-2 text-black">Are you sure you want to buy this course?</p>
+            <p className="mt-2 text-black">
+              Are you sure you want to buy this course?
+            </p>
             <div className="flex justify-end mt-4 space-x-2">
-              <Button onClick={() => setIsOpen(false)} className="text-black border-2">Cancel</Button>
+              <Button
+                onClick={() => setIsOpen(false)}
+                className="text-black border-2"
+              >
+                Cancel
+              </Button>
               <Button
                 onClick={() => {
                   setIsBought(true); // Set bought state

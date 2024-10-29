@@ -16,3 +16,22 @@ export const hexToRGB = (hex: any, alpha?: number): any => {
     return `rgb(${r}, ${g}, ${b})`;
   }
 };
+
+export const formatCreditCardNumber = (value: string): string => {
+  // Your logic to format the card number
+  return value
+    .replace(/\D/g, "")
+    .replace(/(.{4})/g, "$1 ")
+    .trim();
+};
+
+export const formatCVC = (value: string): string => {
+  return value.replace(/\D/g, "");
+};
+
+export const formatExpirationDate = (value: string): string => {
+  return value
+    .replace(/[^0-9]/g, "")
+    .replace(/(.{2})/, "$1/")
+    .trim();
+};

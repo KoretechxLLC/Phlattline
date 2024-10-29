@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import MenuItem from "@/app/components/menu-item";
-import MenuWidget from "@/app/components/Widget";
-import { SidebarToggle } from "@/app/components/sidebar-toggle";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -39,11 +37,6 @@ export function MenuClassic() {
       label: "Performance Management",
       icon: "/assets/PerformanceLogo.png",
     },
-    {
-      href: "/TalentManagement",
-      label: "Talent Management",
-      icon: "/assets/TalentLogo.png",
-    },
     { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
   ];
 
@@ -53,8 +46,8 @@ export function MenuClassic() {
   };
 
   return (
-    <nav className="theme-gradient block rounded-3xl h-full w-full transition-all duration-300 z-40">
-      <div className="flex justify-center items-center mt-4 mb-28">
+    <nav className="theme-gradient rounded-3xl h-full w-full transition-all duration-300 z-40 flex flex-col">
+      <div className="flex justify-center items-center my-12">
         <div className="flex justify-center">
           <Image
             src="/assets/WhiteLogo.png"
@@ -66,30 +59,27 @@ export function MenuClassic() {
         </div>
       </div>
 
-      <ul className="flex flex-col h-[calc(80vh-80px)] justify-between space-y-0 pl-8 py-0 w-[17em] ">
+      <ul className="flex flex-col space-y-4 pl-8 py-8 w-[17em] flex-grow">
         {menus.map((menu, index) => (
           <li className="w-full" key={index}>
-            <div className="w-[90%] mb-1 last:mb-0">
+            <div className="w-[90%]">
               <MenuItem label={menu.label} href={menu.href} icon={menu.icon} />
             </div>
           </li>
         ))}
-        <li className="w-full">
-          <MenuWidget
-            isActive={activeMenu === "/OdaasStrategic"}
-            onClick={() => handleMenuClick("/OdaasStrategic")}
-          />
-        </li>
-        {isDesktop && (
-          <li className="pt-14">
-            <MenuItem
-              label="Settings"
-              href="/SettingsProfile"
-              icon="/assets/SettingsLogo.png"
-            />
-          </li>
-        )}
       </ul>
+
+      {isDesktop && (
+        <div className="pl-8 pb-8 w-full">
+          {" "}
+          {/* Anchors to the bottom */}
+          <MenuItem
+            label="Settings"
+            href="/Settings"
+            icon="/assets/SettingsLogo.png"
+          />
+        </div>
+      )}
     </nav>
   );
 }
