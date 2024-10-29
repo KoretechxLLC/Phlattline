@@ -1,8 +1,14 @@
 "use client";
 
 import { useConfig } from "@/app/hooks/use-config";
+import { fetchAssessments } from "@/redux/slices/individualassessment.slice";
+import { fetchAssessmentsResponse } from "@/redux/slices/individualAssessmentResponse.slice";
+import { RootState } from "@/redux/store";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
+
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface AssessmentTrackerProps {
@@ -19,31 +25,98 @@ const generateColors = (numFields: number) => {
   return colors;
 };
 
+const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
+  let calculatedGraph = assessments.map((index: any) => {
+    let responseData = assessmentsResponse
+      .map((e: any) => {
+        if (e?.question?.individual_assessment_id == index?.id) {
+          let assessementTrack = e?.question?.individual_assessment_options
+            .map((option: any) => {
+              if (e?.selected_option == option?.option_text) {
+                return option.percentage;
+              }
+            })
+            .filter(Boolean);
+
+          return {
+            id: e?.question?.individual_assessment_id,
+            percentage: assessementTrack,
+          };
+        }
+      })
+      .filter(Boolean);
+
+    let totalPercentage = 0;
+
+    responseData.forEach((item: any) => {
+      const currentSum =
+        item?.percentage.length > 0
+          ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
+          : 0;
+
+      totalPercentage += currentSum;
+    });
+
+    return {
+      title: index.title,
+      percentage:
+        totalPercentage / index.individual_assessment_questions.length,
+    };
+  });
+  return calculatedGraph;
+};
+
 const AsessmentTracker = ({
   height = 220,
   chartType = "bar",
-  categories = [
-    "Timing Issues",
-    "Ineffective Leadership",
-    "Mismanagement",
-    "Project Management",
-    "Lack of Innovation",
-  ],
 }: AssessmentTrackerProps) => {
   const [config] = useConfig();
   const { isRtl } = config;
-  const { theme: mode } = useTheme();
 
-  const data = [44, 55, 57, 60, 48];
+  const [allCategories, setAllCategories] = useState<any>([]);
+  const { assessments, loading, error, success } = useSelector(
+    (state: RootState) => state.assessment
+  );
 
-  const chartColors = generateColors(categories.length);
+  const {
+    responseLoading,
+    responseError,
+    assessmentsResponse,
+    responseSuccess,
+  } = useSelector((state: RootState) => state.assessmentResponse);
+
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    if (!assessments || assessments?.length == 0) {
+      dispatch(fetchAssessments());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!assessmentsResponse || assessmentsResponse.length == 0) {
+      dispatch(fetchAssessmentsResponse());
+    }
+  }, [success]);
+
+  useEffect(() => {
+    if (assessments && assessments.length > 0) {
+      const categories =
+        assessments?.length > 0 ? assessments?.map((e: any) => e?.title) : [];
+      setAllCategories(categories);
+    }
+  }, [assessments.length, success]);
+
+  const data = calculatePercentages(assessmentsResponse, assessments);
+
+  const chartColors = generateColors(allCategories.length);
 
   const series = [
     {
       name: "Assessments",
-      data: data.map((value, index) => ({
-        x: categories[index],
-        y: value,
+      data: data.map((value: any, index: any) => ({
+        x: value.title || allCategories[index],
+        y: value.percentage,
         fillColor: chartColors[index],
       })),
     },
@@ -111,7 +184,7 @@ const AsessmentTracker = ({
       },
     },
     xaxis: {
-      categories: categories,
+      categories: allCategories,
       labels: {
         style: {
           colors: "#ffffff",

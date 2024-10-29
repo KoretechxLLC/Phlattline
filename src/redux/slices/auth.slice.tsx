@@ -119,7 +119,7 @@ const authSlice = createSlice({
     setAssessmentUpdate: (state) => {
       state.userData.assessment_status = true;
       if (typeof window !== "undefined") {
-        window.location.href = "/Dashboard";
+        window.location.href = "/Portal/Dashboard";
       }
     },
   },

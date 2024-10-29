@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -13,9 +13,19 @@ import PersonalGoals from "@/app/components/PersonalGoalsTracker";
 import TasksTracker from "@/app/components/TasksTracker";
 import TabButton from "@/app/components/TabButton";
 import NotesCalendar from "../../components/NotesCalendar";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAssessments } from "@/redux/slices/individualassessment.slice";
+import { RootState } from "@/redux/store";
 
 const Dashboard = () => {
   const router = useRouter();
+
+  const { assessments, loading, error, success } = useSelector(
+    (state: RootState) => state.assessment
+  );
+
+  const dispatch: any = useDispatch();
+
   return (
     <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full lg:space-y-5 5xl:-space-y-7 overflow-hidden items-end">
       {/* Left side: Assessments */}

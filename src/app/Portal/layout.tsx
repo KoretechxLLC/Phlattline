@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const path = usePathname();
 
-  // Define path-to-content mappings
   const pathContentMap: {
     [key: string]: { heading: string; description: string };
   } = {

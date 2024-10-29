@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, data: newGoal }, { status: 201 });
+    return NextResponse.json({ success: true, data: newGoal }, { status: 200 });
   } catch (error: any) {
     console.error("Error creating user goal:", error);
     return NextResponse.json(

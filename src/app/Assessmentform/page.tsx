@@ -1,25 +1,32 @@
 "use client";
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 const CreateAssessment: React.FC = () => {
-  const [assessmentName, setAssessmentName] = useState('');
-  const [questions, setQuestions] = useState<{ questionText: string; options: string[]; category: string }[]>([]);
-  const [newQuestion, setNewQuestion] = useState('');
-  const [newOptions, setNewOptions] = useState<string[]>(['']);
-  const [category, setCategory] = useState<'individual' | 'organization'>('individual');
+  const [assessmentName, setAssessmentName] = useState("");
+  const [questions, setQuestions] = useState<
+    { questionText: string; options: string[]; category: string }[]
+  >([]);
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newOptions, setNewOptions] = useState<string[]>([""]);
+  const [category, setCategory] = useState<"individual" | "organization">(
+    "individual"
+  );
 
   const handleAddOption = (index: number) => {
     const updatedOptions = [...newOptions];
-    updatedOptions.splice(index + 1, 0, '');
+    updatedOptions.splice(index + 1, 0, "");
     setNewOptions(updatedOptions);
   };
 
   const handleAddQuestion = () => {
     if (newQuestion.trim() && newOptions.length) {
-      setQuestions([...questions, { questionText: newQuestion, options: newOptions, category }]);
-      setNewQuestion('');
-      setNewOptions(['']); 
+      setQuestions([
+        ...questions,
+        { questionText: newQuestion, options: newOptions, category },
+      ]);
+      setNewQuestion("");
+      setNewOptions([""]);
     }
   };
 
@@ -28,26 +35,27 @@ const CreateAssessment: React.FC = () => {
       type: assessmentName,
       questions: questions,
     };
-    
-    try {
-      const response = await axios.post('/api/assessmentform', data);
 
-      if (response.status === 201) {
-    
-        setAssessmentName('');
+    try {
+      const response = await axios.post("/api/assessmentform", data);
+
+      if (response.status === 200) {
+        setAssessmentName("");
         setQuestions([]);
-        setNewQuestion('');
-        setNewOptions(['']);
+        setNewQuestion("");
+        setNewOptions([""]);
       }
     } catch (error) {
-      console.error('Failed to create assessment:', error);
+      console.error("Failed to create assessment:", error);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold text-center mb-6">Create Assessment</h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">
+          Create Assessment
+        </h1>
         <input
           type="text"
           placeholder="Assessment Name"
@@ -60,18 +68,28 @@ const CreateAssessment: React.FC = () => {
           <h2 className="text-lg font-semibold mb-2">Questions</h2>
           {questions.map((q, index) => (
             <div key={index} className="mb-4 p-4 border rounded-md bg-gray-50">
-              <h3 className="font-medium">{`Question ${index + 1}: ${q.questionText}`}</h3>
+              <h3 className="font-medium">{`Question ${index + 1}: ${
+                q.questionText
+              }`}</h3>
               <div className="mt-2">
                 {q.options.map((option, optIndex) => (
                   <div key={optIndex} className="flex items-center">
-                    <input  onChange={(e) => setAssessmentName(e.target.value)} type="text" value={option} readOnly className="w-full p-2 mb-2 border rounded-md" />
+                    <input
+                      onChange={(e) => setAssessmentName(e.target.value)}
+                      type="text"
+                      value={option}
+                      readOnly
+                      className="w-full p-2 mb-2 border rounded-md"
+                    />
                   </div>
                 ))}
                 <select
                   value={q.category}
                   onChange={(e) => {
                     const updatedQuestions = [...questions];
-                    updatedQuestions[index].category = e.target.value as 'individual' | 'organization';
+                    updatedQuestions[index].category = e.target.value as
+                      | "individual"
+                      | "organization";
                     setQuestions(updatedQuestions);
                   }}
                   className="mt-2 p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
@@ -115,7 +133,9 @@ const CreateAssessment: React.FC = () => {
             ))}
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as 'individual' | 'organization')}
+              onChange={(e) =>
+                setCategory(e.target.value as "individual" | "organization")
+              }
               className="mt-2 p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="individual">Individual</option>

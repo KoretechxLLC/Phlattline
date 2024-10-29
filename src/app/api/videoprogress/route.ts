@@ -1,14 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/app/lib/prisma'; // Adjust the import path based on your structure
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/app/lib/prisma"; // Adjust the import path based on your structure
 
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
-    const { user_id, video_id, progressDuration, totalDuration,course_id } = body;
+    const { user_id, video_id, progressDuration, totalDuration, course_id } =
+      body;
 
-    if (!user_id || !video_id || !course_id || typeof progressDuration !== 'number' || typeof totalDuration !== 'number') {
+    if (
+      !user_id ||
+      !video_id ||
+      !course_id ||
+      typeof progressDuration !== "number" ||
+      typeof totalDuration !== "number"
+    ) {
       return NextResponse.json(
-        { error: 'user_id, video_id, progressDuration, and course_id,  totalDuration are required fields.' },
+        {
+          error:
+            "user_id, video_id, progressDuration, and course_id,  totalDuration are required fields.",
+        },
         { status: 400 }
       );
     }
@@ -38,9 +48,15 @@ export async function PUT(req: NextRequest) {
       );
 
       // If the current progress exists and new progress is less than or equal, do not update
-      if (currentProgress && progressDuration <= currentProgress.progressDuration) {
+      if (
+        currentProgress &&
+        progressDuration <= currentProgress.progressDuration
+      ) {
         return NextResponse.json(
-          { message: 'Rewind detected or no forward progress. No update made.', completed: currentProgress.completed },
+          {
+            message: "Rewind detected or no forward progress. No update made.",
+            completed: currentProgress.completed,
+          },
           { status: 200 }
         );
       }
@@ -68,7 +84,11 @@ export async function PUT(req: NextRequest) {
         },
       });
 
-      return NextResponse.json({ success: true, completed: updatedProgress?.completed, data: updatedProgress });
+      return NextResponse.json({
+        success: true,
+        completed: updatedProgress?.completed,
+        data: updatedProgress,
+      });
     } else {
       // If no progress exists, create a new progress record
       const newProgress = await prisma.user_video_progress.create({
@@ -91,12 +111,19 @@ export async function PUT(req: NextRequest) {
 
       const createdProgress = newProgress.videoProgress[0]; // Assuming only one record is created
 
-      return NextResponse.json({ success: true, completed: createdProgress?.completed, data: newProgress }, { status: 201 });
+      return NextResponse.json(
+        {
+          success: true,
+          completed: createdProgress?.completed,
+          data: newProgress,
+        },
+        { status: 200 }
+      );
     }
   } catch (error: any) {
-    console.error('Error updating video progress:', error);
+    console.error("Error updating video progress:", error);
     return NextResponse.json(
-      { error: error.message || 'Failed to update video progress' },
+      { error: error.message || "Failed to update video progress" },
       { status: 500 }
     );
   }
