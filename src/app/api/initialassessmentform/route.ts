@@ -1,4 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
+
 import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 
@@ -7,7 +8,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file");
 
-    // Check if a valid file is uploaded
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
         { error: "No valid file uploaded." },
@@ -17,72 +17,94 @@ export async function POST(req: NextRequest) {
 
     const data = await file.arrayBuffer();
     const workbook = XLSX.read(data, { type: "array" });
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]]; // Get the first sheet
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-    const headers = jsonData[0]; // Assuming first row contains headers
-    const rows = jsonData.slice(1); // Get all rows except the header
+    const headers = jsonData[0];
+    const rows = jsonData.slice(1);
 
-    const title = headers[0]; // Assuming title is in the first column
-    const questions = rows.map((row) => ({
-      question_text: row[1], // Assuming question text is in the second column
-      options: row.slice(2).filter(Boolean), // Options start from the third column
-    }));
+    const assessments: any[] = [];
+    let currentTitle = "";
+    let questions: any[] = [];
 
-    // Validate the extracted data
-    if (!title) {
+    for (const row of rows) {
+      const title = row[0];
+      const questionText = row[1];
+      const options = [];
+
+      for (let i = 2; i < row.length; i += 2) {
+        const optionText = row[i];
+        const percentage = row[i + 1];
+
+        if (optionText) {
+          options.push({
+            option_text: optionText,
+
+            percentage: percentage || 0,
+          });
+        }
+      }
+
+      if (title && title !== currentTitle) {
+        if (currentTitle) {
+          assessments.push({
+            title: currentTitle,
+            questions,
+          });
+        }
+        currentTitle = title;
+        questions = [];
+      }
+
+      if (questionText) {
+        questions.push({
+          question_text: questionText,
+          options,
+        });
+      }
+    }
+
+    if (currentTitle && questions.length > 0) {
+      assessments.push({
+        title: currentTitle,
+        questions,
+      });
+    }
+
+    if (assessments.length === 0) {
       return NextResponse.json(
-        { error: "Assessment title is required." },
+        {
+          error: "At least one assessment category with questions is required.",
+        },
         { status: 400 }
       );
     }
-    if (!questions || !Array.isArray(questions) || questions.length === 0) {
-      return NextResponse.json(
-        { error: "At least one question is required." },
-        { status: 400 }
-      );
-    }
 
-    for (const question of questions) {
-      if (!question.question_text) {
-        return NextResponse.json(
-          { error: "Question text is required for each question." },
-          { status: 400 }
-        );
-      }
-      if (
-        !question.options ||
-        !Array.isArray(question.options) ||
-        question.options.length === 0
-      ) {
-        return NextResponse.json(
-          { error: "Each question must have at least one option." },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Step 2: Create the assessment in the database
-    const createdAssessment = await prisma.individual_assessments.create({
-      data: {
-        title,
-        individual_assessment_questions: {
-          create: questions.map((q: any) => ({
-            question_text: q.question_text,
-            individual_assessment_options: {
-              create: q.options.map((option: string) => ({
-                option_text: option,
-                is_correct: false, // You can modify this based on your logic
+    const createdAssessments = await Promise.all(
+      assessments.map(async (assessment) => {
+        return prisma.individual_assessments.create({
+          data: {
+            title: assessment.title,
+            individual_assessment_questions: {
+              create: assessment.questions.map((q: any) => ({
+                question_text: q.question_text,
+                individual_assessment_options: {
+                  create: q.options.map((option: any) => ({
+                    option_text: option.option_text,
+                    percentage: Number(option.percentage),
+                    is_correct: false,
+                  })),
+                },
               })),
             },
-          })),
-        },
-      },
-    });
+          },
+        });
+      })
+    );
 
     return NextResponse.json(
-      { success: true, assessment: createdAssessment },
-      { status: 201 }
+      { success: true, assessments: createdAssessments },
+      { status: 200 }
     );
   } catch (error: any) {
     console.error("Error creating assessment:", error);

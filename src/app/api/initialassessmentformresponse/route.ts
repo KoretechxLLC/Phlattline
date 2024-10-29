@@ -8,29 +8,37 @@ export async function POST(req: NextRequest) {
 
     // Validate inputs
     if (!userId || !assessmentId || !Array.isArray(responses)) {
-      return NextResponse.json({ error: 'User ID, assessment ID, and responses are required.' }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID, assessment ID, and responses are required." },
+        { status: 400 }
+      );
     }
 
     const parsedUserId = parseInt(userId, 10);
     const parsedAssessmentId = parseInt(assessmentId, 10);
 
     if (isNaN(parsedUserId) || isNaN(parsedAssessmentId)) {
-      return NextResponse.json({ error: 'User ID and Assessment ID must be valid integers.' }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID and Assessment ID must be valid integers." },
+        { status: 400 }
+      );
     }
 
     for (const response of responses) {
-      const existingResponse = await prisma.user_assessment_responses.findFirst({
-        where: {
-          user_id: parsedUserId, // Use the parsed integer userId
-          assessment_id: parsedAssessmentId, // Use the parsed integer assessmentId
-          question_id: Number(response.questionId),
-        },
-      });
+      const existingResponse = await prisma.user_assessment_responses.findFirst(
+        {
+          where: {
+            user_id: parsedUserId, // Use the parsed integer userId
+            assessment_id: parsedAssessmentId, // Use the parsed integer assessmentId
+            question_id: Number(response.questionId),
+          },
+        }
+      );
 
       if (existingResponse) {
         return NextResponse.json(
           {
-            error: `Question with ID ${response.questionId} has already been answered for this assessment.`,
+            error: `Questions with ID ${response.questionId} has already been answered for this assessment.`,
           },
           { status: 400 }
         );
@@ -38,15 +46,13 @@ export async function POST(req: NextRequest) {
     }
 
     const userResponses = responses.map((response: any) => {
-    
-      return  {
-      user_id: parsedUserId, 
-      assessment_id: parsedAssessmentId, 
-      question_id: Number(response.questionId),
-      selected_option: response.answer,
-    }
-  }
-);
+      return {
+        user_id: parsedUserId,
+        assessment_id: parsedAssessmentId,
+        question_id: Number(response.questionId),
+        selected_option: response.answer,
+      };
+    });
 
     const savedResponses = await prisma.user_assessment_responses.createMany({
       data: userResponses,
@@ -57,15 +63,25 @@ export async function POST(req: NextRequest) {
         id: parsedUserId,
       },
       data: {
-        assessment_status: true,  
+        assessment_status: true,
       },
     });
 
-    return NextResponse.json({ success: true, message: 'Responses submitted successfully.', data: savedResponses }, { status: 201 });
-  } catch (error: any) {
-    console.error('Error submitting responses:', error);
     return NextResponse.json(
-      { error: error?.message || 'Failed to submit responses', details: error.message },
+      {
+        success: true,
+        message: "Responses submitted successfully.",
+        data: savedResponses,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error("Error submitting responses:", error);
+    return NextResponse.json(
+      {
+        error: error?.message || "Failed to submit responses",
+        details: error.message,
+      },
       { status: 500 }
     );
   }
@@ -75,11 +91,11 @@ export async function GET(req: NextRequest) {
   try {
     // Extract user_id from query parameters
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('id');
+    const userId = searchParams.get("id");
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'User ID is required' },
+        { error: "User ID is required" },
         { status: 400 }
       );
     }
@@ -107,7 +123,10 @@ export async function GET(req: NextRequest) {
 
     if (responses.length === 0) {
       return NextResponse.json(
-        { success: false, message: 'No assessment responses found for this user' },
+        {
+          success: false,
+          message: "No assessment responses found for this user",
+        },
         { status: 404 }
       );
     }
@@ -135,13 +154,16 @@ export async function GET(req: NextRequest) {
     };
 
     // Return success response with data
-    return NextResponse.json({ success: true, data: [result] }, { status: 200 });
+    return NextResponse.json(
+      { success: true, data: [result] },
+      { status: 200 }
+    );
   } catch (error: any) {
-    console.error('Error fetching user assessment responses', error);
+    console.error("Error fetching user assessment responses", error);
 
     // Return error response
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch user assessment responses' },
+      { error: error.message || "Failed to fetch user assessment responses" },
       { status: 500 }
     );
   }
@@ -156,7 +178,7 @@ export async function DELETE(req: NextRequest) {
     // Validation: Ensure the userId is provided
     if (!userId) {
       return NextResponse.json(
-        { error: 'User ID is required.' },
+        { error: "User ID is required." },
         { status: 400 }
       );
     }
@@ -171,22 +193,28 @@ export async function DELETE(req: NextRequest) {
     // If no rows were deleted, return a 404
     if (deletedResponses.count === 0) {
       return NextResponse.json(
-        { success: false, message: 'No responses found for this user to delete.' },
+        {
+          success: false,
+          message: "No responses found for this user to delete.",
+        },
         { status: 404 }
       );
     }
 
     // Return success response
     return NextResponse.json(
-      { success: true, message: 'All assessment responses for the user deleted successfully.' },
+      {
+        success: true,
+        message: "All assessment responses for the user deleted successfully.",
+      },
       { status: 200 }
     );
   } catch (error: any) {
-    console.error('Error deleting assessment responses:', error);
+    console.error("Error deleting assessment responses:", error);
 
     // Return error response
     return NextResponse.json(
-      { error: error?.message || 'Failed to delete assessment responses' },
+      { error: error?.message || "Failed to delete assessment responses" },
       { status: 500 }
     );
   }

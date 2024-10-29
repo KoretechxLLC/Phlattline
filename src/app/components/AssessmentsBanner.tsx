@@ -39,7 +39,7 @@ const MostSales = () => {
                 onClick={() => {
                   router.push("/Individualassessment");
                 }}
-                className="text-white px-5 text-sm md:text-base lg:text-base flex w-72 h-11 justify-center items-center rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716]"
+                className="cursor-pointer text-white px-5 text-sm md:text-base lg:text-base flex w-72 h-11 justify-center items-center rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716]"
               >
                 Take the Assessment
               </button>

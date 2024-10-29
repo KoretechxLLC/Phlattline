@@ -1,8 +1,8 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { prisma } from '@/app/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
-import { unlink } from 'fs/promises';
+import { promises as fs } from "fs";
+import path from "path";
+import { prisma } from "@/app/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { unlink } from "fs/promises";
 
 async function saveFile(file: File, destination: string): Promise<string> {
   const dir = path.join(process.cwd(), destination);
@@ -27,7 +27,7 @@ async function saveFile(file: File, destination: string): Promise<string> {
     counter++;
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
+  const buffer: any = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(filePath, buffer);
 
   return filename; // Return just the file name, not the full path
@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
       if (flag) {
         throw new Error("Question fields are required");
       }
-    })
+    });
     const course = await prisma.courses.create({
       data: {
         course_name,
@@ -162,7 +162,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, data: course }, { status: 201 });
+    return NextResponse.json({ success: true, data: course }, { status: 200 });
   } catch (error: any) {
     console.error("Error creating course with video upload:", error);
     return NextResponse.json(
@@ -511,4 +511,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-

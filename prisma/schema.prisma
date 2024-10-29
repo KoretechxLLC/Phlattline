@@ -183,6 +183,7 @@ model individual_assessment_options {
   id                                Int                             @id @default(autoincrement())
   option_text                       String                          @db.VarChar(255)
   is_correct                        Boolean                         @default(false)
+  percentage                        Int
   individual_assessment_question_id Int
   individual_assessment_questions   individual_assessment_questions @relation(fields: [individual_assessment_question_id], references: [id], onDelete: Cascade)
 }
