@@ -37,7 +37,7 @@ const IndividualAssessmentForm = () => {
 
   useEffect(() => {
     if (!assessments || assessments.length == 0) {
-      dispatch(fetchAssessments());
+      dispatch(fetchAssessments({}));
     }
   }, [dispatch]);
 
