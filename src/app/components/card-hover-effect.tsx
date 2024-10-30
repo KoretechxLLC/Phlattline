@@ -4,6 +4,7 @@ import { useState } from "react";
 import { cn } from "../lib/utils";
 import Image from "next/image";
 import { Button } from "@/app/components/button-sidebar";
+import PaymentPopup from "@/app/components/PaymentPopup"; // Import the PaymentPopup component
 
 export const HoverEffect = ({
   items,
@@ -18,6 +19,32 @@ export const HoverEffect = ({
   className?: string; // Optional className prop
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  let [isOpen, setIsOpen] = useState(false); // State to manage the popup visibility
+  let [isBought, setIsBought] = useState(false); // State to manage if the item has been bought
+
+  // Example existing cards (you can fetch this from an API or state management)
+  const existingCards = [
+    {
+      id: "1",
+      number: "4056 8234 1957 1234",
+      name: "John Doe",
+      expiry: "12/24",
+      cvc: "123",
+    },
+    {
+      id: "2",
+      number: "3906 8234 1957 5678",
+      name: "Jane Smith",
+      expiry: "10/25",
+      cvc: "456",
+    },
+  ];
+
+  const handleBuyNowClick = () => {
+    setIsOpen(true); // Open the popup
+    // Reset the isBought state when the user clicks to buy
+    setIsBought(false);
+  };
 
   return (
     <div
@@ -37,7 +64,7 @@ export const HoverEffect = ({
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] block  rounded-3xl"
+                className="absolute inset-0 h-full w-full bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] block rounded-3xl"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -70,6 +97,7 @@ export const HoverEffect = ({
                 className="text-white px-5 text-sm md:text-base lg:text-base flex justify-center items-center rounded-3xl ml-4"
                 size="default"
                 color="primary"
+                onClick={handleBuyNowClick} // Open the payment popup on button click
               >
                 Buy Now
               </Button>
@@ -77,10 +105,17 @@ export const HoverEffect = ({
           </Card>
         </Link>
       ))}
+      <PaymentPopup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen} // Pass the setIsOpen function to allow closing the popup
+        setIsBought={setIsBought} // Pass the setIsBought function to track purchase status
+        cards={existingCards} // Pass existing cards as props
+      />
     </div>
   );
 };
 
+// Card, CardTitle, and CardDescription remain the same
 export const Card = ({
   className,
   children,
@@ -101,6 +136,7 @@ export const Card = ({
     </div>
   );
 };
+
 export const CardTitle = ({
   className,
   children,
@@ -114,6 +150,7 @@ export const CardTitle = ({
     </h4>
   );
 };
+
 export const CardDescription = ({
   className,
   children,

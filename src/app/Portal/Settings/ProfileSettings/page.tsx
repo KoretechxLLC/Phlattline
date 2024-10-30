@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setError, setSuccess, UpdateUser } from "@/redux/slices/auth.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ProfileSettings = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -32,7 +34,7 @@ const Profile = ({ profileImage }: any) => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [designation, setDesignation] = useState("");
-  const [date, setDate] = useState(""); // Ensure this is initialized as an empty string
+  const [date, setDate] = useState<Date | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
@@ -65,9 +67,9 @@ const Profile = ({ profileImage }: any) => {
 
     if (userData?.email) formData.append("email", userData.email); // Assuming email is not editable
 
-    // Only append date_of_birth if it's not null or undefined
+    // Convert date to string format before appending
     if (date !== null && date !== undefined) {
-      formData.append("date_of_birth", date);
+      formData.append("date_of_birth", date.toISOString()); // Change this if you need a different format
     } else if (userData?.date_of_birth) {
       formData.append("date_of_birth", userData.date_of_birth);
     }
@@ -114,12 +116,7 @@ const Profile = ({ profileImage }: any) => {
       />
       {/* First Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="first-name"
             type="text"
@@ -130,13 +127,8 @@ const Profile = ({ profileImage }: any) => {
             required
           />
           <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+        </div>
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="last-name"
             type="text"
@@ -147,17 +139,12 @@ const Profile = ({ profileImage }: any) => {
             required
           />
           <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
+        </div>
       </div>
 
       {/* Second Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="phone"
             type="tel"
@@ -168,13 +155,8 @@ const Profile = ({ profileImage }: any) => {
             required
           />
           <MdPhone className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+        </div>
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="email"
             type="email"
@@ -186,52 +168,36 @@ const Profile = ({ profileImage }: any) => {
             required
           />
           <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
+        </div>
       </div>
 
       {/* Third Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="designation"
             type="text"
             placeholder="Designation"
             value={data && data?.designation}
             onChange={(e) => setDesignation(e.target.value)}
-            className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
+            className="w-full bg-black text-white py-2 px-4 rounded-xl focus:outline-none"
           />
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
-          <input
-            id="date"
-            type="date"
-            value={data && data?.date_of_birth}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none" // Apply consistent styles
+        </div>
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
+          <DatePicker
+            selected={date}
+            onChange={(date) => setDate(date)}
+            placeholderText="Date of Birth"
+            className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
           />
           <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
+        </div>
       </div>
 
       {/* Fourth Row */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="password"
             type="password"
@@ -242,13 +208,8 @@ const Profile = ({ profileImage }: any) => {
             required
           />
           <MdLock className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          className="relative py-2 border border-gray-500 rounded-2xl"
-        >
+        </div>
+        <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="confirm-password"
             type="password"
@@ -259,20 +220,14 @@ const Profile = ({ profileImage }: any) => {
             required
           />
           <MdLock className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </motion.div>
-      </div> */}
+        </div>
+      </div>
 
       {/* Buttons */}
       <div className="flex flex-col sm:flex-row justify-center gap-8 py-2 mx-4 mt-10">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={primaryVariants}
-          whileTap={{ scale: 0.985 }}
-          className="cursor-pointer w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium"
-        >
+        <div className="cursor-pointer w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium">
           Cancel
-        </motion.div>
+        </div>
         <button
           className="w-full sm:w-40 rounded-lg bg-gradient-to-b from-[#BAA716] to-[#B50D34] px-4 py-2 text-center font-medium text-white text-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
           type="submit"
@@ -377,15 +332,4 @@ const ProfileImage = ({ setProfileImage }: any) => {
       </div>
     </div>
   );
-};
-
-const primaryVariants = {
-  initial: {
-    y: 25,
-    opacity: 0,
-  },
-  animate: {
-    y: 0,
-    opacity: 1,
-  },
 };
