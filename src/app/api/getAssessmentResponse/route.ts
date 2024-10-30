@@ -3,7 +3,19 @@ import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, message: "User ID is required" },
+        { status: 400 }
+      );
+    }
     const assessments = await prisma.user_assessment_responses.findMany({
+      where: {
+        user_id: Number(userId),
+      },
       include: {
         question: {
           include: {

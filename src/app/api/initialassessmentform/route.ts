@@ -1,9 +1,14 @@
 import { prisma } from "@/app/lib/prisma";
-
 import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
+import fs from "fs";
+import path from "path";
+import axios from "axios";
+import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
+  const uploadedFiles: string[] = [];
+
   try {
     const formData = await req.formData();
     const file = formData.get("file");
@@ -19,72 +24,115 @@ export async function POST(req: NextRequest) {
     const workbook = XLSX.read(data, { type: "array" });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-    const headers = jsonData[0];
     const rows = jsonData.slice(1);
 
-    const assessments: any[] = [];
+    const assessmentsData: any[] = [];
+    const imageFolder = path.join(process.cwd(), "public", "assessmentsImage");
+    if (!fs.existsSync(imageFolder)) {
+      fs.mkdirSync(imageFolder, { recursive: true });
+    }
+
     let currentTitle = "";
     let questions: any[] = [];
+    let assessmentPrice = 0;
+    let assessmentImageUrl = "";
 
+    // Step 1: Prepare all data outside of Prisma transaction
     for (const row of rows) {
       const title = row[0];
       const questionText = row[1];
       const options = [];
 
-      for (let i = 2; i < row.length; i += 2) {
+      for (let i = 2; i < row.length - 2; i += 2) {
         const optionText = row[i];
         const percentage = row[i + 1];
-
         if (optionText) {
           options.push({
             option_text: optionText,
-
             percentage: percentage || 0,
           });
         }
       }
 
+      const price = row[row.length - 2] || 0;
+      const imageUrl = row[row.length - 1] || "";
+
+      let localImagePath = "";
+      if (imageUrl && /^https:\/\//.test(imageUrl)) {
+        try {
+          const response = await axios.get(imageUrl, {
+            responseType: "stream",
+          });
+          const extension = path.extname(new URL(imageUrl).pathname) || ".jpg";
+          const fileName = crypto.randomBytes(16).toString("hex") + extension;
+          const filePath = path.join(imageFolder, fileName);
+
+          const fileStream = fs.createWriteStream(filePath);
+          response.data.pipe(fileStream);
+
+          await new Promise((resolve, reject) => {
+            fileStream.on("finish", resolve);
+            fileStream.on("error", reject);
+          });
+
+          uploadedFiles.push(filePath);
+          localImagePath = `${fileName}`;
+        } catch (error) {
+          console.error(`Failed to download image from ${imageUrl}`, error);
+          return NextResponse.json(
+            { error: `Failed to fetch image from ${imageUrl}` },
+            { status: 400 }
+          );
+        }
+      }
+
       if (title && title !== currentTitle) {
         if (currentTitle) {
-          assessments.push({
+          assessmentsData.push({
             title: currentTitle,
+            price: assessmentPrice,
+            image_url: assessmentImageUrl,
             questions,
           });
         }
         currentTitle = title;
+        assessmentPrice = price;
+        assessmentImageUrl = localImagePath;
         questions = [];
       }
 
       if (questionText) {
-        questions.push({
-          question_text: questionText,
-          options,
-        });
+        questions.push({ question_text: questionText, options });
       }
     }
 
     if (currentTitle && questions.length > 0) {
-      assessments.push({
+      assessmentsData.push({
         title: currentTitle,
+        price: assessmentPrice,
+        image_url: assessmentImageUrl,
         questions,
       });
     }
 
-    if (assessments.length === 0) {
+    if (assessmentsData.length === 0) {
+      for (const filePath of uploadedFiles) {
+        fs.unlinkSync(filePath);
+      }
       return NextResponse.json(
-        {
-          error: "At least one assessment category with questions is required.",
-        },
+        { error: "At least one assessment with questions is required." },
         { status: 400 }
       );
     }
 
-    const createdAssessments = await Promise.all(
-      assessments.map(async (assessment) => {
-        return prisma.individual_assessments.create({
+    // Step 2: Execute Prisma transaction without async code
+    const createdAssessments = await prisma.$transaction(
+      assessmentsData.map((assessment) =>
+        prisma.individual_assessments.create({
           data: {
             title: assessment.title,
+            price: Number(assessment.price),
+            image: assessment.image_url,
             individual_assessment_questions: {
               create: assessment.questions.map((q: any) => ({
                 question_text: q.question_text,
@@ -98,21 +146,27 @@ export async function POST(req: NextRequest) {
               })),
             },
           },
-        });
-      })
+        })
+      )
     );
 
     return NextResponse.json(
       { success: true, assessments: createdAssessments },
-      { status: 200 }
+      { status: 201 }
     );
-  } catch (error: any) {
-    console.error("Error creating assessment:", error);
+  } catch (err: any) {
+    console.error("Error occurred:", err);
+
+    for (const filePath of uploadedFiles) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (error) {
+        console.error(`Failed to delete file: ${filePath}`, error);
+      }
+    }
+
     return NextResponse.json(
-      {
-        error: error?.message || "Failed to create assessment",
-        details: error.message,
-      },
+      { error: err.message || "Internal Server Error" },
       { status: 500 }
     );
   }
@@ -120,6 +174,9 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
+    const { searchParams }: any = new URL(req.url);
+    const size = parseInt(searchParams.get("size"));
+
     const assessments = await prisma.individual_assessments.findMany({
       include: {
         individual_assessment_questions: {
@@ -128,6 +185,7 @@ export async function GET(req: NextRequest) {
           },
         },
       },
+      take: size > 0 ? size : undefined,
     });
 
     return NextResponse.json(
