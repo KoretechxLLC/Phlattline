@@ -5,7 +5,7 @@ interface AssessmentResponseState {
   responseLoading: boolean;
   responseError: string | null;
   assessmentsResponse: any[];
-  responseSuccess: string | null;
+  responseSuccess: any | null;
 }
 
 const initialState: AssessmentResponseState = {
@@ -15,11 +15,13 @@ const initialState: AssessmentResponseState = {
   assessmentsResponse: [],
 };
 
-export const fetchAssessmentsResponse = createAsyncThunk<any, void>(
+export const fetchAssessmentsResponse = createAsyncThunk<any, any>(
   "assessment/fetchAssessmentsResponse",
-  async (_, { rejectWithValue }) => {
+  async ({ userId }: any, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("api/getAssessmentResponse");
+      const response = await axiosInstance.get(
+        `api/getAssessmentResponse?userId=${userId}`
+      );
 
       return response.data.data;
     } catch (error: any) {
@@ -37,7 +39,7 @@ const assessmentSlice = createSlice({
   initialState,
   reducers: {
     resetSuccess(state) {
-      state.responseSuccess = null;
+      state.responseSuccess = false;
     },
     resetError(state) {
       state.responseError = null;
@@ -49,13 +51,16 @@ const assessmentSlice = createSlice({
       .addCase(fetchAssessmentsResponse.pending, (state) => {
         state.responseLoading = true;
         state.responseError = null;
+        state.responseSuccess = false;
       })
       .addCase(fetchAssessmentsResponse.fulfilled, (state, action) => {
         state.responseLoading = false;
         state.assessmentsResponse = action.payload;
+        state.responseSuccess = true;
       })
       .addCase(fetchAssessmentsResponse.rejected, (state, action) => {
         state.responseLoading = false;
+        state.responseSuccess = false;
         state.responseError = action.payload as string;
       });
   },

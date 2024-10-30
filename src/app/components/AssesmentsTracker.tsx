@@ -9,6 +9,9 @@ import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import GraphLoader from "./graphLoader";
+
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface AssessmentTrackerProps {
@@ -26,43 +29,48 @@ const generateColors = (numFields: number) => {
 };
 
 const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
-  let calculatedGraph = assessments.map((index: any) => {
-    let responseData = assessmentsResponse
-      .map((e: any) => {
-        if (e?.question?.individual_assessment_id == index?.id) {
-          let assessementTrack = e?.question?.individual_assessment_options
-            .map((option: any) => {
-              if (e?.selected_option == option?.option_text) {
-                return option.percentage;
-              }
-            })
-            .filter(Boolean);
+  let calculatedGraph = assessments
+    .map((index: any) => {
+      let responseData = assessmentsResponse
+        .map((e: any) => {
+          if (e?.question?.individual_assessment_id == index?.id) {
+            let assessementTrack = e?.question?.individual_assessment_options
+              .map((option: any) => {
+                if (e?.selected_option == option?.option_text) {
+                  return option.percentage;
+                }
+              })
+              .filter(Boolean);
 
-          return {
-            id: e?.question?.individual_assessment_id,
-            percentage: assessementTrack,
-          };
-        }
-      })
-      .filter(Boolean);
+            return {
+              id: e?.question?.individual_assessment_id,
+              percentage: assessementTrack,
+            };
+          }
+        })
+        .filter(Boolean);
 
-    let totalPercentage = 0;
+      let totalPercentage = 0;
 
-    responseData.forEach((item: any) => {
-      const currentSum =
-        item?.percentage.length > 0
-          ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
-          : 0;
+      responseData.forEach((item: any) => {
+        const currentSum =
+          item?.percentage.length > 0
+            ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
+            : 0;
 
-      totalPercentage += currentSum;
-    });
+        totalPercentage += currentSum;
+      });
 
-    return {
-      title: index.title,
-      percentage:
-        totalPercentage / index.individual_assessment_questions.length,
-    };
-  });
+      if (responseData && responseData.length > 0) {
+        return {
+          title: index.title,
+          percentage:
+            totalPercentage / index.individual_assessment_questions.length,
+        };
+      }
+    })
+    .filter(Boolean);
+
   return calculatedGraph;
 };
 
@@ -85,17 +93,19 @@ const AsessmentTracker = ({
     responseSuccess,
   } = useSelector((state: RootState) => state.assessmentResponse);
 
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId: any = userData?.id;
   const dispatch: any = useDispatch();
 
   useEffect(() => {
     if (!assessments || assessments?.length == 0) {
-      dispatch(fetchAssessments());
+      dispatch(fetchAssessments({}));
     }
   }, []);
 
   useEffect(() => {
     if (!assessmentsResponse || assessmentsResponse.length == 0) {
-      dispatch(fetchAssessmentsResponse());
+      dispatch(fetchAssessmentsResponse({ userId }));
     }
   }, [success]);
 
@@ -114,11 +124,14 @@ const AsessmentTracker = ({
   const series = [
     {
       name: "Assessments",
-      data: data.map((value: any, index: any) => ({
-        x: value.title || allCategories[index],
-        y: value.percentage,
-        fillColor: chartColors[index],
-      })),
+      data:
+        data &&
+        data.length > 0 &&
+        data.map((value: any, index: any) => ({
+          x: value?.title,
+          y: value?.percentage,
+          fillColor: chartColors[index],
+        })),
     },
   ];
 
@@ -238,13 +251,25 @@ const AsessmentTracker = ({
   };
 
   return (
-    <Chart
-      options={options}
-      series={series}
-      type={chartType}
-      height={height}
-      width={"100%"}
-    />
+    <>
+      {responseLoading ? (
+        <div className="text-center text-gray-300">
+          <GraphLoader />
+        </div>
+      ) : data && data.length > 0 ? (
+        <Chart
+          options={options}
+          series={series}
+          type={chartType}
+          height={height}
+          width={"100%"}
+        />
+      ) : (
+        <div className="text-center text-gray-300 py-24">
+          Please Submit Assessments First!
+        </div>
+      )}
+    </>
   );
 };
 

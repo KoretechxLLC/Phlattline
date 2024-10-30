@@ -12,8 +12,7 @@ export const HoverEffect = ({
 }: {
   items: {
     title: string;
-    imageLink: string;
-    link: string;
+    image: string;
     price: number;
   }[];
   className?: string; // Optional className prop
@@ -54,9 +53,8 @@ export const HoverEffect = ({
       )}
     >
       {items.map((item, idx) => (
-        <Link
-          href={item?.link}
-          key={item?.link}
+        <div
+          key={idx}
           className="relative group block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -81,7 +79,7 @@ export const HoverEffect = ({
           <Card className="flex items-center justify-center">
             <div className="flex items-center justify-center">
               <Image
-                src={item?.imageLink}
+                src={`/assessmentsImage/${item?.image}`}
                 width={1000}
                 height={1000}
                 className="h-32 w-32"
@@ -103,7 +101,7 @@ export const HoverEffect = ({
               </Button>
             </div>
           </Card>
-        </Link>
+        </div>
       ))}
       <PaymentPopup
         isOpen={isOpen}

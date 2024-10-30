@@ -5,21 +5,28 @@ interface AssessmentState {
   loading: boolean;
   error: string | null;
   assessments: any[]; // Replace with specific type if you have it
-  success: string | null;
+  success: any | null;
+  assessmentsSuccess: any | null;
 }
 
 const initialState: AssessmentState = {
   loading: false,
   error: null,
-  success: null,
+  success: "",
   assessments: [],
+  assessmentsSuccess: false,
 };
 
-export const fetchAssessments = createAsyncThunk<any, void>(
+export const fetchAssessments = createAsyncThunk<any, { size?: number }>(
   "assessment/fetchAssessments",
-  async (_, { rejectWithValue }) => {
+  async ({ size }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("api/initialassessmentform");
+      const url = size
+        ? `api/initialassessmentform?size=${size}`
+        : "api/initialassessmentform";
+
+      const response = await axiosInstance.get(url);
+
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -68,6 +75,12 @@ const assessmentSlice = createSlice({
     resetError(state) {
       state.error = null;
     },
+    setSuccess(state) {
+      state.success = false;
+    },
+    setAssessmentsSuccess(state) {
+      state.assessmentsSuccess = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -75,14 +88,17 @@ const assessmentSlice = createSlice({
       .addCase(fetchAssessments.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.assessmentsSuccess = false;
       })
       .addCase(fetchAssessments.fulfilled, (state, action) => {
         state.loading = false;
         state.assessments = action.payload;
+        state.assessmentsSuccess = true;
       })
       .addCase(fetchAssessments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        state.assessmentsSuccess = false;
       })
       // Submit Assessment Responses
       .addCase(submitAssessmentResponses.pending, (state) => {
