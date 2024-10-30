@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { unlink, writeFile } from "fs/promises";
 import bcrypt from "bcryptjs";
-import fs from 'fs/promises';
+import fs from "fs/promises";
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,9 +20,9 @@ export async function GET(request: NextRequest) {
       where: {
         id: Number(id),
       },
-      include :{
-        organizations : true
-      }
+      include: {
+        organizations: true,
+      },
     });
 
     if (!user) {
@@ -49,13 +49,15 @@ export async function PUT(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    const userId = formData.get('userId') as string | null;
-    const email = formData.get('email') as string | null;
-    const phone_number = formData.get('phone_number') as string | null;
-    const password = formData.get('password') as string | null;
-    const first_name = formData.get('first_name') as string | null;
-    const last_name = formData.get('last_name') as string | null;
-    const profile_image = formData.get('profile_image') as File | null;
+    const userId = formData.get("userId") as string | null;
+    const email = formData.get("email") as string | null;
+    const phone_number = formData.get("phone_number") as string | null;
+    const password = formData.get("password") as string | null;
+    const first_name = formData.get("first_name") as string | null;
+    const last_name = formData.get("last_name") as string | null;
+    const date_of_birth = formData.get("date_of_birth") as string | null;
+    const profile_image = formData.get("profile_image") as File | null;
+    const designation = formData.get("designation") as string | null;
 
     const userIdValue = userId ?? undefined;
     const emailValue = email ?? undefined;
@@ -63,6 +65,8 @@ export async function PUT(request: NextRequest) {
     const passwordValue = password ?? undefined;
     const firstNameValue = first_name ?? undefined;
     const lastNameValue = last_name ?? undefined;
+    const dateOfBirthValue = date_of_birth ?? undefined;
+    const destinationValue = designation ?? undefined;
 
     if (!userIdValue) {
       return NextResponse.json(
@@ -99,11 +103,15 @@ export async function PUT(request: NextRequest) {
       hashedPassword = await bcrypt.hash(passwordValue, 10);
     }
 
-    let profileImagePath: string | null = existingUser.profile_image; 
+    let profileImagePath: string | null = existingUser.profile_image;
     if (profile_image && profile_image.size > 0) {
       // Delete the old profile image if it exists
       if (profileImagePath) {
-        const oldImagePath = path.join(process.cwd(), 'public/users/profileimage', profileImagePath);
+        const oldImagePath = path.join(
+          process.cwd(),
+          "public/users/profileimage",
+          profileImagePath
+        );
         try {
           await fs.unlink(oldImagePath); // Remove the old image file
         } catch (err) {
@@ -111,18 +119,23 @@ export async function PUT(request: NextRequest) {
         }
       }
       // Save the new profile image
-      profileImagePath = await saveFile(profile_image, 'public/users/profileimage');
+      profileImagePath = await saveFile(
+        profile_image,
+        "public/users/profileimage"
+      );
     }
 
     const updatedUser = await prisma.users.update({
       where: { id: Number(userIdValue) },
       data: {
+        designation: destinationValue || existingUser.designation,
         email: emailValue || existingUser.email,
         phone_number: phoneNumberValue || existingUser.phone_number,
         password: hashedPassword || existingUser.password,
         first_name: firstNameValue || existingUser.first_name,
         last_name: lastNameValue || existingUser.last_name,
-        profile_image: profileImagePath || existingUser.profile_image, 
+        profile_image: profileImagePath || existingUser.profile_image,
+        date_of_birth: dateOfBirthValue || existingUser.date_of_birth,
       },
     });
 
@@ -142,7 +155,7 @@ export async function PUT(request: NextRequest) {
 
 async function saveFile(file: File, destination: string): Promise<string> {
   const dir = path.join(process.cwd(), destination);
-  
+
   await fs.mkdir(dir, { recursive: true });
 
   const originalName = file.name; // Get the original file name
@@ -150,7 +163,12 @@ async function saveFile(file: File, destination: string): Promise<string> {
   let filePath = path.join(dir, filename);
   let counter = 1;
 
-  while (await fs.access(filePath).then(() => true).catch(() => false)) {
+  while (
+    await fs
+      .access(filePath)
+      .then(() => true)
+      .catch(() => false)
+  ) {
     const nameWithoutExt = path.parse(originalName).name;
     const ext = path.parse(originalName).ext;
     filename = `${nameWithoutExt}_${counter}${ext}`; // Append numeric suffix if needed
@@ -161,7 +179,7 @@ async function saveFile(file: File, destination: string): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(filePath, buffer);
 
-  return filename; 
+  return filename;
 }
 
 export async function DELETE(request: NextRequest) {
@@ -194,7 +212,13 @@ export async function DELETE(request: NextRequest) {
 
     // If the user has a profile image, delete it from the file system
     if (user.profile_image) {
-      const imageFilePath = path.join(process.cwd(), "public","users","profileimage",user.profile_image);
+      const imageFilePath = path.join(
+        process.cwd(),
+        "public",
+        "users",
+        "profileimage",
+        user.profile_image
+      );
 
       try {
         await fs.unlink(imageFilePath); // Remove the old image file
