@@ -78,7 +78,7 @@ const ProfileInfo = () => {
                   {item.name}
                 </DropdownMenuItem>
                 {index < 3 && (
-                  <div className="h-px w-full bg-gray-400 my-1"></div>
+                  <div className="h-px w-36 bg-gray-300 my-1 mx-8"></div>
                 )}
               </div>
             ))}

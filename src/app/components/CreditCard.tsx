@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, Dispatch, SetStateAction } from "react"; // Import necessary hooks
+import React, { useState } from "react"; // Import necessary hooks
 import Image from "next/image";
-import Cards from "react-credit-cards-2";
+import PaymentPopup from "@/app/components/PaymentPopup";
 import "react-credit-cards-2/dist/es/styles-compiled.css";
-import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "@/app/components/button-sidebar";
+import { formatCreditCardNumber, formatCVC } from "../lib/utils";
 
 type Focused = "number" | "expiry" | "cvc" | "name" | "";
 
@@ -18,9 +17,23 @@ const CreditCard = () => {
     focus: "" as Focused, // Initialize focus as type Focused
   });
 
-  const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = evt.target;
-    setState((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    let formattedValue = value;
+
+    // Validate input length based on field
+    if (name === "number") {
+      formattedValue = formatCreditCardNumber(value);
+      if (formattedValue.replace(/\s/g, "").length > 19) return; // Limit to 19 digits
+    } else if (name === "cvc") {
+      formattedValue = formatCVC(value);
+      if (formattedValue.length > 3) return; // Limit to 3 digits
+    } else if (name === "name") {
+      if (value.length > 30) return; // Limit to 30 characters
+    }
+
+    setState({ ...state, [name]: formattedValue });
   };
 
   const handleInputFocus = (evt: React.FocusEvent<HTMLInputElement>) => {
@@ -40,20 +53,12 @@ const CreditCard = () => {
       name: "Jane Smith",
       expiry: "05/26",
     },
-    // Additional cards can be added here
   ];
 
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
 
   const togglePopup = () => {
     setIsPopupOpen((prev) => !prev); // Toggle the popup state
-  };
-
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-    // Handle form submission logic (e.g., API call)
-    alert("Payment Submitted!");
-    togglePopup(); // Close the popup after submission
   };
 
   return (
@@ -94,123 +99,13 @@ const CreditCard = () => {
         </div>
       </div>
 
-      {/* Spring Modal for Adding New Card */}
-      <SpringModal
+      {/* Payment Popup */}
+      <PaymentPopup
         isOpen={isPopupOpen}
         setIsOpen={setIsPopupOpen}
-        state={state}
-        setState={setState}
-        handleInputChange={handleInputChange}
-        handleInputFocus={handleInputFocus}
-        handleSubmit={handleSubmit}
+        showOnlyForm={true} // Assuming you want to show only the form
       />
     </div>
-  );
-};
-
-const SpringModal = ({
-  isOpen,
-  setIsOpen,
-  state,
-  setState,
-  handleInputChange,
-  handleInputFocus,
-  handleSubmit,
-}: {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  state: any; // Define a more specific type based on your needs
-  setState: Dispatch<SetStateAction<any>>;
-  handleInputChange: (evt: React.ChangeEvent<HTMLInputElement>) => void;
-  handleInputFocus: (evt: React.FocusEvent<HTMLInputElement>) => void;
-  handleSubmit: (evt: React.FormEvent<HTMLFormElement>) => void;
-}) => {
-  // Close the modal when clicking outside of it
-  const closeModal = (evt: React.MouseEvent<HTMLDivElement>) => {
-    if (evt.target === evt.currentTarget) {
-      setIsOpen(false);
-    }
-  };
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-          onClick={closeModal} // Close modal on outside click
-        >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.8 }}
-            className="bg-white rounded-lg p-6"
-          >
-            <h1 className="text-2xl text-black">Add Payment Details</h1>
-            <Cards
-              number={state.number}
-              expiry={state.expiry}
-              cvc={state.cvc}
-              name={state.name}
-              focused={state.focus} // Use focused state to control card display
-            />
-            <form onSubmit={handleSubmit}>
-              <div className="flex flex-col space-y-6 my-2">
-                {" "}
-                {/* Align inputs vertically */}
-                <input
-                  type="tel"
-                  name="number"
-                  placeholder="Card Number"
-                  value={state.number}
-                  onChange={handleInputChange}
-                  onFocus={handleInputFocus}
-                  className="border p-2 rounded-lg text-black" // Add styling here
-                  required
-                />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Cardholder Name"
-                  value={state.name}
-                  onChange={handleInputChange}
-                  onFocus={handleInputFocus}
-                  className="border p-2 rounded-lg text-black" // Add styling here
-                  required
-                />
-                <div className="flex space-x-4">
-                  <input
-                    type="text"
-                    name="expiry"
-                    placeholder="MM/YY"
-                    value={state.expiry}
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    className="border p-2 rounded-lg text-black w-full" // Add styling here
-                    required
-                  />
-                  <input
-                    type="tel"
-                    name="cvc"
-                    placeholder="CVC"
-                    value={state.cvc}
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    className="border p-2 rounded-lg text-black w-full" // Add styling here
-                    required
-                  />
-                </div>
-              </div>
-              <Button color="primary" type="submit">
-                Submit Payment
-              </Button>
-            </form>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 };
 

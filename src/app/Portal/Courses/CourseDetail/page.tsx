@@ -7,6 +7,7 @@ import TabButton from "@/app/components/TabButton";
 import { Button } from "@/app/components/button-sidebar";
 import { Badge } from "@/app/components/badge";
 import { AnimatePresence, motion } from "framer-motion";
+import PaymentPopup from "@/app/components/PaymentPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
@@ -20,7 +21,7 @@ interface CourseDetailsProps {
 
 const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   const router = useRouter();
-  const [isBought, setIsBought] = useState<Boolean>(false);
+  const [isBought, setIsBought] = useState<boolean>(false);
   const [showComments, setShowComments] = useState<Boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>();
@@ -214,65 +215,12 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
       </div>
 
       {/* Modal Popup */}
-      <SpringModal
+      <PaymentPopup
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         setIsBought={setIsBought}
       />
     </div>
-  );
-};
-
-// Modal component using Framer Motion
-const SpringModal = ({
-  isOpen,
-  setIsOpen,
-  setIsBought,
-}: {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsBought: any;
-}) => {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-        >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.8 }}
-            className="bg-white rounded-lg p-6"
-          >
-            <h2 className="text-lg font-bold text-black">Confirm Purchase</h2>
-            <p className="mt-2 text-black">
-              Are you sure you want to buy this course?
-            </p>
-            <div className="flex justify-end mt-4 space-x-2">
-              <Button
-                onClick={() => setIsOpen(false)}
-                className="text-black border-2"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsBought(true); // Set bought state
-                  setIsOpen(false); // Close modal
-                }}
-                color="primary"
-              >
-                Confirm
-              </Button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 };
 

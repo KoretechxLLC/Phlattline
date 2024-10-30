@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { Button } from "./button-sidebar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface TabButtonProps {
   backgroundColor: string;
@@ -76,10 +78,11 @@ const SpringModal = ({
   setIsOpen: (isOpen: boolean) => void;
 }) => {
   const [matter, setMatter] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState<Date | null>(null); // Initialize as null
   const [time, setTime] = useState("");
 
   const handleContinue = () => {
+    // Add any logic you need for the continue action
     setIsOpen(false);
   };
 
@@ -112,13 +115,12 @@ const SpringModal = ({
                 />
               </div>
               <div className="my-4 ">
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className={`w-full p-2 rounded-md border border-gray-300 ${
-                    date ? "text-gray-600" : "text-gray-400"
-                  }`}
+                <DatePicker
+                  selected={date} // Pass the date state
+                  onChange={(date) => setDate(date)} // Update the date state
+                  placeholderText="Select a date"
+                  className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400"
+                  calendarClassName="z-50" // Ensure datepicker calendar has higher z-index
                 />
               </div>
               <div className="my-4 ">

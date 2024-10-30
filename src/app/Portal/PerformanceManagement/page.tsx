@@ -6,6 +6,14 @@ import SmartGoalForm from "@/app/components/SmartGoalForm";
 import TimeManagement from "@/app/components/TimeManangment";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/Card";
+import PersonalGoals from "@/app/components/PersonalGoalsTracker";
+import SuggestionTabs from "@/app/components/SuggestionTabs";
+import {
   fetchGoals,
   resetError,
   resetSuccess,
@@ -24,7 +32,7 @@ const PerformanceManagement = () => {
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
-  const { success, error, goals } = useSelector(
+  const { success, error } = useSelector(
     (state: RootState) => state.performance
   );
   const { userData } = useSelector((state: RootState) => state.auth);
@@ -33,15 +41,11 @@ const PerformanceManagement = () => {
 
   const handleAddGoal = (goalData: any) => {
     const id = userData?.id;
-    // Create a new FormData object
     const formData = new FormData();
-    // Dynamically append all fields from goalData to the FormData object
     Object.keys(goalData).forEach((key) => {
       formData.append(key, goalData[key]);
     });
     formData.append("id", id);
-
-    // Dispatch the FormData to Redux or submit to an API
     dispatch(submitGoal(formData));
   };
 
@@ -63,6 +67,12 @@ const PerformanceManagement = () => {
       dispatch(resetError());
     }
   }, [success, error, dispatch]);
+
+  const suggestions = [
+    "Define Clear Strategic Goals",
+    "Improve Time Management Skills",
+    "Increase Team Collaboration",
+  ];
 
   return (
     <div className="px-4 text-zinc-50">
@@ -93,6 +103,37 @@ const PerformanceManagement = () => {
         </div>
         <div>
           <TimeManagement />
+        </div>
+
+        {/* Personal Goals Section */}
+        <div className="col-span-1 md:col-span-2 lg:col-span-3">
+          <Card
+            className="border border-gray-500 rounded-3xl shadow-md w-full h-full"
+            style={{ fontFamily: "Sansation" }}
+          >
+            <CardHeader className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
+              <CardTitle>Your Desired Job</CardTitle>
+            </CardHeader>
+            <CardContent className="my-16">
+              <PersonalGoals
+                goals={[
+                  { id: 1, goal: "Finance Officer" },
+                  { id: 2, goal: "Taxation" },
+                ]}
+                showAvatar={false}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Suggestions Section */}
+        <div className="my-4 flex flex-col col-span-1 md:col-span-2 lg:col-span-3">
+          <CardTitle>Your Desired Personal Goals</CardTitle>
+          <div className="flex space-x-4 mt-2">
+            {suggestions.map((suggestion, index) => (
+              <SuggestionTabs key={index} Suggestion={suggestion} />
+            ))}
+          </div>
         </div>
       </motion.div>
     </div>

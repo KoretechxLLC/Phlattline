@@ -101,7 +101,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
             alt={label}
             width={60}
             height={60}
-            className={"h-5 w-5 mb-1 mr-3"}
+            className={"h-5 w-5 mb-1 mx-5"}
           />
           {(!config.collapsed || hovered) && (
             <p className={"w-28 text-sm flex items-start text-start"}>
