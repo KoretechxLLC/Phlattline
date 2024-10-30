@@ -1,3 +1,4 @@
+import axiosInstance from "@/app/utils/privateAxios";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import localforage from "localforage";
@@ -44,7 +45,25 @@ export const Register = createAsyncThunk<any, FormData>(
     try {
       const response = await axios.post(`api/auth/register`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
+export const UpdateUser = createAsyncThunk<any, any>(
+  "auth/UpdateUser",
+  async (formData: any, thunkAPI) => {
+    try {
+      const response = await axiosInstance.put(`api/user`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
       });
       return response.data;
@@ -84,7 +103,7 @@ const authSlice = createSlice({
       localforage.removeItem("access_token");
       localforage.removeItem("refresh_Token");
       if (typeof window !== "undefined") {
-        window.location.href = "/"
+        window.location.href = "/";
       }
     },
     setSuccess: (state) => {
@@ -100,9 +119,9 @@ const authSlice = createSlice({
     setAssessmentUpdate: (state) => {
       state.userData.assessment_status = true;
       if (typeof window !== "undefined") {
-        window.location.href = "/Dashboard"
+        window.location.href = "/Dashboard";
       }
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -118,7 +137,6 @@ const authSlice = createSlice({
         state.success = action.payload.message;
         localforage.setItem("access_token", action.payload.accessToken);
         localforage.setItem("refresh_Token", action.payload.refreshToken);
-      
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -126,9 +144,6 @@ const authSlice = createSlice({
       })
       .addCase(Register.pending, (state) => {
         state.isLoading = true;
-        if (typeof window !== "undefined") {
-          window.location.href = "/Login"
-        }
         state.error = null;
       })
       .addCase(Register.fulfilled, (state, action) => {
@@ -138,10 +153,29 @@ const authSlice = createSlice({
       .addCase(Register.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? "Unknown error";
+      })
+      .addCase(UpdateUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(UpdateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userData = action.payload.data;
+        state.success = "Successfully profile updated";
+      })
+      .addCase(UpdateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Unknown error";
       });
   },
 });
 
-export const { setLogin, setLogOut, setSuccess, setLoading, setError, setAssessmentUpdate } =
-  authSlice.actions;
+export const {
+  setLogin,
+  setLogOut,
+  setSuccess,
+  setLoading,
+  setError,
+  setAssessmentUpdate,
+} = authSlice.actions;
 export default authSlice.reducer;

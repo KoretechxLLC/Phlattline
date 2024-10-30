@@ -8,10 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 import Icon from "@/app/components/utility-icon";
+import { RootState } from "@/redux/store";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const ProfileInfo = () => {
+  const { userData } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
 
   return (
@@ -19,13 +22,26 @@ const ProfileInfo = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="cursor-pointer">
           <div className="flex items-center gap-3 text-default-800">
-            <Image
-              src={"/assets/userProfile.png"}
-              alt={"User"}
-              width={36}
-              height={36}
-              className="rounded-full"
-            />
+            {userData?.profile_image ? (
+              <div className="w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
+                <Image
+                  alt="User profile image"
+                  src={`/users/profileimage/${userData.profile_image}`}
+                  layout="responsive" // Use responsive layout to control aspect ratio
+                  width={5000} // Adjust width for better performance
+                  height={5000} // Adjust height for better performance
+                  className="rounded-full object-cover" // Use object-cover to fill the container
+                />
+              </div>
+            ) : (
+              <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#fff] rounded-full">
+                <span className="text-white text-2xl md:text-8xl font-bold pt-3">
+                  {userData?.first_name?.charAt(0).toUpperCase() +
+                    userData?.last_name?.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+
             <span className="text-base me-2.5 lg:inline-block hidden">
               <Icon icon="heroicons-outline:chevron-down" />
             </span>
