@@ -75,7 +75,7 @@ const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
 };
 
 const AsessmentTracker = ({
-  height = 220,
+  height = 170,
   chartType = "bar",
 }: AssessmentTrackerProps) => {
   const [config] = useConfig();
@@ -101,13 +101,13 @@ const AsessmentTracker = ({
     if (!assessments || assessments?.length == 0) {
       dispatch(fetchAssessments({}));
     }
-  }, []);
+  }, [assessments, dispatch]);
 
   useEffect(() => {
     if (!assessmentsResponse || assessmentsResponse.length == 0) {
       dispatch(fetchAssessmentsResponse({ userId }));
     }
-  }, [success]);
+  }, [assessmentsResponse, dispatch, success, userId]);
 
   useEffect(() => {
     if (assessments && assessments.length > 0) {
@@ -115,7 +115,7 @@ const AsessmentTracker = ({
         assessments?.length > 0 ? assessments?.map((e: any) => e?.title) : [];
       setAllCategories(categories);
     }
-  }, [assessments.length, success]);
+  }, [assessments, assessments.length, success]);
 
   const data = calculatePercentages(assessmentsResponse, assessments);
 
@@ -152,7 +152,7 @@ const AsessmentTracker = ({
       show: true,
       position: "top",
       horizontalAlign: "right",
-      fontSize: "10px",
+      fontSize: "20px",
       offsetY: -30,
       markers: {
         width: 8,
@@ -257,13 +257,15 @@ const AsessmentTracker = ({
           <GraphLoader />
         </div>
       ) : data && data.length > 0 ? (
-        <Chart
-          options={options}
-          series={series}
-          type={chartType}
-          height={height}
-          width={"100%"}
-        />
+        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[180px] ">
+          <Chart
+            options={options}
+            series={series}
+            type={chartType}
+            height="100%"
+            width="100%"
+          />
+        </div>
       ) : (
         <div className="text-center text-gray-300 py-24">
           Please Submit Assessments First!

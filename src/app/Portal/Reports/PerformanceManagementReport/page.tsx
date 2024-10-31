@@ -43,13 +43,13 @@ const PerformanceManagementReport = () => {
       </Card>
 
       <Card
-        className="border border-gray-500 rounded-3xl shadow-md w-full h-full"
+        className="border border-[#62626280] rounded-3xl shadow-md w-full h-full"
         style={{ fontFamily: "Sansation" }}
       >
         <CardHeader className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
           <CardTitle>Your Desired Job</CardTitle>
         </CardHeader>
-        <CardContent className="my-16">
+        <CardContent className="4xl:my-12 my-16">
           <PersonalGoals
             goals={[
               { id: 1, goal: "Finance Officer" },

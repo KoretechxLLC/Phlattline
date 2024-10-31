@@ -39,7 +39,7 @@ const IndividualAssessmentForm = () => {
     if (!assessments || assessments.length == 0) {
       dispatch(fetchAssessments({}));
     }
-  }, [dispatch]);
+  }, [assessments, dispatch]);
 
   const handleOptionChange = (questionId: string, optionText: string) => {
     setResponses((prevResponses) => ({
@@ -110,7 +110,7 @@ const IndividualAssessmentForm = () => {
   if (loading) {
     return (
       <div className="text-center text-gray-300">
-        <Spinner />
+        <Spinner height="80vh" />
       </div>
     );
   }

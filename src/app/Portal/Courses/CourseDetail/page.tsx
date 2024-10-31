@@ -6,11 +6,9 @@ import Icon from "@/app/components/utility-icon";
 import TabButton from "@/app/components/TabButton";
 import { Button } from "@/app/components/button-sidebar";
 import { Badge } from "@/app/components/badge";
-import { AnimatePresence, motion } from "framer-motion";
 import PaymentPopup from "@/app/components/PaymentPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import ReactPlayer from "react-player";
 import { RootState } from "@/redux/store";
 import { fetchcourses } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
@@ -35,11 +33,12 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
+
   useEffect(() => {
     if (!courses || courses.length == 0) {
       dispatch(fetchcourses());
     }
-  }, []);
+  }, [courses, dispatch]);
 
   useEffect(() => {
     if (courseId) {
@@ -48,22 +47,21 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
       );
       setData(filteredCourseData);
     }
-  }, [courseId, courses?.length]);
+  }, [courses, courseId, courses?.length]);
 
   const handleBuyClick = () => {
     setIsOpen(true);
+    setIsBought(true);
   };
 
   const handleGetStartedClick = () => {
     setShowComments(true);
   };
 
-  // Find the video with sequence 1
   const videoWithSequenceOne = data?.videos.find(
     (video: any) => video.sequence === 1
   );
 
-  // Function to toggle video play state
   const handlePlayVideo = () => {
     setIsPlaying(true);
   };
@@ -77,7 +75,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
           className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full space-y-6 rounded-lg"
           style={{ fontFamily: "Sansation" }}
         >
-          {/* Left Column: Course Details */}
           <div>
             <div className="flex items-center px-5 py-1 space-x-4">
               <h1 className="text-3xl font-bold">
@@ -91,44 +88,29 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             </div>
 
             <div className="relative w-full mx-2">
-              {!isPlaying ? (
-                <>
-                  <Image
-                    src={`/courses/thumbnails/${
-                      videoWithSequenceOne?.thumbnail_url ||
-                      "default-thumbnail.jpg"
-                    }`}
-                    alt="Course Thumbnail"
-                    className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
-                    width={1000}
-                    height={1000}
-                  />
-                  <div className="absolute left-0 bottom-0 m-4">
-                    <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
-                      <Icon
-                        icon="tdesign:play-circle"
-                        className="text-white w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
-                        onClick={handlePlayVideo} // Play video on click
-                      />
-                    </div>
+              <>
+                <Image
+                  src={`/courses/thumbnails/${
+                    videoWithSequenceOne?.thumbnail_url ||
+                    "default-thumbnail.jpg"
+                  }`}
+                  alt="Course Thumbnail"
+                  className="w-full 4xl:h-64 h-80 rounded-lg object-contain container border-[1px] border-slate-600 my-2"
+                  width={1000}
+                  height={1000}
+                />
+                <div className="absolute left-0 bottom-0 m-4">
+                  <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
+                    <Icon
+                      icon="tdesign:play-circle"
+                      className="text-white w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
+                      onClick={handlePlayVideo}
+                    />
                   </div>
-                </>
-              ) : (
-                <video
-                  controls
-                  autoPlay
-                  className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
-                >
-                  <source
-                    src={`/courses/videos/${videoWithSequenceOne?.video_url}`}
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              )}
+                </div>
+              </>
             </div>
 
-            {/* Course Details Section */}
             <div className="space-y-5 w-full my-2 mx-2">
               <div className="rounded-2xl">
                 <Card className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] p-4">
@@ -159,60 +141,56 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                         </span>
                       </div>
                     </div>
-
                     <div className="text-default-600 text-sm lg:text-base font-normal my-4 text-gray-500">
                       <p>{data?.description}</p>
                     </div>
                   </CardContent>
                 </Card>
+
+                <div className="my-5 md:my-10 space-x-4">
+                  {!isBought ? (
+                    <Button
+                      className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
+                      size="default"
+                      color="primary"
+                      style={{ fontFamily: "Sansation" }}
+                      onClick={handleBuyClick}
+                    >
+                      Buy now for ${data?.price}
+                    </Button>
+                  ) : (
+                    <Button
+                      className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
+                      size="default"
+                      color="primary"
+                      style={{ fontFamily: "Sansation" }}
+                      onClick={() =>
+                        router.push(
+                          `/Portal/Courses/CourseModule?courseId=${data?.id}`
+                        )
+                      }
+                    >
+                      Get Started
+                    </Button>
+                  )}
+                </div>
+
+                <div className="my-0">
+                  <TabButton
+                    backgroundColor="#FF0000"
+                    text="Training-On Demand"
+                    imageSrc="/assets/LiveIcon.png"
+                    textColor="#FFFFFF"
+                    arrowImageSrc="/assets/ArrowRightUp.png"
+                    showModalOnClick={true}
+                    isClickable={true}
+                  />
+                </div>
               </div>
-            </div>
-
-            {/* Buttons Section */}
-            <div className="my-5 md:my-10 space-x-4">
-              {!isBought ? (
-                <Button
-                  className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
-                  size="default"
-                  color="primary"
-                  style={{ fontFamily: "Sansation" }}
-                  onClick={handleBuyClick}
-                >
-                  Buy now for ${data?.price}
-                </Button>
-              ) : (
-                <Button
-                  className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
-                  size="default"
-                  color="primary"
-                  style={{ fontFamily: "Sansation" }}
-                  onClick={() =>
-                    router.push(
-                      `/Portal/Courses/CourseModule?courseId=${data?.id}`
-                    )
-                  }
-                >
-                  Get Started
-                </Button>
-              )}
-            </div>
-
-            {/* Live Button */}
-            <div className="my-4">
-              <TabButton
-                backgroundColor="#FF0000"
-                text="Training-On Demand"
-                imageSrc="/assets/LiveIcon.png"
-                textColor="#FFFFFF"
-                arrowImageSrc="/assets/ArrowRightUp.png"
-                showModalOnClick={true}
-                isClickable={true}
-              />
             </div>
           </div>
 
-          {/* Right Column: Video List */}
-          <div className="overflow-x-scroll h-[60em]">
+          <div className="h-56">
             <div className="grid my-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
               {data?.videos.map((video: any) => (
                 <div
@@ -239,7 +217,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             </div>
           </div>
 
-          {/* Modal Popup */}
           <PaymentPopup
             isOpen={isOpen}
             setIsOpen={setIsOpen}

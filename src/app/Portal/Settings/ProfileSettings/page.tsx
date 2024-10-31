@@ -37,6 +37,7 @@ const Profile = ({ profileImage }: any) => {
   const [date, setDate] = useState<Date | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const router = useRouter();
   const { userData, success, error } = useSelector(
     (state: RootState) => state.auth
@@ -44,6 +45,10 @@ const Profile = ({ profileImage }: any) => {
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
+
+  const sixteenYearsAgo = new Date();
+  sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
+
   const [data, setData] = useState<any>();
 
   const dispatch: any = useDispatch();
@@ -188,8 +193,12 @@ const Profile = ({ profileImage }: any) => {
           <DatePicker
             selected={date}
             onChange={(date) => setDate(date)}
+            maxDate={sixteenYearsAgo} // Restrict to dates 16+ years ago
             placeholderText="Date of Birth"
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
+            showMonthDropdown // Enable month dropdown
+            showYearDropdown // Enable year dropdown
+            dropdownMode="select" // Makes dropdowns a select element for smoother navigation
           />
           <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>

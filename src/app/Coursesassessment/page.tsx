@@ -4,8 +4,12 @@ import SideBar from "@/app/components/SideBar";
 import Header from "@/app/components/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import {  useRouter, useSearchParams } from "next/navigation";
-import { coursesAssessmentResponses, resetError, resetSuccess } from "@/redux/slices/courses.slice";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  coursesAssessmentResponses,
+  resetError,
+  resetSuccess,
+} from "@/redux/slices/courses.slice";
 import StackedNotifications from "../components/Stackednotification";
 
 export type NotificationType = {
@@ -18,13 +22,19 @@ const Courseassessment = () => {
   const dispatch: any = useDispatch();
   const router: any = useRouter();
   const searchParams = useSearchParams();
-  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const courseId = searchParams.get("courseId");
-  const { courses,loading, error, success } = useSelector((state: RootState) => state.courses);
+  const { courses, loading, error, success } = useSelector(
+    (state: RootState) => state.courses
+  );
   const { userData } = useSelector((state: RootState) => state.auth);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
-  const currentCourse = courses.find((course: any) => course.id === Number(courseId));
+  const currentCourse = courses.find(
+    (course: any) => course.id === Number(courseId)
+  );
   const assessments = currentCourse?.assessments || [];
   const userId = userData?.id;
 
@@ -53,16 +63,17 @@ const Courseassessment = () => {
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-
       if (courseId) {
         await dispatch(
           coursesAssessmentResponses({
             userId,
-            courseId: courseId, 
-            responses: Object.entries(responses).map(([questionId, answer]) => ({
-              questionId,
-              answer,
-            })),
+            courseId: courseId,
+            responses: Object.entries(responses).map(
+              ([questionId, answer]) => ({
+                questionId,
+                answer,
+              })
+            ),
           })
         );
       } else {
@@ -79,8 +90,7 @@ const Courseassessment = () => {
         type: "success",
       });
       dispatch(resetSuccess());
-      router.push("/Portal/Courses")
-  
+      router.push("/Portal/Courses");
     }
     if (error !== null) {
       setNotification({
@@ -90,14 +100,16 @@ const Courseassessment = () => {
       });
       dispatch(resetError());
     }
-  }, [success, error,dispatch]);
-
+  }, [success, error, dispatch, router]);
 
   return (
     <div>
       <div className="flex flex-row">
         <div className="flex-grow">
-          <Header HeadingText="Hey Jack" HeadingDesc="What will you Learn today?" />
+          <Header
+            HeadingText="Hey Jack"
+            HeadingDesc="What will you Learn today?"
+          />
         </div>
         <div className="flex-shrink-0">
           <SideBar />
@@ -113,37 +125,47 @@ const Courseassessment = () => {
       >
         {assessments?.length > 0 &&
           assessments.map((assessment: any) => (
-            <div key={assessment.id} className="mb-6 p-0 bg-black rounded-lg shadow-md">
+            <div
+              key={assessment.id}
+              className="mb-6 p-0 bg-black rounded-lg shadow-md"
+            >
               <div className="space-y-6">
                 {assessment.questions.map((question: any, index: number) => (
                   <div
                     key={question.id}
-                    className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${errors[question.id] ? "border border-red-500" : ""
-                      }`}
+                    className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${
+                      errors[question.id] ? "border border-red-500" : ""
+                    }`}
                   >
                     <label className="text-1xl text-gray-100 mb-2 block pt-0 pb-3 pl-3">
                       {`${index + 1}. ${question.question_text}`}
                     </label>
                     <div className="grid grid-cols-2 gap-0 md:grid-cols-3 lg:grid-cols-6 mt-4 pl-3">
-                      {question.answer_options.map((option: string, idx: number) => (
-                        <label
-                          key={idx}
-                          className="flex items-center space-x-3 text-gray-300 cursor-pointer"
-                        >
-                          <input
-                            type="radio"
-                            name={question.id.toString()}
-                            value={option}
-                            checked={responses[question.id] === option}
-                            onChange={() => handleOptionChange(question.id, option)}
-                            className="form-radio text-yellow-500 focus:ring-0"
-                          />
-                          <span className="text-sm">{option}</span>
-                        </label>
-                      ))}
+                      {question.answer_options.map(
+                        (option: string, idx: number) => (
+                          <label
+                            key={idx}
+                            className="flex items-center space-x-3 text-gray-300 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name={question.id.toString()}
+                              value={option}
+                              checked={responses[question.id] === option}
+                              onChange={() =>
+                                handleOptionChange(question.id, option)
+                              }
+                              className="form-radio text-yellow-500 focus:ring-0"
+                            />
+                            <span className="text-sm">{option}</span>
+                          </label>
+                        )
+                      )}
                     </div>
                     {errors[question.id] && (
-                      <p className="text-red-500 text-sm mt-2">{errors[question.id]}</p>
+                      <p className="text-red-500 text-sm mt-2">
+                        {errors[question.id]}
+                      </p>
                     )}
                   </div>
                 ))}

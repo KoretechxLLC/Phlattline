@@ -8,7 +8,7 @@ import CreditCard from "@/app/components/CreditCard";
 const BillingMethod = () => {
   const router = useRouter();
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col 4xl:gap-3 gap-4">
       <CreditCard />
       <div className="flex justify-end">
         <Button

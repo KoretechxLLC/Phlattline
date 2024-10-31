@@ -26,21 +26,23 @@ const CoursesTab: React.FC<CourseTabProps> = ({
 }) => {
   const router = useRouter();
 
-  const thumbnail = videos.length > 0 ? `/courses/thumbnails/${videos[0].thumbnail_url}` : '/default-thumbnail.jpg';
+  const thumbnail =
+    videos.length > 0
+      ? `/courses/thumbnails/${videos[0].thumbnail_url}`
+      : "/default-thumbnail.jpg";
 
   return (
     <Card
-      className="p-4 w-full border-[1px] border-slate-600 rounded-3xl hover:bg-red-700 transition-colors duration-500 cursor-pointer group"
+      className="p-3 w-full border-[1px] border-slate-600 rounded-3xl hover:bg-red-700 transition-colors duration-500 cursor-pointer group"
       style={{ fontFamily: "Sansation" }}
       onClick={() => router.push(`/Portal/Courses/CourseDetail?courseId=${id}`)}
     >
-
-      <div className="relative bg-default-200 dark:bg-default-900 h-48 flex flex-col justify-center items-center mb-3 rounded-md">
+      <div className="relative bg-default-200 dark:bg-default-900  flex flex-col justify-center items-center  rounded-md">
         <div className="h-full w-full">
           <Image
-            width={300}
-            height={200}
-            className="rounded-2xl h-full w-full object-cover"
+            width={1000}
+            height={1000}
+            className=" rounded-2xl 4xl:h-24 4xl:w-52 5xl:h-40 5xl:w-96  object-cover"
             src={thumbnail}
             alt={title}
           />
@@ -67,32 +69,29 @@ const CoursesTab: React.FC<CourseTabProps> = ({
 
       <div>
         {/* Course Title */}
-        <h6 className="text-default-900 group-hover:text-white text-2xl font-medium mt-2 truncate transition-colors duration-500">
+        <h6 className="text-default-900 group-hover:text-white 4xl:text-xl text-2xl font-medium mt-2 truncate transition-colors duration-500">
           {title}
         </h6>
 
-        {/* Description */}
-        <p className="text-gray-300 group-hover:text-white mt-2 text-sm transition-colors duration-500">
-          {description}
-        </p>
-
-        <div className="flex justify-between pt-3">
+        <div className="flex justify-between py-3">
           <RedBadge text="Basic" />
-          <div className="mt-2">
+          <div className="my-1">
             {videos.length > 0 ? (
               <p className="text-gray-300 group-hover:text-white text-sm">
                 {videos.length} Lessons
               </p>
             ) : (
-              <p className="text-gray-500 group-hover:text-white text-sm">No videos available.</p>
+              <p className="text-gray-500 group-hover:text-white text-sm">
+                No videos available.
+              </p>
             )}
           </div>
         </div>
 
         {/* Price */}
-        <div className="flex justify-between pt-6 pb-3 items-center">
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-default-900 group-hover:text-white font-bold text-2xl">
+        <div className="flex justify-between 4xl:py-1 py-3 items-center">
+          <div className="flex justify-between items-center ">
+            <span className="text-default-900 group-hover:text-white font-bold 4xl:text-xl text-2xl">
               ${price}
             </span>
           </div>

@@ -33,15 +33,15 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
     if (!assessments || assessments?.length == 0) {
       dispatch(fetchAssessments({ size: 9 }));
     }
-  }, []);
+  }, [assessments, dispatch]);
   useEffect(() => {
     if (assessmentsSuccess) {
       setAssessmentCatalogueData(assessments);
     }
-  }, [assessmentsSuccess]);
+  }, [assessments, assessmentsSuccess]);
 
   return (
-    <div className="px-0 md:px-4 grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4 w-full h-full">
+    <div className="px-0 md:px-4 grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-4  w-full h-full">
       {/* Individual Assessments Section */}
       <div className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-xl p-5 w-full">
         {loading ? (
@@ -68,7 +68,7 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
       </div>
 
       {/* Recommended Assessments Section */}
-      <div className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-xl p-5 w-full">
+      <div className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-xl 4xl:p-3 p-5 w-full">
         <CardTitle className="text-xl">Recommended Assessments</CardTitle>
         <HoverEffect
           items={recommendedAssessments} // Show subset

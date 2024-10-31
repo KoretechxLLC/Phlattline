@@ -37,7 +37,7 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
         {/* Action buttons: EditWidget, Search, Notifications, Profile */}
         <div className="flex gap-2 items-start">
           {/* Show the EditWidget and HeaderSearch only on medium and larger screens */}
-          <div className="hidden md:flex gap-2">
+          <div className="hidden md:flex gap-2 my-1">
             <EditWidget />
             <HeaderSearch />
           </div>

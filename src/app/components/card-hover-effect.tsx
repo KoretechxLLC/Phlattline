@@ -82,17 +82,17 @@ export const HoverEffect = ({
                 src={`/assessmentsImage/${item?.image}`}
                 width={1000}
                 height={1000}
-                className="h-32 w-32"
+                className="4xl:h-20 4xl:w-32 h-24 w-36"
                 alt={"Assessment Banner"}
               />
             </div>
             <CardTitle>{item.title}</CardTitle>
             <div className="flex items-center justify-between w-full my-2">
-              <span className="text-default-900 group-hover:text-white font-bold text-2xl">
+              <span className="text-default-900 group-hover:text-white font-bold 4xl:text-xl text-2xl">
                 ${item.price}
               </span>
               <Button
-                className="text-white px-5 text-sm md:text-base lg:text-base flex justify-center items-center rounded-3xl ml-4"
+                className="text-white px-5 4xl:text-sm   text-sm md:text-base lg:text-base flex justify-center items-center rounded-3xl ml-4"
                 size="default"
                 color="primary"
                 onClick={handleBuyNowClick} // Open the payment popup on button click
@@ -124,7 +124,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-4 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-[#626262] relative z-20",
+        "rounded-2xl h-full w-full 4xl:p-0 p-4 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-[#626262] relative z-20",
         className
       )}
     >
@@ -143,7 +143,12 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide my-4", className)}>
+    <h4
+      className={cn(
+        "text-zinc-100 font-semibold 4xl:tracking-tight tracking-wide 4xl:my-1 my-4",
+        className
+      )}
+    >
       {children}
     </h4>
   );

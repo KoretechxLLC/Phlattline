@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 import { ScrollArea } from "@/app/components/scroll-area";
@@ -51,11 +50,11 @@ const Notifications = () => {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="relative hidden focus:ring-none focus:outline-none md:h-8 md:w-8 md:bg-secondary text-secondary-foreground rounded-full md:flex flex-col items-center justify-center"
+          className="relative hidden focus:ring-none focus:outline-none md:h-8 md:w-8 md:bg-secondary text-secondary-foreground rounded-full md:flex flex-col items-center justify-center m-2"
         >
           <Icon
             icon="heroicons-outline:bell"
-            className="animate-tada h-5 w-5"
+            className="animate-tada h-6 w-6"
           />
           {/* Show badge only if there's any unread message */}
           {notifications.some((notification) => notification.unreadmessage) && (

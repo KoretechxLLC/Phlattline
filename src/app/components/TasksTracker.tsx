@@ -4,6 +4,7 @@ import { AnimatedTooltip } from "@/app/components/AnimatedTooltip";
 import { useEffect, useState } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
+import Spinner from "@/app/components/Spinner";
 import { SlCalender } from "react-icons/sl";
 import Deletemodel from "./DeleteModal";
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -53,11 +54,12 @@ const TasksTracker = ({
       image: "/assets/User3.png",
     },
   ];
-  const { goals } = useSelector(
-    (state: RootState) => state.performance
-  );
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const { goals } = useSelector((state: RootState) => state.performance);
   const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
+
   const pendingTasks = [
     { id: 1, goal: "Goal 1", percentage: 30, userId: 1 },
     { id: 2, goal: "Goal 2", percentage: 60, userId: 2 },
@@ -79,10 +81,15 @@ const TasksTracker = ({
   const [activeTab, setActiveTab] = useState("pending");
 
   useEffect(() => {
-    if (userData?.id) {
-      const id = userData?.id;
-      dispatch(fetchGoals(id));
-    }
+    const fetchGoalsData = async () => {
+      if (userData?.id) {
+        setLoading(true); // Start loading
+        const id = userData?.id;
+        await dispatch(fetchGoals(id)); // Dispatch fetch goals action
+        setLoading(false); // Stop loading
+      }
+    };
+    fetchGoalsData();
   }, [dispatch, userData]);
 
   // Update activeTab based on visible buttons
@@ -144,17 +151,22 @@ const TasksTracker = ({
           </button>
         )}
       </div>
+
       <ul
-        className={`overflow-y-auto h-64 justify-center items-center md:justify-start w-full border border-gray-500 rounded-b-3xl relative`}
+        className={`overflow-y-auto 4xl:h-48 h-64 justify-center items-center md:justify-start w-full border border-[#62626280] rounded-b-lg relative`}
       >
-        {activeTab === "pending" ? (
+        {loading ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <Spinner height="20vh" />
+          </div>
+        ) : activeTab === "pending" ? (
           goals && goals.length > 0 ? (
             goals.filter((item: any) => item.status === false).length > 0 ? (
               goals
                 .filter((item: any) => item.status === false)
                 .map((item: any) => (
                   <li
-                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
                     key={item.id}
                   >
                     <div className="flex items-center md:mx-5 justify-between w-full">
@@ -246,7 +258,7 @@ const TasksTracker = ({
                 .filter((item: any) => item.status === true)
                 .map((item: any) => (
                   <li
-                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
                     key={item.id}
                   >
                     <div className="flex items-center md:mx-5 justify-between w-full">
@@ -296,7 +308,7 @@ const TasksTracker = ({
         ) : (
           savedTasks.map((item) => (
             <li
-              className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+              className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
               key={item.id}
             >
               <div className="flex items-center md:mx-5 justify-between w-full">

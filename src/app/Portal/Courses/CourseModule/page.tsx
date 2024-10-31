@@ -93,7 +93,6 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
     }
   }, [videoProgressSuccess, dispatch]);
 
-
   const handleDuration = (duration: number) => {
     setTotalDuration(duration);
   };
@@ -131,7 +130,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             </Badge>
           </div>
 
-          <div className="relative w-full mx-2 pt-3">
+          <div className="relative w-full mx-2 py-1">
             {!videoRun ? (
               <>
                 <Image
@@ -139,7 +138,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                     videoData?.thumbnail_url || "default-thumbnail.jpg"
                   }`}
                   alt="Course Thumbnail"
-                  className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
+                  className="w-full 4xl:h-52 h-96 rounded-lg object-contain container border-[1px] border-slate-600 my-2"
                   width={1000}
                   height={1000}
                 />
@@ -147,30 +146,32 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                   <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
                     <Icon
                       icon="tdesign:play-circle"
-                      className="text-white w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
+                      className="text-white 4xl:w-20 4xl:h-20 w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
                       onClick={handlePlayVideo}
                     />
                   </div>
                 </div>
               </>
             ) : (
-              <ReactPlayer
-                url={`/courses/videos/${videoData?.video_url}`}
-                playing={isPlaying}
-                onPause={handlePause}
-                onPlay={handlePlay}
-                controls={true}
-                onProgress={handleProgress}
-                onDuration={handleDuration}
-                progressInterval={10000}
-                width={"100%"}
-                height={"100%"}
-                style={{ border: "1px solid #2F2F2F" }}
-              />
+              <div className="4xl:h-64 h-96">
+                <ReactPlayer
+                  url={`/courses/videos/${videoData?.video_url}`}
+                  playing={isPlaying}
+                  onPause={handlePause}
+                  onPlay={handlePlay}
+                  controls={true}
+                  onProgress={handleProgress}
+                  onDuration={handleDuration}
+                  progressInterval={10000}
+                  width={"100%"}
+                  height={"100%"} // Adjust this value to set the height
+                  style={{ border: "1px solid #2F2F2F" }}
+                />
+              </div>
             )}
           </div>
 
-          <div className="space-y-5 my-5">
+          <div className="space-y-5 my-3">
             <Card className="bg-black p-2">
               <CardContent>
                 <div className="flex items-center justify-between text-default-900 text-sm lg:text-base font-normal">

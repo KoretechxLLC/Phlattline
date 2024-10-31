@@ -259,7 +259,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = ({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="h-[75px]"
+                className="4xl:h-[65px] h-[75px]"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

@@ -130,7 +130,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             </Badge>
           </div>
 
-          <div className="relative w-full mx-2 pt-3">
+          <div className="relative w-full mx-2 pt-2">
             {!videoRun ? (
               <>
                 <Image

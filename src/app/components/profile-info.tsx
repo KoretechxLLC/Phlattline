@@ -34,8 +34,8 @@ const ProfileInfo = () => {
                 />
               </div>
             ) : (
-              <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#fff] rounded-full">
-                <span className="text-white text-2xl md:text-8xl font-bold pt-3">
+              <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-[#BAA716]  rounded-full">
+                <span className="text-white text-sm md:text-sm font-bold py-3">
                   {userData?.first_name?.charAt(0).toUpperCase() +
                     userData?.last_name?.charAt(0).toUpperCase()}
                 </span>
@@ -48,7 +48,7 @@ const ProfileInfo = () => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-56 p-0 bg-white text-black"
+          className="w-56 py-8 bg-white text-black rounded-2xl"
           align="end"
         >
           <DropdownMenuGroup>
@@ -71,31 +71,31 @@ const ProfileInfo = () => {
             ].map((item, index) => (
               <div key={`info-menu-${index}`}>
                 <DropdownMenuItem
-                  className="flex ml-6 items-center gap-2 text-sm font-medium text-default-600 capitalize px-3 py-1.5 cursor-pointer"
+                  className="flex ml-6 items-center gap-4 text-sm font-normal text-default-600 capitalize px-1 py-3 cursor-pointer"
                   onClick={() => router.push(item.href)}
                 >
-                  <Icon icon={item.icon} className="w-4 h-4 text-red-600" />
+                  <Icon icon={item.icon} className="w-5 h-5 text-red-600" />
                   {item.name}
                 </DropdownMenuItem>
                 {index < 3 && (
-                  <div className="h-px w-36 bg-gray-300 my-1 mx-8"></div>
+                  <div className="h-px w-40 bg-gray-200 my-1 mx-6"></div>
                 )}
               </div>
             ))}
           </DropdownMenuGroup>
           <DropdownMenuItem
-            className="flex items-center ml-6 gap-2 text-sm font-medium text-default-600 capitalize my-1 px-3 cursor-pointer"
+            className="flex items-center ml-6 gap-4 text-sm font-medium text-default-600 capitalize my-1 px-1 cursor-pointer"
             onClick={() => router.push("/Login")} // Update the href to the login page
           >
             <div>
               <form>
                 <button
                   type="submit"
-                  className="w-full flex items-center gap-2"
+                  className="w-full flex items-center gap-4"
                 >
                   <Icon
                     icon="heroicons:arrow-right-on-rectangle"
-                    className="w-4 h-4 text-red-600"
+                    className="w-5 h-5 text-red-600"
                   />
                   Log out
                 </button>

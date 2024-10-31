@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 
@@ -22,7 +21,7 @@ const HoursDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex justify-center w-full items-center mx-5 space-x-5 bg-[#2D2C2C80] rounded-3xl cursor-pointer p-1">
+        <div className="flex justify-center w-full items-center 4xl:mx-3 mx-5 space-x-5 bg-[#2D2C2C80] rounded-3xl cursor-pointer p-1">
           <span className="text-sm text-gray-400">{selectedOption}</span>
           <Icon
             icon="teenyicons:down-solid"

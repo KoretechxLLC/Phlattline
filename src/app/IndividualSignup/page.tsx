@@ -12,6 +12,8 @@ import StackedNotifications from "../components/Stackednotification";
 import { RootState } from "@/redux/store";
 import { SparklesCore } from "../components/sparkles";
 import { AuroraBackground } from "../components/AuroraBackground";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -200,18 +202,22 @@ const IndividualSignUp = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-4 w-full relative bg-black border-2 border-[#b74b279d] text-white"
           >
-            <Input
-              id="number-input"
-              type="tel"
-              placeholder="Enter your number"
+            <PhoneInput
+              country={"us"} // Set default country or detect user's country
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="bg-black border-2 border-[#b74b279d] text-white"
-              required
+              onChange={(phone) => setPhone(phone)}
+              inputClass="w-full bg-black border-2 border-[#b74b279d] text-white"
+              buttonClass="bg-black border-[#b74b279d]"
+              containerClass="w-full bg-black"
+              inputProps={{
+                name: "phone",
+                required: true,
+                autoFocus: true,
+              }}
             />
-            <MdPhone className="absolute top-5 right-5 size-5 text-white" />
+            <MdPhone className="absolute top-3 right-5 size-5 text-white" />
           </motion.div>
 
           <motion.div
