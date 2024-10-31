@@ -85,7 +85,7 @@ const ProfileInfo = () => {
           </DropdownMenuGroup>
           <DropdownMenuItem
             className="flex items-center ml-6 gap-2 text-sm font-medium text-default-600 capitalize my-1 px-3 cursor-pointer"
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/Login")} // Update the href to the login page
           >
             <div>
               <form>

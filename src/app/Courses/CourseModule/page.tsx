@@ -255,10 +255,6 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             <ModuleList />
           </CardContent>
         </Card>
-        <ButtonWrapper
-          text="Start Assessment"
-          className="border-red-500 text-white pl-[10em] pr-[10em] items-center justify-center flex"
-        />
       </div>
     </div>
   );

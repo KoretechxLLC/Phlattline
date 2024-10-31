@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Spinner = () => {
+interface SpinnerProps {
+  height?: string;
+}
+
+const Spinner: React.FC<SpinnerProps> = ({ height = '100vh' }) => {
   const spinnerStyle = {
     border: '3px solid #B50D34', // Light grey
     borderTop: '3px solid #BAA716', // Blue
@@ -15,7 +19,7 @@ const Spinner = () => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh', // Center the spinner in the viewport
+    height, 
   };
 
   return (
@@ -26,4 +30,3 @@ const Spinner = () => {
 };
 
 export default Spinner;
-
