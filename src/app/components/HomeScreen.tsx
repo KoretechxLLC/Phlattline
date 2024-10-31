@@ -45,7 +45,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
     const h = window.innerHeight;
     const scene = new THREE.Scene();
     camera.current = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-    camera.current.position.z = 4.8;
+    camera.current.position.z = 4.5;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
@@ -207,7 +207,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
       if (meshToAnimate) {
         gsap.to(meshToAnimate.position, { x: 0, y: 0, z: 0, duration: 1 });
         gsap.to(camera.current.position, {
-          z: 3.5,
+          z: 3.2,
           duration: 1,
           onComplete: () => router.push(hoveredProfile.route),
         });
