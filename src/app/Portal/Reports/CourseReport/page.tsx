@@ -27,8 +27,6 @@ const coursesData = [
     Price: 40,
     completion: "not started", // Options: "not started", "ongoing", "completed"
     progress: 0, // Progress percentage
-    startTime: "10:00",
-    endTime: "12:00",
   },
   {
     id: 2,
@@ -44,8 +42,6 @@ const coursesData = [
     Price: 60,
     completion: "ongoing",
     progress: 60, // Progress percentage
-    startTime: "9:30",
-    endTime: "10:30",
   },
   {
     id: 3,
@@ -61,8 +57,6 @@ const coursesData = [
     Price: 45,
     completion: "completed",
     progress: 100, // Progress percentage
-    startTime: "7:00",
-    endTime: "9:00",
   },
 ];
 
@@ -81,7 +75,7 @@ const CourseReport = () => {
           </div>
 
           {/* Right Column: Additional Stats */}
-          <div className="w-1/4 flex flex-col">
+          <div className="4xl:w-2/4 w-1/4 flex flex-col">
             <div className="flex flex-col w-fit  mb-3">
               <HoursDropdown />
             </div>
@@ -146,12 +140,12 @@ const CourseReport = () => {
             {coursesData.map((course, i) => (
               <li
                 key={`course-${i}`}
-                className="text-lg text-default-600 py-2 px-2 "
+                className="4xl:text-sm text-lg text-default-600 4xl:py-2 4xl:px-2 py-2 px-2 "
               >
                 <div className="flex items-center">
                   {/* Left border single colored line */}
                   <div
-                    className={`h-12 w-1 mr-4 ${
+                    className={`4xl:h-8 h-12 w-1 mr-4 ${
                       course.progress === 100
                         ? "bg-green-500"
                         : course.progress > 0
@@ -163,11 +157,6 @@ const CourseReport = () => {
                     <div className="flex justify-between">
                       <span>{course.title}</span>
                       <span>{course.progress}%</span>
-                    </div>
-                    <div>
-                      <span>
-                        {course.startTime} - {course.endTime}
-                      </span>
                     </div>
                   </div>
                 </div>

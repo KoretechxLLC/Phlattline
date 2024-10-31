@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { purchasingCourse } from "@/redux/slices/courses.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications from "./Stackednotification";
+import Spinner from "./Spinner";
 
 type Focused = "number" | "expiry" | "cvc" | "name" | "";
 
@@ -62,10 +63,12 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
+  const [loading, setLoading] = useState(false);
   const dispatch: any = useDispatch();
   const { purchaseCourseError, purchaseCourseSuccess } = useSelector(
     (state: RootState) => state.courses
   );
+
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setState({ ...state, focus: e.target.name as Focused });
   };
@@ -78,12 +81,12 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
     // Validate input length based on field
     if (name === "number") {
       formattedValue = formatCreditCardNumber(value);
-      if (formattedValue.replace(/\s/g, "").length > 19) return; // Limit to 19 digits
+      if (formattedValue.replace(/\s/g, "").length > 16) return; // Limit to 19 digits
     } else if (name === "cvc") {
       formattedValue = formatCVC(value);
       if (formattedValue.length > 3) return; // Limit to 3 digits
     } else if (name === "name") {
-      if (value.length > 30) return; // Limit to 30 characters
+      if (value.length > 15) return; // Limit to 30 characters
     }
 
     setState({ ...state, [name]: formattedValue });
@@ -120,9 +123,13 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
 
   const handleContinue = async () => {
     if (userId && courseId) {
+      setLoading(true); // Start loading
       await dispatch(
         purchasingCourse({ user_Id: userId, course_id: courseId })
       );
+
+      // After loading, set formSubmitted to true to show the success screen
+      setFormSubmitted(true);
     }
   };
   useEffect(() => {
@@ -132,9 +139,10 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
         text: purchaseCourseSuccess,
         type: "success",
       });
+      setLoading(false); // End loading
       setIsOpen(false);
     }
-  }, [purchaseCourseSuccess]);
+  }, [purchaseCourseSuccess, setIsOpen]);
   useEffect(() => {
     if (purchaseCourseError) {
       setNotification({
@@ -142,9 +150,10 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
         text: purchaseCourseError,
         type: "error",
       });
+      setLoading(false); // End loading
       setIsOpen(false);
     }
-  }, [purchaseCourseError]);
+  }, [purchaseCourseError, setIsOpen]);
 
   const handleAddPayment = () => {
     setShowForm(true); // Show the payment form
@@ -195,7 +204,11 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
               </button>
 
               <div className="relative z-10 p-5 border rounded-xl my-6">
-                {!formSubmitted ? (
+                {loading ? (
+                  <div className="flex justify-center items-center h-full">
+                    <Spinner /> {/* Display the spinner here */}
+                  </div>
+                ) : formSubmitted ? (
                   <>
                     {showOnlyForm ? ( // Conditional rendering based on showOnlyForm
                       <>

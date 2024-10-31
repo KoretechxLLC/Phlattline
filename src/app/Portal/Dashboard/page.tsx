@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -15,6 +15,7 @@ import TabButton from "@/app/components/TabButton";
 import NotesCalendar from "../../components/NotesCalendar";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAssessments } from "@/redux/slices/individualassessment.slice";
+import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
 
 const Dashboard = () => {
@@ -25,6 +26,14 @@ const Dashboard = () => {
     assessmentsResponse,
     responseSuccess,
   } = useSelector((state: RootState) => state.assessmentResponse);
+
+  if (responseLoading) {
+    return (
+      <div className="text-center text-gray-300">
+        <Spinner height="20vh" />
+      </div>
+    );
+  }
   return (
     <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full  lg:space-y-24 5xl:-space-y-5 overflow-hidden items-end">
       <div className="space-y-4 md:space-y-6">
@@ -32,21 +41,21 @@ const Dashboard = () => {
           <AssessmentsBanner />
         </div>
         <div>
-          <Card className="border-[1px] border-gray-500 rounded-3xl h-full">
+          <Card className="border-[1px] border-gray-500 rounded-3xl h-auto">
             <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-              <div className="text-sm mb-16 flex justify-between">
+              <div className="text-sm 4xl:mb-12 mb-16 flex justify-between">
                 <CardTitle>Assessments Reports</CardTitle>
                 <CardTitle>Total Employees: 115</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="4xl:p-1 p-4">
               <AssessmentsTracker />
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <div className="space-y-8 md:space-y-3 w-full px-5">
+      <div className="4xl:my-0 space-y-8 md:space-y-3 w-full px-5">
         <div>
           <Card className="shadow-md rounded-3xl w-full h-full">
             <CardHeader>
@@ -60,7 +69,7 @@ const Dashboard = () => {
                 </p>
               </div>
             </CardHeader>
-            <CardContent className="w-full bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white rounded-3xl p-4">
+            <CardContent className="w-full bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white rounded-3xl p-4 4xl:p-2">
               <NotesCalendar />
             </CardContent>
           </Card>
@@ -78,7 +87,7 @@ const Dashboard = () => {
         </div>
 
         <div>
-          <Card className="border border-gray-500 rounded-3xl shadow-md w-full h-full">
+          <Card className="border border-[#62626280] rounded-3xl shadow-md w-full h-full">
             <CardHeader>
               <CardTitle>Personal Goals</CardTitle>
             </CardHeader>

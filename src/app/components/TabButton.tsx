@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { Button } from "./button-sidebar";
 import DatePicker from "react-datepicker";
+import { MdOutlineTextFields, MdDateRange, MdAccessTime } from "react-icons/md";
 import "react-datepicker/dist/react-datepicker.css";
+import Spinner from "./Spinner"; // Import your Spinner component
 
 interface TabButtonProps {
   backgroundColor: string;
@@ -38,7 +40,7 @@ const TabButton: React.FC<TabButtonProps> = ({
   return (
     <div>
       <div
-        className={`w-full py-3 rounded-lg flex items-center justify-between ${
+        className={`w-full 4xl:py-2 lg:py-3 rounded-lg flex items-center justify-between ${
           isClickable ? "cursor-pointer" : ""
         }`} // Apply cursor-pointer based on isClickable
         style={{ backgroundColor }}
@@ -52,16 +54,19 @@ const TabButton: React.FC<TabButtonProps> = ({
             alt=""
             className="mx-5"
           />
-          <span className="text-xl mx-2" style={{ color: textColor }}>
+          <span
+            className="4xl:text-sm lg:text-xl mx-1"
+            style={{ color: textColor }}
+          >
             {text}
           </span>
         </div>
         <Image
-          width={25}
-          height={25}
+          width={100}
+          height={100}
           src={arrowImageSrc}
           alt=""
-          className="mx-5"
+          className="w-5 h-5 mx-5"
         />
       </div>
 
@@ -78,12 +83,16 @@ const SpringModal = ({
   setIsOpen: (isOpen: boolean) => void;
 }) => {
   const [matter, setMatter] = useState("");
-  const [date, setDate] = useState<Date | null>(null); // Initialize as null
-  const [time, setTime] = useState("");
+  const [date, setDate] = useState<Date | null>(null);
+  const [time, setTime] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // New loading state
 
-  const handleContinue = () => {
-    // Add any logic you need for the continue action
-    setIsOpen(false);
+  const handleContinue = async () => {
+    setLoading(true); // Start loading
+    // Simulate a network request
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a 2-second delay
+    setLoading(false); // End loading
+    setIsOpen(false); // Close modal after request
   };
 
   return (
@@ -94,7 +103,7 @@ const SpringModal = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setIsOpen(false)}
-          className="bg-slate-900/20 backdrop-blur p-8 fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer"
+          className="bg-slate-900/20 backdrop-blur p-10 fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer"
         >
           <motion.div
             initial={{ scale: 0, rotate: "12.5deg" }}
@@ -104,8 +113,9 @@ const SpringModal = ({
             className="bg-white p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             <div className="relative z-10 p-5 rounded-xl my-6">
-              {/* Input Fields */}
-              <div className="my-4 ">
+              {/* Input Field with Icon */}
+              <div className="my -4 flex items-center gap-2">
+                <MdOutlineTextFields className="text-gray-500 text-2xl" />
                 <input
                   type="text"
                   value={matter}
@@ -114,23 +124,33 @@ const SpringModal = ({
                   className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400"
                 />
               </div>
-              <div className="my-4 ">
+
+              {/* Date Picker with Icon */}
+              <div className="my-4 flex items-center gap-2">
+                <MdDateRange className="text-gray-500 text-2xl" />
                 <DatePicker
-                  selected={date} // Pass the date state
-                  onChange={(date) => setDate(date)} // Update the date state
+                  selected={date}
+                  onChange={(date) => setDate(date)}
                   placeholderText="Select a date"
-                  className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400"
-                  calendarClassName="z-50" // Ensure datepicker calendar has higher z-index
+                  className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md border border-gray-300"
+                  calendarClassName="z-50"
                 />
               </div>
-              <div className="my-4 ">
-                <input
-                  type="time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className={`w-full p-2 rounded-md border border-gray-300 ${
-                    time ? "text-gray-600" : "text-gray-400"
-                  }`}
+
+              {/* Time Picker with Icon */}
+              <div className="my-4 flex items-center gap-2">
+                <MdAccessTime className="text-gray-500 text-2xl" />
+                <DatePicker
+                  selected={date}
+                  onChange={(date) => setDate(date)}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeFormat="HH:mm"
+                  timeIntervals={60}
+                  placeholderText="Select time"
+                  dateFormat="HH:mm"
+                  className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md border border-gray-300"
+                  calendarClassName="z-50"
                 />
               </div>
             </div>
@@ -140,8 +160,13 @@ const SpringModal = ({
                 color="primary"
                 className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-12 justify-center items-center rounded-3xl"
                 onClick={handleContinue}
+                disabled={loading} // Disable button while loading
               >
-                Send Request
+                {loading ? (
+                  <Spinner /> // Display spinner while loading
+                ) : (
+                  "Send Request"
+                )}
               </Button>
             </div>
           </motion.div>

@@ -24,16 +24,16 @@ const MostSales = () => {
       <CardContent>
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex-none md:w-1/2">
-            <h4 className="text-default-600 text-base md:text-xl font-normal mx-1.5">
+            <h4 className="text-default-600 text-base md:text-xl lg:text-xl font-normal mx-1.5">
               Identify Your Strengths and Weaknesses
             </h4>
-            <div className="text-xs md:text-lg font-medium mx-1.5 text-default-900">
+            <div className="text-xs 4xl:text-sm md:text-md lg:text-xl font-medium mx-1.5 text-default-900">
               Preach almost the soup tap close child scratch ago <br /> invite
               tower best everywhere calculator.
             </div>
 
             {/* Button */}
-            <div className="mt-5 md:mt-20">
+            <div className="4xl:my-20 md:my-20 ">
               <button
                 disabled={userData?.assessment_status}
                 onClick={() => {

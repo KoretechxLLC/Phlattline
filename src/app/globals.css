@@ -104,6 +104,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   -webkit-appearance: none;
 }
 
+/* Daily Dose Calendar Styling */
 
 .dashcode-app-calendar .fc .fc-button-primary {
   @apply bg-transparent;
@@ -121,7 +122,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .dashcode-app-calendar .fc-daygrid-day-top,
 .dashcode-app-calendar .fc-toolbar-title {
-  @apply flex justify-center items-center text-3xl px-2 py-1 text-center;
+  @apply flex justify-center items-center 4xl:py-0 4xl:px-0 text-3xl px-2 py-1 text-center;
 }
 
 
@@ -140,6 +141,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .dashcode-app-calendar .fc-daygrid-day-number{
   @apply py-2
 }
+
+ .dashcode-app-calendar .fc-daygrid-day-top{
+  @apply 4xl:h-8 4xl:text-3xl
+} 
 
 
 /* Shimmer Css */

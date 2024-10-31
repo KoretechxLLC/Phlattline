@@ -12,6 +12,7 @@ import {
 } from "@/app/components/Card";
 import { useRouter, useSearchParams } from "next/navigation";
 import ModuleList from "@/app/components/ModuleList";
+import Spinner from "@/app/components/Spinner"; // Import your Spinner component
 
 const coursesData = [
   {
@@ -55,9 +56,8 @@ const EventModal = ({
   event?: typeof staticEvent;
 }) => {
   const router = useRouter();
-
-  // Move hooks out of the conditional block
   const [data, setData] = useState<any>();
+  const [loading, setLoading] = useState(false); // New loading state
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId");
 
@@ -72,9 +72,23 @@ const EventModal = ({
 
   if (!open) return null; // Conditional rendering can still be used here
 
+  const handleGetStarted = async () => {
+    setLoading(true); // Start loading
+    // Simulate a network request or navigation delay
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a 2-second delay
+    setLoading(false); // End loading
+    router.push(`/Portal/Courses/CourseModule?courseId=${event.id}`); // Navigate after loading
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="relative p-5 bg-white rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-40">
+            <Spinner /> {/* Display spinner in the parent div */}
+          </div>
+        )}
+
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-700 hover:text-red-500"
@@ -198,11 +212,14 @@ const EventModal = ({
             <Button
               color="primary"
               className="w-full text-white px-4 py-2 rounded-3xl"
-              onClick={() =>
-                router.push(`/Portal/Courses/CourseModule?courseId=${event.id}`)
-              }
+              onClick={handleGetStarted}
+              disabled={loading} // Disable button while loading
             >
-              Get Started
+              {loading ? (
+                <Spinner /> // Display spinner while loading
+              ) : (
+                "Get Started"
+              )}
             </Button>
           </div>
         </div>
@@ -217,7 +234,7 @@ const EventModal = ({
                 </div>
               </CardHeader>
               <CardContent>
-                <ModuleList  />
+                <ModuleList />
               </CardContent>
             </Card>
           </div>

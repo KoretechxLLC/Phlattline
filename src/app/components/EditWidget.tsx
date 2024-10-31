@@ -40,14 +40,14 @@ const EditWidget = ({}) => {
       <SheetTrigger asChild>
         <button
           type="button"
-          className="relative focus:ring-none focus:outline-none h-10 w-10 md:h-8 md:w-8 bg-secondary text-secondary-foreground rounded-full flex items-center justify-center"
+          className="relative mx-1 focus:ring-none focus:outline-none h-10 w-10 md:h-10 md:w-10 bg-secondary text-secondary-foreground rounded-full flex items-center justify-center"
         >
           <Image
             src={`/assets/EditWidget.svg`}
             alt="Edit Widget"
-            width={60}
-            height={60}
-            className="h-9 w-9 mt-2"
+            width={100}
+            height={100}
+            className="h-10 w-10 mt-2"
           />
         </button>
       </SheetTrigger>

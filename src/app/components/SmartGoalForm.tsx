@@ -34,7 +34,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
   }, [success]);
 
   return (
-    <div className="bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] text-white p-6 rounded-xl shadow-lg w-full">
+    <div className="bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] text-white 4xl:p-3 p-14 rounded-xl shadow-lg w-full">
       <h2 className="text-xl font-semibold mb-4 text-center">
         SMART Goals Creation
       </h2>
