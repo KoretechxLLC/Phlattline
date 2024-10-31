@@ -53,8 +53,13 @@ export const HoverEffect = ({
   };
 
   return (
-    <div className={cn(className, "grid")}>
-      {items.map((item, idx) => (
+    <div
+      className={cn(
+        className, // Apply the custom className last to ensure it takes precedence
+        "grid" // Default classes
+      )}
+    >
+      {items && items?.length>0 && items.map((item, idx) => (
         <div
           key={idx}
           className="relative group block p-2 h-full w-full"
