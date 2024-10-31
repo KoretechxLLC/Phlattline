@@ -455,17 +455,20 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("id"); // Get the course ID from query params
 
-    // If courseId is provided, fetch the course by ID
+
     if (courseId) {
       const course = await prisma.courses.findUnique({
         where: { id: Number(courseId) },
         include: {
-          videos: true, // Include videos related to the course
-          assessments: true, // Include assessments related to the course
+          videos: true, 
+          assessments: {
+            include: {
+              questions: true,
+            },
+          },
         },
       });
 
-      // If the course is not found, return an error
       if (!course) {
         return NextResponse.json(
           { error: "Course not found." },
@@ -484,13 +487,17 @@ export async function GET(req: NextRequest) {
     const allCourses = await prisma.courses.findMany({
       include: {
         videos: true, // Include videos for each course
-        assessments: true, // Include assessments for each course
+        assessments: {
+          include: {
+            questions: true,
+          },
+        },
       },
     });
 
-    if (allCourses.length == 0) {
+    if (allCourses.length === 0) {
       return NextResponse.json(
-        { error: "No Course avaiable" },
+        { error: "No Course available" },
         { status: 404 }
       );
     }

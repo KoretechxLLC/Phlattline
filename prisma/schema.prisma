@@ -59,6 +59,7 @@ model courses {
   course_name         String                @db.VarChar(255)
   description         String?
   price               Float
+  CoursesAssessmentResponse CoursesAssessmentResponse[]
   assessments         assessments[]
   course_assignments  course_assignments[]
   user_courses        user_courses[]
@@ -91,6 +92,7 @@ model questions {
   id             Int         @id @default(autoincrement())
   question_text  String      @db.VarChar(255)
   answer_options String[]
+  CoursesAssessmentResponse CoursesAssessmentResponse[]
   correct_answer String      @db.VarChar(255)
   assessment_id  Int
   assessments    assessments @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
@@ -166,6 +168,8 @@ model individual_assessments {
   id                              Int                               @id @default(autoincrement())
   title                           String                            @db.VarChar(255)
   created_at                      DateTime?                         @default(now()) @db.Timestamp(6)
+  price                           Int
+  image                           String
   individual_assessment_questions individual_assessment_questions[]
   user_assessment_responses       user_assessment_responses[] // Add this line
 }
@@ -243,4 +247,16 @@ model VideoProgress {
   courses                courses?            @relation(fields: [course_id], references: [id], onDelete: Cascade) // Relation to courses
   updated_at             DateTime            @default(now()) @db.Timestamptz(6) // Track when the progress was last updated
   user_video_progress    user_video_progress @relation(fields: [user_video_progress_id], references: [id], onDelete: Cascade)
+}
+
+model CoursesAssessmentResponse {
+  id          Int       @id @default(autoincrement()) // Primary key
+  courseId    Int                                       // Foreign key for the course
+  questionId  Int                                       // Stores the ID of each question
+  answer      String                                    // Selected answer for the question
+  createdAt   DateTime  @default(now())                 // Timestamp of submission
+  userId      Int?                                      // Link to user table if needed
+  course      courses?  @relation(fields: [courseId], references: [id]) // Link to courses model
+  status      Boolean   @default(false)                  // Status of the assessment response (true or false)
+  question    questions? @relation(fields: [questionId], references: [id]) // Link to questions model
 }

@@ -1,4 +1,5 @@
 import axiosInstance from '@/app/utils/privateAxios';
+import { identity } from '@fullcalendar/core/internal';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface CoursesState {
@@ -9,7 +10,8 @@ interface CoursesState {
   videoProgressLoading: boolean;
   videoProgressError: string | null;
   videoProgressSuccess: string | null;
-  videoProgress: any[]; // Assuming you want to store video progress
+  videoProgress: any; // Assuming you want to store video progress
+  responses: any;
 }
 
 interface VideoProgressParams {
@@ -26,7 +28,8 @@ const initialState: CoursesState = {
   videoProgressLoading: false,
   videoProgressError: null,
   videoProgressSuccess: null,
-  videoProgress: [], // Initialize video progress as an empty array
+  videoProgress: [],
+  responses: null,
 };
 
 // Thunk for fetching courses
@@ -57,16 +60,39 @@ export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
   }
 );
 
+export const coursesAssessmentResponses = createAsyncThunk<any, { userId: string; courseId: string; responses: any[] }>(
+  'assessment/submitAssessmentResponses',
+  async ({ userId, courseId, responses }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('api/coursesassessmentresponse', {
+        userId,
+        courseId,
+        responses,
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to submit assessment';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const updateVideoProgress = createAsyncThunk(
   'courses/updateVideoProgress',
   async (
     progressData: { user_id: number; video_id: number; progressDuration: number; totalDuration: number, course_id: number },
     { rejectWithValue }
   ) => {
+
+
     try {
       const response = await axiosInstance.put('/api/videoprogress', progressData);
-      return response.data; // Ensure this matches your API response structure
-    } catch (error: any) {
+
+
+      return response.data
+
+    }
+    catch (error: any) {
       const errorMessage = error.response?.data?.error || error.message || 'Failed to update video progress';
       return rejectWithValue(errorMessage);
     }
@@ -104,6 +130,23 @@ const coursesSlice = createSlice({
         state.error = action.payload as string;
       })
 
+      //Submit Courses Response
+      .addCase(coursesAssessmentResponses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(coursesAssessmentResponses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.responses = action.payload.data;
+        state.success = action.payload.message; // Set success message
+      })
+      .addCase(coursesAssessmentResponses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+
       // Fetch Video Progress
       .addCase(fetchvideoprogress.pending, (state) => {
         state.videoProgressLoading = true;
@@ -128,6 +171,8 @@ const coursesSlice = createSlice({
         state.videoProgressLoading = false;
         state.videoProgressSuccess = 'Video progress updated successfully!';
 
+
+
         const {
           user_id = null,
           video_id = null,
@@ -136,25 +181,48 @@ const coursesSlice = createSlice({
           completed = null,
         } = action.payload.data || {}; // Use optional chaining
 
-        if (user_id === null || video_id === null || progressDuration === null || totalDuration === null) {
+
+        if (video_id === null || progressDuration === null || totalDuration === null) {
           console.error('Incomplete video progress data:', action.payload.data);
           state.videoProgressError = 'Failed to update video progress due to incomplete data.';
           return;
         }
 
-        const progressEntry = { user_id, video_id, progressDuration, totalDuration, completed };
+        // const progressEntry = { user_id, video_id, progressDuration, totalDuration, completed };
 
-        const existingProgressIndex = state.videoProgress.findIndex(
-          (progress) => progress.video_id === video_id && progress.user_id === user_id
-        );
-        console.error('completed video progress data:', action.payload.data);
-        if (existingProgressIndex > -1) {
-          // Update existing progress
-          state.videoProgress[existingProgressIndex] = progressEntry;
+        // const existingProgressIndex = state.videoProgress.findIndex(
+        //   (progress) => progress.video_id == video_id
+        // );
+
+
+        if (state.videoProgress && state.videoProgress?.length > 0) {
+
+          let video = state?.videoProgress?.find((video: any) => video?.video_id == video_id)
+
+          if (video) {
+            state.videoProgress = state.videoProgress?.map((e: any) => {
+
+              if (e?.video_id == video_id) {
+                return {
+                  ...e,
+                  totalDuration: totalDuration,
+                  progressDuration: progressDuration,
+                  completed: completed
+                }
+              } else {
+                return e
+              }
+
+            })
+          } else {
+            state.videoProgress = [...state.videoProgress, action.payload.data];
+          }
         } else {
-          // Add new progress entryd
-          state.videoProgress.push(progressEntry);
+          state.videoProgress = [...state.videoProgress, action.payload.data];
         }
+
+
+
       })
       .addCase(updateVideoProgress.rejected, (state, action) => {
         state.videoProgressLoading = false;

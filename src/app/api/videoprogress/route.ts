@@ -42,16 +42,12 @@ export async function PUT(req: NextRequest) {
     });
 
     if (existingProgress) {
-      // Find the current saved progress for the specific video
+      
       const currentProgress = existingProgress.videoProgress.find(
         (vp) => vp.video_id === videoIdString
       );
 
-      // If the current progress exists and new progress is less than or equal, do not update
-      if (
-        currentProgress &&
-        progressDuration <= currentProgress.progressDuration
-      ) {
+      if (currentProgress && progressDuration <= currentProgress.progressDuration) {
         return NextResponse.json(
           {
             message: "Rewind detected or no forward progress. No update made.",
@@ -61,7 +57,6 @@ export async function PUT(req: NextRequest) {
         );
       }
 
-      // Update the progress only if it's moving forward
       await prisma.videoProgress.updateMany({
         where: {
           user_video_progress_id: existingProgress.id,
@@ -76,7 +71,6 @@ export async function PUT(req: NextRequest) {
         },
       });
 
-      // Query again to get the updated progress and completed status
       const updatedProgress = await prisma.videoProgress.findFirst({
         where: {
           user_video_progress_id: existingProgress.id,
@@ -90,10 +84,10 @@ export async function PUT(req: NextRequest) {
         data: updatedProgress,
       });
     } else {
-      // If no progress exists, create a new progress record
       const newProgress = await prisma.user_video_progress.create({
         data: {
           user_id: user_id,
+          course_id: course_id,
           videoProgress: {
             create: {
               video_id: videoIdString,

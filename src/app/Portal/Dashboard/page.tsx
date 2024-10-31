@@ -20,15 +20,10 @@ import { RootState } from "@/redux/store";
 const Dashboard = () => {
   const router = useRouter();
 
-  const { assessments, loading, error, success } = useSelector(
-    (state: RootState) => state.assessment
-  );
 
-  const dispatch: any = useDispatch();
 
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full lg:space-y-5 5xl:-space-y-7 overflow-hidden items-end">
-      {/* Left side: Assessments */}
+    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full  lg:space-y-24 5xl:-space-y-5 overflow-hidden items-end">
       <div className="space-y-4 md:space-y-6">
         <div>
           <AssessmentsBanner />

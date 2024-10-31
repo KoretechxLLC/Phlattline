@@ -21,7 +21,6 @@ const HorizontalScrollCarousel = () => {
   const [xTransform, setXTransform] = useState(["0%", "-72.5%"]); // default for larger screens
 
   useEffect(() => {
-    // Function to set the transform based on screen width
     if(typeof window !== "undefined") {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
@@ -67,10 +66,8 @@ const Card = ({ card }: { card: CardType }) => {
         card.id === 1 ? "flex items-center justify-center" : ""
       }`}
     >
-      {/* Card 1 (with ProUrl and other content) */}
       {card.ProUrl && card.id === 1 && (
         <div className="absolute flex justify-center items-center inset-0 z-10  w-[75rem] 3xl:w-[45rem] 4xl:w-[60rem] 6xl:w-[21rem]  bg-cover bg-center ">
-          {/* Name overlay */}
           <div className="relative leading-none 3xl:left-[15.5rem] 4xl:left-[13.5rem] left-[17rem] top-[-5rem] w-[100%] inset-0 flex justify-center  items-center gap-16 3xl:gap-8 4xl:gap-8  ">
             <div className="">
               <Image
