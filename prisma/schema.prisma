@@ -71,6 +71,8 @@ model courses {
   user_courses              user_courses[]
   user_video_progress       user_video_progress[]
   videos                    videos[]
+  created_at                DateTime                    @default(now())
+  updated_at                DateTime                    @default(now()) @updatedAt
 }
 
 model videos {

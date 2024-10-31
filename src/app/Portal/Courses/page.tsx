@@ -87,6 +87,9 @@ const Courses = () => {
   };
 
   const displayedCourses = showAll ? coursesData : coursesData.slice(0, 6);
+  if (error) {
+    return <p>Error fetching courses: {error}</p>;
+  }
 
   return (
     <div>

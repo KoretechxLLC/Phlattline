@@ -233,13 +233,18 @@ const coursesSlice = createSlice({
         state.loading = true;
         state.error = null;
         state.coursesSuccess = false;
+        state.success = null
       })
       .addCase(fetchcourses.fulfilled, (state, action) => {
+
+
         state.loading = false;
         state.courses = action.payload;
         state.coursesSuccess = true;
+        state.success = "Course Successfully fetched"
       })
       .addCase(fetchcourses.rejected, (state, action) => {
+        console.log(action.payload,"payload")
         state.loading = false;
         state.error = action.payload as string;
         state.coursesSuccess = false;

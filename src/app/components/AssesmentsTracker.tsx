@@ -32,7 +32,7 @@ const generateColors = (numFields: number) => {
 };
 
 const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
-  let calculatedGraph = assessments
+  let calculatedGraph = assessments && assessments?.length>0 && assessments
     .map((index: any) => {
       let responseData = assessmentsResponse
         .map((e: any) => {
@@ -123,7 +123,7 @@ const AsessmentTracker = ({
         assessments?.length > 0 ? assessments?.map((e: any) => e?.title) : [];
       setAllCategories(categories);
     }
-  }, [assessments, assessments.length, success]);
+  }, [assessments, assessments?.length]);
 
   const data = calculatePercentages(assessmentsResponse, assessments);
 

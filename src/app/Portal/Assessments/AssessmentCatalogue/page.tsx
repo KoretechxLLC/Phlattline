@@ -72,7 +72,7 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
           <>
             <CardTitle className="text-xl">Individual Assessments</CardTitle>
             <HoverEffect
-              items={assessmentCatalogueData.slice(0, 2)} // Show subset
+              items={assessmentCatalogueData?.slice(0, 2)} // Show subset
               className="grid grid-cols-1 md:grid-cols-2 gap-2"
             />
             <Button
