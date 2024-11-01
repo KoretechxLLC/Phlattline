@@ -1,6 +1,8 @@
-import axiosInstance from '@/app/utils/privateAxios';
-import { identity } from '@fullcalendar/core/internal';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axiosInstance from "@/app/utils/privateAxios";
+import { identity } from "@fullcalendar/core/internal";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { create } from "domain";
+import { any } from "zod";
 
 interface CoursesState {
   loading: boolean;
@@ -12,13 +14,16 @@ interface CoursesState {
   videoProgressSuccess: string | null;
   videoProgress: any; // Assuming you want to store video progress
   responses: any;
+  purchaseCourse: any | null;
+  purchaseCourseLoader: boolean | null;
+  purchaseCourseError: any | null;
+  purchaseCourseSuccess: any | null;
 }
 
 interface VideoProgressParams {
   courseId: number; // Change here to match the expected property names
   userId: number;
 }
-
 
 const initialState: CoursesState = {
   loading: false,
@@ -30,17 +35,24 @@ const initialState: CoursesState = {
   videoProgressSuccess: null,
   videoProgress: [],
   responses: null,
+  purchaseCourse: null,
+  purchaseCourseLoader: false,
+  purchaseCourseError: null,
+  purchaseCourseSuccess: null,
 };
 
 // Thunk for fetching courses
 export const fetchcourses = createAsyncThunk<any, void>(
-  'courses/fetchcourses',
+  "courses/fetchcourses",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('api/courses');
+      const response = await axiosInstance.get("api/courses");
       return response.data.data;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to fetch courses';
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch courses";
       return rejectWithValue(errorMessage);
     }
   }
@@ -48,59 +60,96 @@ export const fetchcourses = createAsyncThunk<any, void>(
 
 // Thunk for fetching video progress
 export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
-  'courses/fetchvideoprogress',
+  "courses/fetchvideoprogress",
   async ({ courseId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`api/videoprogress?course_id=${courseId}&user_id=${userId}`);
+      const response = await axiosInstance.get(
+        `api/videoprogress?course_id=${courseId}&user_id=${userId}`
+      );
       return response.data.data;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to fetch video progress';
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch video progress";
       return rejectWithValue(errorMessage);
     }
   }
 );
 
-export const coursesAssessmentResponses = createAsyncThunk<any, { userId: string; courseId: string; responses: any[] }>(
-  'assessment/submitAssessmentResponses',
+export const coursesAssessmentResponses = createAsyncThunk<
+  any,
+  { userId: string; courseId: string; responses: any[] }
+>(
+  "assessment/submitAssessmentResponses",
   async ({ userId, courseId, responses }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('api/coursesassessmentresponse', {
-        userId,
-        courseId,
-        responses,
-      });
+      const response = await axiosInstance.post(
+        "api/coursesassessmentresponse",
+        {
+          userId,
+          courseId,
+          responses,
+        }
+      );
       return response.data;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to submit assessment';
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to submit assessment";
       return rejectWithValue(errorMessage);
     }
   }
 );
 
 export const updateVideoProgress = createAsyncThunk(
-  'courses/updateVideoProgress',
+  "courses/updateVideoProgress",
   async (
-    progressData: { user_id: number; video_id: number; progressDuration: number; totalDuration: number, course_id: number },
+    progressData: {
+      user_id: number;
+      video_id: number;
+      progressDuration: number;
+      totalDuration: number;
+      course_id: number;
+    },
     { rejectWithValue }
   ) => {
-
-
     try {
-      const response = await axiosInstance.put('/api/videoprogress', progressData);
+      const response = await axiosInstance.put(
+        "/api/videoprogress",
+        progressData
+      );
 
-
-      return response.data
-
-    }
-    catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to update video progress';
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to update video progress";
       return rejectWithValue(errorMessage);
     }
   }
 );
 
+export const purchasingCourse = createAsyncThunk<any, any>(
+  "courses/purchasingCourse",
+  async ({ user_Id, course_id }, { rejectWithValue }) => {
+    try {
+      const data = { user_Id, course_id };
+      const response = await axiosInstance.post("/api/purchaseCourse", data);
+
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to purchase this course";
+
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 const coursesSlice = createSlice({
-  name: 'courses',
+  name: "courses",
   initialState,
   reducers: {
     resetSuccess(state) {
@@ -112,6 +161,12 @@ const coursesSlice = createSlice({
     resetVideoProgressStatus(state) {
       state.videoProgressSuccess = null;
       state.videoProgressError = null;
+    },
+    setPurchaseCourse(state) {
+      state.purchaseCourse = null;
+    },
+    setPurchaseCourseSuccess(state) {
+      state.purchaseCourseSuccess = false;
     },
   },
   extraReducers: (builder) => {
@@ -146,7 +201,6 @@ const coursesSlice = createSlice({
         state.error = action.payload as string;
       })
 
-
       // Fetch Video Progress
       .addCase(fetchvideoprogress.pending, (state) => {
         state.videoProgressLoading = true;
@@ -169,9 +223,7 @@ const coursesSlice = createSlice({
       })
       .addCase(updateVideoProgress.fulfilled, (state, action) => {
         state.videoProgressLoading = false;
-        state.videoProgressSuccess = 'Video progress updated successfully!';
-
-
+        state.videoProgressSuccess = "Video progress updated successfully!";
 
         const {
           user_id = null,
@@ -181,10 +233,14 @@ const coursesSlice = createSlice({
           completed = null,
         } = action.payload.data || {}; // Use optional chaining
 
-
-        if (video_id === null || progressDuration === null || totalDuration === null) {
-          console.error('Incomplete video progress data:', action.payload.data);
-          state.videoProgressError = 'Failed to update video progress due to incomplete data.';
+        if (
+          video_id === null ||
+          progressDuration === null ||
+          totalDuration === null
+        ) {
+          console.error("Incomplete video progress data:", action.payload.data);
+          state.videoProgressError =
+            "Failed to update video progress due to incomplete data.";
           return;
         }
 
@@ -194,43 +250,56 @@ const coursesSlice = createSlice({
         //   (progress) => progress.video_id == video_id
         // );
 
-
         if (state.videoProgress && state.videoProgress?.length > 0) {
-
-          let video = state?.videoProgress?.find((video: any) => video?.video_id == video_id)
+          let video = state?.videoProgress?.find(
+            (video: any) => video?.video_id == video_id
+          );
 
           if (video) {
             state.videoProgress = state.videoProgress?.map((e: any) => {
-
               if (e?.video_id == video_id) {
                 return {
                   ...e,
                   totalDuration: totalDuration,
                   progressDuration: progressDuration,
-                  completed: completed
-                }
+                  completed: completed,
+                };
               } else {
-                return e
+                return e;
               }
-
-            })
+            });
           } else {
             state.videoProgress = [...state.videoProgress, action.payload.data];
           }
         } else {
           state.videoProgress = [...state.videoProgress, action.payload.data];
         }
-
-
-
       })
       .addCase(updateVideoProgress.rejected, (state, action) => {
         state.videoProgressLoading = false;
         state.videoProgressError = action.payload as string;
+      })
+      .addCase(purchasingCourse.pending, (state) => {
+        state.purchaseCourseLoader = true;
+
+        state.purchaseCourseError = null;
+      })
+      .addCase(purchasingCourse.fulfilled, (state, action) => {
+        state.purchaseCourseLoader = false;
+        state.purchaseCourseSuccess =
+          action.payload.message ||
+          "You have Purchased this Course Successfully";
+        state.purchaseCourse = action.payload.data;
+        state.purchaseCourseError = null;
+      })
+      .addCase(purchasingCourse.rejected, (state, action) => {
+        state.purchaseCourseLoader = false;
+        state.purchaseCourseError = action.payload as string;
       });
   },
 });
 
-export const { resetSuccess, resetError, resetVideoProgressStatus } = coursesSlice.actions;
+export const { resetSuccess, resetError, resetVideoProgressStatus } =
+  coursesSlice.actions;
 
 export default coursesSlice.reducer;
