@@ -39,6 +39,7 @@ model users {
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
   user_assessment_responses user_assessment_responses[]
   user_video_progress       user_video_progress[]
+  timeLogs                  TimeLog[]
 }
 
 model organizations {
@@ -55,17 +56,17 @@ model organizations {
 }
 
 model courses {
-  id                  Int                   @id @default(autoincrement())
-  course_name         String                @db.VarChar(255)
-  description         String?
-  price               Float
+  id                        Int                         @id @default(autoincrement())
+  course_name               String                      @db.VarChar(255)
+  description               String?
+  price                     Float
   CoursesAssessmentResponse CoursesAssessmentResponse[]
-  assessments         assessments[]
-  course_assignments  course_assignments[]
-  user_courses        user_courses[]
-  videos              videos[]
-  user_video_progress user_video_progress[]
-  VideoProgress       VideoProgress[]
+  assessments               assessments[]
+  course_assignments        course_assignments[]
+  user_courses              user_courses[]
+  videos                    videos[]
+  user_video_progress       user_video_progress[]
+  VideoProgress             VideoProgress[]
 }
 
 model videos {
@@ -89,23 +90,30 @@ model assessments {
 }
 
 model questions {
-  id             Int         @id @default(autoincrement())
-  question_text  String      @db.VarChar(255)
-  answer_options String[]
+  id                        Int                         @id @default(autoincrement())
+  question_text             String                      @db.VarChar(255)
+  answer_options            String[]
   CoursesAssessmentResponse CoursesAssessmentResponse[]
-  correct_answer String      @db.VarChar(255)
-  assessment_id  Int
-  assessments    assessments @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
+  correct_answer            String                      @db.VarChar(255)
+  assessment_id             Int
+  assessments               assessments                 @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
 }
 
 model user_courses {
-  id        Int     @id @default(autoincrement())
-  user_id   Int
-  course_id Int
-  status    String  @db.VarChar(20)
-  progress  Int
-  courses   courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  users     users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int           @id @default(autoincrement())
+  user_id     Int
+  course_id   Int
+  status      course_status @default(notStarted)
+  courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  purchasedAt DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime      @updatedAt
+}
+
+enum course_status {
+  inprogress
+  notStarted
+  completed
 }
 
 model course_assignments {
@@ -250,13 +258,23 @@ model VideoProgress {
 }
 
 model CoursesAssessmentResponse {
-  id          Int       @id @default(autoincrement()) // Primary key
-  courseId    Int                                       // Foreign key for the course
-  questionId  Int                                       // Stores the ID of each question
-  answer      String                                    // Selected answer for the question
-  createdAt   DateTime  @default(now())                 // Timestamp of submission
-  userId      Int?                                      // Link to user table if needed
-  course      courses?  @relation(fields: [courseId], references: [id]) // Link to courses model
-  status      Boolean   @default(false)                  // Status of the assessment response (true or false)
-  question    questions? @relation(fields: [questionId], references: [id]) // Link to questions model
+  id         Int        @id @default(autoincrement()) // Primary key
+  courseId   Int // Foreign key for the course
+  questionId Int // Stores the ID of each question
+  answer     String // Selected answer for the question
+  createdAt  DateTime   @default(now()) // Timestamp of submission
+  userId     Int? // Link to user table if needed
+  course     courses?   @relation(fields: [courseId], references: [id]) // Link to courses model
+  status     Boolean    @default(false) // Status of the assessment response (true or false)
+  question   questions? @relation(fields: [questionId], references: [id]) // Link to questions model
+}
+
+model TimeLog {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  clockIn   DateTime
+  clockOut  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  users     users     @relation(fields: [userId], references: [id])
 }

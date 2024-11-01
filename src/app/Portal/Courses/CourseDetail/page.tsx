@@ -155,7 +155,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
               style={{ fontFamily: "Sansation" }}
               onClick={handleBuyClick}
             >
-              Buy now for $50
+              Buy now for ${data?.price}
             </Button>
           ) : (
             <Button
