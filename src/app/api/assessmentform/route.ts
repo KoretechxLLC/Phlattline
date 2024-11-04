@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma"; // Adjust the import path according to your setup
+import { prisma } from "@/app/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, questions } = body;
 
-    // Validate input
     if (!type) {
       return NextResponse.json(
         { error: "Assessment type is required." },
@@ -20,7 +19,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate each question
     for (const question of questions) {
       if (!question.question_text) {
         return NextResponse.json(
@@ -53,7 +51,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Step 1: Create the assessment form
     const newAssessment = await prisma.assessmentsform.create({
       data: {
         type,
@@ -72,7 +69,7 @@ export async function POST(req: NextRequest) {
       include: {
         assessmentsquestions: {
           include: {
-            assessmentsformoptions: true, // Include options in the response
+            assessmentsformoptions: true,
           },
         },
       },

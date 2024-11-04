@@ -12,10 +12,15 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get("file");
+    const categoryName = formData.get("categoryName")?.toString();
+    const subCategoryName = formData.get("subCategoryName")?.toString();
 
-    if (!file || !(file instanceof File)) {
+    if (!file || !(file instanceof File) || !categoryName || !subCategoryName) {
       return NextResponse.json(
-        { error: "No valid file uploaded." },
+        {
+          error:
+            "Invalid inputs. Ensure file, category name, and subcategory name are provided.",
+        },
         { status: 400 }
       );
     }
@@ -25,7 +30,44 @@ export async function POST(req: NextRequest) {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
     const rows = jsonData.slice(1);
+    let category = await prisma.assessment_category.findUnique({
+      where: { name: categoryName },
+    });
 
+    if (!category) {
+      category = await prisma.assessment_category.create({
+        data: { name: categoryName },
+      });
+    }
+
+    // Find or create the subcategory
+    let subCategory = await prisma.assessment_subCategory.findFirst({
+      where: {
+        name: subCategoryName,
+        category_id: category.id,
+      },
+    });
+    if (subCategory) {
+      await prisma.individual_assessments.deleteMany({
+        where: { subCategoryId: subCategory.id },
+      });
+    } else {
+      subCategory = await prisma.assessment_subCategory.create({
+        data: {
+          name: subCategoryName,
+          category_id: category.id,
+        },
+      });
+    }
+
+    if (!subCategory) {
+      subCategory = await prisma.assessment_subCategory.create({
+        data: {
+          name: subCategoryName,
+          category_id: category.id,
+        },
+      });
+    }
     const assessmentsData: any[] = [];
     const imageFolder = path.join(process.cwd(), "public", "assessmentsImage");
     if (!fs.existsSync(imageFolder)) {
@@ -37,7 +79,6 @@ export async function POST(req: NextRequest) {
     let assessmentPrice = 0;
     let assessmentImageUrl = "";
 
-    // Step 1: Prepare all data outside of Prisma transaction
     for (const row of rows) {
       const title = row[0];
       const questionText = row[1];
@@ -133,6 +174,8 @@ export async function POST(req: NextRequest) {
             title: assessment.title,
             price: Number(assessment.price),
             image: assessment.image_url,
+            categoryId: category.id,
+            subCategoryId: subCategory.id,
             individual_assessment_questions: {
               create: assessment.questions.map((q: any) => ({
                 question_text: q.question_text,
@@ -179,17 +222,36 @@ export async function GET(req: NextRequest) {
 
     const assessments = await prisma.individual_assessments.findMany({
       include: {
+        assessment_category: {
+          include: {
+            assessment_subCategories: true,
+          },
+        },
         individual_assessment_questions: {
           include: {
             individual_assessment_options: true,
           },
         },
       },
+
       take: size > 0 ? size : undefined,
+    });
+    const filteredAssessments = assessments.map((assessment) => {
+      const filteredCategory = {
+        ...assessment.assessment_category,
+        assessment_subCategories:
+          assessment.assessment_category.assessment_subCategories.filter(
+            (subCategory) => subCategory.id === assessment.subCategoryId
+          ),
+      };
+      return {
+        ...assessment,
+        assessment_category: filteredCategory,
+      };
     });
 
     return NextResponse.json(
-      { success: true, data: assessments },
+      { success: true, data: filteredAssessments },
       { status: 200 }
     );
   } catch (error: any) {
@@ -224,6 +286,33 @@ export async function DELETE(req: NextRequest) {
         { error: "Assessment ID must be a valid number" },
         { status: 400 }
       );
+    }
+
+    const assessment = await prisma.individual_assessments.findUnique({
+      where: { id: assessmentId },
+    });
+
+    if (!assessment) {
+      return NextResponse.json(
+        { error: "Assessment not found" },
+        { status: 404 }
+      );
+    }
+
+    if (assessment.image) {
+      const imagePath = path.join(
+        process.cwd(),
+        "public",
+        "assessmentsImage",
+        assessment.image
+      );
+      if (fs.existsSync(imagePath)) {
+        try {
+          fs.unlinkSync(imagePath);
+        } catch (error) {
+          console.error(`Failed to delete image file: ${imagePath}`, error);
+        }
+      }
     }
 
     // Attempt to delete the assessment
