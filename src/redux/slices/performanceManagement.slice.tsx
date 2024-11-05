@@ -4,18 +4,23 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface GoalState {
   loading: boolean;
   error: string | null;
-  goals: any[]; // Replace with specific type if you have it
+  goals: any[]; 
   success: string | null;
+  data?: any;
+  timeLogs?:any[];
+  logSuccess:any;
 }
 
 const initialState: GoalState = {
   loading: false,
   error: null,
   success: null,
+  logSuccess:null,
   goals: [],
+  timeLogs:[]
+  
 };
 
-// Thunk for fetching goals
 export const fetchGoals = createAsyncThunk<any, any>(
   "performanceManagement/fetchGoals",
   async (id, { rejectWithValue }) => {
@@ -32,7 +37,35 @@ export const fetchGoals = createAsyncThunk<any, any>(
   }
 );
 
-// Thunk for submitting goals responses
+export const updateTimemanagement = createAsyncThunk(
+  'timeLog/updateTimemanagement',
+  async (timeData: { user_id: number; timeSpent: number }, { rejectWithValue }) => { // Change string to number
+    try {
+      const response = await axiosInstance.put('/api/timeManagement', timeData);
+      return response.data;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to update clock-out time';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchtimelog = createAsyncThunk(
+  "timeLog/fetchtimelog",
+  async ({userId,duration}:any, { rejectWithValue }) => {
+    try {
+
+
+      const response = await axiosInstance.get(`/api/timeManagement?id=${userId}&duration=${duration}`);
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error || error.message || "Failed to fetch time log";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const submitGoal = createAsyncThunk<any, any>(
   "performanceManagement/submitGoal",
   async (data, { rejectWithValue }) => {
@@ -47,7 +80,6 @@ export const submitGoal = createAsyncThunk<any, any>(
   }
 );
 
-// Thunk for completing goals
 export const completeGoal = createAsyncThunk<any, any>(
   "performanceManagement/completeGoal",
   async (id, { rejectWithValue }) => {
@@ -62,7 +94,6 @@ export const completeGoal = createAsyncThunk<any, any>(
   }
 );
 
-// Thunk for delete goals
 export const deleteGoal = createAsyncThunk<any, any>(
   "performanceManagement/deleteGoal",
   async (id, { rejectWithValue }) => {
@@ -87,10 +118,10 @@ const performanceManagement = createSlice({
     resetError(state) {
       state.error = null;
     },
+
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Goal
       .addCase(fetchGoals.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -103,7 +134,6 @@ const performanceManagement = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Submit Goal Responses
       .addCase(submitGoal.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -120,6 +150,22 @@ const performanceManagement = createSlice({
         state.error = action.payload as string;
         state.success = null;
       })
+      //Fetch Time Logs
+      .addCase(fetchtimelog.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.logSuccess = null
+      })
+      .addCase(fetchtimelog.fulfilled, (state, action) => {
+        state.loading = false;
+        state.timeLogs = action.payload.data; // Store fetched timelogs
+        state.logSuccess = "Fetch timelogs successfully";
+      })
+      .addCase(fetchtimelog.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
       // Submit Goal Responses
       .addCase(completeGoal.pending, (state) => {
         state.loading = true;
@@ -141,6 +187,22 @@ const performanceManagement = createSlice({
         state.error = action.payload as string;
         state.success = null;
       })
+      //Updated Time Managment 
+      .addCase(updateTimemanagement.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateTimemanagement.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+      })
+      .addCase(updateTimemanagement.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+
       // delete Goal Responses
       .addCase(deleteGoal.pending, (state) => {
         state.loading = true;

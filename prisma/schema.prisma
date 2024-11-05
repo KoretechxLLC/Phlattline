@@ -172,16 +172,6 @@ enum Category {
   organization
 }
 
-model individual_assessments {
-  id                              Int                               @id @default(autoincrement())
-  title                           String                            @db.VarChar(255)
-  created_at                      DateTime?                         @default(now()) @db.Timestamp(6)
-  price                           Int
-  image                           String
-  individual_assessment_questions individual_assessment_questions[]
-  user_assessment_responses       user_assessment_responses[] // Add this line
-}
-
 model individual_assessment_questions {
   id                            Int                             @id @default(autoincrement())
   question_text                 String                          @db.VarChar(255)
@@ -277,4 +267,35 @@ model TimeLog {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   users     users     @relation(fields: [userId], references: [id])
+}
+
+model individual_assessments {
+  id                              Int                               @id @default(autoincrement())
+  title                           String                            @db.VarChar(255)
+  created_at                      DateTime?                         @default(now()) @db.Timestamp(6)
+  price                           Int
+  image                           String
+  individual_assessment_questions individual_assessment_questions[]
+  user_assessment_responses       user_assessment_responses[] // Add this line
+  categoryId                      Int
+  assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])
+  subCategoryId                   Int
+  assessment_subCategory          assessment_subCategory            @relation(fields: [subCategoryId], references: [id])
+}
+
+model assessment_category {
+  id                       Int                      @id @default(autoincrement())
+  name                     String                   @unique
+  createdAt                DateTime                 @default(now())
+  assessment_subCategories assessment_subCategory[]
+  individual_assessments   individual_assessments[]
+}
+
+model assessment_subCategory {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @unique
+  createdAt              DateTime                 @default(now())
+  category_id            Int
+  category               assessment_category      @relation(fields: [category_id], references: [id])
+  individual_assessments individual_assessments[]
 }

@@ -1,16 +1,19 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CoursesResults from "@/app/components/CoursesResults";
 import TabButton from "@/app/components/TabButton";
 import HoursDropdown from "@/app/components/HoursDropdown";
 import ActivityHours from "@/app/components/ActivityHours";
-import { Badge } from "@/app/components/badge";
+import { CiClock1 } from "react-icons/ci";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchtimelog } from "@/redux/slices/performanceManagement.slice";
+import { RootState } from "@/redux/store";
 
 const coursesData = [
   {
@@ -60,7 +63,58 @@ const coursesData = [
   },
 ];
 
+const formatTimeSpent = (seconds: any) => {
+  if (seconds < 60) {
+    return (
+      <span>
+        {seconds} <span style={{ fontSize: '0.8em' }}>SEC</span>
+      </span>
+    );
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  return (
+    <span>
+      <span>
+        {minutes}
+        <span style={{ fontSize: '0.6em', color: '#FF0000' }}> MIN</span>
+      </span>
+      {remainingSeconds > 0 && (
+        <span style={{ marginLeft: '0.2em' }}>
+          {remainingSeconds}
+          <span style={{ fontSize: '0.6em', color: '#FF0000' }}> SEC</span>
+        </span>
+      )}
+    </span>
+  );
+};
+
 const CourseReport = () => {
+  const dispatch: any = useDispatch();
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const { loading, error, success, logSuccess, goals, timeLogs }: any = useSelector((state: RootState) => state.performance);
+  const [timelogsData, setTimeLogsData] = useState<any>([]);
+  const [timeLogSpent, setTimeLogSpent] = useState(0);
+
+  const userId: any = userData?.id;
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchtimelog(userId));
+    }
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    if (logSuccess) {
+      setTimeLogsData(timeLogs?.timelogs);
+      setTimeLogSpent(timeLogs?.totalTimeSpent);
+    }
+  }, [logSuccess]);
+
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <Card className="border border-gray-500 rounded-3xl p-1">
@@ -68,44 +122,23 @@ const CourseReport = () => {
           <CardTitle className="flex-1">Activity Hours</CardTitle>
         </CardHeader>
 
-        <div className="flex space-x-4 ">
-          {/* Left Column: Activity Hours */}
+        <div className="flex space-x-4">
           <div className="w-full">
             <ActivityHours />
           </div>
 
-          {/* Right Column: Additional Stats */}
-          <div className="4xl:w-2/4 w-1/4 flex flex-col">
-            <div className="flex flex-col w-fit  mb-3">
-              <HoursDropdown />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold my-1 text-lg">Time Spent</span>
-              <span className="flex items-center space-x-8">
-                <span className="text-2xl">28</span>
-                <Badge className="bg-[#BAA71640] text-[#BAA716] text-md rounded-3xl">
-                  43%
-                </Badge>
-              </span>
-            </div>
+          <div className="w-1/4 flex flex-col">
+            <div className="flex flex-col w-fit mb-3">
 
-            <div className="flex flex-col">
-              <span className="font-bold my-1 text-lg">Lessons Taken</span>
-              <span className="flex items-center space-x-8">
-                <span className="text-2xl">50</span>
-                <Badge className="bg-[#BAA71640] text-[#BAA716] text-md rounded-3xl">
-                  84%
-                </Badge>
-              </span>
             </div>
+            <div className="flex flex-col mt-[8em]">
+              <span className="space-x-8 items-center flex justify-center">
+                <span className="text-2xl">{timeLogSpent ? formatTimeSpent(timeLogSpent) : '0 secs'}</span>
 
-            <div className="flex flex-col">
-              <span className="font-bold my-1 text-lg">Exams Passed</span>
-              <span className="flex items-center space-x-8">
-                <span className="text-2xl">50</span>
-                <Badge className="bg-[#BAA71640] text-[#BAA716] text-md rounded-3xl">
-                  83%
-                </Badge>
+              </span>
+              <span className="font-bold my-1 text-lg flex justify-center items-center gap-1">
+                <CiClock1 />
+                Time Spent
               </span>
             </div>
           </div>
@@ -140,18 +173,16 @@ const CourseReport = () => {
             {coursesData.map((course, i) => (
               <li
                 key={`course-${i}`}
-                className="4xl:text-sm text-lg text-default-600 4xl:py-2 4xl:px-2 py-2 px-2 "
+                className="text-lg text-default-600 py-2 px-2"
               >
                 <div className="flex items-center">
-                  {/* Left border single colored line */}
                   <div
-                    className={`4xl:h-8 h-12 w-1 mr-4 ${
-                      course.progress === 100
-                        ? "bg-green-500"
-                        : course.progress > 0
+                    className={`h-12 w-1 mr-4 ${course.progress === 100
+                      ? "bg-green-500"
+                      : course.progress > 0
                         ? "bg-yellow-500"
                         : "bg-red-500"
-                    }`}
+                      }`}
                   ></div>
                   <div className="flex-1">
                     <div className="flex justify-between">

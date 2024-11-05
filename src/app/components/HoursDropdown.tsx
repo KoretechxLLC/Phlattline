@@ -9,12 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 
-const HoursDropdown = () => {
-  // State to store selected option
-  const [selectedOption, setSelectedOption] = useState("Weekly");
+// const HoursDropdown = () => {
+//   // State to store selected option
+//   const [selectedOption, setSelectedOption] = useState("Weekly");
 
-  // Update selected option on item click
-  const handleSelect = (option: any) => {
+//   const handleSelect = (option: any) => {
+//     setSelectedOption(option);
+//   };
+
+
+const HoursDropdown = ({ selectedOption, setSelectedOption }:any) => {
+  const handleSelect = (option:any) => {
     setSelectedOption(option);
   };
 

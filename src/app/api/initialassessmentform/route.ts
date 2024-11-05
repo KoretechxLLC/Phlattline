@@ -12,6 +12,8 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get("file");
+    const categoryName: any = formData.get("categoryName")?.toString();
+    const subCategoryName: any = formData.get("subCategoryName")?.toString();
 
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
@@ -125,6 +127,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    let category = await prisma.assessment_category.findUnique({
+      where: { name: categoryName },
+    });
+
+    if (!category) {
+      category = await prisma.assessment_category.create({
+        data: { name: categoryName },
+      });
+    }
+
+    // Find or create the subcategory
+    let subCategory = await prisma.assessment_subCategory.findFirst({
+      where: {
+        name: subCategoryName,
+        category_id: category.id,
+      },
+    });
+    if (subCategory) {
+      await prisma.individual_assessments.deleteMany({
+        where: { subCategoryId: subCategory.id },
+      });
+    } else {
+      subCategory = await prisma.assessment_subCategory.create({
+        data: {
+          name: subCategoryName,
+          category_id: category.id,
+        },
+      });
+    }
+
+    if (!subCategory) {
+      subCategory = await prisma.assessment_subCategory.create({
+        data: {
+          name: subCategoryName,
+          category_id: category.id,
+        },
+      });
+    }
     // Step 2: Execute Prisma transaction without async code
     const createdAssessments = await prisma.$transaction(
       assessmentsData.map((assessment) =>
@@ -132,6 +172,8 @@ export async function POST(req: NextRequest) {
           data: {
             title: assessment.title,
             price: Number(assessment.price),
+            categoryId: category.id,
+            subCategoryId: subCategory.id,
             image: assessment.image_url,
             individual_assessment_questions: {
               create: assessment.questions.map((q: any) => ({
@@ -175,7 +217,10 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams }: any = new URL(req.url);
-    const size = parseInt(searchParams.get("size"));
+    const page = parseInt(searchParams.get("page")) || 1;
+    const size = parseInt(searchParams.get("size")) || 10;
+
+    const skip = (page - 1) * size;
 
     const assessments = await prisma.individual_assessments.findMany({
       include: {
@@ -185,7 +230,8 @@ export async function GET(req: NextRequest) {
           },
         },
       },
-      take: size > 0 ? size : undefined,
+      take: size,
+      skip: skip,
     });
 
     return NextResponse.json(

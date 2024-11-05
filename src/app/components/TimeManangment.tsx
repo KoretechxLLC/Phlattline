@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import StackedNotifications from "./Stackednotification";
 import localforage from "localforage";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTimemanagement } from "@/redux/slices/performanceManagement.slice";
+import { RootState } from "@/redux/store";
 
 export type NotificationType = {
   id: number;
@@ -10,7 +13,10 @@ export type NotificationType = {
 
 const TimeManagement = () => {
   const [clockedIn, setClockedIn] = useState(false);
-  const [onBreak, setOnBreak] = useState(false); // New state for break
+  const dispatch:any = useDispatch();
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId: any = userData?.id;
+  const [onBreak, setOnBreak] = useState(false);
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
@@ -21,12 +27,12 @@ const TimeManagement = () => {
   });
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const savedElapsedTimeRef = useRef<number>(0); // Keeps track of elapsed time when taking a break
+  const savedElapsedTimeRef = useRef<number>(0);
 
   const handleClockIn = async () => {
     const startTime = Date.now();
     setClockedIn(true);
-    setOnBreak(false); // Ensure break state is reset
+    setOnBreak(false); 
     await localforage.setItem("clockedIn", true);
     await localforage.setItem("startTime", startTime);
     startTimer(startTime);
@@ -35,21 +41,49 @@ const TimeManagement = () => {
   const handleClockOut = async () => {
     setClockedIn(false);
     setOnBreak(false);
+  
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+  
     setShowTime({ hours: 0, minutes: 0, seconds: 0 });
-    savedElapsedTimeRef.current = 0; // Reset elapsed time
+    savedElapsedTimeRef.current = 0;
+  
+    const clockOutTime = new Date(); // Current time
+    const clockInTimeTimestamp = await localforage.getItem("startTime"); 
+  
+    // Ensure clockInTime is a valid number
+    if (typeof clockInTimeTimestamp !== 'number') {
+      console.error("Invalid clock in time.");
+      return; // Exit if invalid
+    }
+  
+    const clockInTime = new Date(clockInTimeTimestamp); // Convert timestamp to Date object
+  
+    // Calculate time spent in seconds
+    const timeSpentInSeconds = Math.floor((clockOutTime.getTime() - clockInTime.getTime()) / 1000);
+  
+    // Prepare the data for dispatching
+    const timeData = {
+      user_id: userData.id,
+      timeSpent: timeSpentInSeconds, // Ensure this is a number
+    };
+  
+    // Dispatch the updateTimemanagement action with the timeData
+    await dispatch(updateTimemanagement(timeData));
+  
+    // Local storage updates
     await localforage.setItem("clockedIn", false);
     await localforage.removeItem("startTime");
     await localforage.setItem("performanceTimer", showTime);
   };
+  
 
   const handleTakeBreak = async () => {
     setOnBreak(true);
     savedElapsedTimeRef.current +=
-      Date.now() - ((await localforage.getItem("startTime")) as number); // Save the elapsed time so far
+      Date.now() - ((await localforage.getItem("startTime")) as number);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -58,8 +92,8 @@ const TimeManagement = () => {
 
   const handleResumeWork = () => {
     setOnBreak(false);
-    const resumeStartTime = Date.now() - savedElapsedTimeRef.current; // Calculate new start time
-    localforage.setItem("startTime", resumeStartTime); // Update start time
+    const resumeStartTime = Date.now() - savedElapsedTimeRef.current; 
+    localforage.setItem("startTime", resumeStartTime); 
     startTimer(resumeStartTime);
   };
 
@@ -90,7 +124,7 @@ const TimeManagement = () => {
         setClockedIn(storedClockedIn as boolean);
         if (storedStartTime) {
           const startTime = storedStartTime as number;
-          startTimer(startTime); // Start timer using stored start time
+          startTimer(startTime); 
         }
       }
     };

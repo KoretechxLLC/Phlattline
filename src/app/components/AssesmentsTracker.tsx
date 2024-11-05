@@ -1,7 +1,10 @@
 "use client";
 
 import { useConfig } from "@/app/hooks/use-config";
-import { fetchAssessments } from "@/redux/slices/individualassessment.slice";
+import {
+  fetchAssessments,
+  resetSuccess,
+} from "@/redux/slices/individualassessment.slice";
 import { fetchAssessmentsResponse } from "@/redux/slices/individualAssessmentResponse.slice";
 import { RootState } from "@/redux/store";
 import { useTheme } from "next-themes";
@@ -107,8 +110,13 @@ const AsessmentTracker = ({
     if (!assessmentsResponse || assessmentsResponse.length == 0) {
       dispatch(fetchAssessmentsResponse({ userId }));
     }
-  }, [assessmentsResponse, dispatch, success, userId]);
+  }, [dispatch, userId]);
 
+  useEffect(() => {
+    if (responseSuccess) {
+      dispatch(resetSuccess());
+    }
+  }, [responseSuccess]);
   useEffect(() => {
     if (assessments && assessments.length > 0) {
       const categories =
