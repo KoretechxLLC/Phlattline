@@ -20,9 +20,6 @@ import { RootState } from "@/redux/store";
 
 const Dashboard = () => {
   const router = useRouter();
-  
-
-  
   return (
     <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full  lg:space-y-24 5xl:-space-y-5 overflow-hidden items-end">
       <div className="space-y-4 md:space-y-6">

@@ -5,7 +5,8 @@ import fs from "fs/promises";
 import path from "path";
 
 const generateOrganizationCode = (): string => {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 8 }, () =>
     chars.charAt(Math.floor(Math.random() * chars.length))
   ).join("");
@@ -29,7 +30,7 @@ const saveFile = async (file: File, folderPath: string): Promise<string> => {
   const fileName = `${Date.now()}_${file.name}`;
   const filePath = path.join(process.cwd(), folderPath, fileName);
 
-  const fileData = Buffer.from(await file.arrayBuffer());
+  const fileData: any = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(filePath, fileData);
 
   return fileName;
@@ -44,8 +45,12 @@ export async function POST(request: NextRequest) {
     const password = formData.get("password") as string | null;
     const first_name = formData.get("first_name") as string | null;
     const last_name = formData.get("last_name") as string | null;
-    const organization_code = formData.get("organization_code") as string | null;
+    const organization_code = formData.get("organization_code") as
+      | string
+      | null;
     const profile_image = formData.get("profile_image") as File | null;
+    const categoryId: any = formData.get("categoryId") as number | null;
+    const subCategoryId: any = formData.get("subCategoryId") as number | null;
 
     if (!email || !phone_number || !password || !first_name || !last_name) {
       return NextResponse.json(
@@ -95,7 +100,10 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      profileImagePath = await saveFile(profile_image, "public/users/profileimage");
+      profileImagePath = await saveFile(
+        profile_image,
+        "public/users/profileimage"
+      );
     }
 
     const newUser = await prisma.users.create({
@@ -105,9 +113,11 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         first_name,
         last_name,
-        user_type_id: organizationId ? 2 : 1, 
-        organization_id: organizationId || undefined, 
-        profile_image: profileImagePath || undefined, 
+        user_type_id: organizationId ? 2 : 1,
+        organization_id: organizationId || undefined,
+        profile_image: profileImagePath || undefined,
+        categoryId: categoryId,
+        subCategoryId: subCategoryId,
       },
     });
 
@@ -116,7 +126,6 @@ export async function POST(request: NextRequest) {
       success: true,
       data: newUser,
     });
-
   } catch (error: any) {
     console.error("Error registering user:", error.message);
     return NextResponse.json(

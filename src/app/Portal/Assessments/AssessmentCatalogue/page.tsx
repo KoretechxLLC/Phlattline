@@ -5,35 +5,55 @@ import { CardTitle } from "@/app/components/Card";
 import { HoverEffect } from "@/app/components/card-hover-effect";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { fetchAssessments } from "@/redux/slices/individualassessment.slice";
+import {
+  fetchAssessments,
+  fetchRecommendedAssessments,
+} from "@/redux/slices/individualassessment.slice";
 import GraphLoader from "@/app/components/graphLoader";
-
-const recommendedAssessments: any[] = [
-  {
-    imageLink: "/assets/AssessmentBanner.svg",
-    title: "Cognitive Ability Test",
-    link: "#",
-    price: 45,
-  },
-  {
-    imageLink: "/assets/AssessmentBanner.svg",
-    title: "Career Interest and Values",
-    link: "#",
-    price: 55,
-  },
-];
+import RecommendedAssessments from "@/app/components/RecommendedAssessments";
 
 const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
   const [assessmentCatalogueData, setAssessmentCatalogueData] = useState([]);
-  const { assessments, loading, error, assessmentsSuccess }: any = useSelector(
-    (state: RootState) => state.assessment
-  );
+  const [recommendedCatalogueData, setRecommendedCatalogueData] = useState([]);
+  const {
+    assessments,
+    loading,
+    error,
+    assessmentsSuccess,
+    recommendedAssessment,
+    recommendedAssessmentLoading,
+    recommendedAssessmentSuccess,
+    recommendedAssessmentError,
+  }: any = useSelector((state: RootState) => state.assessment);
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const categoryId = userData?.categoryId;
+
   const dispatch: any = useDispatch();
   useEffect(() => {
-    if (!assessments || assessments?.length == 0) {
-      dispatch(fetchAssessments({ size: 9 }));
+    dispatch(
+      fetchAssessments({
+        filter: { page: 1, size: 12 },
+      })
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      fetchRecommendedAssessments({
+        filter: {
+          page: 1,
+          size: 12,
+          categoryId: categoryId,
+        },
+      })
+    );
+  }, [dispatch]);
+  useEffect(() => {
+    if (recommendedAssessmentSuccess) {
+      setRecommendedCatalogueData(recommendedAssessment);
     }
-  }, [assessments, dispatch]);
+  }, [recommendedAssessmentSuccess]);
+
   useEffect(() => {
     if (assessmentsSuccess) {
       setAssessmentCatalogueData(assessments);
@@ -71,7 +91,7 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
       <div className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-xl 4xl:p-3 p-5 w-full">
         <CardTitle className="text-xl">Recommended Assessments</CardTitle>
         <HoverEffect
-          items={recommendedAssessments} // Show subset
+          items={recommendedCatalogueData.slice(0, 2)} // Show subset
           className="grid grid-cols-1 md:grid-cols-2 gap-2"
         />
         <Button

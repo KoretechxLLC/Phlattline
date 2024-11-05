@@ -1,4 +1,5 @@
 import axiosInstance from "@/app/utils/privateAxios";
+import { Category } from "@prisma/client";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AssessmentState {
@@ -7,6 +8,15 @@ interface AssessmentState {
   assessments: any[]; // Replace with specific type if you have it
   success: any | null;
   assessmentsSuccess: any | null;
+  assessmentsCount: any | null;
+  assessmentsCountLoading: boolean | any;
+  assessmentsCountSuccess: string | any;
+  assessmentsCountError: string | any;
+
+  recommendedAssessment: string | any;
+  recommendedAssessmentLoading: boolean | any;
+  recommendedAssessmentSuccess: string | any;
+  recommendedAssessmentError: string | any;
 }
 
 const initialState: AssessmentState = {
@@ -15,17 +25,43 @@ const initialState: AssessmentState = {
   success: "",
   assessments: [],
   assessmentsSuccess: false,
+  assessmentsCount: null,
+  assessmentsCountLoading: false,
+  assessmentsCountSuccess: null,
+  assessmentsCountError: null,
+  recommendedAssessment: null,
+  recommendedAssessmentLoading: false,
+  recommendedAssessmentSuccess: null,
+  recommendedAssessmentError: null,
 };
 
-export const fetchAssessments = createAsyncThunk<any, { size?: number }>(
-  "assessment/fetchAssessments",
-  async ({ size }, { rejectWithValue }) => {
+export const fetchassessmentsCount = createAsyncThunk<any, any>(
+  "assessment/fetchassessmentsCount",
+  async ({ filter = {} }, thunkAPI) => {
     try {
-      const url = size
-        ? `api/initialassessmentform?size=${size}`
-        : "api/initialassessmentform";
-
-      const response = await axiosInstance.get(url);
+      const queryParams = filter.categoryId
+        ? `?categoryId=${filter.categoryId}`
+        : "";
+      const response = await axiosInstance.get(
+        `/api/assessmentsCount${queryParams}`
+      );
+      return response?.data?.count;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error || "Failed to fetch assessments Count";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchAssessments = createAsyncThunk<any, any>(
+  "assessment/fetchAssessments",
+  async ({ filter }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/initialassessmentform?page=${filter.page}&size=${filter.size}${
+          filter.categoryId ? `&categoryId=${filter.categoryId}` : ""
+        }`
+      );
 
       return response.data.data;
     } catch (error: any) {
@@ -33,7 +69,28 @@ export const fetchAssessments = createAsyncThunk<any, { size?: number }>(
         error.response?.data?.error ||
         error.message ||
         "Failed to fetch assessments";
-      return rejectWithValue(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchRecommendedAssessments = createAsyncThunk<any, any>(
+  "assessment/fetchRecommendedAssessments",
+  async ({ filter }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/initialassessmentform?page=${filter.page}&size=${filter.size}${
+          filter.categoryId ? `&categoryId=${filter.categoryId}` : ""
+        }`
+      );
+
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
@@ -81,6 +138,12 @@ const assessmentSlice = createSlice({
     setAssessmentsSuccess(state) {
       state.assessmentsSuccess = false;
     },
+    setAssessmentsCount(state) {
+      state.assessmentsCount = 0;
+    },
+    setRecommendedAssessment(state) {
+      state.recommendedAssessment = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -115,6 +178,38 @@ const assessmentSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.success = null;
+      })
+      .addCase(fetchassessmentsCount.pending, (state) => {
+        state.assessmentsCountLoading = true;
+        state.assessmentsCountError = null;
+        state.assessmentsCountSuccess = null;
+      })
+      .addCase(fetchassessmentsCount.fulfilled, (state, action) => {
+        state.assessmentsCountLoading = false;
+        state.assessmentsCountSuccess =
+          action?.payload?.message || "Assessment Counts fetched successfully!";
+
+        state.assessmentsCount = action.payload;
+
+        state.error = null;
+      })
+      .addCase(fetchRecommendedAssessments.pending, (state) => {
+        state.recommendedAssessmentLoading = true;
+        state.recommendedAssessment = null;
+        state.recommendedAssessmentError = false;
+      })
+      .addCase(fetchRecommendedAssessments.fulfilled, (state, action) => {
+        state.recommendedAssessmentLoading = false;
+        state.recommendedAssessment = action.payload;
+        state.recommendedAssessmentError = null;
+        state.recommendedAssessmentSuccess =
+          action.payload.message ||
+          "Recommended Assessments Fetched Successfully";
+      })
+      .addCase(fetchRecommendedAssessments.rejected, (state, action) => {
+        state.recommendedAssessmentLoading = false;
+        state.recommendedAssessment = null;
+        state.recommendedAssessmentError = action.payload;
       });
   },
 });

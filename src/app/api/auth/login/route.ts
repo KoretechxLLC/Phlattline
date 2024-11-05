@@ -25,7 +25,9 @@ export async function POST(request: NextRequest) {
 
     // Check if the user status is approved
     if (user.status !== "approved") {
-      throw new Error("Your account is not approved yet. Please contact support.");
+      throw new Error(
+        "Your account is not approved yet. Please contact support."
+      );
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
@@ -59,9 +61,6 @@ export async function POST(request: NextRequest) {
     });
     return response;
   } catch (err: any) {
-
-  
-
     let statusCode = 500; // Default to Internal Server Error
 
     if (
@@ -71,7 +70,10 @@ export async function POST(request: NextRequest) {
       statusCode = 400; // Bad Request
     } else if (err.message === "User not found") {
       statusCode = 404; // Not Found
-    } else if (err.message === "Your account is not approved yet. Please contact support.") {
+    } else if (
+      err.message ===
+      "Your account is not approved yet. Please contact support."
+    ) {
       statusCode = 403; // Forbidden
     }
 

@@ -40,6 +40,8 @@ model users {
   user_assessment_responses user_assessment_responses[]
   user_video_progress       user_video_progress[]
   timeLogs                  TimeLog[]
+  subCategoryId             Int
+  categoryId                Int
 }
 
 model organizations {
@@ -260,13 +262,13 @@ model CoursesAssessmentResponse {
 }
 
 model TimeLog {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    Int
-  clockIn   DateTime
-  clockOut  DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  users     users     @relation(fields: [userId], references: [id])
+  timeSpent Int // Represented in seconds or another unit of time
+  date      DateTime @default(now()) // Date without time
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     users    @relation(fields: [userId], references: [id])
 }
 
 model individual_assessments {
