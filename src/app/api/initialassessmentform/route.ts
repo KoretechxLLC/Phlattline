@@ -219,22 +219,16 @@ export async function GET(req: NextRequest) {
     const { searchParams }: any = new URL(req.url);
     const page = parseInt(searchParams.get("page")) || 1;
     const size = parseInt(searchParams.get("size")) || 10;
-    const categoryId = searchParams.get("categoryId");
 
     const skip = (page - 1) * size;
-    const whereClause: any = categoryId
-      ? { categoryId: Number(categoryId) }
-      : {};
 
     const assessments = await prisma.individual_assessments.findMany({
-      where: whereClause,
       include: {
         individual_assessment_questions: {
           include: {
             individual_assessment_options: true,
           },
         },
-        assessment_subCategory: true,
       },
       take: size,
       skip: skip,

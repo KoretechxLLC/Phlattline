@@ -14,6 +14,7 @@ import {
 import PersonalGoals from "@/app/components/PersonalGoalsTracker";
 import SuggestionTabs from "@/app/components/SuggestionTabs";
 import {
+  fetchGoals,
   resetError,
   resetSuccess,
   submitGoal,
