@@ -138,7 +138,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                     videoData?.thumbnail_url || "default-thumbnail.jpg"
                   }`}
                   alt="Course Thumbnail"
-                  className="w-full 4xl:h-52 h-96 rounded-lg object-contain container border-[1px] border-slate-600 my-2"
+                  className="w-full 4xl:h-52 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
                   width={1000}
                   height={1000}
                 />
@@ -177,14 +177,6 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                 <div className="flex items-center justify-between text-default-900 text-sm lg:text-base font-normal">
                   <h1 className="text-3xl font-bold">About this course</h1>
                   <div className="flex items-center gap-1.5">
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-default-300/80" />
-                    <span className="ltr:pl-2 rtl:pr-2 text-default-500">
-                      {filteredData && filteredData.rating}
-                    </span>
                     <p className="text-gray-500 mx-5">|</p>
                     <Icon
                       icon="heroicons-solid:users"
@@ -243,7 +235,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
       </div>
 
       {/* Right Column: Course Modules and Information */}
-      <div className="md:col-span-1 my-16">
+      <div className="md:col-span-1 my-12">
         <Card className="border border-gray-500 rounded-xl p-5">
           <CardHeader
             className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]"

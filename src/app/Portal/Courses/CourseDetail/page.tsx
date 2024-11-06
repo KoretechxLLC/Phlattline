@@ -72,7 +72,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
         <Spinner />
       ) : (
         <div
-          className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full space-y-6 rounded-lg"
+          className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full rounded-lg"
           style={{ fontFamily: "Sansation" }}
         >
           <div>
@@ -95,7 +95,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                     "default-thumbnail.jpg"
                   }`}
                   alt="Course Thumbnail"
-                  className="w-full 4xl:h-64 h-80 rounded-lg object-contain container border-[1px] border-slate-600 my-2"
+                  className="w-full 4xl:h-64 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
                   width={1000}
                   height={1000}
                 />
@@ -120,17 +120,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                         {data?.course_name}
                       </h1>
                       <div className="flex items-center gap-1.5">
-                        <Icon icon="ph:star-fill" className="text-red-600" />
-                        <Icon icon="ph:star-fill" className="text-red-600" />
-                        <Icon icon="ph:star-fill" className="text-red-600" />
-                        <Icon icon="ph:star-fill" className="text-red-600" />
-                        <Icon
-                          icon="ph:star-fill"
-                          className="text-default-300/80"
-                        />
-                        <span className="ltr:pl-2 rtl:pr-2 text-default-500">
-                          {data?.rating}
-                        </span>
                         <p className="text-gray-500 mx-5">|</p>
                         <Icon
                           icon="heroicons-solid:users"
@@ -190,8 +179,8 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             </div>
           </div>
 
-          <div className="h-56">
-            <div className="grid my-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+          <div>
+            <div className="grid my-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
               {data?.videos.map((video: any) => (
                 <div
                   key={video.id}
@@ -200,7 +189,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   <Image
                     src={`/courses/thumbnails/${video.thumbnail_url}`}
                     alt={`Video Thumbnail ${video.id}`}
-                    className="w-full h-full rounded-lg container"
+                    className="w-full h-56 rounded-lg object-cover container"
                     width={1000}
                     height={1000}
                   />

@@ -67,7 +67,7 @@ const formatTimeSpent = (seconds: any) => {
   if (seconds < 60) {
     return (
       <span>
-        {seconds} <span style={{ fontSize: '0.8em' }}>SEC</span>
+        {seconds} <span style={{ fontSize: "0.8em" }}>SEC</span>
       </span>
     );
   }
@@ -79,12 +79,12 @@ const formatTimeSpent = (seconds: any) => {
     <span>
       <span>
         {minutes}
-        <span style={{ fontSize: '0.6em', color: '#FF0000' }}> MIN</span>
+        <span style={{ fontSize: "0.6em", color: "#FF0000" }}> MIN</span>
       </span>
       {remainingSeconds > 0 && (
-        <span style={{ marginLeft: '0.2em' }}>
+        <span style={{ marginLeft: "0.2em" }}>
           {remainingSeconds}
-          <span style={{ fontSize: '0.6em', color: '#FF0000' }}> SEC</span>
+          <span style={{ fontSize: "0.6em", color: "#FF0000" }}> SEC</span>
         </span>
       )}
     </span>
@@ -94,7 +94,8 @@ const formatTimeSpent = (seconds: any) => {
 const CourseReport = () => {
   const dispatch: any = useDispatch();
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { loading, error, success, logSuccess, goals, timeLogs }: any = useSelector((state: RootState) => state.performance);
+  const { loading, error, success, logSuccess, goals, timeLogs }: any =
+    useSelector((state: RootState) => state.performance);
   const [timelogsData, setTimeLogsData] = useState<any>([]);
   const [timeLogSpent, setTimeLogSpent] = useState(0);
 
@@ -111,9 +112,7 @@ const CourseReport = () => {
       setTimeLogsData(timeLogs?.timelogs);
       setTimeLogSpent(timeLogs?.totalTimeSpent);
     }
-  }, [logSuccess]);
-
-
+  }, [logSuccess, timeLogs?.timelogs, timeLogs?.totalTimeSpent]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -128,13 +127,12 @@ const CourseReport = () => {
           </div>
 
           <div className="w-1/4 flex flex-col">
-            <div className="flex flex-col w-fit mb-3">
-
-            </div>
+            <div className="flex flex-col w-fit mb-3"></div>
             <div className="flex flex-col mt-[8em]">
               <span className="space-x-8 items-center flex justify-center">
-                <span className="text-2xl">{timeLogSpent ? formatTimeSpent(timeLogSpent) : '0 secs'}</span>
-
+                <span className="text-2xl">
+                  {timeLogSpent ? formatTimeSpent(timeLogSpent) : "0 secs"}
+                </span>
               </span>
               <span className="font-bold my-1 text-lg flex justify-center items-center gap-1">
                 <CiClock1 />
@@ -177,12 +175,13 @@ const CourseReport = () => {
               >
                 <div className="flex items-center">
                   <div
-                    className={`h-12 w-1 mr-4 ${course.progress === 100
-                      ? "bg-green-500"
-                      : course.progress > 0
+                    className={`h-12 w-1 mr-4 ${
+                      course.progress === 100
+                        ? "bg-green-500"
+                        : course.progress > 0
                         ? "bg-yellow-500"
                         : "bg-red-500"
-                      }`}
+                    }`}
                   ></div>
                   <div className="flex-1">
                     <div className="flex justify-between">

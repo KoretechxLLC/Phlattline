@@ -20,7 +20,6 @@ import {
 } from "@/redux/slices/performanceManagement.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
-import Spinner from "@/app/components/Spinner";
 
 export type NotificationType = {
   id: number;
@@ -76,72 +75,63 @@ const PerformanceManagement = () => {
 
   return (
     <>
-      {loading ? (
-        <div className="text-center text-gray-300">
-          <Spinner height="20vh" />
-        </div>
-      ) : (
-        <div className="px-4 text-zinc-50">
-          <StackedNotifications
-            notification={notification}
-            setNotification={setNotification}
-          />
-          <motion.div
-            initial="initial"
-            animate="animate"
-            transition={{
-              staggerChildren: 0.05,
-            }}
-            className="mx-auto grid max-w-[100%] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            <div>
-              <SmartGoalForm handleAddGoal={handleAddGoal} success={success} />
-            </div>
-            <div className="space-y-5">
-              <TasksTracker
-                showPending={true}
-                showCompleted={true}
-                showSaved={false}
-                showTooltip={false}
-                label={"Assessments"}
-                isClickable={false}
-              />
-              <Card
-                className="border border-[#62626280] rounded-3xl shadow-md w-full"
-                style={{ fontFamily: "Sansation" }}
-              >
-                <CardHeader className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
-                  <CardTitle>Your Desired Job</CardTitle>
-                </CardHeader>
-                <CardContent className="4xl:my-8 my-16">
-                  <PersonalGoals
-                    goals={[
-                      { id: 1, goal: "Finance Officer" },
-                      { id: 2, goal: "Taxation" },
-                    ]}
-                    showAvatar={false}
-                  />
-                </CardContent>
-              </Card>
-            </div>
+      <div className="px-4 text-zinc-50">
+        <StackedNotifications
+          notification={notification}
+          setNotification={setNotification}
+        />
+        <motion.div
+          initial="initial"
+          animate="animate"
+          transition={{
+            staggerChildren: 0.05,
+          }}
+          className="mx-auto grid max-w-[100%] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
+          <div>
+            <SmartGoalForm handleAddGoal={handleAddGoal} success={success} />
+          </div>
+          <div className="space-y-5">
+            <TasksTracker
+              showPending={true}
+              showCompleted={true}
+              showSaved={false}
+              showTooltip={false}
+              label={"Assessments"}
+              isClickable={false}
+            />
+            <Card className="border border-[#62626280] rounded-3xl shadow-md w-full">
+              <CardHeader className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
+                <CardTitle>Your Desired Job</CardTitle>
+              </CardHeader>
+              <CardContent className="4xl:my-8 my-16">
+                <PersonalGoals
+                  goals={[
+                    { id: 1, goal: "Finance Officer" },
+                    { id: 2, goal: "Taxation" },
+                  ]}
+                  showAvatar={false}
+                />
+              </CardContent>
+            </Card>
+          </div>
 
-            {/* Combined TasksTracker and PersonalGoals in one column */}
-            <div>
-              <TimeManagement />
-            </div>
+          {/* Combined TasksTracker and PersonalGoals in one column */}
+          <div>
+            <TimeManagement />
+          </div>
 
-            {/* Suggestions Section */}
-            <div className="my-2 flex flex-col col-span-1  md:col-span-2 lg:col-span-3">
-              <CardTitle>Your Desired Personal Goals</CardTitle>
-              <div className="flex space-x-4 my-1">
-                {suggestions.map((suggestion, index) => (
-                  <SuggestionTabs key={index} Suggestion={suggestion} />
-                ))}
-              </div>
+          {/* Suggestions Section */}
+          {/* <div className="my-2 flex flex-col col-span-1  md:col-span-2 lg:col-span-3">
+            <CardTitle>Your Desired Personal Goals</CardTitle>
+            <div className="flex space-x-4 my-1">
+              {suggestions.map((suggestion, index) => (
+                <SuggestionTabs key={index} Suggestion={suggestion} />
+              ))}
             </div>
-          </motion.div>
-        </div>
-      )}
+          </div> */}
+        </motion.div>
+      </div>
     </>
   );
 };

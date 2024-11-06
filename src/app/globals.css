@@ -173,3 +173,63 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background-position: 400px 0;
   }
 }
+
+
+.phone-input {
+  @apply w-full bg-black  text-white p-5 !important;
+}
+.phone-input-button {
+
+  background-color: #000 !important;
+  margin-top: 0% !important;
+  border: #2d2c2c80 !important;
+  border-width: 0 !important;
+ 
+}
+
+
+.phone-input-button:focus {
+
+  background-color: #000 !important;
+  margin-top: 0% !important;
+  border: #2d2c2c80 !important;
+  border-width: 0 !important;
+}
+.phone-input-button:hover{
+  background-color:#000 !important;
+  margin-top: 0% !important;
+  border: #2d2c2c80 !important;
+  border-width: 0 !important;
+}
+
+.phone-input:hover{
+  background-color:#4a4a4a !important;
+}
+
+
+.phone-input-button:focus {
+  background-color: #ff6600 !important; /* Orange background color on focus */
+  color: white; /* White text color on focus */
+}
+
+
+
+
+li.country:hover, 
+li.country.highlight { 
+  background-color: #4a4a4a !important; 
+  color: #fff;
+}
+
+.flag-dropdown.phone-input-button {
+  background-color: #000; /* Default background color */
+  color: #fff; /* Default text color */
+}
+
+.flag-dropdown.phone-input-button:hover {
+  background-color: #ff6600 !important; /* Your desired hover background color */
+  color: #000 !important; /* Your desired hover text color */
+  border: #b50d34 !important;
+  border-width: 2em !important;
+}
+

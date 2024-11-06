@@ -30,7 +30,7 @@ const PerformanceManagementReport = () => {
         isClickable={false}
       />
 
-      <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+      {/* <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
         <CardHeader className="h-16 rounded-3xl">
           <div className="text-sm flex justify-between">
             <CardTitle>Issues Reported</CardTitle>
@@ -40,9 +40,9 @@ const PerformanceManagementReport = () => {
         <CardContent className="p-2">
           <IssuesTracker />
         </CardContent>
-      </Card>
+      </Card> */}
 
-      <Card
+      {/* <Card
         className="border border-[#62626280] rounded-3xl shadow-md w-full h-full"
         style={{ fontFamily: "Sansation" }}
       >
@@ -58,7 +58,7 @@ const PerformanceManagementReport = () => {
             showAvatar={false}
           />
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 };

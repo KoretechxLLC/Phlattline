@@ -6,7 +6,7 @@ import { RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchvideoprogress } from "@/redux/slices/courses.slice";
 import ButtonWrapper from "./Button";
-import StackedNotifications from "@/app/components/Stackednotification";
+
 import CustomShimmer from "./Customeshimmer";
 
 const ModuleList: React.FC = () => {
@@ -14,19 +14,14 @@ const ModuleList: React.FC = () => {
   const router = useRouter();
   const dispatch: any = useDispatch();
   const courseId = searchParams.get("courseId");
-  const { courses, videoProgress } = useSelector(
+  const { courses, videoProgress, videoProgressSuccess } = useSelector(
     (state: RootState) => state.courses
   );
   const { userData } = useSelector((state: RootState) => state.auth);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [assessmentCompleted, setAssessmentCompleted] = useState(false);
-  const [showModules, setShowModules] = useState<any>([]);
+  const [showModules, setShowModules] = React.useState<any>([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState<{
-    id: number;
-    text: string;
-    type: string;
-  } | null>(null); // Updated notification state
   const userId = userData?.id;
 
   useEffect(() => {
@@ -40,11 +35,11 @@ const ModuleList: React.FC = () => {
   );
 
   useEffect(() => {
-    if (videoProgress && videoProgress.length > 0) {
+    if (videoProgress && videoProgress?.length > 0) {
       const modules =
         currentCourse?.videos.map((video: any, index: number) => {
           const progress = videoProgress.find(
-            (progress: any) => progress.video_id === video.id
+            (progress: any) => progress.video_id == video.id
           );
           return {
             id: video.id,
@@ -57,14 +52,32 @@ const ModuleList: React.FC = () => {
 
       setShowModules(modules);
       const allCompleted = modules.every((module: any) => module.completed);
-      setIsButtonEnabled(allCompleted && !assessmentCompleted);
+      setIsButtonEnabled(allCompleted);
 
       const assessmentStatus = videoProgress.every(
         (progress: any) => progress.user_video_progress?.assessment === true
       );
       setAssessmentCompleted(assessmentStatus);
     }
-  }, [videoProgress, currentCourse, assessmentCompleted]);
+  }, [
+    videoProgress,
+    videoProgress?.length,
+    currentCourse,
+    videoProgressSuccess?.length,
+  ]);
+
+  useEffect(() => {
+    const modules =
+      currentCourse?.videos.map((video: any, index: number) => ({
+        id: video.id,
+        sequence: index + 1,
+        title: video.title,
+        completed: false,
+        clickable: index === 0 || videoProgress[index - 1]?.completed,
+      })) || [];
+
+    setShowModules(modules);
+  }, [currentCourse, videoProgress]);
 
   const handleModuleClick = (videoId: number, clickable: boolean) => {
     if (clickable) {
@@ -76,6 +89,7 @@ const ModuleList: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 6000);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -84,23 +98,13 @@ const ModuleList: React.FC = () => {
   }
 
   const handleButtonClick = () => {
-    if (isButtonEnabled) {
+    if (isButtonEnabled && !assessmentCompleted) {
       router.push(`/Coursesassessment?courseId=${courseId}`);
-    } else {
-      setNotification({
-        id: Date.now(),
-        text: "Please complete the modules first.", // Error message
-        type: "error",
-      });
     }
   };
 
   return (
     <>
-      <StackedNotifications
-        notification={notification}
-        setNotification={setNotification}
-      />
       {showModules &&
         showModules.length > 0 &&
         showModules.map((module: any) => (
@@ -119,11 +123,11 @@ const ModuleList: React.FC = () => {
             <span className="text-xl font-bold">{module.title}</span>
           </div>
         ))}
+
       <ButtonWrapper
         text={assessmentCompleted ? "Assessment Completed" : "Start Assessment"}
-        className={`text-3xl w-full text-center flex justify-center ${
-          !isButtonEnabled ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        className="text-3xl w-full text-center flex justify-center"
+        disabled={!isButtonEnabled || assessmentCompleted}
         onClick={handleButtonClick}
       />
     </>
