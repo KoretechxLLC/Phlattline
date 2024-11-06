@@ -12,16 +12,12 @@ import AssessmentsTracker from "@/app/components/AssesmentsTracker";
 import PersonalGoals from "@/app/components/PersonalGoalsTracker";
 import TasksTracker from "@/app/components/TasksTracker";
 import TabButton from "@/app/components/TabButton";
-import NotesCalendar from "../../components/NotesCalendar";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAssessments } from "@/redux/slices/individualassessment.slice";
-import Spinner from "@/app/components/Spinner";
-import { RootState } from "@/redux/store";
+import NotesCalendar from "@/app/components/NotesCalendar";
 
 const Dashboard = () => {
   const router = useRouter();
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full  lg:space-y-24 5xl:-space-y-5 overflow-hidden items-end">
+    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full 4xl:space-y-0 lg:space-y-24 5xl:space-y-9 overflow-hidden items-end">
       <div className="space-y-4 md:space-y-6">
         <div>
           <AssessmentsBanner />
@@ -31,7 +27,6 @@ const Dashboard = () => {
             <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <div className="text-sm 4xl:mb-12 mb-16 flex justify-between">
                 <CardTitle>Assessments Reports</CardTitle>
-                <CardTitle>Total Employees: 115</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="4xl:p-1 p-4">
@@ -41,7 +36,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="4xl:my-0 space-y-8 md:space-y-3 w-full px-5">
+      <div className="4xl:my-0 space-y-3 md:space-y-3 w-full px-5">
         <div>
           <Card className="shadow-md rounded-3xl w-full h-full">
             <CardHeader>
@@ -49,7 +44,7 @@ const Dashboard = () => {
                 <h1 className="text-xs">Upcoming Videos and Blogs</h1>
                 <p
                   className="text-sm underline cursor-pointer"
-                  onClick={() => router.push("")}
+                  onClick={() => router.push("/Portal/DailyDose")}
                 >
                   View
                 </p>

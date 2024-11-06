@@ -42,7 +42,7 @@ const CoursesTab: React.FC<CourseTabProps> = ({
           <Image
             width={1000}
             height={1000}
-            className=" rounded-2xl 4xl:h-24 4xl:w-52 5xl:h-40 5xl:w-96  object-cover"
+            className=" rounded-lg 4xl:h-24 4xl:w-52 5xl:h-40 5xl:w-96  object-cover"
             src={thumbnail}
             alt={title}
           />

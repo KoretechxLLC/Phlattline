@@ -17,7 +17,7 @@ const LayoutContentProvider = ({ children }: { children: React.ReactNode }) => {
         })}
       >
         <div
-          className={cn("p-6 mb-24 md:mb-0", {
+          className={cn("p-6 4xl:mb-16 mb-24 md:mb-0", {
             "container ": config.contentWidth === "boxed",
           })}
         >

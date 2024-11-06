@@ -12,7 +12,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
   // Use media query to determine if the screen size is below medium
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
 
-  const series = [13, 55, 44]; // This data should be dynamic or fetched
+  const series = [55, 45]; // This data should be dynamic or fetched
   const isLoading = false; // Set this to true while loading data (e.g., fetching from an API)
 
   const options: any = {
@@ -24,7 +24,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
     stroke: {
       width: 0,
     },
-    labels: ["Ongoing", "Skipped", "Attempted"],
+    labels: ["Skipped", "Attempted"],
     dataLabels: {
       enabled: true,
       style: {
@@ -32,7 +32,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
       },
     },
     // Assign specific colors for each segment
-    colors: ["#C4421B", "#BAA716", "#FFFFFF"], // White, Orange, Yellow
+    colors: ["#BAA716", "#FFFFFF"], // White, Orange, Yellow
     tooltip: {
       enabled: false,
     },

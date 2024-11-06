@@ -15,14 +15,11 @@ const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
 const SignupScreen = () => {
   return (
-    <AuroraBackground>
-      <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
-        <div className="flex items-center justify-center">
-          <OrganizationSignup />
-        </div>
-        <SignUpImage />
-      </section>
-    </AuroraBackground>
+    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
+      <div className="flex items-center justify-center">
+        <OrganizationSignup />
+      </div>
+    </section>
   );
 };
 
@@ -70,7 +67,11 @@ const OrganizationSignup = () => {
             </motion.p>
           </div>
         </div>
-        <form onSubmit={(e) => e.preventDefault()} className="w-full">
+        <form
+          noValidate
+          onSubmit={(e) => e.preventDefault()}
+          className="w-full"
+        >
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
@@ -133,7 +134,7 @@ const OrganizationSignup = () => {
                 scale: 0.985,
               }}
               onClick={() => router.push("/Login")}
-              type="submit"
+              type="button"
               className="mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-4 py-2 my-1 text-center font-medium text-red transition-color"
             >
               Login

@@ -4,12 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/Card";
+import { Card, CardContent, CardHeader } from "@/app/components/Card";
 import CoursesTab from "@/app/components/CoursesTab";
 import CoursesResults from "@/app/components/CoursesResults";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -34,14 +29,6 @@ const Courses = () => {
     dispatch(fetchcourses());
   }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="text-center text-gray-300">
-        <Spinner height="20vh" />
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-full bg-black">
@@ -56,24 +43,52 @@ const Courses = () => {
 
   return (
     <div>
-      <h1 className="text-3xl px-10 ">Recommended Courses</h1>
-      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-5 md:space-y-0">
+      <h1 className="text-3xl px-10">Recommended Courses</h1>
+      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0">
         {/* Left side: Courses List */}
         <div className="space-y-4 md:space-y-2 ml-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {displayedCourses.map((course: any) => (
-              <CoursesTab
-                id={course.id}
-                title={course.course_name}
-                description={course.description}
-                price={course.price}
-                videos={course.videos}
-                assessments={course.assessments}
-                key={course.id}
-              />
-            ))}
+            {loading ? (
+              <div className="col-span-3 flex justify-center items-center">
+                <Spinner height="20vh" />
+              </div>
+            ) : courses && courses.length > 0 ? (
+              <>
+                {displayedCourses.map((course: any) => (
+                  <CoursesTab
+                    id={course.id}
+                    title={course.course_name}
+                    description={course.description}
+                    price={course.price}
+                    videos={course.videos}
+                    assessments={course.assessments}
+                    key={course.id}
+                  />
+                ))}
+              </>
+            ) : (
+              <div className="flex items-center justify-center col-span-3">
+                <p className="text-red-700 p-4 rounded-lg border border-red-300 text-center">
+                  No courses available.
+                </p>
+              </div>
+            )}
           </div>
-
+          {/* Show the button below the courses */}
+          {!loading && !showAll && courses && courses.length > 0 && (
+            <div className="mt-4">
+              <Button
+                className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-10 justify-center items-center rounded-3xl"
+                size="default"
+                variant="default"
+                color="primary"
+                style={{ fontFamily: "Sansation" }}
+                onClick={() => setShowAll(true)}
+              >
+                View All Courses
+              </Button>
+            </div>
+          )}
           {/* Conditional Pagination Buttons */}
           {showAll && (
             <div className="flex items-center justify-center gap-2 py-4">
@@ -94,21 +109,6 @@ const Courses = () => {
               </Button>
             </div>
           )}
-
-          {!showAll && (
-            <div className="mt-5 md:mt-10">
-              <Button
-                className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-12 justify-center items-center rounded-3xl"
-                size="default"
-                variant="default"
-                color="primary"
-                style={{ fontFamily: "Sansation" }}
-                onClick={() => setShowAll(true)}
-              >
-                View All Courses
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* Right side: Additional Content */}
@@ -120,7 +120,7 @@ const Courses = () => {
                   <h1 className="text-xs">Upcoming Videos and Blogs</h1>
                   <p
                     className="text-sm underline cursor-pointer"
-                    onClick={() => router.push("")}
+                    onClick={() => router.push("/Portal/DailyDose")}
                   >
                     View
                   </p>
@@ -140,7 +140,8 @@ const Courses = () => {
               textColor="#000"
               arrowImageSrc="/assets/BlackArrowRU.png"
               showModalOnClick={false}
-              isClickable={false}
+              isClickable={true}
+              redirectTo={"/Portal/Assessments?view=recommended"}
             />
           </div>
 

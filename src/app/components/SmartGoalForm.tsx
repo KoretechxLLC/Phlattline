@@ -56,6 +56,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             placeholderText="Start Date"
+            minDate={new Date()} // Prevent past dates
             className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none"
           />
         </div>
@@ -66,6 +67,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
             selected={completionDate}
             onChange={(date) => setCompletionDate(date)}
             placeholderText="Completion Date"
+            minDate={startDate || new Date()} // Ensure completion date is after start date
             className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none"
           />
         </div>

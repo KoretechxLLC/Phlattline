@@ -14,18 +14,18 @@ interface HeaderProps {
 
 const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
   return (
-    <div className="w-full px-4 sm:px-8">
+    <div className="w-full">
       {/* Full header responsive layout */}
-      <div className="flex flex-wrap items-center justify-between py-4 md:pl-72 gap-5">
+      <div className="flex flex-wrap items-center justify-between py-4 md:pl-64 gap-5">
         {/* Heading Section */}
         <div className="flex items-center gap-3 flex-1">
           {/* Heading and Description */}
-          <div className="flex flex-col">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl mx-2 font-bold">
               {HeadingText}
             </h1>
             {HeadingDesc && (
-              <h2 className="text-sm sm:text-base text-gray-500">
+              <h2 className="text-sm sm:text-base mx-2 text-gray-500">
                 {HeadingDesc}
               </h2>
             )}
@@ -35,14 +35,14 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
         </div>
 
         {/* Action buttons: EditWidget, Search, Notifications, Profile */}
-        <div className="flex gap-2 items-start">
+        <div className="flex gap-2 mx-5 items-start">
           {/* Show the EditWidget and HeaderSearch only on medium and larger screens */}
           <div className="hidden md:flex gap-2 my-1">
-            <EditWidget />
-            <HeaderSearch />
+            {/* <EditWidget /> */}
+            {/* <HeaderSearch /> */}
           </div>
 
-          <Notifications />
+          {/* <Notifications /> */}
           <ProfileInfo />
         </div>
       </div>

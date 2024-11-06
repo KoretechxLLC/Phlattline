@@ -15,8 +15,9 @@ interface TabButtonProps {
   imageSrc: string;
   textColor: string;
   arrowImageSrc: string;
-  showModalOnClick: boolean; // Prop to control modal visibility on click
-  isClickable: boolean; // New prop to control cursor-pointer styling
+  showModalOnClick: boolean;
+  isClickable: boolean;
+  redirectTo?: string; // New prop for redirect URL
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
@@ -26,14 +27,17 @@ const TabButton: React.FC<TabButtonProps> = ({
   textColor,
   arrowImageSrc,
   showModalOnClick,
-  isClickable, // Destructure new prop
+  isClickable,
+  redirectTo, // Destructure new prop
 }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = () => {
-    if (showModalOnClick) {
-      setIsOpen(true); // Open modal only if showModalOnClick is true
+    if (redirectTo) {
+      router.push(redirectTo); // Redirect if URL is provided
+    } else if (showModalOnClick) {
+      setIsOpen(true); // Open modal if showModalOnClick is true
     }
   };
 
@@ -42,7 +46,7 @@ const TabButton: React.FC<TabButtonProps> = ({
       <div
         className={`w-full 4xl:py-2 lg:py-3 rounded-lg flex items-center justify-between ${
           isClickable ? "cursor-pointer" : ""
-        }`} // Apply cursor-pointer based on isClickable
+        }`}
         style={{ backgroundColor }}
         onClick={handleButtonClick}
       >
@@ -70,7 +74,9 @@ const TabButton: React.FC<TabButtonProps> = ({
         />
       </div>
 
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      {showModalOnClick && !redirectTo && (
+        <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      )}
     </div>
   );
 };
@@ -110,48 +116,51 @@ const SpringModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-white p-16 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             <div className="relative z-10 p-5 rounded-xl my-6">
               {/* Input Field with Icon */}
-              <div className="my -4 flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-4">
                 <MdOutlineTextFields className="text-gray-500 text-2xl" />
                 <input
                   type="text"
                   value={matter}
                   onChange={(e) => setMatter(e.target.value)}
                   placeholder="Matter"
-                  className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400"
+                  className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400 focus:outline-none"
                 />
               </div>
 
-              {/* Date Picker with Icon */}
-              <div className="my-4 flex items-center gap-2">
+              {/* Date Picker with Icon in a Single Row */}
+              <div className="my-4 flex items-center gap-2 mb-4 ">
                 <MdDateRange className="text-gray-500 text-2xl" />
-                <DatePicker
-                  selected={date}
-                  onChange={(date) => setDate(date)}
-                  placeholderText="Select a date"
-                  className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md border border-gray-300"
-                  calendarClassName="z-50"
-                />
+                <div className="w-full border border-gray-300">
+                  <DatePicker
+                    selected={date}
+                    onChange={(date) => setDate(date)}
+                    placeholderText="Select a date"
+                    className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md focus:outline-none"
+                  />
+                </div>
               </div>
 
-              {/* Time Picker with Icon */}
-              <div className="my-4 flex items-center gap-2">
+              {/* Time Picker with Icon in a Single Row */}
+              <div className="my-4 flex items-center gap-2 mb-4 ">
                 <MdAccessTime className="text-gray-500 text-2xl" />
-                <DatePicker
-                  selected={date}
-                  onChange={(date) => setDate(date)}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeFormat="HH:mm"
-                  timeIntervals={60}
-                  placeholderText="Select time"
-                  dateFormat="HH:mm"
-                  className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md border border-gray-300"
-                  calendarClassName="z-50"
-                />
+                <div className="border w-full border-gray-300">
+                  <DatePicker
+                    selected={date}
+                    onChange={(date) => setDate(date)}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeFormat="HH:mm"
+                    timeIntervals={60}
+                    placeholderText="Select time"
+                    dateFormat="HH:mm"
+                    className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md focus:outline-none"
+                    calendarClassName="z-50"
+                  />
+                </div>
               </div>
             </div>
 
