@@ -42,6 +42,7 @@ model users {
   timeLogs                  TimeLog[]
   subCategoryId             Int
   categoryId                Int
+  purchased_assessments     purchased_assessments[]
 }
 
 model organizations {
@@ -110,6 +111,17 @@ model user_courses {
   users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
   purchasedAt DateTime      @default(now()) @db.Timestamp(6)
   updatedAt   DateTime      @updatedAt
+}
+
+model purchased_assessments {
+  id                        Int                    @id @default(autoincrement())
+  user_id                   Int
+  individual_assessments_id Int
+  completed                 Boolean                @default(false)
+  individual_assessments    individual_assessments @relation(fields: [individual_assessments_id], references: [id])
+  users                     users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  purchasedAt               DateTime               @default(now()) @db.Timestamp(6)
+  updatedAt                 DateTime               @updatedAt
 }
 
 enum course_status {
@@ -283,6 +295,7 @@ model individual_assessments {
   assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])
   subCategoryId                   Int
   assessment_subCategory          assessment_subCategory            @relation(fields: [subCategoryId], references: [id])
+  purchased_assessments           purchased_assessments[]
 }
 
 model assessment_category {
