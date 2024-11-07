@@ -224,13 +224,23 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                 </div>
               </div>
               <div className="rounded-full overflow-hidden">
-                <Image
-                  src={author.image}
-                  alt={author.name}
-                  className="w-full h-full object-cover"
-                  width={100}
-                  height={100}
-                />
+                {author.image ? (
+                  <div className="w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
+                    <Image
+                      src={author.image}
+                      alt={author.name}
+                      className="w-full h-full object-cover"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-[#BAA716]  rounded-full">
+                    <span className="text-white text-sm md:text-sm font-bold py-3">
+                      {author.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

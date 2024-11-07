@@ -20,6 +20,11 @@ export const AnimatedTooltip = ({
   }[];
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [imgError, setImgError] = useState(false);
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
+
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0);
   const rotate = useSpring(
@@ -79,8 +84,9 @@ export const AnimatedTooltip = ({
             onMouseMove={handleMouseMove}
             height={40}
             width={40}
-            src={item.image}
+            src={imgError ? "/assets/DummyImg.png" : item.image}
             alt={item.name}
+            onError={handleError}
             className="object-cover !m-0 !p-0 object-top rounded-2xl h-7 w-7 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
           />
         </div>

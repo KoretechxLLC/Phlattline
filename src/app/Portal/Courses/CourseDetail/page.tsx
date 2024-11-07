@@ -26,6 +26,8 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId");
   const { courses, loading } = useSelector((state: RootState) => state.courses);
@@ -33,6 +35,10 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
+
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
 
   useEffect(() => {
     if (!courses || courses.length == 0) {
@@ -90,14 +96,19 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             <div className="relative w-full mx-2">
               <>
                 <Image
-                  src={`/courses/thumbnails/${
-                    videoWithSequenceOne?.thumbnail_url ||
-                    "default-thumbnail.jpg"
-                  }`}
+                  src={
+                    imgError
+                      ? "/assets/DummyImg.png"
+                      : `/courses/thumbnails/${
+                          videoWithSequenceOne?.thumbnail_url ||
+                          "default-thumbnail.jpg"
+                        }`
+                  }
                   alt="Course Thumbnail"
                   className="w-full 4xl:h-64 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
                   width={1000}
                   height={1000}
+                  onError={handleError} // If image fails to load, trigger the error handler
                 />
                 <div className="absolute left-0 bottom-0 m-4">
                   <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
@@ -187,11 +198,16 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   className="relative border border-gray-500 rounded-lg"
                 >
                   <Image
-                    src={`/courses/thumbnails/${video.thumbnail_url}`}
+                    src={
+                      imgError
+                        ? "/assets/DummyImg.png"
+                        : `/courses/thumbnails/${video.thumbnail_url}`
+                    }
                     alt={`Video Thumbnail ${video.id}`}
                     className="w-full h-56 rounded-lg object-cover container"
                     width={1000}
                     height={1000}
+                    onError={handleError}
                   />
                   <div className="absolute inset-0 flex justify-center items-center">
                     <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">

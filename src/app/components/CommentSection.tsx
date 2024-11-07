@@ -25,13 +25,23 @@ const CommentSection = () => {
       {/* Input for New Comment and Toolbar in the Same Row */}
       <div className="flex items-center w-full p-5 my-3 border border-[#2D2C2C80] bg-black rounded-xl">
         <div className="rounded-full overflow-hidden">
-          <Image
-            src={author.image} // Using author's image for the comment input
-            alt={author.name}
-            className="w-10 h-10 object-cover"
-            width={40}
-            height={40}
-          />
+          {author.image ? (
+            <div className="w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
+              <Image
+                src={author.image}
+                alt={author.name}
+                className="w-full h-full object-cover"
+                width={100}
+                height={100}
+              />
+            </div>
+          ) : (
+            <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-[#BAA716]  rounded-full">
+              <span className="text-white text-sm md:text-sm font-bold py-3">
+                {author.name?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex-grow mx-5 rounded-2xl bg-[#62626280]">
           <div className="flex items-center w-full">
