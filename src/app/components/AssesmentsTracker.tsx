@@ -101,10 +101,17 @@ const AsessmentTracker = ({
   const dispatch: any = useDispatch();
 
   useEffect(() => {
-    if (!assessments || assessments?.length == 0) {
-      dispatch(fetchAssessments({}));
-    }
-  }, [assessments, dispatch]);
+    dispatch(
+      fetchAssessments({
+        filter: {
+          page: 1,
+          size: 5,
+          categoryId: 1,
+        },
+        type: "general",
+      })
+    );
+  }, [dispatch]);
 
   useEffect(() => {
     if (!assessmentsResponse || assessmentsResponse.length == 0) {

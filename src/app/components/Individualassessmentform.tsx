@@ -36,10 +36,17 @@ const IndividualAssessmentForm = () => {
   const userId = userData?.id; // Replace with actual userId
 
   useEffect(() => {
-    if (!assessments || assessments.length == 0) {
-      dispatch(fetchAssessments({}));
-    }
-  }, [assessments, dispatch]);
+    dispatch(
+      fetchAssessments({
+        filter: {
+          page: 1,
+          size: 5,
+          categoryId: 1,
+        },
+        type: "general",
+      })
+    );
+  }, [dispatch]);
 
   const handleOptionChange = (questionId: string, optionText: string) => {
     setResponses((prevResponses) => ({
@@ -52,7 +59,6 @@ const IndividualAssessmentForm = () => {
       [questionId]: "",
     }));
   };
-
   useEffect(() => {
     if (success !== null) {
       setNotification({
@@ -110,7 +116,7 @@ const IndividualAssessmentForm = () => {
   if (loading) {
     return (
       <div className="text-center text-gray-300">
-        <Spinner height="80vh" />
+        <Spinner />
       </div>
     );
   }
@@ -125,7 +131,8 @@ const IndividualAssessmentForm = () => {
         onSubmit={handleSubmit}
         className="space-y-8 overflow-x-auto h-[48em] pr-8"
       >
-        {assessments?.length > 0 &&
+        {assessments &&
+          assessments?.length > 0 &&
           assessments?.map((assessment: any) => (
             <div
               key={assessment.id}

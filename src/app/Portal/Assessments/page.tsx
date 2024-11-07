@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import AssessmentsCatalogue from "@/app/Portal/Assessments/AssessmentCatalogue/page";
-import MyAssessments from "@/app/Portal/Assessments/MyAssessments/page";
-import AssessmentResults from "@/app/Portal/Assessments/AssessmentResults/page";
+import MyAssessments from "@/app/Portal/Assessments/myAssessments/page";
+import AssessmentResults from "@/app/Portal/Assessments/assessmentResults/page";
 import IndividualAssessments from "@/app/Portal/Assessments/AssessmentCatalogue/IndividualAssessments/page";
 import RecommendedAssessments from "@/app/Portal/Assessments/AssessmentCatalogue/RecommendedAssessments/page";
 import Spinner from "@/app/components/Spinner";

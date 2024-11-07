@@ -10,6 +10,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   success: string | null;
+  updateUserData: any | null;
 }
 
 const initialState: AuthState = {
@@ -19,6 +20,7 @@ const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   success: null,
+  updateUserData: null,
 };
 
 export const login = createAsyncThunk<any, any>(
@@ -116,6 +118,11 @@ const authSlice = createSlice({
     setError: (state) => {
       state.error = null;
     },
+
+    setUpdateUserData: (state, action) => {
+      state.userData = action.payload;
+    },
+
     setAssessmentUpdate: (state) => {
       state.userData.assessment_status = true;
       if (typeof window !== "undefined") {
@@ -177,5 +184,6 @@ export const {
   setLoading,
   setError,
   setAssessmentUpdate,
+  setUpdateUserData,
 } = authSlice.actions;
 export default authSlice.reducer;

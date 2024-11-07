@@ -8,10 +8,20 @@ import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker styles
 import { formatCreditCardNumber, formatCVC } from "@/app/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { purchasingCourse } from "@/redux/slices/courses.slice";
+import {
+  purchasingCourse,
+  setPurchaseCourseError,
+  setPurchaseCourseSuccess,
+} from "@/redux/slices/courses.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications from "./Stackednotification";
 import Spinner from "./Spinner";
+import {
+  purchasingAssessment,
+  setPurchaseAssessmentError,
+  setPurchaseAssessmentSuccess,
+} from "@/redux/slices/purchaseAssessment.slice";
+import { setUpdateUserData } from "@/redux/slices/auth.slice";
 
 type Focused = "number" | "expiry" | "cvc" | "name" | "";
 
@@ -30,7 +40,8 @@ interface PaymentPopupProps {
   cards?: Card[]; // Make cards prop optional
   showOnlyForm?: boolean; // New prop for conditional rendering
   courseId?: any;
-  userId?: any;
+
+  isAssessmentId?: any;
 }
 export type NotificationType = {
   id: number;
@@ -44,7 +55,8 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   cards = [], // Default to an empty array if no cards are passed
   showOnlyForm = false, // Default to false
   courseId,
-  userId,
+
+  isAssessmentId,
 }) => {
   const [state, setState] = useState({
     number: "",
@@ -65,14 +77,23 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   );
   const [loading, setLoading] = useState(false);
   const dispatch: any = useDispatch();
-  const { purchaseCourseError, purchaseCourseSuccess } = useSelector(
-    (state: RootState) => state.courses
-  );
+  const { purchaseCourseError, purchaseCourseSuccess, purchaseCourse } =
+    useSelector((state: RootState) => state.courses);
+
+  const {
+    purchaseAssessment,
+    purchaseAssessmentLoader,
+    purchaseAssessmentError,
+    purchaseAssessmentSuccess,
+  } = useSelector((state: RootState) => state.purchaseAssessment);
+
+  const { userData } = useSelector((state: RootState) => state.auth);
 
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setState({ ...state, focus: e.target.name as Focused });
   };
 
+  const user_Id: number = userData?.id;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -104,7 +125,6 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
       setState({ ...state, expiry: "" }); // Clear expiry if date is null
     }
   };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newCard: Card = {
@@ -122,16 +142,24 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   };
 
   const handleContinue = async () => {
-    if (userId && courseId) {
+    if (user_Id && courseId) {
       setLoading(true); // Start loading
       await dispatch(
-        purchasingCourse({ user_Id: userId, course_id: courseId })
+        purchasingCourse({ user_Id: user_Id, course_id: courseId })
       );
 
       // After loading, set formSubmitted to true to show the success screen
       setFormSubmitted(true);
+    } else if (user_Id && isAssessmentId) {
+      await dispatch(
+        purchasingAssessment({
+          user_Id: user_Id,
+          individual_assessments_id: isAssessmentId,
+        })
+      );
     }
   };
+
   useEffect(() => {
     if (purchaseCourseSuccess) {
       setNotification({
@@ -142,8 +170,54 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
       setLoading(false); // End loading
       setIsOpen(false);
       setCardAddedSuccess(false);
+      dispatch(setPurchaseCourseSuccess());
+      const updatedUserCourses = [...userData?.user_courses, purchaseCourse];
+      dispatch(
+        setUpdateUserData({
+          ...userData,
+          user_courses: updatedUserCourses,
+        })
+      );
     }
   }, [purchaseCourseSuccess, setIsOpen]);
+
+  useEffect(() => {
+    if (purchaseAssessmentSuccess) {
+      setNotification({
+        id: Date.now(),
+        text: purchaseAssessmentSuccess,
+        type: "success",
+      });
+      setLoading(false); // End loading
+      setIsOpen(false);
+      setCardAddedSuccess(false);
+      dispatch(setPurchaseAssessmentSuccess());
+      const updatedUserAssessment = [
+        ...userData?.purchased_assessments,
+        purchaseAssessment,
+      ];
+      console.log("user data uppdating", updatedUserAssessment);
+      dispatch(
+        setUpdateUserData({
+          ...userData,
+          purchased_assessments: updatedUserAssessment,
+        })
+      );
+    }
+  }, [purchaseAssessmentSuccess, setIsOpen]);
+
+  useEffect(() => {
+    if (purchaseAssessmentError) {
+      setNotification({
+        id: Date.now(),
+        text: purchaseAssessmentError,
+        type: "error",
+      });
+      setLoading(false); // End loading
+      setIsOpen(false);
+      dispatch(setPurchaseAssessmentError());
+    }
+  }, [purchaseAssessmentError, setIsOpen]);
   useEffect(() => {
     if (purchaseCourseError) {
       setNotification({
@@ -153,6 +227,7 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
       });
       setLoading(false); // End loading
       setIsOpen(false);
+      dispatch(setPurchaseCourseError());
     }
   }, [purchaseCourseError, setIsOpen]);
 

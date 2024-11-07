@@ -34,7 +34,7 @@ const AssessmentsCatalogue = () => {
 
   useEffect(() => {
     dispatch(fetchassessmentsCount({ filter: { categoryId: categoryId } }));
-  }, [assessmentsCount, dispatch, categoryId]);
+  }, [assessmentsCount, dispatch, categoryId, userData]);
 
   useEffect(() => {
     if (assessmentsCount) {
@@ -52,7 +52,7 @@ const AssessmentsCatalogue = () => {
         },
       })
     );
-  }, [categoryId, dispatch, currentPage]);
+  }, [categoryId, dispatch, currentPage, userData]);
 
   const handleNextPage = () => {
     if (currentPage < totalPage) {

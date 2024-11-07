@@ -8,13 +8,13 @@ import PaymentPopup from "@/app/components/PaymentPopup"; // Import the PaymentP
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import GraphLoader from "./graphLoader";
-import AssessmentPaymentPopup from "./assessmentPaymentPopup";
 
 export const HoverEffect = ({
   items,
   className, // Accept a className prop
 }: {
   items: {
+    id: number;
     title: string;
     image: string;
     price: number;
@@ -24,6 +24,7 @@ export const HoverEffect = ({
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   let [isOpen, setIsOpen] = useState(false); // State to manage the popup visibility
   let [isBought, setIsBought] = useState(false);
+  const [isAssessmentId, setIsAssessmentId] = useState(0);
   const { loading }: any = useSelector((state: RootState) => state.assessment);
   const existingCards = [
     {
@@ -41,12 +42,13 @@ export const HoverEffect = ({
       cvc: "456",
     },
   ];
-
-  const handleBuyNowClick = () => {
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId: number = userData?.id;
+  const handleBuyNowClick = (id: number) => {
+    setIsAssessmentId(id);
     setIsOpen(true);
     setIsBought(false);
   };
-
   return (
     <div className={cn(className, "grid")}>
       {items.map((item, idx) => (
@@ -92,7 +94,7 @@ export const HoverEffect = ({
                 className="text-white px-5 4xl:text-sm   text-sm md:text-base lg:text-base flex justify-center items-center rounded-3xl ml-4"
                 size="default"
                 color="primary"
-                onClick={handleBuyNowClick} // Open the payment popup on button click
+                onClick={() => handleBuyNowClick(item?.id)} // Open the payment popup on button click
               >
                 Buy Now
               </Button>
@@ -105,6 +107,7 @@ export const HoverEffect = ({
         setIsOpen={setIsOpen} // Pass the setIsOpen function to allow closing the popup
         setIsBought={setIsBought} // Pass the setIsBought function to track purchase status
         cards={existingCards} // Pass existing cards as props
+        isAssessmentId={isAssessmentId}
       />
     </div>
   );

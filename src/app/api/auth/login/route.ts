@@ -17,6 +17,10 @@ export async function POST(request: NextRequest) {
       where: {
         email: email,
       },
+      include: {
+        user_courses: true,
+        purchased_assessments: true,
+      },
     });
 
     if (!user) {

@@ -55,12 +55,12 @@ export const fetchassessmentsCount = createAsyncThunk<any, any>(
 );
 export const fetchAssessments = createAsyncThunk<any, any>(
   "assessment/fetchAssessments",
-  async ({ filter }, thunkAPI) => {
+  async ({ filter, type }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
         `/api/initialassessmentform?page=${filter.page}&size=${filter.size}${
           filter.categoryId ? `&categoryId=${filter.categoryId}` : ""
-        }`
+        }${type ? `&type=${type}` : ""}` // Added type query parameter
       );
 
       return response.data.data;

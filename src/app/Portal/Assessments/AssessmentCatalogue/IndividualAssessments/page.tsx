@@ -11,6 +11,7 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/app/components/button-sidebar";
 import GraphLoader from "@/app/components/graphLoader";
+import { userData } from "three/webgpu";
 
 const AssessmentsCatalogue = () => {
   const [assessmentData, setAssessmentData] = useState([]);
@@ -31,7 +32,7 @@ const AssessmentsCatalogue = () => {
 
   useEffect(() => {
     dispatch(fetchassessmentsCount({}));
-  }, [dispatch]);
+  }, [dispatch, userData]);
 
   useEffect(() => {
     if (assessmentsCountSuccess) {
@@ -46,8 +47,8 @@ const AssessmentsCatalogue = () => {
         filter: { page: currentPage, size: assessmentsPerPage },
       })
     );
-  }, [dispatch, currentPage]);
-
+  }, [dispatch, currentPage, userData]);
+  console.log("user data from individual", userData);
   useEffect(() => {
     if (assessmentsSuccess) {
       setAssessmentData(assessments);

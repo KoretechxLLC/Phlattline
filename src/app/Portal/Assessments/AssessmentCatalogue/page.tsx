@@ -29,13 +29,14 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
   const categoryId = userData?.categoryId;
 
   const dispatch: any = useDispatch();
+
   useEffect(() => {
     dispatch(
       fetchAssessments({
         filter: { page: 1, size: 12 },
       })
     );
-  }, [dispatch]);
+  }, [dispatch, userData]);
 
   useEffect(() => {
     dispatch(
@@ -47,20 +48,38 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
         },
       })
     );
-  }, [dispatch, categoryId]);
+  }, [dispatch, categoryId, userData]);
+
+  console.log("user datra", userData, "assessmentsssss", assessments);
 
   useEffect(() => {
     if (recommendedAssessmentSuccess) {
-      setRecommendedCatalogueData(recommendedAssessment);
+      let recommendedassessmentDataArray: any = [];
+      recommendedassessmentDataArray = recommendedAssessment?.filter(
+        (e: any) => {
+          return userData?.purchased_assessments.every(
+            (item: any) => item?.individual_assessments_id != e.id
+          );
+        }
+      );
+
+      setRecommendedCatalogueData(recommendedassessmentDataArray);
     }
   }, [recommendedAssessmentSuccess, recommendedAssessment]);
 
   useEffect(() => {
     if (assessmentsSuccess) {
-      setAssessmentCatalogueData(assessments);
+      let assessmentData: any = [];
+      assessmentData = assessments?.filter((e: any) => {
+        return userData?.purchased_assessments.every(
+          (item: any) => item?.individual_assessments_id != e.id
+        );
+      });
+      console.log("updated assessmnet data", assessmentData);
+      setAssessmentCatalogueData(assessmentData);
     }
-  }, [assessments, assessmentsSuccess]);
-
+  }, [assessments, assessmentsSuccess, userData]);
+  console.log("userData", userData);
   return (
     <div className="px-0 md:px-4 grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-4 w-full h-full">
       {/* Individual Assessments Section */}
