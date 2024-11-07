@@ -8,6 +8,7 @@ import PaymentPopup from "@/app/components/PaymentPopup"; // Import the PaymentP
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import GraphLoader from "./graphLoader";
+import AssessmentPaymentPopup from "./assessmentPaymentPopup";
 
 export const HoverEffect = ({
   items,

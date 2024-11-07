@@ -23,7 +23,7 @@ interface Card {
   cvc: string;
 }
 
-interface PaymentPopupProps {
+interface AssessmentPaymentProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsBought?: Dispatch<SetStateAction<boolean>>;
@@ -37,7 +37,7 @@ export type NotificationType = {
   text: string;
   type: "error" | "success";
 };
-const PaymentPopup: React.FC<PaymentPopupProps> = ({
+const AssessmentPaymentPopup: React.FC<AssessmentPaymentProps> = ({
   isOpen,
   setIsOpen,
   setIsBought,
@@ -491,4 +491,4 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   );
 };
 
-export default PaymentPopup;
+export default AssessmentPaymentPopup;
