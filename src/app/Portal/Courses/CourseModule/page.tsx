@@ -39,6 +39,10 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
   const [videoRun, setVideoRun] = useState(false);
   const [videoDuration, setVideoDuration] = useState<number>(0);
   const [totalDuration, setTotalDuration] = useState<number>(0);
+  const [imgError, setImgError] = useState(false);
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
 
   const courseId = searchParams.get("courseId");
   const videoId = searchParams.get("videoId");
@@ -114,7 +118,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
 
   return (
     <div
-      className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-default-50 w-full h-full rounded-lg"
+      className="p- grid grid-cols-1 md:grid-cols-3 gap-6 bg-default-50 w-full h-full rounded-lg"
       style={{ fontFamily: "Sansation" }}
     >
       <div className="md:col-span-2">
@@ -134,13 +138,18 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             {!videoRun ? (
               <>
                 <Image
-                  src={`/courses/thumbnails/${
-                    videoData?.thumbnail_url || "default-thumbnail.jpg"
-                  }`}
+                  src={
+                    imgError
+                      ? "/assets/DummyImg.png"
+                      : `/courses/thumbnails/${
+                          videoData?.thumbnail_url || "default-thumbnail.jpg"
+                        }`
+                  }
                   alt="Course Thumbnail"
                   className="w-full 4xl:h-52 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
                   width={1000}
                   height={1000}
+                  onError={handleError}
                 />
                 <div className="absolute left-0 bottom-0 m-4">
                   <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
@@ -218,13 +227,23 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                 </div>
               </div>
               <div className="rounded-full overflow-hidden">
-                <Image
-                  src={author.image}
-                  alt={author.name}
-                  className="w-full h-full object-cover"
-                  width={100}
-                  height={100}
-                />
+                {author.image ? (
+                  <div className="w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
+                    <Image
+                      src={author.image}
+                      alt={author.name}
+                      className="w-full h-full object-cover"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-[#BAA716]  rounded-full">
+                    <span className="text-white text-sm md:text-sm font-bold py-3">
+                      {author.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

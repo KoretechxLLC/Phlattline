@@ -59,6 +59,11 @@ const EventModal = ({
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(false); // New loading state
   const searchParams = useSearchParams();
+  const [imgError, setImgError] = useState(false);
+
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
   const courseId = searchParams.get("courseId");
 
   useEffect(() => {
@@ -107,11 +112,12 @@ const EventModal = ({
 
           <div className="relative w-full mx-2 mb-2">
             <Image
-              src={event.thumbnail}
+              src={imgError ? event.thumbnail : "/assets/DummyImg.jpg"}
               alt="Course Image"
               className="w-full h-full rounded-lg object-cover"
               width={1000}
               height={1000}
+              onError={handleError}
             />
             <div className="absolute left-0 bottom-0 m-4">
               <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
@@ -184,13 +190,23 @@ const EventModal = ({
               </div>
               <div className="flex items-center space-x-3">
                 <div className="rounded-full overflow-hidden w-12 h-12">
-                  <Image
-                    src={event.instructorimage}
-                    alt={event.instructorname}
-                    className="w-full h-full object-cover"
-                    width={1000}
-                    height={1000}
-                  />
+                  {staticEvent.instructorimage ? (
+                    <div className="w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
+                      <Image
+                        src={staticEvent.instructorimage}
+                        alt={staticEvent.instructorname}
+                        className="w-full h-full object-cover"
+                        width={100}
+                        height={100}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-[#BAA716]  rounded-full">
+                      <span className="text-white text-sm md:text-sm font-bold py-3">
+                        {staticEvent.instructorname?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col justify-center items-end">
                   <div className="flex items-center space-x-1 text-yellow-400">

@@ -24,6 +24,11 @@ export const HoverEffect = ({
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   let [isOpen, setIsOpen] = useState(false); // State to manage the popup visibility
   let [isBought, setIsBought] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
   const { loading }: any = useSelector((state: RootState) => state.assessment);
   const existingCards = [
     {
@@ -76,11 +81,16 @@ export const HoverEffect = ({
           <Card className="flex items-center justify-center">
             <div className="flex items-center justify-center">
               <Image
-                src={`/assessmentsImage/${item?.image}`}
+                src={
+                  imgError
+                    ? `/assessmentsImage/${item?.image}`
+                    : "/assets/DummyImg.png"
+                }
                 width={1000}
                 height={1000}
                 className="4xl:h-20 4xl:w-32 h-24 w-36"
                 alt={"Assessment Banner"}
+                onError={handleError}
               />
             </div>
             <CardTitle>{item.title}</CardTitle>

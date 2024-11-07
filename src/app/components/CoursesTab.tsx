@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Card } from "@/app/components/Card";
 import Icon from "@/app/components/utility-icon";
@@ -31,6 +31,12 @@ const CoursesTab: React.FC<CourseTabProps> = ({
       ? `/courses/thumbnails/${videos[0].thumbnail_url}`
       : "/default-thumbnail.jpg";
 
+  const [imgError, setImgError] = useState(false);
+
+  const handleError = () => {
+    setImgError(true); // Set the error flag to true when image fails to load
+  };
+
   return (
     <Card
       className="p-3 w-full border-[1px] border-slate-600 rounded-3xl hover:bg-red-700 transition-colors duration-500 cursor-pointer group"
@@ -42,9 +48,10 @@ const CoursesTab: React.FC<CourseTabProps> = ({
           <Image
             width={1000}
             height={1000}
-            className=" rounded-lg 4xl:h-24 4xl:w-52 5xl:h-40 5xl:w-96  object-cover"
-            src={thumbnail}
+            className="rounded-lg 4xl:h-24 4xl:w-52 5xl:h-40 5xl:w-96 object-cover"
+            src={imgError || !thumbnail ? "/assets/DummyImg.png" : thumbnail} // Fallback to DummyImg if there's an error or no thumbnail
             alt={title}
+            onError={handleError} // If image fails to load, trigger the error handler
           />
         </div>
 
