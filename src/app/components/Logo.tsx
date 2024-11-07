@@ -10,12 +10,12 @@ const Logo = () => {
     <>
       <Image
         src={
-          path == "/Richard" || path == "/"
+          path == "/AlexJohnson" || path == "/HiroshiTanaka" || path == "/"
             ? "/assets/WhiteLogo.png"
             : "/assets/RadiantLogo.png"
         }
         alt="Logo"
-        className="3xl:w-[80%] 4xl:w-[70%]"
+        className="3xl:w-[80%] 4xl:w-[75%]"
         height="100"
         width="200"
         onClick={() => router.push("/")}

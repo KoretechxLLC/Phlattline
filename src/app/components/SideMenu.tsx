@@ -40,12 +40,12 @@ const navItems = [
   { position: 1, title: "Home", Link: "/" },
   { position: 4, title: "About", Link: "/About" },
   { position: 7, title: "Contact", Link: "/Contact" },
-  { position: 10, title: "William James", Link: "/WilliamJames" },
+  { position: 10, title: "Amina Patel", Link: "/AminaPatel" },
   { position: 13, title: "Jordan Lee", Link: "/JordanLee" },
   { position: 16, title: "Sophia Rodriguez", Link: "/SophiaRodriguez" },
   { position: 19, title: "Elijah Martinez", Link: "/ElijahMartinez" },
-  { position: 22, title: "Mrs. Nancy", Link: "/Nancy" },
-  { position: 25, title: "Mr. Richard", Link: "/Richard" },
+  { position: 22, title: "Hiroshi Tanaka ", Link: "/HiroshiTanaka" },
+  { position: 25, title: "Alex Johnson", Link: "/AlexJohnson" },
   { position: 28, title: "Portal", Link: "/Login" },
 ];
 
@@ -123,14 +123,17 @@ const LinkLine = ({
     } else {
       linkWidth.set(25);
     }
-  }, [isHovered,linkWidth]);
+  }, [isHovered, linkWidth]);
   const router = useRouter();
   if (title) {
     return (
       <motion.div
         ref={ref}
         className={`group relative cursor-pointer transition-colors hover:bg-red-500 ${
-          path === "/Richard" || path === "/About" || path === "/"
+          path == "/HiroshiTanaka" ||
+          path == "/AlexJohnson" ||
+          path === "/About" ||
+          path === "/"
             ? "bg-white"
             : "bg-slate-900"
         }`}
@@ -146,7 +149,10 @@ const LinkLine = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className={`absolute left-0 top-0 z-10 w-full pt-2 font-bold uppercase  hover:text-red-500 transition-colors group-hover:text-red-500 ${
-                path == "/Richard" || path === "/About" || path === "/"
+                path == "/HiroshiTanaka" ||
+                path == "/AlexJohnson" ||
+                path === "/About" ||
+                path === "/"
                   ? "text-white"
                   : "text-slate-900"
               }`}
@@ -162,7 +168,10 @@ const LinkLine = ({
       <motion.div
         ref={ref}
         className={`relative  ${
-          path == "/Richard" || path === "/About" || path === "/"
+          path == "/HiroshiTanaka" ||
+          path == "/AlexJohnson" ||
+          path === "/About" ||
+          path === "/"
             ? "bg-white"
             : "bg-slate-900"
         }`}
