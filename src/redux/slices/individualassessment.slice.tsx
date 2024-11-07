@@ -7,6 +7,7 @@ interface AssessmentState {
   error: string | null;
   assessments: any[]; // Replace with specific type if you have it
   success: any | null;
+  submitAssessment: any;
   assessmentsSuccess: any | null;
   assessmentsCount: any | null;
   assessmentsCountLoading: boolean | any;
@@ -17,6 +18,11 @@ interface AssessmentState {
   recommendedAssessmentLoading: boolean | any;
   recommendedAssessmentSuccess: string | any;
   recommendedAssessmentError: string | any;
+
+  singleAssessment: string | any;
+  singleAssessmentLoading: boolean | any;
+  singleAssessmentSuccess: string | any;
+  singleAssessmentError: string | any;
 }
 
 const initialState: AssessmentState = {
@@ -33,6 +39,11 @@ const initialState: AssessmentState = {
   recommendedAssessmentLoading: false,
   recommendedAssessmentSuccess: null,
   recommendedAssessmentError: null,
+  submitAssessment: null,
+  singleAssessment: null,
+  singleAssessmentLoading: false,
+  singleAssessmentSuccess: null,
+  singleAssessmentError: null,
 };
 
 export const fetchassessmentsCount = createAsyncThunk<any, any>(
@@ -55,12 +66,31 @@ export const fetchassessmentsCount = createAsyncThunk<any, any>(
 );
 export const fetchAssessments = createAsyncThunk<any, any>(
   "assessment/fetchAssessments",
-  async ({ filter }, thunkAPI) => {
+  async ({ filter, type }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
         `/api/initialassessmentform?page=${filter.page}&size=${filter.size}${
           filter.categoryId ? `&categoryId=${filter.categoryId}` : ""
-        }`
+        }${type ? `&type=${type}` : ""}` // Added type query parameter
+      );
+
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchSingleAssessments = createAsyncThunk<any, any>(
+  "assessment/fetchSingleAssessments",
+  async ({ filter }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `api/paidAssessment?userId=${filter.userId}&assessmentId=${filter.assessmentId}` // Added type query parameter
       );
 
       return response.data.data;
@@ -144,6 +174,15 @@ const assessmentSlice = createSlice({
     setRecommendedAssessment(state) {
       state.recommendedAssessment = null;
     },
+    setSingleAssessment(state) {
+      state.singleAssessment = null;
+    },
+    setSingleAssessmentSuccess(state) {
+      state.singleAssessmentSuccess = null;
+    },
+    setSingleAssessmentError(state) {
+      state.singleAssessmentError = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -168,14 +207,17 @@ const assessmentSlice = createSlice({
         state.loading = true;
         state.error = null;
         state.success = null;
+        state.submitAssessment = null;
       })
       .addCase(submitAssessmentResponses.fulfilled, (state, action) => {
         state.loading = false;
+        state.submitAssessment = action.payload;
         state.success = "Assessment submitted successfully!";
         state.error = null;
       })
       .addCase(submitAssessmentResponses.rejected, (state, action) => {
         state.loading = false;
+        state.submitAssessment = null;
         state.error = action.payload as string;
         state.success = null;
       })
@@ -210,6 +252,24 @@ const assessmentSlice = createSlice({
         state.recommendedAssessmentLoading = false;
         state.recommendedAssessment = null;
         state.recommendedAssessmentError = action.payload;
+      })
+
+      .addCase(fetchSingleAssessments.pending, (state) => {
+        state.singleAssessmentLoading = true;
+        state.singleAssessment = null;
+        state.singleAssessmentError = null;
+      })
+      .addCase(fetchSingleAssessments.fulfilled, (state, action) => {
+        state.singleAssessmentLoading = false;
+        state.singleAssessment = action.payload;
+        state.singleAssessmentError = null;
+        state.singleAssessmentSuccess =
+          action.payload.message || "Assessment fetched Fetched Successfully";
+      })
+      .addCase(fetchSingleAssessments.rejected, (state, action) => {
+        state.singleAssessmentLoading = false;
+        state.singleAssessment = null;
+        state.singleAssessmentError = action.payload;
       });
   },
 });

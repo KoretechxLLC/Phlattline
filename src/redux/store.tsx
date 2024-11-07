@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth.slice";
 import assessmentReducer from "./slices/individualassessment.slice";
 import assessmentResponseReducer from "./slices/individualAssessmentResponse.slice";
+import purchasingAssessmentReducer from "./slices/purchaseAssessment.slice";
 import coursesReducer from "./slices/courses.slice";
 import videoProgressReducer from "./slices/courses.slice";
 import { persistStore, persistReducer } from "redux-persist";
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   assessmentResponse: assessmentResponseReducer,
   trainingOnDemand: trainingOnDemandReducer,
   categories: categoriesReducer,
+  purchaseAssessment: purchasingAssessmentReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

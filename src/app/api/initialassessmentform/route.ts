@@ -39,12 +39,26 @@ export async function POST(req: NextRequest) {
     let assessmentPrice = 0;
     let assessmentImageUrl = "";
 
-    // Step 1: Prepare all data outside of Prisma transaction
+    // Collect all unique options across the entire spreadsheet
+    let allUniqueOptions = new Set<string>();
+    for (const row of rows) {
+      for (let i = 2; i < row.length - 2; i += 2) {
+        const optionText = row[i];
+        if (optionText) {
+          allUniqueOptions.add(optionText);
+        }
+      }
+    }
+
+    // Convert the Set to an array
+    const uniqueOptionsArray = Array.from(allUniqueOptions);
+
     for (const row of rows) {
       const title = row[0];
       const questionText = row[1];
-      const options = [];
+      const options: any[] = [];
 
+      // Populate options from the row
       for (let i = 2; i < row.length - 2; i += 2) {
         const optionText = row[i];
         const percentage = row[i + 1];
@@ -55,6 +69,16 @@ export async function POST(req: NextRequest) {
           });
         }
       }
+
+      // Ensure all unique options are present
+      uniqueOptionsArray.forEach((optionText) => {
+        if (!options.find((opt) => opt.option_text === optionText)) {
+          options.push({
+            option_text: optionText,
+            percentage: 0, // Default percentage if not specified
+          });
+        }
+      });
 
       const price = row[row.length - 2] || 0;
       const imageUrl = row[row.length - 1] || "";
@@ -137,7 +161,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Find or create the subcategory
     let subCategory = await prisma.assessment_subCategory.findFirst({
       where: {
         name: subCategoryName,
@@ -157,15 +180,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    if (!subCategory) {
-      subCategory = await prisma.assessment_subCategory.create({
-        data: {
-          name: subCategoryName,
-          category_id: category.id,
-        },
-      });
-    }
-    // Step 2: Execute Prisma transaction without async code
     const createdAssessments = await prisma.$transaction(
       assessmentsData.map((assessment) =>
         prisma.individual_assessments.create({
@@ -220,12 +234,37 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get("page")) || 1;
     const size = parseInt(searchParams.get("size")) || 10;
     const categoryId = searchParams.get("categoryId");
+    const type = searchParams.get("type");
 
     const skip = (page - 1) * size;
-    const whereClause: any = categoryId
-      ? { categoryId: Number(categoryId) }
-      : {};
+    let whereClause: any = {};
 
+    // Check if the type parameter is "general"
+    if (type === "general") {
+      // Fetch only assessments from the first category (id = 1)
+      whereClause.categoryId = 1;
+    } else {
+      // If categoryId is provided, add it to the where clause
+      whereClause.categoryId = { not: 1 };
+      if (categoryId) {
+        whereClause.categoryId = Number(categoryId);
+      }
+
+      // Fetch all purchased assessment IDs
+      const purchasedAssessments = await prisma.purchased_assessments.findMany({
+        select: { individual_assessments_id: true },
+      });
+
+      // Extract the IDs into an array
+      const purchasedIds = purchasedAssessments.map(
+        (assessment) => assessment.individual_assessments_id
+      );
+
+      // Exclude purchased assessments from the results
+      whereClause.id = { notIn: purchasedIds };
+    }
+
+    // Fetch the assessments
     const assessments = await prisma.individual_assessments.findMany({
       where: whereClause,
       include: {
@@ -252,7 +291,6 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 export async function DELETE(req: NextRequest) {
   try {
     // Get the ID from the URL search parameters

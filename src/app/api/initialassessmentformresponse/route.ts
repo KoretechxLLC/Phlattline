@@ -57,6 +57,24 @@ export async function POST(req: NextRequest) {
     const savedResponses = await prisma.user_assessment_responses.createMany({
       data: userResponses,
     });
+    const purchasedRecord = await prisma.purchased_assessments.findFirst({
+      where: {
+        user_id: parsedUserId,
+        individual_assessments_id: parsedAssessmentId,
+      },
+    });
+
+    // If the assessment was purchased, mark it as completed
+    if (purchasedRecord) {
+      await prisma.purchased_assessments.update({
+        where: {
+          id: purchasedRecord.id,
+        },
+        data: {
+          completed: true,
+        },
+      });
+    }
 
     await prisma.users.update({
       where: {
