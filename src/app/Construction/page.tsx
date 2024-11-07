@@ -66,7 +66,7 @@ const Construction = ({ onModelLoaded }: any) => {
     // Load GLB Model
     const loader = new GLTFLoader();
     loader.load(
-      "/assets/Construction.glb", // Path to your construction model
+      "/assets/Agri-v1.glb", // Path to your construction model
       (gltf) => {
         const earthMesh = gltf.scene;
         const box = new THREE.Box3().setFromObject(earthMesh);

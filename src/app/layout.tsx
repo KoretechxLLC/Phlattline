@@ -16,12 +16,12 @@ const sideMenuPaths = [
   "/",
   "/Contact",
   "/About",
-  "/WilliamJames",
   "/JordanLee",
+  "/AminaPatel",
   "/SophiaRodriguez",
   "/ElijahMartinez",
-  "/Nancy",
-  "/Richard",
+  "/AlexJohnson",
+  "/HiroshiTanaka",
 ];
 
 export default function RootLayout({

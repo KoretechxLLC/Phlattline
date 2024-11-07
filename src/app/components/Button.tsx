@@ -34,7 +34,8 @@ const RoundedSlideButton: React.FC<RoundedSlideButtonProps> = ({
         before:rounded-[100%] before:bg-gradient-to-b from-[#B50D34] to-[#BAA716]
         before:transition-transform before:duration-1000
         before:content-[""]
-        hover:scale-105 hover:text-neutral-900
+
+        hover:scale-105 hover:text-white
         hover:before:translate-x-[0%]
         hover:before:translate-y-[0%]
         active:scale-95 ${className}
