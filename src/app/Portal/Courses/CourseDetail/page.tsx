@@ -57,7 +57,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const handleBuyClick = () => {
     setIsOpen(true);
-    setIsBought(true);
   };
 
   const handleGetStartedClick = () => {
@@ -72,6 +71,16 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
     setIsPlaying(true);
   };
 
+  useEffect(() => {
+    if (userData.user_courses && userData.user_courses.length > 0) {
+      let courseData = userData.user_courses.find((e: any) => {
+        return e.course_id == courseId;
+      });
+      if (courseData) {
+        setIsBought(true);
+      }
+    }
+  }, [courseId, userData]);
   return (
     <>
       {loading ? (
@@ -227,7 +236,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             setIsOpen={setIsOpen}
             setIsBought={setIsBought}
             courseId={courseId}
-            userId={userId}
           />
         </div>
       )}

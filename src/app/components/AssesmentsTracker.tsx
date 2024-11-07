@@ -32,47 +32,50 @@ const generateColors = (numFields: number) => {
 };
 
 const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
-  let calculatedGraph = assessments && assessments?.length>0 && assessments
-    .map((index: any) => {
-      let responseData = assessmentsResponse
-        .map((e: any) => {
-          if (e?.question?.individual_assessment_id == index?.id) {
-            let assessementTrack = e?.question?.individual_assessment_options
-              .map((option: any) => {
-                if (e?.selected_option == option?.option_text) {
-                  return option.percentage;
-                }
-              })
-              .filter(Boolean);
+  let calculatedGraph =
+    assessments &&
+    assessments?.length > 0 &&
+    assessments
+      .map((index: any) => {
+        let responseData = assessmentsResponse
+          ?.map((e: any) => {
+            if (e?.question?.individual_assessment_id == index?.id) {
+              let assessementTrack = e?.question?.individual_assessment_options
+                .map((option: any) => {
+                  if (e?.selected_option == option?.option_text) {
+                    return option.percentage;
+                  }
+                })
+                .filter(Boolean);
 
-            return {
-              id: e?.question?.individual_assessment_id,
-              percentage: assessementTrack,
-            };
-          }
-        })
-        .filter(Boolean);
+              return {
+                id: e?.question?.individual_assessment_id,
+                percentage: assessementTrack,
+              };
+            }
+          })
+          .filter(Boolean);
 
-      let totalPercentage = 0;
+        let totalPercentage = 0;
 
-      responseData.forEach((item: any) => {
-        const currentSum =
-          item?.percentage.length > 0
-            ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
-            : 0;
+        responseData.forEach((item: any) => {
+          const currentSum =
+            item?.percentage.length > 0
+              ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
+              : 0;
 
-        totalPercentage += currentSum;
-      });
+          totalPercentage += currentSum;
+        });
 
-      if (responseData && responseData.length > 0) {
-        return {
-          title: index.title,
-          percentage:
-            totalPercentage / index.individual_assessment_questions.length,
-        };
-      }
-    })
-    .filter(Boolean);
+        if (responseData && responseData.length > 0) {
+          return {
+            title: index.title,
+            percentage:
+              totalPercentage / index.individual_assessment_questions.length,
+          };
+        }
+      })
+      .filter(Boolean);
 
   return calculatedGraph;
 };
@@ -101,15 +104,20 @@ const AsessmentTracker = ({
   const dispatch: any = useDispatch();
 
   useEffect(() => {
-    if (!assessments || assessments?.length == 0) {
-      dispatch(fetchAssessments({}));
-    }
-  }, [assessments, dispatch]);
+    dispatch(
+      fetchAssessments({
+        filter: {
+          page: 1,
+          size: 5,
+          categoryId: 1,
+        },
+        type: "general",
+      })
+    );
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!assessmentsResponse || assessmentsResponse.length == 0) {
-      dispatch(fetchAssessmentsResponse({ userId }));
-    }
+    dispatch(fetchAssessmentsResponse({ userId }));
   }, [dispatch, userId]);
 
   useEffect(() => {
@@ -123,12 +131,11 @@ const AsessmentTracker = ({
         assessments?.length > 0 ? assessments?.map((e: any) => e?.title) : [];
       setAllCategories(categories);
     }
-  }, [assessments, assessments?.length]);
+  }, [assessments]);
 
   const data = calculatePercentages(assessmentsResponse, assessments);
 
   const chartColors = generateColors(allCategories.length);
-
   const series = [
     {
       name: "Assessments",

@@ -27,11 +27,12 @@ const AssessmentsCatalogue = () => {
     assessmentsCountLoading,
     assessmentsCountSuccess,
   }: any = useSelector((state: RootState) => state.assessment);
+  const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
 
   useEffect(() => {
     dispatch(fetchassessmentsCount({}));
-  }, [dispatch]);
+  }, [dispatch, userData]);
 
   useEffect(() => {
     if (assessmentsCountSuccess) {
@@ -46,7 +47,7 @@ const AssessmentsCatalogue = () => {
         filter: { page: currentPage, size: assessmentsPerPage },
       })
     );
-  }, [dispatch, currentPage]);
+  }, [dispatch, currentPage, userData]);
 
   useEffect(() => {
     if (assessmentsSuccess) {

@@ -217,7 +217,10 @@ const coursesSlice = createSlice({
       state.purchaseCourse = null;
     },
     setPurchaseCourseSuccess(state) {
-      state.purchaseCourseSuccess = false;
+      state.purchaseCourseSuccess = null;
+    },
+    setPurchaseCourseError(state) {
+      state.purchaseCourseError = null;
     },
     setCoursesSuccess(state) {
       state.coursesSuccess = false;
@@ -392,7 +395,12 @@ const coursesSlice = createSlice({
   },
 });
 
-export const { resetSuccess, resetError, resetVideoProgressStatus } =
-  coursesSlice.actions;
+export const {
+  resetSuccess,
+  resetError,
+  resetVideoProgressStatus,
+  setPurchaseCourseSuccess,
+  setPurchaseCourseError,
+} = coursesSlice.actions;
 
 export default coursesSlice.reducer;

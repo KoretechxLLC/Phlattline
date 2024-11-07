@@ -1,55 +1,65 @@
 "use client";
-import React from "react";
-import AssessmentResultPie from "@/app/components/AssessmentsResultPie";
-import IssuesTracker from "@/app/components/IssuesTracker";
-import PreviousResultsTracker from "@/app/components/PreviousResultsTracker";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/Card";
+import AssessmentTaskTracker from "@/app/components/assessmentTaskTracker";
+import { RootState } from "@/redux/store";
+import { root } from "postcss";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const MyAssessments = () => {
+  const [pendingAssessments, setPendingAssessments] = useState([]);
+  const [completedAssessments, setCompletedAssessments] = useState([]);
+
+  const { userData } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (userData) {
+      const pendingAssessmentsData = userData?.purchased_assessments.filter(
+        (assessment: any) => !assessment?.completed
+      );
+
+      setPendingAssessments(pendingAssessmentsData);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData) {
+      const completedAssessmentsData = userData?.purchased_assessments.filter(
+        (assessment: any) => assessment?.completed
+      );
+
+      setCompletedAssessments(completedAssessmentsData);
+    }
+  }, [userData]);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[120vh] min-h-[40vh]">
-      {/* First two components in one row */}
-      <div className="md:col-span-2">
-        <Card className="border-[1px] border-gray-500 rounded-3xl h-full">
-          <CardHeader className="h-16 rounded-3xl">
-            <div className="text-sm my-1 flex justify-between">
-              <CardTitle>Previous Results</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-2">
-            <PreviousResultsTracker />
-          </CardContent>
-        </Card>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <AssessmentTaskTracker
+        showPending={true}
+        showCompleted={false}
+        showSaved={false}
+        showTooltip={false}
+        label={"Assessments"}
+        isClickable={false}
+        pendingAssessments={pendingAssessments}
+      />
 
-      {/* <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-        <CardHeader className="h-16 rounded-3xl">
-          <div className="text-sm flex justify-between">
-            <CardTitle>Issues Reported</CardTitle>
-            <CardTitle>124 Open Issues</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="p-2">
-          <IssuesTracker />
-        </CardContent>
-      </Card> */}
-
-      {/* The third component in the next row */}
-
-      <Card className="border-[1px] border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
-        <CardHeader className="h-16 rounded-3xl">
-          <CardTitle>Assessment Results</CardTitle>
-          <CardTitle>115 Total</CardTitle>
-        </CardHeader>
-        <CardContent className="p-2">
-          <AssessmentResultPie />
-        </CardContent>
-      </Card>
+      <AssessmentTaskTracker
+        showPending={false}
+        showCompleted={true}
+        showSaved={false}
+        showTooltip={false}
+        label={"Assessments"}
+        isClickable={false}
+        completedAssessments={completedAssessments}
+      />
+      {/* <AssessmentTaskTracker
+        showPending={false}
+        showCompleted={false}
+        showSaved={true}
+        showTooltip={false}
+        label={"Assessments"}
+        isClickable={false}
+      /> */}
     </div>
   );
 };
