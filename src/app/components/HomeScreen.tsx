@@ -84,7 +84,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
             position: [0.3, 0.4, 0.6],
             name: "Corporate",
             size: 0.85,
-            route: "/WilliamJames",
+            route: "/Corporate",
           },
           {
             position: [-1, 0.1, 0.05],
@@ -96,7 +96,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onModelLoaded }) => {
             position: [0.3, 0.1, -0.7],
             name: "Agriculture",
             size: 0.75,
-            route: "/SophiaRodriguez",
+            route: "/Agriculture",
           },
         ];
 
