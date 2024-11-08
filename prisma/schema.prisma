@@ -32,17 +32,18 @@ model users {
   app_provider              String                      @default("App")
   profile_image             String?                     @db.VarChar(255)
   assessment_status         Boolean                     @default(false)
+  categoryId                Int
+  subCategoryId             Int
+  timeLogs                  TimeLog[]
+  TrainingOnDemand          TrainingOnDemand[]
   course_assignments        course_assignments[]
-  user_goals                user_goal[]
+  purchased_assessments     purchased_assessments[]
+  user_assessment_responses user_assessment_responses[]
   user_courses              user_courses[]
+  user_goals                user_goal[]
+  user_video_progress       user_video_progress[]
   organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
-  user_assessment_responses user_assessment_responses[]
-  user_video_progress       user_video_progress[]
-  timeLogs                  TimeLog[]
-  subCategoryId             Int
-  categoryId                Int
-  purchased_assessments     purchased_assessments[]
 }
 
 model organizations {
@@ -64,12 +65,12 @@ model courses {
   description               String?
   price                     Float
   CoursesAssessmentResponse CoursesAssessmentResponse[]
+  VideoProgress             VideoProgress[]
   assessments               assessments[]
   course_assignments        course_assignments[]
   user_courses              user_courses[]
-  videos                    videos[]
   user_video_progress       user_video_progress[]
-  VideoProgress             VideoProgress[]
+  videos                    videos[]
 }
 
 model videos {
@@ -81,7 +82,7 @@ model videos {
   thumbnail_url       String?               @db.VarChar(255)
   course_id           Int
   courses             courses               @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  user_video_progress user_video_progress[] // This relation now links to the user_video_progress
+  user_video_progress user_video_progress[] @relation("user_video_progressTovideos")
 }
 
 model assessments {
@@ -96,9 +97,9 @@ model questions {
   id                        Int                         @id @default(autoincrement())
   question_text             String                      @db.VarChar(255)
   answer_options            String[]
-  CoursesAssessmentResponse CoursesAssessmentResponse[]
   correct_answer            String                      @db.VarChar(255)
   assessment_id             Int
+  CoursesAssessmentResponse CoursesAssessmentResponse[]
   assessments               assessments                 @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
 }
 
@@ -107,10 +108,10 @@ model user_courses {
   user_id     Int
   course_id   Int
   status      course_status @default(notStarted)
-  courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
   purchasedAt DateTime      @default(now()) @db.Timestamp(6)
   updatedAt   DateTime      @updatedAt
+  courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model purchased_assessments {
@@ -118,16 +119,10 @@ model purchased_assessments {
   user_id                   Int
   individual_assessments_id Int
   completed                 Boolean                @default(false)
-  individual_assessments    individual_assessments @relation(fields: [individual_assessments_id], references: [id])
-  users                     users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   purchasedAt               DateTime               @default(now()) @db.Timestamp(6)
   updatedAt                 DateTime               @updatedAt
-}
-
-enum course_status {
-  inprogress
-  notStarted
-  completed
+  individual_assessments    individual_assessments @relation(fields: [individual_assessments_id], references: [id])
+  users                     users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model course_assignments {
@@ -158,7 +153,7 @@ model assessmentsform {
   type                     String                     @db.VarChar(255)
   created_at               DateTime?                  @default(now()) @db.Timestamp(6)
   assessmentform_responses assessmentform_responses[]
-  assessmentsquestions     assessmentsquestions[]     @relation("FormQuestions") // Define relation name
+  assessmentsquestions     assessmentsquestions[]     @relation("FormQuestions")
 }
 
 model assessmentsformoptions {
@@ -178,21 +173,16 @@ model assessmentsquestions {
   assessmentsformoptions   assessmentsformoptions[]
   assessmentsform          assessmentsform?           @relation("FormQuestions", fields: [assessment_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([category]) // Add index to optimize querying by category
-}
-
-enum Category {
-  individual
-  organization
+  @@index([category])
 }
 
 model individual_assessment_questions {
   id                            Int                             @id @default(autoincrement())
   question_text                 String                          @db.VarChar(255)
   individual_assessment_id      Int
-  individual_assessment         individual_assessments          @relation(fields: [individual_assessment_id], references: [id], onDelete: Cascade)
   individual_assessment_options individual_assessment_options[]
-  user_assessment_responses     user_assessment_responses[] // Add this line
+  individual_assessment         individual_assessments          @relation(fields: [individual_assessment_id], references: [id], onDelete: Cascade)
+  user_assessment_responses     user_assessment_responses[]
 }
 
 model individual_assessment_options {
@@ -211,9 +201,9 @@ model user_assessment_responses {
   question_id     Int
   selected_option String                          @db.VarChar(255)
   created_at      DateTime?                       @default(now()) @db.Timestamp(6)
-  user            users                           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   assessment      individual_assessments          @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
   question        individual_assessment_questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  user            users                           @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model user_goal {
@@ -222,62 +212,56 @@ model user_goal {
   start_date      DateTime @db.Date
   completion_date DateTime @db.Date
   goal_type       GoalType @default(Personal)
-  description     String?  @db.Text
+  description     String?
   user_id         Int
-  user            users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   status          Boolean  @default(false)
   created_at      DateTime @default(now()) @db.Timestamp(6)
   updated_at      DateTime @default(now()) @db.Timestamp(6)
-}
-
-enum GoalType {
-  Personal
-  Performance
-  Professional
+  user            users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model user_video_progress {
   id            Int             @id @default(autoincrement())
   user_id       Int
-  assessment    Boolean         @default(false) // Assessment field
-  videoProgress VideoProgress[] // Relation to VideoProgress model
-  videos        videos[] // Relation to videos
-  course_id     Int? // Foreign key to courses
-  courses       courses?        @relation(fields: [course_id], references: [id], onDelete: Cascade) // Relation to courses
+  assessment    Boolean         @default(false)
+  course_id     Int?
+  updated_at    DateTime        @default(now()) @db.Timestamptz(6)
+  videoProgress VideoProgress[]
+  courses       courses?        @relation(fields: [course_id], references: [id], onDelete: Cascade)
   users         users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  updated_at    DateTime        @default(now()) @db.Timestamptz(6) // Track when the progress was last updated
+  videos        videos[]        @relation("user_video_progressTovideos")
 }
 
 model VideoProgress {
   id                     Int                 @id @default(autoincrement())
-  user_video_progress_id Int // Foreign key relation to user_video_progress
-  video_id               String // Change to String if needed
-  progressDuration       Float // Progress duration in seconds
-  totalDuration          Float // Total video duration in seconds
+  video_id               String
+  progressDuration       Float
+  totalDuration          Float
   completed              Boolean             @default(false)
-  course_id              Int? // Foreign key to courses
-  courses                courses?            @relation(fields: [course_id], references: [id], onDelete: Cascade) // Relation to courses
-  updated_at             DateTime            @default(now()) @db.Timestamptz(6) // Track when the progress was last updated
+  course_id              Int?
+  updated_at             DateTime            @default(now()) @db.Timestamptz(6)
+  user_video_progress_id Int
+  courses                courses?            @relation(fields: [course_id], references: [id], onDelete: Cascade)
   user_video_progress    user_video_progress @relation(fields: [user_video_progress_id], references: [id], onDelete: Cascade)
 }
 
 model CoursesAssessmentResponse {
-  id         Int        @id @default(autoincrement()) // Primary key
-  courseId   Int // Foreign key for the course
-  questionId Int // Stores the ID of each question
-  answer     String // Selected answer for the question
-  createdAt  DateTime   @default(now()) // Timestamp of submission
-  userId     Int? // Link to user table if needed
-  course     courses?   @relation(fields: [courseId], references: [id]) // Link to courses model
-  status     Boolean    @default(false) // Status of the assessment response (true or false)
-  question   questions? @relation(fields: [questionId], references: [id]) // Link to questions model
+  id         Int       @id @default(autoincrement())
+  courseId   Int
+  questionId Int
+  answer     String
+  createdAt  DateTime  @default(now())
+  userId     Int?
+  status     Boolean   @default(false)
+  course     courses   @relation(fields: [courseId], references: [id])
+  question   questions @relation(fields: [questionId], references: [id])
 }
 
 model TimeLog {
   id        Int      @id @default(autoincrement())
   userId    Int
-  timeSpent Int // Represented in seconds or another unit of time
-  date      DateTime @default(now()) // Date without time
+  timeSpent Int
+  date      DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   users     users    @relation(fields: [userId], references: [id])
@@ -289,13 +273,13 @@ model individual_assessments {
   created_at                      DateTime?                         @default(now()) @db.Timestamp(6)
   price                           Int
   image                           String
-  individual_assessment_questions individual_assessment_questions[]
-  user_assessment_responses       user_assessment_responses[] // Add this line
   categoryId                      Int
-  assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])
   subCategoryId                   Int
+  individual_assessment_questions individual_assessment_questions[]
+  assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])
   assessment_subCategory          assessment_subCategory            @relation(fields: [subCategoryId], references: [id])
   purchased_assessments           purchased_assessments[]
+  user_assessment_responses       user_assessment_responses[]
 }
 
 model assessment_category {
@@ -313,4 +297,31 @@ model assessment_subCategory {
   category_id            Int
   category               assessment_category      @relation(fields: [category_id], references: [id])
   individual_assessments individual_assessments[]
+}
+
+model TrainingOnDemand {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  created_at  DateTime @default(now())
+  matter_name String
+  select_date DateTime
+  select_time String
+  users       users    @relation(fields: [user_id], references: [id])
+}
+
+enum course_status {
+  inprogress
+  notStarted
+  completed
+}
+
+enum Category {
+  individual
+  organization
+}
+
+enum GoalType {
+  Personal
+  Performance
+  Professional
 }

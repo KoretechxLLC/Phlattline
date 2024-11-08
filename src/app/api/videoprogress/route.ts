@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma"; // Adjust the import path based on your structure
+import { prisma } from "@/app/lib/prisma";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -26,7 +26,6 @@ export async function PUT(req: NextRequest) {
     const completed = progressDuration >= totalDuration;
     const videoIdString = String(video_id);
 
-    // Find existing progress record for the user and video
     const existingProgress = await prisma.user_video_progress.findFirst({
       where: {
         user_id: user_id,
@@ -42,7 +41,6 @@ export async function PUT(req: NextRequest) {
     });
 
     if (existingProgress) {
-      
       const currentProgress = existingProgress.videoProgress.find(
         (vp) => vp.video_id === videoIdString
       );
@@ -71,12 +69,75 @@ export async function PUT(req: NextRequest) {
         },
       });
 
+      const course = await prisma?.courses?.findUnique({
+        where: { id: Number(course_id) },
+        include: {
+          videos: true
+        }
+      })
+
+
+      let videoLength = course?.videos?.length
+
       const updatedProgress = await prisma.videoProgress.findFirst({
         where: {
           user_video_progress_id: existingProgress.id,
           video_id: videoIdString,
         },
       });
+
+      if (updatedProgress?.completed) {
+        await prisma.user_courses.updateMany({
+          where: {
+            user_id: user_id,
+            course_id: course_id,
+          },
+          data: {
+            status: "inprogress",
+          },
+        });
+      }
+
+
+      const allVideoProgressRecords = await prisma.videoProgress.findMany({
+        where: {
+          course_id: course_id,
+        },
+        include: {
+          user_video_progress: true
+        }
+      });
+
+      let videos = allVideoProgressRecords?.filter((video: any) => video?.user_video_progress?.user_id == user_id)
+
+  
+
+      
+    
+
+
+      if (videos?.length == videoLength) {
+
+
+        const allVideosSeen = videos.every(
+          (record: any) => record.completed == true
+        );
+
+        if (allVideosSeen) {
+
+          await prisma.user_courses.updateMany({
+            where: {
+              user_id: user_id,
+              course_id: course_id,
+            },
+            data: {
+              status: "completed",
+            },
+          })
+
+
+        }
+      }
 
       return NextResponse.json({
         success: true,
@@ -104,6 +165,19 @@ export async function PUT(req: NextRequest) {
       });
 
       const createdProgress = newProgress.videoProgress[0]; // Assuming only one record is created
+
+      // Update the course status to inProgress if the video is completed
+      if (createdProgress?.completed) {
+        await prisma.user_courses.updateMany({
+          where: {
+            user_id: user_id,
+            course_id: course_id,
+          },
+          data: {
+            status: "inprogress", // Set the course status to inProgress
+          },
+        });
+      }
 
       return NextResponse.json(
         {

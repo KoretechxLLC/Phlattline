@@ -13,6 +13,7 @@ interface CoursesState {
   videoProgressError: string | null;
   videoProgressSuccess: string | null;
   videoProgress: any; // Assuming you want to store video progress
+  usercourses : any;
   responses: any;
   purchaseCourse: any | null;
   purchaseCourseLoader: boolean | null;
@@ -34,6 +35,7 @@ const initialState: CoursesState = {
   videoProgressError: null,
   videoProgressSuccess: null,
   videoProgress: [],
+  usercourses: [],
   responses: null,
   purchaseCourse: null,
   purchaseCourseLoader: false,
@@ -76,6 +78,24 @@ export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
     }
   }
 );
+
+// Thunk for fetching user-specific courses
+export const fetchusercourses = createAsyncThunk<any, number>(
+  "courses/fetchusercourses",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/api/usercourses?userId=${userId}`);
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch user courses";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 
 export const coursesAssessmentResponses = createAsyncThunk<
   any,
@@ -213,6 +233,20 @@ const coursesSlice = createSlice({
       .addCase(fetchvideoprogress.rejected, (state, action) => {
         state.videoProgressLoading = false;
         state.videoProgressError = action.payload as string;
+      })
+
+      // Fetch User Courses
+      .addCase(fetchusercourses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchusercourses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.usercourses = action.payload;
+      })
+      .addCase(fetchusercourses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
 
       // Update Video Progress

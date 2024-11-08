@@ -75,21 +75,31 @@ const ActivityHours = ({ height = 250 }) => {
   }, [logSuccess, timeLogs?.timelogs, timeLogs?.totalTimeSpent]);
 
   useEffect(() => {
-    if (timelogsData && timelogsData?.length > 0) {
-      if (selectedOption?.toLowerCase() == "weekly") {
-        let seriesData = timelogsData?.map((data: any) => {
-          return Number(data?.timeSpent) / 60 / 60;
-        });
 
+
+    if (timelogsData && timelogsData.length > 0) {
+      if (selectedOption?.toLowerCase() === "weekly") {
+        // Initialize an array with 7 elements, one for each day of the week, all set to 0
+        const weeklyData = Array(7).fill(0);
+  
+        // Map the days of the week to indices (Sunday=0, Monday=1, ..., Saturday=6)
+        timelogsData.forEach((data: any) => {
+          const dayIndex = moment(data.date).day(); // `day()` returns 0-6 for Sunday-Saturday
+          weeklyData[dayIndex] = Number(data.timeSpent) / 3600; // Convert seconds to hours
+        });
+  
         setSeries([
           {
             name: "Hours",
-            data: seriesData,
+            data: weeklyData,
           },
         ]);
-      } else if (selectedOption?.toLowerCase() == "monthly") {
-        const startOfMonth = moment().startOf("month");
-        const endOfMonth = moment().endOf("month");
+      }
+      else if (selectedOption?.toLowerCase() == "monthly") {
+
+
+        const startOfMonth = moment().startOf('month');
+        const endOfMonth = moment().endOf('month');
 
         // Calculate the number of weeks in the month
         const totalWeeksInMonth = endOfMonth.diff(startOfMonth, "weeks") + 1; // +1 because it includes the starting week
