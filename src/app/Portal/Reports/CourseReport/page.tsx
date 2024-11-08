@@ -153,9 +153,7 @@ const CourseReport = () => {
         <CardContent>
       <div className="pb-3 pt-1">
         {loading ? (
-          <div className="flex justify-center items-center">
-            <div className="spinner-border animate-spin h-8 w-8 border-t-2 border-blue-500 border-solid rounded-full"></div>
-          </div>
+        <Spinner/>
         ) : (
           <ul>
             {currentCourses.map((course: any) => (

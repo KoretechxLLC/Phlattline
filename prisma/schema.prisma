@@ -35,7 +35,7 @@ model users {
   categoryId                Int
   subCategoryId             Int
   timeLogs                  TimeLog[]
-  TrainingOnDemand          TrainingOnDemand[]
+  trainingOnDemand          trainingOnDemand[]
   course_assignments        course_assignments[]
   purchased_assessments     purchased_assessments[]
   user_assessment_responses user_assessment_responses[]
@@ -299,7 +299,7 @@ model assessment_subCategory {
   individual_assessments individual_assessments[]
 }
 
-model TrainingOnDemand {
+model trainingOnDemand {
   id          Int      @id @default(autoincrement())
   user_id     Int
   created_at  DateTime @default(now())

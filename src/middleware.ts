@@ -1,52 +1,35 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { verifyAccessToken } from "./helper/jwt_helper";
 
 export async function middleware(request: NextRequest) {
-  if (
-    request.nextUrl.pathname.endsWith("/registration") ||
-    request.nextUrl.pathname.endsWith("/forgot-password") ||
-    request.nextUrl.pathname.endsWith("/change-password") ||
-    request.nextUrl.pathname.endsWith("/login") ||
-    request.nextUrl.pathname?.includes("auth") ||
-    request.nextUrl.pathname?.endsWith("/categories") ||
-    request.nextUrl.pathname?.endsWith("/subCategories")
-  ) {
-    return NextResponse.next();
+  const token = request.cookies.get("accessToken")?.value;
+  const path = request.nextUrl.pathname;
+
+  const publicPaths = [
+    '/Login',
+    '/IndividualSignup',
+    '/Contact',
+    '/About',
+    '/JordanLee',
+    '/AminaPatel',
+    '/SophiaRodriguez',
+    '/ElijahMartinez',
+    '/AlexJohnson',
+    '/HiroshiTanaka'
+  ];
+
+  const isPublicPath = publicPaths.some((publicPath) => path.startsWith(publicPath));
+
+  if (!token && !isPublicPath) {
+    return NextResponse.redirect(new URL('/Login', request.url));
   }
 
-  try {
-    const headers = request.headers;
-    const authHeader = headers.get("authorization");
-
-    if (!authHeader) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    let token = authHeader.split(" ")?.[1];
-
-    if (!token) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    try {
-      const { userId, role }: any = await verifyAccessToken(token);
-
-      request.headers.set("id", userId);
-
-      if (request.nextUrl.pathname?.includes("admins") && role !== "admin") {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
-
-      return NextResponse.next();
-    } catch (err) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  } catch (err: any) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (token && path === '/Login') {
+    return NextResponse.redirect(new URL('/Portal/Dashboard', request.url));
   }
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ['/Portal/:path*', '/Login', '/IndividualSignup', '/Contact', '/About'],
 };
