@@ -8,7 +8,9 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.endsWith("/forgot-password") ||
     request.nextUrl.pathname.endsWith("/change-password") ||
     request.nextUrl.pathname.endsWith("/login") ||
-    request.nextUrl.pathname?.includes("auth")
+    request.nextUrl.pathname?.includes("auth") ||
+    request.nextUrl.pathname?.endsWith("/categories") ||
+    request.nextUrl.pathname?.endsWith("/subCategories")
   ) {
     return NextResponse.next();
   }
@@ -16,8 +18,6 @@ export async function middleware(request: NextRequest) {
   try {
     const headers = request.headers;
     const authHeader = headers.get("authorization");
-
-    
 
     if (!authHeader) {
       return NextResponse.redirect(new URL("/", request.url));

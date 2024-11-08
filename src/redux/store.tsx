@@ -8,7 +8,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PerformanceManagementReducer from "./slices/performanceManagement.slice";
 import trainingOnDemandReducer from "./slices/traningdemand.slice";
-
+import categoriesReducer from "./slices/categories.slice";
 
 const persistConfig = {
   key: "root",
@@ -24,6 +24,7 @@ const rootReducer = combineReducers({
   performance: PerformanceManagementReducer,
   assessmentResponse: assessmentResponseReducer,
   trainingOnDemand: trainingOnDemandReducer,
+  categories: categoriesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
