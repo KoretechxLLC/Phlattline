@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     // Check for existing training at the same date and time
     const trainingSession = await prisma.$transaction(async (prisma) => {
-      const existingTraining = await prisma.TrainingOnDemand.findFirst({
+      const existingTraining = await prisma.trainingOnDemand.findFirst({
         where: {
           user_id: Number(user_Id),
           select_date: parsedDate,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Create the new training session entry
-      return await prisma.TrainingOnDemand.create({
+      return await prisma.trainingOnDemand.create({
         data: {
           user_id: Number(user_Id),
           matter_name,

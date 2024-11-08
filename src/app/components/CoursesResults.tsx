@@ -102,12 +102,11 @@ const CoursesResults = ({ height = 280 }) => {
     <div className="relative w-full min-h-[200px]  md:h-[250px] 4xl:h-[220px] lg:h-[330px]">
       {isLoading ? (
         <div className="flex items-center justify-center h-full">
-          <Spinner height="80vh" /> {/* Show spinner when loading */}
+          <Spinner height="80vh" /> 
         </div>
       ) : isDataEmpty ? (
         <div className="flex items-center justify-center h-full">
           <span className="text-gray-500">No data found</span>
-          {/* Message when no data is found */}
         </div>
       ) : (
         <>

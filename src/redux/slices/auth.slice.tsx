@@ -26,18 +26,51 @@ export const login = createAsyncThunk<any, any>(
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await axios.post(`api/auth/login`, {
-        email: email,
-        password: password,
+        email,
+        password,
         provider: "app",
       });
+
+      const { accessToken } = response.data;
+
+      // Set the access token in a cookie
+      if (typeof window !== "undefined") {
+        document.cookie = `access_token=${accessToken}; path=/; max-age=86400; secure; samesite=strict`;
+      }
+
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
-        error.response.data.message || "Internal Server Error"
+        error.response?.data?.message || "Internal Server Error"
       );
     }
   }
 );
+
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (userId: string, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post(`/api/auth/logout?id=${userId}`);
+
+      // Perform token removal and clear local storage, cookies
+      await localforage.removeItem("access_token");
+      await localforage.removeItem("refresh_Token");
+
+      if (typeof window !== "undefined") {
+        document.cookie = `access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+        document.cookie = `refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+      }
+
+      return { message: response.data?.message || "Logout successful" };
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Internal Server Error");
+    }
+  }
+);
+
+
 
 export const Register = createAsyncThunk<any, FormData>(
   "auth/Register",
@@ -137,6 +170,9 @@ const authSlice = createSlice({
         state.success = action.payload.message;
         localforage.setItem("access_token", action.payload.accessToken);
         localforage.setItem("refresh_Token", action.payload.refreshToken);
+
+        window.location.href = "/Portal/Dashboard"
+
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -154,6 +190,26 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload ?? "Unknown error";
       })
+
+      //Logout 
+      .addCase(logout.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+
+        state.isLoading = false;
+        state.userData = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.success = "Logout successful";
+        window.location.href = "/Login"
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Logout failed";
+      })
+
       .addCase(UpdateUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
