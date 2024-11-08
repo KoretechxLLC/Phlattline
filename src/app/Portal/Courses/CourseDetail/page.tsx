@@ -42,7 +42,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   useEffect(() => {
     if (!courses || courses.length == 0) {
-      dispatch(fetchcourses());
+      dispatch(fetchcourses({}));
     }
   }, [courses, dispatch]);
 

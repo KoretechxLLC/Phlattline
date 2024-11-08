@@ -12,22 +12,57 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import TabButton from "@/app/components/TabButton";
 import NotesCalendar from "@/app/components/NotesCalendar";
 import { Button } from "@/app/components/button-sidebar";
-import { fetchcourses } from "@/redux/slices/courses.slice";
+import { fetchcourses, fetchcoursesCount } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 
 const Courses = () => {
   const router = useRouter();
   const dispatch: any = useDispatch();
 
+  const [coursesData, setCoursesData] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const coursesPerPage = 12;
 
-  const { courses, loading, error } = useSelector(
-    (state: any) => state.courses
-  );
+  const {
+    courses,
+    loading,
+    error,
+    coursesSuccess,
+    coursesCount,
+    coursesCountLoading,
+    coursesCountSuccess,
+  } = useSelector((state: any) => state.courses);
 
+  // Fetch total count of courses once
   useEffect(() => {
-    dispatch(fetchcourses());
+    dispatch(fetchcoursesCount({}));
   }, [dispatch]);
+
+  // Calculate total pages after courses count is successfully fetched
+  useEffect(() => {
+    if (coursesCountSuccess) {
+      const pages = Math.ceil(coursesCount / coursesPerPage);
+      setTotalPage(pages);
+    }
+  }, [coursesCountSuccess, coursesCount]);
+
+  // Fetch courses for the current page whenever `currentPage` changes
+  useEffect(() => {
+    dispatch(
+      fetchcourses({
+        filter: { page: currentPage, size: coursesPerPage },
+      })
+    );
+  }, [dispatch, currentPage]);
+
+  // Update `coursesData` when `coursesSuccess` changes
+  useEffect(() => {
+    if (coursesSuccess) {
+      setCoursesData(courses);
+    }
+  }, [coursesSuccess, courses]);
 
   if (error) {
     return (
@@ -39,7 +74,19 @@ const Courses = () => {
     );
   }
 
-  const displayedCourses = showAll ? courses : courses.slice(0, 6);
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const displayedCourses = showAll ? coursesData : coursesData.slice(0, 6);
 
   return (
     <div>
@@ -52,17 +99,17 @@ const Courses = () => {
               <div className="col-span-3 flex justify-center items-center">
                 <Spinner height="20vh" />
               </div>
-            ) : courses && courses.length > 0 ? (
+            ) : coursesData && coursesData.length > 0 ? (
               <>
-                {displayedCourses.map((course: any) => (
+                {displayedCourses.map((coursesData: any) => (
                   <CoursesTab
-                    id={course.id}
-                    title={course.course_name}
-                    description={course.description}
-                    price={course.price}
-                    videos={course.videos}
-                    assessments={course.assessments}
-                    key={course.id}
+                    id={coursesData.id}
+                    title={coursesData.course_name}
+                    description={coursesData.description}
+                    price={coursesData.price}
+                    videos={coursesData.videos}
+                    assessments={coursesData.assessments}
+                    key={coursesData.id}
                   />
                 ))}
               </>
@@ -96,14 +143,20 @@ const Courses = () => {
                 variant="outline"
                 size="icon"
                 className="w-8 h-8 border-transparent hover:bg-transparent"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
               >
                 <ChevronLeft className="w-5 h-5 text-default-900" />
               </Button>
-              <span className="text-sm font-medium text-default-900">1</span>
+              <span className="text-sm font-medium text-default-900">
+                Page {currentPage} of {totalPage}
+              </span>
               <Button
                 variant="outline"
                 size="icon"
                 className="w-8 h-8 border-transparent hover:bg-transparent"
+                onClick={handleNextPage}
+                disabled={currentPage >= totalPage}
               >
                 <ChevronRight className="w-5 h-5 text-default-900" />
               </Button>

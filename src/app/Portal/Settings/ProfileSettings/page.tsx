@@ -46,6 +46,17 @@ const Profile = ({ profileImage }: any) => {
     null
   );
 
+  useEffect(() => {
+    // Initialize state variables with user data
+    if (userData) {
+      setFirstName(userData.first_name || "");
+      setLastName(userData.last_name || "");
+      setPhone(userData.phone_number || "");
+      setEmail(userData.email || ""); // Keep email as read-only
+      setDesignation(userData.designation || "");
+      setDate(userData.date_of_birth ? new Date(userData.date_of_birth) : null);
+    }
+  }, [userData]);
   const sixteenYearsAgo = new Date();
   sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
 
@@ -126,8 +137,8 @@ const Profile = ({ profileImage }: any) => {
             id="first-name"
             type="text"
             placeholder="First Name"
-            value={data && data?.first_name}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={firstName || data?.first_name} // Use state variable for input
+            onChange={(e) => setFirstName(e.target.value)} // Update state on change
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -138,8 +149,8 @@ const Profile = ({ profileImage }: any) => {
             id="last-name"
             type="text"
             placeholder="Last Name"
-            value={data && data?.last_name}
-            onChange={(e) => setLastName(e.target.value)}
+            value={lastName || data?.last_name} // Use state variable for input
+            onChange={(e) => setLastName(e.target.value)} // Update state on change
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -154,8 +165,8 @@ const Profile = ({ profileImage }: any) => {
             id="phone"
             type="tel"
             placeholder="Phone"
-            value={data && data?.phone_number}
-            onChange={(e) => setPhone(e.target.value)}
+            value={phone || data?.phone_number} // Use state variable for input
+            onChange={(e) => setPhone(e.target.value)} // Update state on change
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -166,9 +177,8 @@ const Profile = ({ profileImage }: any) => {
             id="email"
             type="email"
             placeholder="Email"
-            value={data && data?.email}
+            value={data?.email} // Keep email as read-only
             disabled
-            onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -183,8 +193,8 @@ const Profile = ({ profileImage }: any) => {
             id="designation"
             type="text"
             placeholder="Designation"
-            value={data && data?.designation}
-            onChange={(e) => setDesignation(e.target.value)}
+            value={designation || data?.designation} // Use state variable for input
+            onChange={(e) => setDesignation(e.target.value)} // Update state on change
             className="w-full bg-black text-white py-2 px-4 rounded-xl focus:outline-none"
           />
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
@@ -192,7 +202,7 @@ const Profile = ({ profileImage }: any) => {
         <div className="relative py-2 border border-gray-500 rounded-2xl">
           <DatePicker
             selected={date}
-            onChange={(date) => setDate(date)}
+            onChange={(date) => setDate(date)} // Update state on date change
             maxDate={sixteenYearsAgo} // Restrict to dates 16+ years ago
             placeholderText="Date of Birth"
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
@@ -201,34 +211,6 @@ const Profile = ({ profileImage }: any) => {
             dropdownMode="select" // Makes dropdowns a select element for smoother navigation
           />
           <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </div>
-      </div>
-
-      {/* Fourth Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            value={data && data?.password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
-            required
-          />
-          <MdLock className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-        </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
-          <input
-            id="confirm-password"
-            type="password"
-            placeholder="Confirm Password"
-            value={data && data?.password}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
-            required
-          />
-          <MdLock className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
       </div>
 

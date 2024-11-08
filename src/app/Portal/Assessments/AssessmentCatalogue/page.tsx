@@ -10,7 +10,6 @@ import {
   fetchRecommendedAssessments,
 } from "@/redux/slices/individualassessment.slice";
 import GraphLoader from "@/app/components/graphLoader";
-import RecommendedAssessments from "@/app/components/RecommendedAssessments";
 
 const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
   const [assessmentCatalogueData, setAssessmentCatalogueData] = useState([]);

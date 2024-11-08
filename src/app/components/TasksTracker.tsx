@@ -169,7 +169,7 @@ const TasksTracker = ({
                     className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
                     key={item.id}
                   >
-                    <div className="flex items-center md:mx-5 justify-between w-full">
+                    <div className="flex items-center 4xl:mx-5 md:mx-5 justify-between  w-full">
                       <div className="flex items-center">
                         <Avatar className="w-6 h-6">
                           <AvatarImage
@@ -178,8 +178,17 @@ const TasksTracker = ({
                             className="w-5 h-5"
                           />
                         </Avatar>
-                        <span className="text-xs sm:text-sm px-2">
-                          {item.goal_name}
+                        <span className="text-xs sm:text-sm px-1">
+                          <button
+                            className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
+                            title={`Description: ${
+                              item.description
+                            }\nStart Date: ${new Date(
+                              item.start_date
+                            ).toLocaleDateString("en-GB")}`}
+                          >
+                            {item.goal_name}
+                          </button>
                         </span>
                       </div>
 
@@ -188,7 +197,7 @@ const TasksTracker = ({
                           <AnimatedTooltip items={tooltipItems} />
                         )}
                         <button
-                          className={`inline-block w-[70px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
+                          className={`inline-block  w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
                             new Date(item?.completion_date).toDateString() ===
                             new Date().toDateString()
                               ? "bg-green-800 text-green-400" // Green for today's completion date
@@ -199,7 +208,7 @@ const TasksTracker = ({
                           title="Completion Date"
                         >
                           <div className="flex justify-center items-center">
-                            <div className="w-5">
+                            <div className="w-4">
                               <SlCalender />
                             </div>
                             <span>
@@ -270,8 +279,17 @@ const TasksTracker = ({
                             className="w-5 h-5"
                           />
                         </Avatar>
-                        <span className="text-xs px-2 sm:text-sm">
-                          {item.goal_name}
+                        <span className="text-xs sm:text-sm px-2">
+                          <button
+                            className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
+                            title={`Description: ${
+                              item.description
+                            }\nStart Date: ${new Date(
+                              item.start_date
+                            ).toLocaleDateString("en-GB")}`}
+                          >
+                            {item.goal_name}
+                          </button>
                         </span>
                       </div>
 

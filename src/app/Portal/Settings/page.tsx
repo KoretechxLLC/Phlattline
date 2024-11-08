@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import ProfileSettings from "@/app/Portal/Settings/ProfileSettings/page";
 import BillingMethod from "@/app/Portal/Settings/BillingMethod/page";
@@ -18,6 +18,20 @@ const Settings = () => {
       setLoading(false); // Set loading to false after the delay
     }, 500); // Adjust the delay as needed
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get("view");
+
+    // Set the active tab based on query parameter
+    if (view === "profilesettings") {
+      setActiveTab("profilesettings");
+    } else if (view === "billingmethod") {
+      setActiveTab("billingmethod");
+    } else {
+      setActiveTab("profilesettings");
+    }
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {

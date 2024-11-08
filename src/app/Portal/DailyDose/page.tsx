@@ -139,7 +139,7 @@ const DailyDose = () => {
 
     return (
       <div
-        className={`flex flex-col justify-between cursor-pointer 4xl:gap-y-6  gap-y-7 w-full h-full 4xl:px-2 4xl:py-4 px-2 py-7 lg:mx-6 4xl:mx-0 5xl:mx-2 rounded-lg text-white border-l-4 ${borderColor}`}
+        className={`flex flex-col justify-between cursor-pointer 4xl:gap-y-6   gap-y-7 w-full h-full 4xl:px-2 4xl:py-4 px-2 py-7 lg:mx-6 4xl:mx-0 5xl:mx-2 rounded-lg text-white border-l-4 ${borderColor}`}
         style={{ backgroundColor }}
       >
         <div className="flex-grow">
@@ -154,13 +154,24 @@ const DailyDose = () => {
           </span>
 
           <div className="hidden md:flex  items-center ">
-            <Image
-              src={instructorimage}
-              alt={`${instructorname}'s profile`}
-              height={1000}
-              width={1000}
-              className="w-7 h-7 rounded-full"
-            />
+            {instructorimage ? (
+              <div className="4xl:w-7 4xl:h-7 w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
+                <Image
+                  src={instructorimage}
+                  alt={`${instructorname}'s profile`}
+                  height={1000}
+                  width={1000}
+                  className="w-7 h-7 rounded-full"
+                />
+              </div>
+            ) : (
+              <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34]  rounded-full">
+                <span className="text-white text-sm md:text-sm font-bold py-3">
+                  {instructorname?.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+
             <span className="font-normal 4xl:text-sm text-lg 4xl:mx-1 mx-4">
               {instructorname}
             </span>

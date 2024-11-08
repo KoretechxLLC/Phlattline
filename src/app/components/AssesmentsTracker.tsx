@@ -265,7 +265,7 @@ const AsessmentTracker = ({
           <GraphLoader />
         </div>
       ) : data && data.length > 0 ? (
-        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[180px] ">
+        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[150px] ">
           <Chart
             options={options}
             series={series}
@@ -275,7 +275,7 @@ const AsessmentTracker = ({
           />
         </div>
       ) : (
-        <div className="text-center text-gray-300 py-24">
+        <div className="text-center text-gray-300 py-12">
           Please Submit Assessments First!
         </div>
       )}

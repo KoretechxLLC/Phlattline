@@ -80,15 +80,22 @@ export const AnimatedTooltip = ({
               </motion.div>
             )}
           </AnimatePresence>
-          <Image
-            onMouseMove={handleMouseMove}
-            height={40}
-            width={40}
-            src={imgError ? "/assets/DummyImg.png" : item.image}
-            alt={item.name}
-            onError={handleError}
-            className="object-cover !m-0 !p-0 object-top rounded-2xl h-7 w-7 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
-          />
+          {item.image ? (
+            <Image
+              onMouseMove={handleMouseMove}
+              height={40}
+              width={40}
+              src={item.image}
+              alt={item.name}
+              className="object-cover !m-0 !p-0 object-top rounded-2xl h-7 w-7 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
+            />
+          ) : (
+            <div className="object-cover !m-0 !p-0 object-top rounded-2xl h-7 w-7 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34]  relative transition duration-500">
+              <span className="text-white text-sm md:text-sm font-bold py-3">
+                {item.name?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
       ))}
     </>

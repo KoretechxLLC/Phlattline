@@ -5,7 +5,7 @@ import { MenuClassic } from "@/app/components/menu";
 
 const Sidebar = () => {
   return (
-    <div className="hidden md:block">
+    <div className="hidden 4xl:block 5xl:block xl:block">
       <SidebarContent>
         <MenuClassic />
       </SidebarContent>
