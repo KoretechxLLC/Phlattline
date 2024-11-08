@@ -41,6 +41,10 @@ import { AuroraBackground } from "../components/AuroraBackground";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { CustomPhoneInput } from "../components/phoneInput";
+import {
+  getCategories,
+  getSubCategories,
+} from "@/redux/slices/categories.slice";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -68,6 +72,9 @@ const IndividualSignUp = () => {
   const [password, setPassword] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const { success, error } = useSelector((state: RootState) => state.auth);
+  const { userSubCategories, userCategories } = useSelector(
+    (state: RootState) => state.categories
+  );
   const router = useRouter();
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [notification, setNotification] = useState<NotificationType | null>(
@@ -75,6 +82,16 @@ const IndividualSignUp = () => {
   );
   const [selectedIndustry, setSelectedIndustry] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState("");
+
+  useEffect(() => {
+    dispatch(getCategories({}));
+  }, []);
+
+  useEffect(() => {
+    if (selectedIndustry) {
+      dispatch(getSubCategories({ subCategories: Number(selectedIndustry) }));
+    }
+  }, [selectedIndustry]);
 
   const validate = () => {
     const newErrors = {
@@ -136,7 +153,8 @@ const IndividualSignUp = () => {
       formData.append("first_name", name);
       formData.append("last_name", lastname);
       formData.append("phone_number", phone);
-
+      formData.append("categoryId", selectedIndustry);
+      formData.append("SubCategoryId", selectedDesignation);
       try {
         await dispatch(Register(formData));
       } catch (error) {
@@ -153,6 +171,7 @@ const IndividualSignUp = () => {
         type: "success",
       });
       dispatch(setSuccess());
+      router.push("/Login");
     }
     if (error !== null) {
       setNotification({
@@ -261,7 +280,7 @@ const IndividualSignUp = () => {
               value={selectedIndustry}
               onChange={(e) => setSelectedIndustry(e.target.value)}
               className="bg-black border-2 border-[#b74b279d] text-white w-full p-2"
-              options={industries}
+              options={userCategories}
               placeholder={"Select Your Industry"}
               required
             />
@@ -271,7 +290,6 @@ const IndividualSignUp = () => {
             )} */}
           </motion.div>
 
-          {/* Designation Select */}
           <motion.div
             variants={primaryVariants}
             className="mb-2 w-full relative"
@@ -281,7 +299,7 @@ const IndividualSignUp = () => {
               value={selectedDesignation}
               onChange={(e) => setSelectedDesignation(e.target.value)}
               className="bg-black border-2 border-[#b74b279d] text-white w-full p-2"
-              options={designations}
+              options={userSubCategories}
               placeholder={"Select Your Designation"}
               required
             />

@@ -5,7 +5,7 @@ import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
 
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ id: number; name: string }>;
   placeholder?: string; // Add placeholder prop
 }
 
@@ -46,8 +46,8 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         <select
           className={cn(
             `flex h-14 w-full bg-gray-50 text-black shadow-input rounded-md px-3 py-2 text-sm
-            placeholder:text-neutral-400 
-            disabled:cursor-not-allowed disabled:opacity-50`,
+    placeholder:text-neutral-400 
+    disabled:cursor-not-allowed disabled:opacity-50`,
             className
           )}
           ref={ref}
@@ -56,11 +56,15 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <option className="text-gray-500" value="" disabled>
             {placeholder} {/* Use the placeholder prop here */}
           </option>
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
+          {options && options.length > 0 ? (
+            options.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))
+          ) : (
+            <option disabled>Select Industry first</option>
+          )}
         </select>
       </motion.div>
     );

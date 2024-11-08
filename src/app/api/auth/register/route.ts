@@ -49,9 +49,48 @@ export async function POST(request: NextRequest) {
       | string
       | null;
     const profile_image = formData.get("profile_image") as File | null;
-    const categoryId: any = formData.get("categoryId") as number | null;
-    const subCategoryId: any = formData.get("subCategoryId") as number | null;
+    const categoryId = parseInt(formData.get("categoryId") as string) || 0;
+    const subCategoryId =
+      parseInt(formData.get("subCategoryId") as string) || 0;
 
+    // Ensure categoryId and subCategoryId are valid
+    if (isNaN(categoryId) || isNaN(subCategoryId)) {
+      return NextResponse.json(
+        { message: "Invalid category or sub-category ID.", success: false },
+        { status: 400 }
+      );
+    }
+
+    // Ensure category exists
+    const categoryExists = await prisma.assessment_category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!categoryExists) {
+      return NextResponse.json(
+        { message: "Invalid category ID.", success: false },
+        { status: 400 }
+      );
+    }
+
+    // If subCategoryId is provided, validate that it exists under the category
+    if (subCategoryId !== 0) {
+      const subCategoryExists = await prisma.assessment_subCategory.findFirst({
+        where: { id: subCategoryId, category_id: categoryId },
+      });
+
+      if (!subCategoryExists) {
+        return NextResponse.json(
+          {
+            message: "Invalid sub-category ID for the selected category.",
+            success: false,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Ensure required fields are present
     if (!email || !phone_number || !password || !first_name || !last_name) {
       return NextResponse.json(
         { message: "Missing required fields.", success: false },
@@ -59,8 +98,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let organizationId: number | undefined = undefined;
+    // Check for existing user
+    const existingUser = await prisma.users.findUnique({
+      where: { email },
+    });
+    if (existingUser) {
+      return NextResponse.json(
+        { message: "User with this email already exists.", success: false },
+        { status: 400 }
+      );
+    }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let profileImagePath: string | null = null;
+    if (profile_image && profile_image.size > 0) {
+      const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedMimeTypes.includes(profile_image.type)) {
+        return NextResponse.json(
+          { message: "Invalid file type.", success: false },
+          { status: 400 }
+        );
+      }
+
+      profileImagePath = await saveFile(
+        profile_image,
+        "public/users/profileimage"
+      );
+    }
+
+    // If organization code is provided, validate the organization
+    let organizationId: number | undefined = undefined;
     if (organization_code) {
       const organization = await prisma.organizations.findUnique({
         where: { organization_code },
@@ -76,36 +144,7 @@ export async function POST(request: NextRequest) {
       organizationId = organization.id;
     }
 
-    const existingUser = await prisma.users.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
-      return NextResponse.json(
-        { message: "User with this email already exists.", success: false },
-        { status: 400 }
-      );
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    let profileImagePath: string | null = null;
-    if (profile_image && profile_image.size > 0) {
-      // Validate file type for profile image
-      const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
-      if (!allowedMimeTypes.includes(profile_image.type)) {
-        return NextResponse.json(
-          { message: "Invalid file type.", success: false },
-          { status: 400 }
-        );
-      }
-
-      profileImagePath = await saveFile(
-        profile_image,
-        "public/users/profileimage"
-      );
-    }
-
+    // Create the new user
     const newUser = await prisma.users.create({
       data: {
         email,
@@ -113,18 +152,21 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         first_name,
         last_name,
-        user_type_id: organizationId ? 2 : 1, 
-        organization_id: organizationId || undefined, 
-        profile_image: profileImagePath || undefined, 
+        user_type_id: organizationId ? 2 : 1,
+        organization_id: organizationId || undefined,
+        profile_image: profileImagePath || undefined,
         categoryId: categoryId,
         subCategoryId: subCategoryId,
       },
     });
 
+    // Omit sensitive information like the password
+    const { password: _, ...userData } = newUser;
+
     return NextResponse.json({
       message: "User registered successfully",
       success: true,
-      data: newUser,
+      data: userData,
     });
   } catch (error: any) {
     console.error("Error registering user:", error.message);
