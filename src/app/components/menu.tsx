@@ -4,6 +4,7 @@ import Image from "next/image";
 import MenuItem from "@/app/components/menu-item";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 import { useRouter, usePathname } from "next/navigation";
+import MenuWidget from "./Widget";
 
 export function MenuClassic() {
   const isDesktop = useMediaQuery("(min-width: 1280px)");
@@ -68,7 +69,12 @@ export function MenuClassic() {
           </li>
         ))}
       </ul>
-
+      <li className="w-full">
+        <MenuWidget
+          isActive={activeMenu === "/Portal/ODaas"}
+          onClick={() => handleMenuClick("/Portal/ODaas")}
+        />
+      </li>
       {isDesktop && (
         <div className="pl-8 pb-8 w-full">
           {" "}
