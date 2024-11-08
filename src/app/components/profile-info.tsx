@@ -4,7 +4,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 import Icon from "@/app/components/utility-icon";
@@ -15,6 +14,7 @@ import { useSelector } from "react-redux";
 
 const ProfileInfo = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
+
   const router = useRouter();
 
   return (
@@ -34,7 +34,7 @@ const ProfileInfo = () => {
                 />
               </div>
             ) : (
-              <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-[#BAA716]  rounded-full">
+              <div className="w-10 h-10 ring-1 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34]  rounded-full">
                 <span className="text-white text-sm md:text-sm font-bold py-3">
                   {userData?.first_name?.charAt(0).toUpperCase() +
                     userData?.last_name?.charAt(0).toUpperCase()}
@@ -56,17 +56,17 @@ const ProfileInfo = () => {
               {
                 name: "Profile Setting",
                 icon: "heroicons:user",
-                href: "/user-profile",
+                href: "/Portal/Settings?view=profilesettings",
               },
               {
                 name: "Billing Method",
                 icon: "heroicons:credit-card",
-                href: "/dashboard",
+                href: "/Portal/Settings?view=billingmethod",
               },
               {
                 name: "Purchase History",
                 icon: "heroicons:shopping-bag",
-                href: "/dashboard",
+                href: "/Portal/Settings/PurchaseHistory",
               },
             ].map((item, index) => (
               <div key={`info-menu-${index}`}>

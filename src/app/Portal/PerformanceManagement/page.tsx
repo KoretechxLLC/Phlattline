@@ -105,13 +105,7 @@ const PerformanceManagement = () => {
                 <CardTitle>Your Desired Job</CardTitle>
               </CardHeader>
               <CardContent className="4xl:my-8 my-16">
-                <PersonalGoals
-                  goals={[
-                    { id: 1, goal: "Finance Officer" },
-                    { id: 2, goal: "Taxation" },
-                  ]}
-                  showAvatar={false}
-                />
+                <PersonalGoals showAvatar={true} />
               </CardContent>
             </Card>
           </div>
