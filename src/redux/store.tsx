@@ -7,6 +7,8 @@ import videoProgressReducer from "./slices/courses.slice";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PerformanceManagementReducer from "./slices/performanceManagement.slice";
+import trainingOnDemandReducer from "./slices/traningdemand.slice";
+
 
 const persistConfig = {
   key: "root",
@@ -21,6 +23,7 @@ const rootReducer = combineReducers({
   videoProgress: videoProgressReducer,
   performance: PerformanceManagementReducer,
   assessmentResponse: assessmentResponseReducer,
+  trainingOnDemand: trainingOnDemandReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

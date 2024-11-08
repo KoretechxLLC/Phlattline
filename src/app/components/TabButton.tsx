@@ -2,12 +2,16 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./button-sidebar";
 import DatePicker from "react-datepicker";
 import { MdOutlineTextFields, MdDateRange, MdAccessTime } from "react-icons/md";
 import "react-datepicker/dist/react-datepicker.css";
 import Spinner from "./Spinner"; // Import your Spinner component
+import { useDispatch, useSelector } from "react-redux";
+import { createTrainingOnDemand } from "@/redux/slices/traningdemand.slice";
+import { RootState } from "@/redux/store";
+import StackedNotifications from "./Stackednotification";
 
 interface TabButtonProps {
   backgroundColor: string;
@@ -17,7 +21,7 @@ interface TabButtonProps {
   arrowImageSrc: string;
   showModalOnClick: boolean;
   isClickable: boolean;
-  redirectTo?: string; // New prop for redirect URL
+  redirectTo?: string;
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
@@ -28,10 +32,16 @@ const TabButton: React.FC<TabButtonProps> = ({
   arrowImageSrc,
   showModalOnClick,
   isClickable,
-  redirectTo, // Destructure new prop
+  redirectTo,
 }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  // const handleButtonClick = () => {
+  //   if (showModalOnClick) {
+  //     setIsOpen(true);
+  //   }
+  // };
 
   const handleButtonClick = () => {
     if (redirectTo) {
@@ -44,41 +54,29 @@ const TabButton: React.FC<TabButtonProps> = ({
   return (
     <div>
       <div
-        className={`w-full 4xl:py-2 lg:py-3 rounded-lg flex items-center justify-between ${
-          isClickable ? "cursor-pointer" : ""
-        }`}
+        className={`w-full 4xl:py-2 lg:py-3 rounded-lg flex items-center justify-between ${isClickable ? "cursor-pointer" : ""
+          }`}
         style={{ backgroundColor }}
         onClick={handleButtonClick}
       >
         <div className="flex items-center">
-          <Image
-            width={25}
-            height={25}
-            src={imageSrc}
-            alt=""
-            className="mx-5"
-          />
-          <span
-            className="4xl:text-sm lg:text-xl mx-1"
-            style={{ color: textColor }}
-          >
+          <Image width={25} height={25} src={imageSrc} alt="" className="mx-5" />
+          <span className="4xl:text-sm lg:text-xl mx-1" style={{ color: textColor }}>
             {text}
           </span>
         </div>
-        <Image
-          width={100}
-          height={100}
-          src={arrowImageSrc}
-          alt=""
-          className="w-5 h-5 mx-5"
-        />
+        <Image width={100} height={100} src={arrowImageSrc} alt="" className="w-5 h-5 mx-5" />
       </div>
 
-      {showModalOnClick && !redirectTo && (
-        <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
-      )}
+      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
+};
+
+export type NotificationType = {
+  id: number;
+  text: string;
+  type: "error" | "success";
 };
 
 const SpringModal = ({
@@ -88,21 +86,82 @@ const SpringModal = ({
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }) => {
+  const dispatch: any = useDispatch();
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId = userData?.id;
+  const { success, error } = useSelector((state: RootState) => state.trainingOnDemand);
   const [matter, setMatter] = useState("");
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<NotificationType | null>(null);
 
   const handleContinue = async () => {
-    setLoading(true); // Start loading
-    // Simulate a network request
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a 2-second delay
-    setLoading(false); // End loading
-    setIsOpen(false); // Close modal after request
+    setLoading(true);
+
+    if (!matter || !date || !time) {
+      setNotification({
+        id: Date.now(),
+        text: "Please fill in all fields.",
+        type: "error",
+      });
+      setLoading(false);
+      return;
+    }
+
+    const formattedDate = date.toISOString().split("T")[0];
+    const data = {
+      user_Id: userId,
+      matter_name: matter,
+      select_date: formattedDate,
+      select_time: time,
+    };
+
+    try {
+      await dispatch(createTrainingOnDemand(data));
+      setLoading(false);
+      setIsOpen(false);
+    } catch (error) {
+      setNotification({
+        id: Date.now(),
+        text: "Training request failed.",
+        type: "error",
+      });
+      setLoading(false);
+    }
   };
+
+  // Handle notifications based on Redux state changes
+  useEffect(() => {
+    if (success) {
+      setNotification({
+        id: Date.now(),
+        text: success,
+        type: "success",
+      });
+    }
+    if (error) {
+      setNotification({
+        id: Date.now(),
+        text: error,
+        type: "error",
+      });
+    }
+
+    // Clear the notification after 3 seconds
+    const timeout = setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [success, error]);
 
   return (
     <AnimatePresence>
+      {notification && (
+        <StackedNotifications notification={notification} setNotification={setNotification} />
+      )}
+
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -116,68 +175,66 @@ const SpringModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white p-16 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-white p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
-            <div className="relative z-10 p-5 rounded-xl my-6">
-              {/* Input Field with Icon */}
-              <div className="flex items-center gap-2 mb-4">
+            <h1 className="text-center text-3xl font-bold text-[#B51533] -mb-[1em]">
+              Training-On Demand
+            </h1>
+            <div className="p-5 rounded-xl my-6">
+              <div className="my-4 flex items-center gap-2">
                 <MdOutlineTextFields className="text-gray-500 text-2xl" />
                 <input
                   type="text"
                   value={matter}
                   onChange={(e) => setMatter(e.target.value)}
                   placeholder="Matter"
-                  className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400 focus:outline-none"
+                  className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400"
                 />
               </div>
-
-              {/* Date Picker with Icon in a Single Row */}
-              <div className="my-4 flex items-center gap-2 mb-4 ">
+              <div className="my-4 flex items-center gap-2">
                 <MdDateRange className="text-gray-500 text-2xl" />
-                <div className="w-full border border-gray-300">
-                  <DatePicker
-                    selected={date}
-                    onChange={(date) => setDate(date)}
-                    placeholderText="Select a date"
-                    className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md focus:outline-none"
-                  />
-                </div>
+                <DatePicker
+                  selected={date}
+                  onChange={(date) => setDate(date)}
+                  placeholderText="Select Date"
+                  minDate={new Date()}
+                  className="w-full p-2 text-gray-600 rounded-md border border-gray-300"
+                  dateFormat="yyyy-MM-dd"
+                />
               </div>
-
-              {/* Time Picker with Icon in a Single Row */}
-              <div className="my-4 flex items-center gap-2 mb-4 ">
+              <div className="my-4 flex items-center gap-2">
                 <MdAccessTime className="text-gray-500 text-2xl" />
-                <div className="border w-full border-gray-300">
-                  <DatePicker
-                    selected={date}
-                    onChange={(date) => setDate(date)}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeFormat="HH:mm"
-                    timeIntervals={60}
-                    placeholderText="Select time"
-                    dateFormat="HH:mm"
-                    className="w-full p-2 text-gray-600 placeholder-gray-400 rounded-md focus:outline-none"
-                    calendarClassName="z-50"
-                  />
-                </div>
+                <DatePicker
+                  selected={date}
+                  onChange={(selectedDate) => {
+                    if (selectedDate) {
+                      setDate(selectedDate);
+                      const selectedTime = selectedDate.toLocaleTimeString("en-GB", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+                      setTime(selectedTime);
+                    }
+                  }}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeFormat="HH:mm"
+                  timeIntervals={60}
+                  placeholderText="Select Time"
+                  dateFormat="HH:mm"
+                  className="w-full p-2 text-gray-600 rounded-md border border-gray-300"
+                />
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <Button
-                color="primary"
-                className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-12 justify-center items-center rounded-3xl"
-                onClick={handleContinue}
-                disabled={loading} // Disable button while loading
-              >
-                {loading ? (
-                  <Spinner /> // Display spinner while loading
-                ) : (
-                  "Send Request"
-                )}
-              </Button>
-            </div>
+            <Button
+              color="primary"
+              className="text-white px-5 text-sm md:text-base flex w-full h-12 justify-center items-center rounded-3xl"
+              onClick={handleContinue}
+              disabled={loading}
+            >
+              {loading ? <Spinner /> : "Send Request"}
+            </Button>
           </motion.div>
         </motion.div>
       )}

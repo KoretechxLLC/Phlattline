@@ -14,54 +14,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { fetchtimelog } from "@/redux/slices/performanceManagement.slice";
 import { RootState } from "@/redux/store";
-
-const coursesData = [
-  {
-    id: 1,
-    thumbnail: "/assets/framepic2.png",
-    title: "AI and Virtual",
-    type: "Basic",
-    subscribers: 1014,
-    rating: 3.4,
-    instructorname: "Jack Edwards",
-    instructorimage: "/assets/userProfile.png",
-    Lessons: 14,
-    Hours: 12,
-    Price: 40,
-    completion: "not started", // Options: "not started", "ongoing", "completed"
-    progress: 0, // Progress percentage
-  },
-  {
-    id: 2,
-    thumbnail: "/assets/framepic2.png",
-    title: "Data Science Fundamentals",
-    type: "Premium",
-    subscribers: 850,
-    rating: 4.2,
-    instructorname: "Sarah Johnson",
-    instructorimage: "/assets/userProfile.png",
-    Lessons: 20,
-    Hours: 25,
-    Price: 60,
-    completion: "ongoing",
-    progress: 60, // Progress percentage
-  },
-  {
-    id: 3,
-    thumbnail: "/assets/framepic2.png",
-    title: "Learn Development and Grow",
-    type: "Basic",
-    subscribers: 700,
-    rating: 4.5,
-    instructorname: "Michael Smith",
-    instructorimage: "/assets/userProfile.png",
-    Lessons: 16,
-    Hours: 18,
-    Price: 45,
-    completion: "completed",
-    progress: 100, // Progress percentage
-  },
-];
+import { fetchcourses, fetchusercourses } from "@/redux/slices/courses.slice";
+import Spinner from "@/app/components/Spinner";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const formatTimeSpent = (seconds: any) => {
   if (seconds < 60) {
@@ -74,6 +29,7 @@ const formatTimeSpent = (seconds: any) => {
 
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
+
 
   return (
     <span>
@@ -93,13 +49,33 @@ const formatTimeSpent = (seconds: any) => {
 
 const CourseReport = () => {
   const dispatch: any = useDispatch();
+  const { courses, videoProgress, usercourses } = useSelector(
+    (state: RootState) => state.courses
+  );
+  const [coursesList, setcoursesList] = useState<any>([]);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { loading, error, success, logSuccess, goals, timeLogs }: any =
-    useSelector((state: RootState) => state.performance);
+  const [loadings, setLoadings] = useState(true);
+  const { loading, error, success, logSuccess, goals, timeLogs }: any = useSelector((state: RootState) => state.performance);
   const [timelogsData, setTimeLogsData] = useState<any>([]);
   const [timeLogSpent, setTimeLogSpent] = useState(0);
 
   const userId: any = userData?.id;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 3;
+
+  // Fetch the courses for the current page
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = usercourses.slice(indexOfFirstCourse, indexOfLastCourse);
+
+  // Handle page change
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+
+
 
   useEffect(() => {
     if (userId) {
@@ -112,7 +88,15 @@ const CourseReport = () => {
       setTimeLogsData(timeLogs?.timelogs);
       setTimeLogSpent(timeLogs?.totalTimeSpent);
     }
-  }, [logSuccess, timeLogs?.timelogs, timeLogs?.totalTimeSpent]);
+  }, [logSuccess]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchusercourses(userId));
+    }
+  }, [dispatch, userId]);
+
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -164,36 +148,72 @@ const CourseReport = () => {
 
       <Card className="border h-full border-gray-500 rounded-3xl">
         <CardHeader className="flex-row gap-3">
-          <CardTitle className="flex-1">Courses Completion</CardTitle>
+          <CardTitle className="flex-1 ml-6">Courses Completion</CardTitle>
         </CardHeader>
         <CardContent>
+      <div className="pb-3 pt-1">
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <div className="spinner-border animate-spin h-8 w-8 border-t-2 border-blue-500 border-solid rounded-full"></div>
+          </div>
+        ) : (
           <ul>
-            {coursesData.map((course, i) => (
-              <li
-                key={`course-${i}`}
-                className="text-lg text-default-600 py-2 px-2"
-              >
+            {currentCourses.map((course: any) => (
+              <li key={course.id} className="text-lg text-default-600 py-2 px-2">
                 <div className="flex items-center">
                   <div
-                    className={`h-12 w-1 mr-4 ${
-                      course.progress === 100
-                        ? "bg-green-500"
-                        : course.progress > 0
-                        ? "bg-yellow-500"
-                        : "bg-red-500"
-                    }`}
+                    className={`h-12 w-1 mr-4 ${course.status === 'completed'
+                      ? 'bg-green-500'
+                      : course.status === 'inprogress'
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
+                      }`}
                   ></div>
                   <div className="flex-1">
                     <div className="flex justify-between">
-                      <span>{course.title}</span>
-                      <span>{course.progress}%</span>
+                      <span>{course.courses.course_name}</span>
+                      <span
+                        className={`${course.status === 'completed'
+                          ? 'text-green-500 capitalize'
+                          : course.status === 'inprogress'
+                            ? 'text-yellow-500 capitalize'
+                            : 'text-red-500 capitalize'
+                          }`}
+                      >
+                        {course.status}
+                      </span>
                     </div>
                   </div>
                 </div>
               </li>
             ))}
           </ul>
-        </CardContent>
+        )}
+      </div>
+    </CardContent>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2  text-white rounded-l-lg"
+          >
+            <FaChevronLeft />
+
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage * coursesPerPage >= usercourses.length}
+            className="px-4 py-2  text-white rounded-r-lg"
+          >
+            
+            <FaChevronRight />
+
+
+          </button>
+        </div>
+
       </Card>
     </div>
   );

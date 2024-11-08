@@ -5,15 +5,36 @@ import { colors } from "@/app/lib/colors";
 import { useTheme } from "next-themes";
 import { useConfig } from "@/app/hooks/use-config";
 import Spinner from "@/app/components/Spinner"; // Adjust the import based on your project's structure
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const CoursesResults = ({ height = 280 }) => {
   const [config] = useConfig();
+  const dispatch: any = useDispatch();
+  const { usercourses } = useSelector((state: RootState) => state.courses);
+
+  const { userData } = useSelector((state: RootState) => state.auth);
   const { theme: mode } = useTheme();
 
-  const isLoading = false; // Set this to true while loading data (e.g., fetching from an API)
+  const isLoading = false; 
 
-  // Series values for Not Started, In Progress, and Completed
-  const series = [20, 40, 60]; // Not Started, In Progress, Completed
+  const courseStatusCounts = {
+    notStarted: 0,
+    inProgress: 0,
+    completed: 0,
+  };
+
+  usercourses.forEach((course:any) => {
+    if (course.status === "notStarted") courseStatusCounts.notStarted++;
+    else if (course.status === "inprogress") courseStatusCounts.inProgress++;
+    else if (course.status === "completed") courseStatusCounts.completed++;
+  });
+
+  const series = [
+    courseStatusCounts.notStarted,
+    courseStatusCounts.inProgress,
+    courseStatusCounts.completed,
+  ];
 
   // Check if data is empty
   const isDataEmpty = !series || series.every((value) => value === 0);
@@ -99,8 +120,8 @@ const CoursesResults = ({ height = 280 }) => {
           />
           {/* Custom labels */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-white text-xl font-bold">Ongoing</span>
-            <span className="text-red-500 text-xl">32</span>
+            <span className="text-white text-xl font-bold">inProgress</span>
+            <span className="text-[#FDF53F] text-xl">{courseStatusCounts.inProgress}</span>
           </div>
         </>
       )}
