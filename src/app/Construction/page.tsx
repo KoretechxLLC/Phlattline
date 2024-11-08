@@ -28,7 +28,7 @@ const Construction = ({ onModelLoaded }: any) => {
   const rotateArrow3 = useRef<() => void>(null!);
 
   useEffect(() => {
-    const clickableMeshNames = ["Home Screen", "Elijah Martinez", "Mrs. Nancy"];
+    const clickableMeshNames = ["About", "Chatbot", "Contact Us"];
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
 
     const container: any = containerRef.current;
@@ -41,23 +41,23 @@ const Construction = ({ onModelLoaded }: any) => {
     const scene = new THREE.Scene();
 
     camera.current = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-    camera.current.position.z = 3;
+    camera.current.position.z = 3.5;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
     container?.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
     directionalLight.position.set(5, 5, 5).normalize();
     scene.add(directionalLight);
 
     const controls = new OrbitControls(camera.current, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.1;
+    controls.dampingFactor = 0.05;
     controls.enablePan = true;
-    controls.minDistance = 3;
+    controls.minDistance = 2;
     controls.maxDistance = 5;
 
     controls.maxPolarAngle = Math.PI / 2.5;
@@ -66,14 +66,14 @@ const Construction = ({ onModelLoaded }: any) => {
     // Load GLB Model
     const loader = new GLTFLoader();
     loader.load(
-      "/assets/Agri-v1.glb", // Path to your construction model
+      "/assets/Construction.glb", // Path to your construction model
       (gltf) => {
         const earthMesh = gltf.scene;
         const box = new THREE.Box3().setFromObject(earthMesh);
         const center = box.getCenter(new THREE.Vector3());
         earthMesh.position.sub(center);
         const height = box.getSize(new THREE.Vector3()).y;
-        earthMesh.position.y += height / 2;
+        earthMesh.position.y += height / 1.9;
 
         const pivot = new THREE.Group();
         pivot.add(earthMesh);
@@ -84,19 +84,19 @@ const Construction = ({ onModelLoaded }: any) => {
           {
             position: [1.3, 0.5, -0.6],
             route: "/About",
-            name: "Home Screen",
+            name: "About",
             size: [0.18, 0.18, 0.85],
           },
           {
             position: [0.1, 0.35, 0.62],
-            route: "/ElijahMartinez",
-            name: "Elijah Martinez",
+            route: "",
+            name: "Chatbot",
             size: [0.1, 0.1, 0.3],
           },
           {
             position: [1.05, 0.33, 0.72],
-            route: "/Nancy",
-            name: "Mrs. Nancy",
+            route: "/Contact",
+            name: "Contact Us",
             size: [0.1, 0.1, 0.3],
           },
         ];
@@ -146,7 +146,7 @@ const Construction = ({ onModelLoaded }: any) => {
             arrowPlane.rotation.y += 0.1; // Rotate around the Y-axis
 
             // Update time and calculate new y-position using a sine wave for up-and-down motion
-            time += 0.2;
+            time += 0.15;
             arrowPlane.position.y = initialY + Math.sin(time) * 0.05; // Adjust amplitude as needed
           };
         };
@@ -182,7 +182,7 @@ const Construction = ({ onModelLoaded }: any) => {
       controls.update();
       // Stop rotation if hovering over a mesh
       if (earthMeshRef.current && !isHovering.current) {
-        earthMeshRef.current.rotation.y -= 0.007; // Continuous rotation of the model
+        earthMeshRef.current.rotation.y -= 0.005; // Continuous rotation of the model
       }
       renderer.render(scene, camera.current!);
       // Call the rotate functions for arrows if they are defined
@@ -241,22 +241,22 @@ const Construction = ({ onModelLoaded }: any) => {
       setHoveredProfile(null);
     };
 
-    const zoomOutOnClick = (callback: () => void) => {
-      const duration = 400;
+    const zoomInOnClick = (callback: () => void) => {
+      const duration = 1500;
       const start = performance.now();
       const initialPosition = camera.current?.position.clone();
-      const targetPosition = new THREE.Vector3(0, 0, 5);
-
+      const targetPosition = new THREE.Vector3(0, 0, 0.5); // Zoom in closer on z-axis
+    
       const animateZoom = (time: number) => {
         const elapsed = time - start;
         const t = Math.min(elapsed / duration, 1);
-
+    
         camera.current?.position.lerpVectors(
           initialPosition!,
           targetPosition,
           t
         );
-
+    
         if (t < 1) {
           requestAnimationFrame(animateZoom);
         } else {
@@ -279,7 +279,7 @@ const Construction = ({ onModelLoaded }: any) => {
       if (intersects.length > 0) {
         const clickedObject: any = intersects[0].object;
         if (clickedObject.userData.route) {
-          zoomOutOnClick(() => {
+          zoomInOnClick(() => {
             router.push(clickedObject.userData.route);
           });
         }
@@ -303,3 +303,5 @@ const Construction = ({ onModelLoaded }: any) => {
 };
 
 export default Construction;
+
+
