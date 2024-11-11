@@ -4,9 +4,11 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useRouter } from "next/navigation";
+import SplashScreen from "../components/SplashScreen";
 
 const Corporate = ({ onModelLoaded }: any) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   const hasModelLoaded = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const earthMeshRef: React.MutableRefObject<THREE.Group> = useRef(null!);
@@ -18,6 +20,7 @@ const Corporate = ({ onModelLoaded }: any) => {
 
   const [hoveredProfile, setHoveredProfile] = useState<{
     name: string;
+    designation: string;
     picture: string;
     position: { x: number; y: number };
   } | null>(null);
@@ -28,7 +31,14 @@ const Corporate = ({ onModelLoaded }: any) => {
   const rotateArrow3 = useRef<() => void>(null!);
 
   useEffect(() => {
-    const clickableMeshNames = ["About", "Contact Us", "Chatbot"];
+    const clickableMeshNames = [
+      "About",
+      "Contact Us",
+      "Chatbot",
+      "Jordan Lee",
+      "Sophia Rodriguez",
+      "Amina Patel",
+    ];
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
 
     const container: any = containerRef.current;
@@ -65,6 +75,7 @@ const Corporate = ({ onModelLoaded }: any) => {
 
     // Load GLB Model
     const loader = new GLTFLoader();
+    setIsLoading(true); // Start loading
     loader.load(
       "/assets/Corporate.glb", // Path to your construction model
       (gltf) => {
@@ -85,39 +96,104 @@ const Corporate = ({ onModelLoaded }: any) => {
             position: [0.88, 0.7, -0.4],
             route: "/About",
             name: "About",
+            designation: "",
             size: [0.25, 0.25, 1],
           },
           {
             position: [0.32, 0.28, 0.5],
             route: "/Contact",
             name: "Contact Us",
+            designation: "",
             size: [0.1, 0.1, 0.51],
           },
           {
             position: [0.85, 0.28, 1.3],
             route: "",
             name: "Chatbot",
+            designation: "",
             size: [0.1, 0.1, 0.54],
+          },
+          {
+            position: [-0.93, 1.2, -0.4],
+            route: "/JordanLee",
+            name: "Jordan Lee",
+            designation: "Director",
+            size: [0.12, 0.12, 0.18],
+          },
+          {
+            position: [-0.83, 1.45, 0.98],
+            route: "/SophiaRodriguez",
+            name: "Sophia Rodriguez",
+            designation: "Senior Vice President",
+            size: [0.12, 0.12, 0.18],
+          },
+          {
+            position: [-0.43, 1.28, -1.25],
+            route: "/AminaPatel",
+            name: "Amina Patel",
+            designation: "Chief Operating Officer",
+            size: [0.12, 0.12, 0.18],
           },
         ];
 
-        clickableMeshes.forEach(({ position, route, name, size }) => {
-          const geometry = new THREE.CylinderGeometry(
-            size[0],
-            size[1],
-            size[2],
-            32
-          );
-          const material = new THREE.MeshStandardMaterial({
-            color: "blue",
+        clickableMeshes.forEach(
+          ({ position, route, name, size, designation }) => {
+            const geometry = new THREE.CylinderGeometry(
+              size[0],
+              size[1],
+              size[2],
+              32
+            );
+            const material = new THREE.MeshStandardMaterial({
+              color: "blue",
+              transparent: true,
+              opacity: 0,
+            });
+            const cylinder = new THREE.Mesh(geometry, material);
+            cylinder.position.set(position[0], position[1], position[2]);
+            cylinder.userData = { route, name, designation };
+            earthMesh.add(cylinder);
+          }
+        );
+
+        // Function to add profile image on buildings without animation
+        const addProfileImage = (
+          position: THREE.Vector3Like,
+          imageUrl: string
+        ) => {
+          const textureLoader = new THREE.TextureLoader();
+          const imageTexture = textureLoader.load(imageUrl);
+
+          const planeGeometry = new THREE.PlaneGeometry(0.4, 0.4); // Adjust size as needed
+          const planeMaterial = new THREE.MeshStandardMaterial({
+            map: imageTexture,
             transparent: true,
-            opacity: 0,
+            opacity: 1,
+            side: THREE.DoubleSide,
           });
-          const cylinder = new THREE.Mesh(geometry, material);
-          cylinder.position.set(position[0], position[1], position[2]);
-          cylinder.userData = { route, name };
-          earthMesh.add(cylinder);
-        });
+
+          const profileImagePlane = new THREE.Mesh(
+            planeGeometry,
+            planeMaterial
+          );
+          profileImagePlane.position.copy(position);
+          profileImagePlane.scale.set(0.5, 0.5, 0.5); // Adjust scale for visibility
+          earthMeshRef.current.add(profileImagePlane); // Add profile image to the earthMesh
+        };
+
+        // Inside loader.load callback, add static profile images
+        addProfileImage(
+          new THREE.Vector3(-0.93, 0.78, -0.4),
+          "/assets/Jordan.png"
+        );
+        addProfileImage(
+          new THREE.Vector3(-0.83, 1.03, 0.98),
+          "/assets/Sophia.png"
+        );
+        addProfileImage(
+          new THREE.Vector3(-0.43, 0.86, -1.25),
+          "/assets/Amina.png"
+        );
 
         // Function to create and add an arrow with up-and-down animation
         const addArrow = (position: THREE.Vector3, imageUrl: string) => {
@@ -168,12 +244,14 @@ const Corporate = ({ onModelLoaded }: any) => {
         if (!hasModelLoaded.current) {
           setIsModelLoaded(true);
           onModelLoaded();
+          setIsLoading(false);
           hasModelLoaded.current = true;
         }
       },
       undefined,
       (error) => {
         console.error("Error loading the GLB model:", error);
+        setIsLoading(false);
       }
     );
 
@@ -182,7 +260,7 @@ const Corporate = ({ onModelLoaded }: any) => {
       controls.update();
       // Stop rotation if hovering over a mesh
       if (earthMeshRef.current && !isHovering.current) {
-        earthMeshRef.current.rotation.y -= 0.008; // Continuous rotation of the model
+        earthMeshRef.current.rotation.y -= 0.002; // Continuous rotation of the model
       }
       renderer.render(scene, camera.current!);
       // Call the rotate functions for arrows if they are defined
@@ -215,18 +293,23 @@ const Corporate = ({ onModelLoaded }: any) => {
 
         if (intersects.length > 0) {
           const hoveredObject: any = intersects[0].object;
-
           if (
             hoveredObject.userData.name &&
             clickableMeshNames.includes(hoveredObject.userData.name)
           ) {
             isHovering.current = true;
-            setHoveredProfile({
-              name: hoveredObject.userData.name,
-              picture: "",
-              position: { x: event.clientX, y: event.clientY },
-            });
-
+            if (
+              hoveredObject.userData.name === "Jordan Lee" ||
+              hoveredObject.userData.name === "Sophia Rodriguez" ||
+              hoveredObject.userData.name === "Amina Patel"
+            ) {
+              setHoveredProfile({
+                name: hoveredObject.userData.name,
+                designation: hoveredObject.userData.designation,
+                picture: "",
+                position: { x: event.clientX, y: event.clientY },
+              });
+            }
             hoveredObject.material.opacity = 0;
           }
         } else {
@@ -298,8 +381,58 @@ const Corporate = ({ onModelLoaded }: any) => {
       renderer.dispose();
     };
   }, [onModelLoaded, router]);
-
-  return <div ref={containerRef} style={{ height: "100vh", width: "100%" }} />;
+  return (
+    <>
+      {isLoading && (
+        <div className="z-50 w-screen h-screen fixed">
+          <SplashScreen />
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
+      >
+        {hoveredProfile && (
+          <div
+            style={{
+              position: "absolute",
+              top: hoveredProfile.position.y - 40,
+              left: hoveredProfile.position.x + 30,
+              background: "linear-gradient(to right, #BAA716, #B50D34)", // Gradient background
+              padding: "2px", // Thin padding to create the "border" effect
+              borderRadius: "10px", // Rounded corners
+              boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "white", // Inner background color
+                borderRadius: "8px", // Slightly smaller radius to fit inside the "border"
+                padding: "10px 22px",
+              }}
+            >
+              <h3
+                className="text-black text-[24px] font-bold"
+                style={{ fontFamily: "Sansation" }}
+              >
+                {hoveredProfile.name}
+              </h3>
+              <div className="flex items-center gap-4">
+                <p className="w-[6px] h-[6px] rounded-full bg-gradient-to-b from-[#BAA716] to-[#B50D34]"></p>
+                <h3
+                  className="text-black text-[16px] font-bold"
+                  style={{ fontFamily: "Sansation" }}
+                >
+                  {hoveredProfile.designation}
+                </h3>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default Corporate;

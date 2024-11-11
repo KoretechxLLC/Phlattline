@@ -20,6 +20,7 @@ const Construction = ({ onModelLoaded }: any) => {
 
   const [hoveredProfile, setHoveredProfile] = useState<{
     name: string;
+    designation: string;
     picture: string;
     position: { x: number; y: number };
   } | null>(null);
@@ -30,7 +31,12 @@ const Construction = ({ onModelLoaded }: any) => {
   const rotateArrow3 = useRef<() => void>(null!);
 
   useEffect(() => {
-    const clickableMeshNames = ["About", "Chatbot", "Contact Us"];
+    const clickableMeshNames = [
+      "About",
+      "Chatbot",
+      "Contact Us",
+      "Elijah Martinez",
+    ];
     if (hasModelLoaded.current) return; // Prevent duplicate model loading
 
     const container: any = containerRef.current;
@@ -76,7 +82,7 @@ const Construction = ({ onModelLoaded }: any) => {
         const center = box.getCenter(new THREE.Vector3());
         earthMesh.position.sub(center);
         const height = box.getSize(new THREE.Vector3()).y;
-        earthMesh.position.y += height / 1.9;
+        earthMesh.position.y += height / 1.8;
 
         const pivot = new THREE.Group();
         pivot.add(earthMesh);
@@ -88,39 +94,82 @@ const Construction = ({ onModelLoaded }: any) => {
             position: [1.3, 0.5, -0.6],
             route: "/About",
             name: "About",
+            designation: "",
             size: [0.18, 0.18, 0.85],
           },
           {
             position: [0.1, 0.35, 0.62],
             route: "",
             name: "Chatbot",
+            designation: "",
             size: [0.1, 0.1, 0.3],
           },
           {
             position: [1.05, 0.33, 0.72],
             route: "/Contact",
             name: "Contact Us",
+            designation: "",
             size: [0.1, 0.1, 0.3],
+          },
+          {
+            position: [-0.1, 0.98, -0.83],
+            route: "/ElijahMartinez",
+            name: "Elijah Martinez",
+            designation: "Sustainable Construction",
+            size: [0.1, 0.1, 0.2],
           },
         ];
 
-        clickableMeshes.forEach(({ position, route, name, size }) => {
-          const geometry = new THREE.CylinderGeometry(
-            size[0],
-            size[1],
-            size[2],
-            32
-          );
-          const material = new THREE.MeshStandardMaterial({
-            color: "blue",
+        clickableMeshes.forEach(
+          ({ position, route, name, size, designation }) => {
+            const geometry = new THREE.CylinderGeometry(
+              size[0],
+              size[1],
+              size[2],
+              32
+            );
+            const material = new THREE.MeshStandardMaterial({
+              color: "blue",
+              transparent: true,
+              opacity: 0,
+            });
+            const cylinder = new THREE.Mesh(geometry, material);
+            cylinder.position.set(position[0], position[1], position[2]);
+            cylinder.userData = { route, name, designation };
+            earthMesh.add(cylinder);
+          }
+        );
+
+        // Function to add profile image on buildings without animation
+        const addProfileImage = (
+          position: THREE.Vector3Like,
+          imageUrl: string
+        ) => {
+          const textureLoader = new THREE.TextureLoader();
+          const imageTexture = textureLoader.load(imageUrl);
+
+          const planeGeometry = new THREE.PlaneGeometry(0.4, 0.4); // Adjust size as needed
+          const planeMaterial = new THREE.MeshStandardMaterial({
+            map: imageTexture,
             transparent: true,
-            opacity: 0,
+            opacity: 3.5,
+            side: THREE.DoubleSide,
           });
-          const cylinder = new THREE.Mesh(geometry, material);
-          cylinder.position.set(position[0], position[1], position[2]);
-          cylinder.userData = { route, name };
-          earthMesh.add(cylinder);
-        });
+
+          const profileImagePlane = new THREE.Mesh(
+            planeGeometry,
+            planeMaterial
+          );
+          profileImagePlane.position.copy(position);
+          profileImagePlane.scale.set(0.5, 0.5, 0.5); // Adjust scale for visibility
+          earthMeshRef.current.add(profileImagePlane); // Add profile image to the earthMesh
+        };
+
+        // Inside loader.load callback, add static profile images
+        addProfileImage(
+          new THREE.Vector3(-0.4, 0.87, -0.65),
+          "/assets/Elijah.png"
+        );
 
         const addArrow = (position: THREE.Vector3, imageUrl: string) => {
           const textureLoader = new THREE.TextureLoader();
@@ -180,7 +229,7 @@ const Construction = ({ onModelLoaded }: any) => {
       requestAnimationFrame(animate);
       controls.update();
       if (earthMeshRef.current && !isHovering.current) {
-        earthMeshRef.current.rotation.y -= 0.005; // Continuous rotation of the model
+        earthMeshRef.current.rotation.y -= 0.002; // Continuous rotation of the model
       }
       renderer.render(scene, camera.current!);
       if (rotateArrow1.current) rotateArrow1.current();
@@ -212,18 +261,19 @@ const Construction = ({ onModelLoaded }: any) => {
 
         if (intersects.length > 0) {
           const hoveredObject: any = intersects[0].object;
-
           if (
             hoveredObject.userData.name &&
             clickableMeshNames.includes(hoveredObject.userData.name)
           ) {
             isHovering.current = true;
-            setHoveredProfile({
-              name: hoveredObject.userData.name,
-              picture: "",
-              position: { x: event.clientX, y: event.clientY },
-            });
-
+            if (hoveredObject.userData.name === "Elijah Martinez") {
+              setHoveredProfile({
+                name: hoveredObject.userData.name,
+                designation: hoveredObject.userData.designation,
+                picture: "",
+                position: { x: event.clientX, y: event.clientY },
+              });
+            }
             hoveredObject.material.opacity = 0;
           }
         } else {
@@ -243,7 +293,7 @@ const Construction = ({ onModelLoaded }: any) => {
       const start = performance.now();
       const initialPosition = camera.current?.position.clone();
       const targetPosition = new THREE.Vector3(0, 0, 0.5); // Zoom in closer on z-axis
-    
+
       const animateZoom = (time: number) => {
         const elapsed = time - start;
         const t = Math.min(elapsed / duration, 1);
@@ -252,7 +302,7 @@ const Construction = ({ onModelLoaded }: any) => {
           targetPosition,
           t
         );
-    
+
         if (t < 1) {
           requestAnimationFrame(animateZoom);
         } else {
@@ -302,11 +352,51 @@ const Construction = ({ onModelLoaded }: any) => {
           <SplashScreen />
         </div>
       )}
-      <div ref={containerRef} style={{ height: "100vh", width: "100%" }} />
+      <div
+        ref={containerRef}
+        style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
+      >
+        {hoveredProfile && (
+          <div
+            style={{
+              position: "absolute",
+              top: hoveredProfile.position.y - 40,
+              left: hoveredProfile.position.x + 30,
+              background: "linear-gradient(to right, #BAA716, #B50D34)",
+              padding: "2px",
+              borderRadius: "10px", // Rounded corners
+              boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "10px 22px",
+              }}
+            >
+              <h3
+                className="text-black text-[24px] font-bold"
+                style={{ fontFamily: "Sansation" }}
+              >
+                {hoveredProfile.name}
+              </h3>
+              <div className="flex items-center gap-3">
+                <p className="w-[6px] h-[6px] rounded-full bg-gradient-to-b from-[#BAA716] to-[#B50D34]"></p>
+                <h3
+                  className="text-black text-[16px] font-bold"
+                  style={{ fontFamily: "Sansation" }}
+                >
+                  {hoveredProfile.designation}
+                </h3>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 };
 
 export default Construction;
-
-
