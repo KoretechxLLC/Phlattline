@@ -110,7 +110,12 @@ const DailyDose = () => {
   const [allCourses, setAllCourses] = useState<any>([]);
 
   useEffect(() => {
-    dispatch(fetchcourses({}));
+    let filter = {
+      page: 0,
+      size: 0,
+    };
+
+    dispatch(fetchcourses({ filter: filter }));
   }, [dispatch]);
 
   useEffect(() => {

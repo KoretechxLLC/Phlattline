@@ -49,12 +49,11 @@ export async function POST(request: NextRequest) {
       | string
       | null;
     const profile_image = formData.get("profile_image") as File | null;
-    const categoryId = parseInt(formData.get("categoryId") as string) || 0;
-    const subCategoryId =
-      parseInt(formData.get("subCategoryId") as string) || 0;
+    const categoryId = formData.get("categoryId") as string;
+    const subCategoryId = formData.get("SubCategoryId") as string;
 
     // Ensure categoryId and subCategoryId are valid
-    if (isNaN(categoryId) || isNaN(subCategoryId)) {
+    if (Number(categoryId) || Number(subCategoryId)) {
       return NextResponse.json(
         { message: "Invalid category or sub-category ID.", success: false },
         { status: 400 }
@@ -63,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // Ensure category exists
     const categoryExists = await prisma.assessment_category.findUnique({
-      where: { id: categoryId },
+      where: { id: Number(categoryId) },
     });
 
     if (!categoryExists) {
@@ -74,9 +73,9 @@ export async function POST(request: NextRequest) {
     }
 
     // If subCategoryId is provided, validate that it exists under the category
-    if (subCategoryId !== 0) {
+    if (Number(subCategoryId) !== 0) {
       const subCategoryExists = await prisma.assessment_subCategory.findFirst({
-        where: { id: subCategoryId, category_id: categoryId },
+        where: { id: Number(subCategoryId), category_id: Number(categoryId) },
       });
 
       if (!subCategoryExists) {
@@ -155,8 +154,8 @@ export async function POST(request: NextRequest) {
         user_type_id: organizationId ? 2 : 1,
         organization_id: organizationId || undefined,
         profile_image: profileImagePath || undefined,
-        categoryId: categoryId,
-        subCategoryId: subCategoryId,
+        categoryId: Number(categoryId),
+        subCategoryId: Number(subCategoryId),
       },
     });
 

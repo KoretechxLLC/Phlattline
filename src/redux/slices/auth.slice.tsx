@@ -49,12 +49,13 @@ export const login = createAsyncThunk<any, any>(
   }
 );
 
-
 export const logout = createAsyncThunk(
   "auth/logout",
   async (userId: string, thunkAPI) => {
     try {
-      const response = await axiosInstance.post(`/api/auth/logout?id=${userId}`);
+      const response = await axiosInstance.post(
+        `/api/auth/logout?id=${userId}`
+      );
 
       // Perform token removal and clear local storage, cookies
       await localforage.removeItem("access_token");
@@ -67,12 +68,12 @@ export const logout = createAsyncThunk(
 
       return { message: response.data?.message || "Logout successful" };
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Internal Server Error");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
     }
   }
 );
-
-
 
 export const Register = createAsyncThunk<any, FormData>(
   "auth/Register",
@@ -178,8 +179,7 @@ const authSlice = createSlice({
         localforage.setItem("access_token", action.payload.accessToken);
         localforage.setItem("refresh_Token", action.payload.refreshToken);
 
-        window.location.href = "/Portal/Dashboard"
-
+        window.location.href = "/Portal/Dashboard";
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -198,19 +198,19 @@ const authSlice = createSlice({
         state.error = action.payload ?? "Unknown error";
       })
 
-      //Logout 
+      //Logout
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(logout.fulfilled, (state) => {
-
         state.isLoading = false;
         state.userData = null;
         state.accessToken = null;
         state.refreshToken = null;
         state.success = "Logout successful";
-        window.location.href = "/Login"
+        if (typeof window !== "undefined" && window)
+          window.location.href = "/Login";
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;

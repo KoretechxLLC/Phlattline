@@ -35,9 +35,9 @@ model users {
   categoryId                Int
   subCategoryId             Int
   timeLogs                  TimeLog[]
-  trainingOnDemand          trainingOnDemand[]
   course_assignments        course_assignments[]
   purchased_assessments     purchased_assessments[]
+  trainingOnDemand          trainingOnDemand[]
   user_assessment_responses user_assessment_responses[]
   user_courses              user_courses[]
   user_goals                user_goal[]
@@ -64,6 +64,8 @@ model courses {
   course_name               String                      @db.VarChar(255)
   description               String?
   price                     Float
+  created_at                DateTime                    @default(now())
+  updated_at                DateTime                    @default(now()) @updatedAt
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   assessments               assessments[]
@@ -71,8 +73,6 @@ model courses {
   user_courses              user_courses[]
   user_video_progress       user_video_progress[]
   videos                    videos[]
-  created_at                DateTime                    @default(now())
-  updated_at                DateTime                    @default(now()) @updatedAt
 }
 
 model videos {

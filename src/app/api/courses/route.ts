@@ -455,12 +455,11 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("id"); // Get the course ID from query params
 
-
     if (courseId) {
       const course = await prisma.courses.findUnique({
         where: { id: Number(courseId) },
         include: {
-          videos: true, 
+          videos: true,
           assessments: {
             include: {
               questions: true,

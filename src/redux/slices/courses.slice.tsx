@@ -18,7 +18,7 @@ interface CoursesState {
   videoProgressError: string | null;
   videoProgressSuccess: string | null;
   videoProgress: any; // Assuming you want to store video progress
-  usercourses : any;
+  usercourses: any;
   responses: any;
   purchaseCourse: any | null;
   purchaseCourseLoader: boolean | null;
@@ -77,8 +77,7 @@ export const fetchcourses = createAsyncThunk<any, any>(
   async ({ filter }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/courses?page=${filter.page}&size=${filter.size} : ""
-        }`
+        `/api/courses?page=${filter.page}&size=${filter.size} : "" }`
       );
       return response.data.data;
     } catch (error: any) {
@@ -115,7 +114,9 @@ export const fetchusercourses = createAsyncThunk<any, number>(
   "courses/fetchusercourses",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/api/usercourses?userId=${userId}`);
+      const response = await axiosInstance.get(
+        `/api/usercourses?userId=${userId}`
+      );
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -126,7 +127,6 @@ export const fetchusercourses = createAsyncThunk<any, number>(
     }
   }
 );
-
 
 export const coursesAssessmentResponses = createAsyncThunk<
   any,
@@ -236,18 +236,15 @@ const coursesSlice = createSlice({
         state.loading = true;
         state.error = null;
         state.coursesSuccess = false;
-        state.success = null
+        state.success = null;
       })
       .addCase(fetchcourses.fulfilled, (state, action) => {
-
-
         state.loading = false;
         state.courses = action.payload;
         state.coursesSuccess = true;
-        state.success = "Course Successfully fetched"
+        state.success = "Course Successfully fetched";
       })
       .addCase(fetchcourses.rejected, (state, action) => {
-        console.log(action.payload,"payload")
         state.loading = false;
         state.error = action.payload as string;
         state.coursesSuccess = false;
