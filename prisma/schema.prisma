@@ -68,6 +68,8 @@ model courses {
   updated_at                DateTime                    @default(now()) @updatedAt
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
+  categoryId                Int
+  subCategoryId             Int
   assessments               assessments[]
   course_assignments        course_assignments[]
   user_courses              user_courses[]

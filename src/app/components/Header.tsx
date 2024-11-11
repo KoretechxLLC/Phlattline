@@ -6,6 +6,7 @@ import Notifications from "@/app/components/notifications";
 import EditWidget from "@/app/components/EditWidget";
 import { Badge } from "@/app/components/badge";
 import RedBadge from "@/app/components/RedBadge";
+import { Hamburger } from "./hamburger";
 
 interface HeaderProps {
   HeadingText: string;
@@ -42,8 +43,13 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
             {/* <HeaderSearch /> */}
           </div>
 
-          {/* <Notifications /> */}
-          <ProfileInfo />
+          {/* Conditionally render components based on screen size */}
+          <div className="hidden xl:block">
+            <ProfileInfo /> {/* Show ProfileInfo on screens above xl */}
+          </div>
+          <div className="block xl:hidden">
+            <Hamburger /> {/* Show Example on screens below xl */}
+          </div>
         </div>
       </div>
     </div>

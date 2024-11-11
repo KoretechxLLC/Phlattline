@@ -135,7 +135,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dashcode-app-calendar .fc-event-main{
-  @apply absolute -bottom-6 -my-7;
+  @apply absolute -bottom-6 -my-3;
 }
 
 .dashcode-app-calendar .fc-daygrid-day-number{

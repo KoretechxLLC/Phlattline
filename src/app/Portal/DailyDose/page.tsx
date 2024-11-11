@@ -155,7 +155,7 @@ const DailyDose = () => {
 
     return (
       <div
-        className={`w-full flex flex-col justify-between cursor-pointer gap-y-7 w-full h-full px-2 py-7 lg:mx-6 5xl:mx-2 rounded-lg text-white border-l-4 ${borderColor}`}
+        className={`w-full flex flex-col justify-between cursor-pointer gap-y-7  h-full px-2 py-7 4xl:py-4 lg:mx-6 4xl:mx-1 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor}`}
         style={{ backgroundColor }}
       >
         <div className="flex-grow">
@@ -164,7 +164,7 @@ const DailyDose = () => {
 
         <div className="flex flex-col w-full">
           <span
-            className={`font-bold ${textColor} text-center break-words whitespace-normal text-sm `}
+            className={`font-bold ${textColor} text-center break-words whitespace-normal text-sm 4xl:text-xs `}
           >
             {calendar}
           </span>
@@ -199,7 +199,7 @@ const DailyDose = () => {
   ) : (
     <>
       <div className="flex flex-col w-full h-full overflow-hidden">
-        <Card className="flex-grow py-2 border rounded-3xl border-gray-500 lg:my-20 5xl:my-0  w-full">
+        <Card className="flex-grow py-2 border rounded-3xl border-gray-500 lg:my-20 4xl:my-0 5xl:my-0  w-full">
           <div className="p-2 dashcode-app-calendar w-full h-full">
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin, listPlugin]}

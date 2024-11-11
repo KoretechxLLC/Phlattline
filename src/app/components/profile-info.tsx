@@ -11,14 +11,15 @@ import { RootState } from "@/redux/store";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { logout } from "@/redux/slices/auth.slice";
 
 const ProfileInfo = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
+  const [open, setOpen] = useState(false);
 
   const router = useRouter();
-   const dispatch: any = useDispatch();
+  const dispatch: any = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const userId: any = userData?.id; // Access the user ID from userData
@@ -26,17 +27,17 @@ const ProfileInfo = () => {
   const handleLogout = async () => {
     try {
       setLoading(true); // Start loading
-  
+
       // Assuming `userId` is fetched correctly from `userData`
       const userId = userData?.id;
-  
+
       if (!userId) {
         console.error("User ID not found.");
         return;
       }
-  
+
       await dispatch(logout(userId));
-  
+
       router.push("/Login");
     } catch (error) {
       console.error("Error during logout:", error);
@@ -44,7 +45,6 @@ const ProfileInfo = () => {
       setLoading(false); // Stop loading
     }
   };
-  
 
   return (
     <div className="md:block hidden">
@@ -112,20 +112,20 @@ const ProfileInfo = () => {
               </div>
             ))}
           </DropdownMenuGroup>
-          <DropdownMenuItem
-            className="flex items-center ml-6 gap-4 text-sm font-medium text-default-600 capitalize my-1 px-1 cursor-pointer"
-          >
+          <DropdownMenuItem className="flex items-center ml-6 gap-4 text-sm font-medium text-default-600 capitalize my-1 px-1 cursor-pointer">
             <button
               type="button"
               onClick={handleLogout} // Attach the handleLogout function here
               className="w-full flex items-center gap-4"
               disabled={loading} // Disable the button when loading
             >
-              <Icon icon="heroicons:arrow-right-on-rectangle" className="w-5 h-5 text-red-600" />
+              <Icon
+                icon="heroicons:arrow-right-on-rectangle"
+                className="w-5 h-5 text-red-600"
+              />
               {loading ? "Logging out..." : "Log out"}
             </button>
           </DropdownMenuItem>
-
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -35,15 +35,16 @@ async function saveFile(file: File, destination: string): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
-    const body: any = await req.formData(); // Parse form data
+    const body: any = await req.formData();
 
     const course_name = String(body.get("course_name")).trim();
     const description = String(body.get("description")).trim();
     const price = parseFloat(body.get("price"));
+    const categoryId = parseInt(body.get("categoryId"));
+    const subCategoryId = parseInt(body.get("subCategoryId"));
     let assessments = body.get("assessments");
     assessments = JSON.parse(assessments);
 
-    // Validate course_name and description
     if (!course_name) {
       return NextResponse.json(
         { error: "Course name is required." },
@@ -62,8 +63,13 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    if (isNaN(categoryId) || isNaN(subCategoryId)) {
+      return NextResponse.json(
+        { error: "Category ID and Subcategory ID are required." },
+        { status: 400 }
+      );
+    }
 
-    // Validate assessments
     if (!Array.isArray(assessments) || assessments.length === 0) {
       return NextResponse.json(
         { error: "At least one assessment is required." },
@@ -72,14 +78,11 @@ export async function POST(req: NextRequest) {
     }
 
     const videosData: any[] = [];
-    const assessmentsData: any[] = []; // Initialize assessmentsData array
-
-    // Video data processing
     for (const [key, value] of body.entries()) {
       const match = key.match(/videos\[(\d+)\]\[(\w+)\]/);
       if (match) {
-        const index = match[1]; // Get the index of the video
-        const type = match[2]; // Get the type (file, title, etc.)
+        const index = match[1];
+        const type = match[2];
 
         if (!videosData[index]) {
           videosData[index] = {
@@ -90,64 +93,34 @@ export async function POST(req: NextRequest) {
             thumbnail_url: "",
           };
         }
+
         if (type === "file" && value instanceof File) {
-          // Save the video file and store only the file name in the database
           const videoFilename = await saveFile(value, "public/courses/videos");
-          videosData[index].video_url = videoFilename; // Save only the file name
+          videosData[index].video_url = videoFilename;
         } else if (type === "title") {
           videosData[index].title = String(value).trim();
-          if (!videosData[index].title) {
-            return NextResponse.json(
-              { error: `Title is required for video ${parseInt(index) + 1}.` },
-              { status: 400 }
-            );
-          }
         } else if (type === "description") {
           videosData[index].description = String(value).trim();
-          if (!videosData[index].description) {
-            return NextResponse.json(
-              {
-                error: `Description is required for video ${
-                  parseInt(index) + 1
-                }.`,
-              },
-              { status: 400 }
-            );
-          }
         } else if (type === "thumbnail" && value instanceof File) {
-          // Save the thumbnail file and store only the file name in the database
           const thumbnailFilename = await saveFile(
             value,
             "public/courses/thumbnails"
           );
-          videosData[index].thumbnail_url = thumbnailFilename; // Save only the file name
+          videosData[index].thumbnail_url = thumbnailFilename;
         } else if (type === "sequence") {
           videosData[index].sequence = Number(value);
         }
       }
     }
 
-    let assessmentValidation = await assessments.map((e, i) => {
-      if (!e?.title) {
-        throw new Error(" Assessments Title not found");
-      }
-
-      let values = Object.values(e?.questions);
-
-      let flag =
-        values &&
-        values.length > 0 &&
-        values.some((question: any) => Object.values(question).some((e) => !e));
-
-      if (flag) {
-        throw new Error("Question fields are required");
-      }
-    });
+    // Create course in the database
     const course = await prisma.courses.create({
       data: {
         course_name,
         description,
         price,
+        categoryId,
+        subCategoryId,
         videos: {
           create: videosData,
         },
@@ -164,12 +137,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: course }, { status: 200 });
   } catch (error: any) {
-    console.error("Error creating course with video upload:", error);
+    console.error("Error creating course:", error);
     return NextResponse.json(
-      {
-        error: error?.message || "Failed to create course with video upload",
-        details: error.message,
-      },
+      { error: error.message || "Failed to create course" },
       { status: 500 }
     );
   }
