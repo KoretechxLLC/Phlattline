@@ -108,7 +108,7 @@ const AssessmentsCatalogue = () => {
         </>
       ) : (
         <div className="text-center text-gray-300 py-24">
-          No Assessments Found!
+          No Assessment Found!
         </div>
       )}
     </div>

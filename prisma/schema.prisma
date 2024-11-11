@@ -66,6 +66,8 @@ model courses {
   price                     Float
   created_at                DateTime                    @default(now())
   updated_at                DateTime                    @default(now()) @updatedAt
+  categoryId                Int
+  subCategoryId             Int
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   categoryId                Int
