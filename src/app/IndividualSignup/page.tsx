@@ -1,27 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-const industries = [
-  { value: "technology", label: "Technology" },
-  { value: "finance", label: "Finance" },
-  { value: "healthcare", label: "Healthcare" },
-  { value: "education", label: "Education" },
-  { value: "manufacturing", label: "Manufacturing" },
-];
-
-const designations = [
-  { value: "software-engineer", label: "Software Engineer" },
-  { value: "project-manager", label: "Project Manager" },
-  { value: "product-designer", label: "Product Designer" },
-  { value: "data-analyst", label: "Data Analyst" },
-  { value: "marketing-specialist", label: "Marketing Specialist" },
-];
 
 import {
-  MdBuild,
   MdDomain,
   MdEmail,
-  MdHomeWork,
   MdLock,
   MdPerson,
   MdPhone,
@@ -37,8 +20,6 @@ import { Register, setError, setSuccess } from "@/redux/slices/auth.slice";
 import StackedNotifications from "../components/Stackednotification";
 import { RootState } from "@/redux/store";
 import { SparklesCore } from "../components/sparkles";
-import { AuroraBackground } from "../components/AuroraBackground";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { CustomPhoneInput } from "../components/phoneInput";
 import {

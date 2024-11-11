@@ -173,9 +173,9 @@ const AssessmentTaskTracker = ({
                     <Button
                       className="text-md md:text-2 w-full sm:w-auto rounded-2xl px-3 py-2 sm:px-6 cursor-pointer"
                       color="primary"
-                      onClick={() =>
-                        handleButtonClick(item?.individual_assessments?.id)
-                      }
+                      onClick={() => {
+                        handleButtonClick(item?.individual_assessments_id);
+                      }}
                     >
                       Take Assessment
                     </Button>
