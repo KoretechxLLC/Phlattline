@@ -16,12 +16,14 @@ export async function GET(req: NextRequest) {
       where: {
         user_id: Number(userId),
       },
+
       include: {
         question: {
           include: {
             individual_assessment_options: true,
           },
         },
+        assessment: true,
       },
     });
 

@@ -66,6 +66,8 @@ model courses {
   price                     Float
   created_at                DateTime                    @default(now())
   updated_at                DateTime                    @default(now()) @updatedAt
+  categoryId                Int
+  subCategoryId             Int
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   assessments               assessments[]
@@ -117,14 +119,14 @@ model user_courses {
 }
 
 model purchased_assessments {
-  id                        Int                      @id @default(autoincrement())
+  id                        Int                    @id @default(autoincrement())
   user_id                   Int
   individual_assessments_id Int
-  completed                 Boolean                  @default(false)
-  purchasedAt               DateTime                 @default(now()) @db.Timestamp(6)
-  updatedAt                 DateTime                 @updatedAt
-  individual_assessments    individual_assessments[]
-  users                     users                    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  completed                 Boolean                @default(false)
+  purchasedAt               DateTime               @default(now()) @db.Timestamp(6)
+  updatedAt                 DateTime               @updatedAt
+  individual_assessments    individual_assessments @relation(fields: [individual_assessments_id], references: [id])
+  users                     users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model course_assignments {

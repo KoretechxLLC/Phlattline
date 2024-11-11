@@ -1,45 +1,150 @@
 "use client";
 
 import { useConfig } from "@/app/hooks/use-config";
-import { useTheme } from "next-themes";
-import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-import Spinner from "@/app/components/Spinner"; // Adjust the import based on your project's structure
+import {
+  fetchAssessments,
+  resetSuccess,
+} from "@/redux/slices/individualassessment.slice";
+import { fetchAssessmentsResponse } from "@/redux/slices/individualAssessmentResponse.slice";
+import { RootState } from "@/redux/store";
 
-interface PrevResultsTrackerProps {
+import dynamic from "next/dynamic";
+
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import GraphLoader from "./graphLoader";
+
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+interface AssessmentTrackerProps {
   height?: number;
   chartType?: "bar" | "area";
   categories?: string[];
 }
 
+const generateColors = (numFields: number) => {
+  const colors = [];
+  for (let i = 0; i < numFields; i++) {
+    colors.push(i % 2 === 0 ? "#FF0700" : "#FDF53F");
+  }
+  return colors;
+};
+
+const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
+  let calculatedGraph =
+    assessments &&
+    assessments?.length > 0 &&
+    assessments
+      .map((index: any) => {
+        let responseData = assessmentsResponse
+          ?.map((e: any) => {
+            if (e?.question?.individual_assessment_id == index?.id) {
+              let assessementTrack = e?.question?.individual_assessment_options
+                .map((option: any) => {
+                  if (e?.selected_option == option?.option_text) {
+                    return option.percentage;
+                  }
+                })
+                .filter(Boolean);
+
+              return {
+                id: e?.question?.individual_assessment_id,
+                percentage: assessementTrack,
+              };
+            }
+          })
+          .filter(Boolean);
+
+        let totalPercentage = 0;
+
+        responseData.forEach((item: any) => {
+          const currentSum =
+            item?.percentage.length > 0
+              ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
+              : 0;
+
+          totalPercentage += currentSum;
+        });
+
+        if (responseData && responseData.length > 0) {
+          return {
+            title: index.title,
+            percentage:
+              totalPercentage / index.individual_assessment_questions.length,
+          };
+        }
+      })
+      .filter(Boolean);
+
+  return calculatedGraph;
+};
+
 const PreviousResultsTracker = ({
-  height = 215,
+  height = 170,
   chartType = "bar",
-  categories = [
-    "Lack of Interest",
-    "Focus Problem",
-    "Time Management",
-    "Operational",
-    "Role Specification",
-  ],
-}: PrevResultsTrackerProps) => {
+}: AssessmentTrackerProps) => {
   const [config] = useConfig();
   const { isRtl } = config;
-  const { theme: mode } = useTheme();
 
-  const data = [44, 55, 57, 60, 48]; // This data could be fetched dynamically
-  const isLoading = false; // Set this to true while loading data (e.g., fetching from an API)
+  const [allCategories, setAllCategories] = useState<any>([]);
+  const { assessments, loading, error, success } = useSelector(
+    (state: RootState) => state.assessment
+  );
 
-  const isDataEmpty = !data || data.length === 0;
+  const {
+    responseLoading,
+    responseError,
+    assessmentsResponse,
+    responseSuccess,
+  } = useSelector((state: RootState) => state.assessmentResponse);
 
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId: any = userData?.id;
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      fetchAssessments({
+        filter: {
+          page: 0,
+          size: 0,
+        },
+      })
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchAssessmentsResponse({ userId }));
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    if (responseSuccess) {
+      dispatch(resetSuccess());
+    }
+  }, [responseSuccess]);
+  useEffect(() => {
+    if (assessments && assessments.length > 0) {
+      const categories =
+        assessments?.length > 0 ? assessments?.map((e: any) => e?.title) : [];
+      setAllCategories(categories);
+    }
+  }, [assessments]);
+
+  const data = calculatePercentages(assessmentsResponse, assessments);
+
+  const chartColors = generateColors(allCategories.length);
   const series = [
     {
       name: "Assessments",
-      data: data.map((value, index) => ({
-        x: categories[index],
-        y: value,
-        fillColor: "#FFFFFF",
-      })),
+      data:
+        data &&
+        data.length > 0 &&
+        data.map((value: any, index: any) => ({
+          x: value?.title,
+          y: value?.percentage,
+          fillColor: chartColors[index],
+        })),
     },
   ];
 
@@ -53,20 +158,14 @@ const PreviousResultsTracker = ({
       bar: {
         horizontal: false,
         endingShape: "rounded",
-        columnWidth: "15%",
-        borderRadius: 5,
+        columnWidth: "5%",
       },
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ["#000000"],
     },
     legend: {
       show: true,
       position: "top",
       horizontalAlign: "right",
-      fontSize: "10px",
+      fontSize: "20px",
       offsetY: -30,
       markers: {
         width: 8,
@@ -83,10 +182,27 @@ const PreviousResultsTracker = ({
         vertical: 0,
       },
     },
+    title: {
+      align: "left",
+      offsetY: 13,
+      offsetX: isRtl ? "0%" : 0,
+      floating: false,
+      style: {
+        fontSize: "20px",
+        fontWeight: "500",
+        color: "#62626280",
+      },
+    },
     dataLabels: {
       enabled: false,
     },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ["transparent"],
+    },
     yaxis: {
+      percentage: [0, 10, 40, 70, 100],
       labels: {
         style: {
           colors: "#ffffff",
@@ -94,7 +210,7 @@ const PreviousResultsTracker = ({
       },
     },
     xaxis: {
-      categories: categories,
+      categories: allCategories,
       labels: {
         style: {
           colors: "#ffffff",
@@ -111,7 +227,8 @@ const PreviousResultsTracker = ({
       opacity: 1,
     },
     tooltip: {
-      theme: mode === "dark" ? "dark" : "light",
+      theme: "dark",
+      style: {},
       y: {
         formatter: function (val: number) {
           return val + "%";
@@ -122,6 +239,7 @@ const PreviousResultsTracker = ({
       show: false,
       borderColor: "#62626280",
       strokeDashArray: 10,
+      position: "back",
     },
     responsive: [
       {
@@ -136,6 +254,9 @@ const PreviousResultsTracker = ({
             bar: {
               columnWidth: "30%",
             },
+            chart: {
+              width: "50%",
+            },
           },
         },
       },
@@ -143,21 +264,27 @@ const PreviousResultsTracker = ({
   };
 
   return (
-    <div className="relative w-full h-[215px] sm:h-[280px] md:h-[320px] 4xl:h-[205px] lg:h-[215px]">
-      {isLoading ? (
-        <Spinner height="20vh" /> // Show spinner when loading
-      ) : isDataEmpty ? (
-        <div className="text-gray-500">No data found</div> // Message when no data is found
+    <>
+      {responseLoading ? (
+        <div className="text-center text-gray-300">
+          <GraphLoader />
+        </div>
+      ) : data && data.length > 0 ? (
+        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[150px] ">
+          <Chart
+            options={options}
+            series={series}
+            type={chartType}
+            height="100%"
+            width="100%"
+          />
+        </div>
       ) : (
-        <Chart
-          options={options}
-          series={series}
-          type={chartType}
-          height="100%"
-          width="100%"
-        />
+        <div className="text-center text-gray-300 py-12">
+          Please Submit Assessments First!
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
