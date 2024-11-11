@@ -69,6 +69,10 @@ const CourseReport = () => {
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = usercourses.slice(indexOfFirstCourse, indexOfLastCourse);
 
+
+
+
+
   // Handle page change
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -77,11 +81,11 @@ const CourseReport = () => {
 
 
 
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchtimelog(userId));
-    }
-  }, [dispatch, userId]);
+  // useEffect(() => {
+  //   if (userId) {
+  //     dispatch(fetchtimelog({userId:userId,duration:""}));
+  //   }
+  // }, [dispatch, userId]);
 
   useEffect(() => {
     if (logSuccess) {

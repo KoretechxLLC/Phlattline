@@ -55,7 +55,7 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
       let recommendedassessmentDataArray: any = [];
       recommendedassessmentDataArray = recommendedAssessment?.filter(
         (e: any) => {
-          return userData?.purchased_assessments.every(
+          return userData?.purchased_assessments?.every(
             (item: any) => item?.individual_assessments_id != e.id
           );
         }

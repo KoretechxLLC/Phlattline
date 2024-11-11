@@ -60,17 +60,11 @@ const Courses = () => {
     );
   }, [dispatch, currentPage]);
 
-  console.log(courses, "This is courses");
 
   // Update `coursesData` when `coursesSuccess` changes
   useEffect(() => {
     if (coursesSuccess) {
-      let categoryCourses =
-        courses &&
-        courses?.length > 0 &&
-        courses?.filter(
-          (course: any) => course?.categoryId == userData?.categoryId
-        );
+      let categoryCourses = courses && courses?.length>0 && courses?.filter((course:any)=> course?.categoryId == userData?.categoryId)
       setCoursesData(categoryCourses);
     }
   }, [coursesSuccess, courses]);

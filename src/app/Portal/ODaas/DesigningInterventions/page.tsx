@@ -39,11 +39,13 @@ const DesigningInterventions = () => {
   const assessmentCatalogueData = [
     {
       image: "/assets/assessment1.png",
+      id: 1, // Added id
       title: "Team Assessment",
       price: 49,
     },
     {
       image: "/assets/assessment2.png",
+      id: 2, // Added id
       title: "Self Assessment",
       price: 29,
     },

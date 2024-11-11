@@ -91,16 +91,19 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (!duration) {
 
-      return NextResponse.json(
-        { error: "duration is required." },
-        { status: 400 }
-      );
 
-    }
 
-    if (duration != "week" && duration != "month" && duration != "year") {
+    // if (!duration) {
+
+    //   return NextResponse.json(
+    //     { error: "duration is required." },
+    //     { status: 400 }
+    //   );
+
+    // }
+
+    if (duration && duration != "week" && duration != "month" && duration != "year") {
       return NextResponse.json(
         { error: "Invalid duration." },
         { status: 400 }
@@ -138,30 +141,50 @@ export async function GET(req: NextRequest) {
 
 
 
+    if (duration) {
 
+      if (!startDate.isValid() || !endDate.isValid()) {
+        return NextResponse.json(
+          { error: "Invalid start or end date." },
+          { status: 400 }
+        );
+      }
 
-    if (!startDate.isValid() || !endDate.isValid()) {
-      return NextResponse.json(
-        { error: "Invalid start or end date." },
-        { status: 400 }
-      );
     }
 
     // Convert to JavaScript Date objects
-    const start = startDate.toDate();
-    const end = endDate.toDate();
 
-    const timelogs = await prisma.timeLog.findMany({
-      where: {
-        userId,
-        date: {
-          gte: start,
-          lte: end,
-        }
-      },
+    let timelogs;
 
-      orderBy: { date: 'asc' },
-    });
+    if (duration) {
+      const start = startDate.toDate();
+      const end = endDate.toDate();
+
+      timelogs = await prisma.timeLog.findMany({
+        where: {
+          userId,
+          date: {
+            gte: start,
+            lte: end,
+          }
+        },
+
+        orderBy: { date: 'asc' },
+      });
+
+    }
+    else {
+
+
+      timelogs = await prisma.timeLog.findMany({
+        where: {
+          userId,
+        },
+
+        orderBy: { date: 'asc' },
+      });
+
+    }
 
     const totalTimeSpent = timelogs.reduce((total, log) => total + log.timeSpent, 0);
 
