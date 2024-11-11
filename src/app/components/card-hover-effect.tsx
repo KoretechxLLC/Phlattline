@@ -18,7 +18,7 @@ export const HoverEffect = ({
     title: string;
     image: string;
     price: number;
-  }[];
+  }[]
   className?: string; // Optional className prop
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);

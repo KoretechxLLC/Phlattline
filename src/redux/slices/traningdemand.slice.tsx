@@ -16,7 +16,6 @@ const initialState: TrainingOnDemandState = {
   };
   
 
-// Thunk for fetching training sessions for a specific user
 export const fetchTrainingOnDemand = createAsyncThunk<any, number>(
   "trainingOnDemand/fetchTrainingOnDemand",
   async (userId, { rejectWithValue }) => {
@@ -97,7 +96,6 @@ const trainingOnDemandSlice = createSlice({
   },
 });
 
-// Export the action to clear messages
 export const { clearMessages } = trainingOnDemandSlice.actions;
 
 export default trainingOnDemandSlice.reducer;
