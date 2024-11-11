@@ -85,8 +85,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            {path !== "/Portal" && (
-              <div className="z-20 fixed left-12 top-12">
+            {path !== "/Portal/" && (
+              <div className="z-20 fixed left-12 top-12 ">
                 <Logo />
               </div>
             )}

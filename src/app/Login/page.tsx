@@ -198,6 +198,9 @@ const Login = () => {
               <motion.div
                 variants={primaryVariants}
                 whileTap={{ scale: 0.985 }}
+                onClick={() => {
+                  router.push("/IndividualSignup");
+                }}
                 className="cursor-pointer mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium"
               >
                 Register

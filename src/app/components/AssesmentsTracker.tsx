@@ -282,7 +282,7 @@ const AsessmentTracker = ({
           />
         </div>
       ) : (
-        <div className="text-center text-gray-300 py-12">
+        <div className="text-center text-gray-300 py-16">
           Please Submit Assessments First!
         </div>
       )}

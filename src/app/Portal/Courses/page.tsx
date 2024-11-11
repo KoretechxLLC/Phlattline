@@ -14,6 +14,7 @@ import NotesCalendar from "@/app/components/NotesCalendar";
 import { Button } from "@/app/components/button-sidebar";
 import { fetchcourses, fetchcoursesCount } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
+import { RootState } from "@/redux/store";
 
 const Courses = () => {
   const router = useRouter();
@@ -34,6 +35,8 @@ const Courses = () => {
     coursesCountLoading,
     coursesCountSuccess,
   } = useSelector((state: any) => state.courses);
+
+  const { userData } = useSelector((state: RootState) => state.auth);
 
   // Fetch total count of courses once
   useEffect(() => {
@@ -57,10 +60,18 @@ const Courses = () => {
     );
   }, [dispatch, currentPage]);
 
+  console.log(courses, "This is courses");
+
   // Update `coursesData` when `coursesSuccess` changes
   useEffect(() => {
     if (coursesSuccess) {
-      setCoursesData(courses);
+      let categoryCourses =
+        courses &&
+        courses?.length > 0 &&
+        courses?.filter(
+          (course: any) => course?.categoryId == userData?.categoryId
+        );
+      setCoursesData(categoryCourses);
     }
   }, [coursesSuccess, courses]);
 
