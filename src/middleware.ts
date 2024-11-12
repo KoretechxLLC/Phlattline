@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (token && (path === "/Login" || path === "/IndividualSignup")) {
-    return NextResponse.redirect(new URL("/Portal/Dashboardnpx ", request.url));
+    return NextResponse.redirect(new URL("/Portal/Dashboard", request.url));
   }
 
   if (path && path.includes("/api")) {
