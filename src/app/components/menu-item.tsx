@@ -37,7 +37,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
       >
         <button
           className={`flex items-center`}
-          onClick={() => router.push(`/Portal/${href}`)}
+          onClick={() => router.push(`/Portal${href}`)}
         >
           <div className="flex items-center">
             <Image
