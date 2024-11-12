@@ -466,7 +466,7 @@ export async function GET(req: NextRequest) {
 
     if (allCourses.length === 0) {
       return NextResponse.json(
-        { error: "No Course available" },
+        { error: "Oops! It looks like there are no courses available right now." },
         { status: 404 }
       );
     }

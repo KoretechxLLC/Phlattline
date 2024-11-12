@@ -69,7 +69,7 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
     if (assessmentsSuccess) {
       let assessmentData: any = [];
       assessmentData = assessments?.filter((e: any) => {
-        return userData?.purchased_assessments.every(
+        return userData?.purchased_assessments?.every(
           (item: any) => item?.individual_assessments_id != e.id
         );
       });

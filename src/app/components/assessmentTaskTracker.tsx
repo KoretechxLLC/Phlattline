@@ -54,6 +54,8 @@ const AssessmentTaskTracker = ({
     },
   ];
 
+
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -74,6 +76,8 @@ const AssessmentTaskTracker = ({
       router.push(`/paidAssessmnet?assessmnetId=${id}`);
     }
   };
+
+
 
   return (
     <div>
@@ -125,8 +129,10 @@ const AssessmentTaskTracker = ({
           </div>
         ) : activeTab === "pending" ? (
           pendingAssessments && pendingAssessments.length > 0 ? (
-            pendingAssessments.map((item: any) => (
-              <li
+            pendingAssessments.map((item: any) => {
+             
+             
+              return <li
                 className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
                 key={item.id}
               >
@@ -140,7 +146,8 @@ const AssessmentTaskTracker = ({
                       />
                     </Avatar>
                     <span className="text-xs sm:text-sm px-2">
-                      {item?.individual_assessments?.title}
+                      {item?.title}
+                      
                     </span>
                   </div>
 
@@ -182,7 +189,7 @@ const AssessmentTaskTracker = ({
                   </div>
                 </div>
               </li>
-            ))
+            })
           ) : (
             <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
               No pending assessmnets found
@@ -205,7 +212,7 @@ const AssessmentTaskTracker = ({
                       />
                     </Avatar>
                     <span className="text-xs px-2 sm:text-sm">
-                      {item?.individual_assessments?.title}
+                      {item?.title}
                     </span>
                   </div>
 
