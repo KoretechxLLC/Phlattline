@@ -1,9 +1,12 @@
 "use client";
 import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 import { useRouter } from "next/navigation"; // Importing useRouter
 import Logo from "./Logo";
+import { logout } from "@/redux/slices/auth.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export const Hamburger = () => {
   return (
@@ -19,27 +22,37 @@ const Nav = () => {
   return (
     <>
       <HamburgerButton active={active} setActive={setActive} />
-      <AnimatePresence>{active && <LinksOverlay />}</AnimatePresence>
+      <AnimatePresence>
+        {active && <LinksOverlay setActive={setActive} />}
+      </AnimatePresence>
     </>
   );
 };
 
-const LinksOverlay = () => {
+const LinksOverlay = ({
+  setActive,
+}: {
+  setActive: Dispatch<SetStateAction<boolean>>;
+}) => {
   return (
     <nav className="fixed right-4 top-4 z-40 h-[calc(100vh_-_32px)] w-[calc(100%_-_32px)] overflow-hidden">
       <NavLogo />
-      <LinksContainer />
-      <FooterCTAs />
+      <LinksContainer setActive={setActive} />
+      <FooterCTAs setActive={setActive} />
     </nav>
   );
 };
 
-const LinksContainer = () => {
+const LinksContainer = ({
+  setActive,
+}: {
+  setActive: Dispatch<SetStateAction<boolean>>;
+}) => {
   return (
     <motion.div className="space-y-4 p-12 pl-4 md:pl-20">
       {LINKS.map((l, idx) => {
         return (
-          <NavLink key={l.title} href={l.href} idx={idx}>
+          <NavLink key={l.title} href={l.href} idx={idx} setActive={setActive}>
             {l.title}
           </NavLink>
         );
@@ -52,15 +65,18 @@ const NavLink = ({
   children,
   href,
   idx,
+  setActive,
 }: {
   children: ReactNode;
   href: string;
   idx: number;
+  setActive: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter(); // Getting access to the router
 
   const handleNavigation = (href: string) => {
     router.push(href); // Using router.push for navigation
+    setActive(false); // Close the hamburger menu
   };
 
   return (
@@ -95,9 +111,11 @@ const NavLogo = () => {
       }}
       exit={{ opacity: 0, y: -12 }}
       href="#"
-      className="grid h-20 w-20 place-content-center rounded-br-xl rounded-tl-xl bg-white transition-colors hover:bg-violet-50"
+      className="grid h-24 w-24 place-content-evenly  rounded-br-xl rounded-tl-xl bg-white transition-colors hover:bg-violet-50"
     >
-      <Logo />
+      <div className="ml-5">
+        <Logo />
+      </div>
     </motion.a>
   );
 };
@@ -123,50 +141,81 @@ const HamburgerButton = ({
         initial={false}
         animate={active ? "open" : "closed"}
         onClick={() => setActive((pv) => !pv)}
-        className={`group fixed right-4 top-4 z-50 h-20 w-20 bg-white/0 transition-all hover:bg-white/20 ${
+        className={`group fixed right-4 top-4 z-50 h-10 w-12 bg-white/0 transition-all hover:bg-white/20 ${
           active ? "rounded-bl-xl rounded-tr-xl" : "rounded-xl"
         }`}
       >
         <motion.span
           variants={HAMBURGER_VARIANTS.top}
-          className="absolute block h-1 w-10 bg-white"
+          className="absolute block h-1 w-8 bg-white"
           style={{ y: "-50%", left: "50%", x: "-50%" }}
         />
         <motion.span
           variants={HAMBURGER_VARIANTS.middle}
-          className="absolute block h-1 w-10 bg-white"
+          className="absolute block h-1 w-8 bg-white"
           style={{ left: "50%", x: "-50%", top: "50%", y: "-50%" }}
         />
         <motion.span
           variants={HAMBURGER_VARIANTS.bottom}
-          className="absolute block h-1 w-5 bg-white"
-          style={{ x: "-50%", y: "50%" }}
+          className="absolute block h-1 w-8 bg-white"
+          style={{ left: "50%", x: "-50%", top: "65%", y: "-50%" }}
         />
       </motion.button>
     </>
   );
 };
 
-const FooterCTAs = () => {
+const FooterCTAs = ({
+  setActive,
+}: {
+  setActive: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const dispatch: any = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true); // Start loading
+
+      // Assuming `userId` is fetched correctly from `userData`
+      const userId = userData?.id;
+
+      if (!userId) {
+        console.error("User ID not found.");
+        return;
+      }
+
+      await dispatch(logout(userId));
+      router.push("/Login");
+
+      setActive(false); // Close the hamburger menu after logout
+    } catch (error) {
+      console.error("Error during logout:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
   return (
-    <>
-      <motion.button
-        initial={{ opacity: 0, y: 8 }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          transition: {
-            delay: 1.125,
-            duration: 0.5,
-            ease: "easeInOut",
-          },
-        }}
-        exit={{ opacity: 0, y: 8 }}
-        className="absolute bottom-2 right-2 flex items-center gap-2 rounded-full bg-gradient-to-b from-[#B50D34] to-[#BAA716] px-3 py-3 text-4xl uppercase text-white-200 transition-colors hover:bg-white hover:text-violet-600 md:bottom-4 md:right-4 md:px-6 md:text-2xl"
-      >
-        <span className="hidden md:block">Log out</span> <FiArrowRight />
-      </motion.button>
-    </>
+    <motion.button
+      initial={{ opacity: 0, y: 8 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        transition: {
+          delay: 1.125,
+          duration: 0.5,
+          ease: "easeInOut",
+        },
+      }}
+      exit={{ opacity: 0, y: 8 }}
+      onClick={handleLogout}
+      className="absolute bottom-2 right-2 flex items-center gap-2 rounded-full bg-gradient-to-b from-[#B50D34] to-[#BAA716] px-3 py-3 text-4xl uppercase text-white-200 transition-colors hover:bg-white hover:text-red-600 md:bottom-4 md:right-4 md:px-6 md:text-2xl"
+    >
+      <span className="hidden md:block">Log out</span> <FiArrowRight />
+    </motion.button>
   );
 };
 
@@ -204,8 +253,8 @@ const UNDERLAY_VARIANTS = {
     transition: { type: "spring", mass: 3, stiffness: 400, damping: 50 },
   },
   closed: {
-    width: "80px",
-    height: "80px",
+    width: "45px",
+    height: "40px",
     transition: {
       delay: 0.75,
       type: "spring",
@@ -219,32 +268,30 @@ const UNDERLAY_VARIANTS = {
 const HAMBURGER_VARIANTS = {
   top: {
     open: {
-      rotate: ["0deg", "0deg", "45deg"],
-      top: ["35%", "50%", "50%"],
+      rotate: 50,
+      top: "50%",
     },
     closed: {
-      rotate: ["45deg", "0deg", "0deg"],
-      top: ["50%", "50%", "35%"],
+      rotate: 0,
+      top: "35%",
     },
   },
   middle: {
     open: {
-      rotate: ["0deg", "0deg", "-45deg"],
+      rotate: 50,
     },
     closed: {
-      rotate: ["-45deg", "0deg", "0deg"],
+      rotate: 0,
     },
   },
   bottom: {
     open: {
-      rotate: ["0deg", "0deg", "45deg"],
-      bottom: ["35%", "50%", "50%"],
-      left: "50%",
+      rotate: -50,
+      top: "50%", // Aligning with the top bar during the open state
     },
     closed: {
-      rotate: ["45deg", "0deg", "0deg"],
-      bottom: ["50%", "50%", "35%"],
-      left: "calc(50% + 10px)",
+      rotate: 0,
+      top: "65%", // Keeping it similar to its initial closed position
     },
   },
 };
