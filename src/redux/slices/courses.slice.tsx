@@ -74,10 +74,10 @@ export const fetchcoursesCount = createAsyncThunk<any, any>(
 // Thunk for fetching courses
 export const fetchcourses = createAsyncThunk<any, any>(
   "courses/fetchcourses",
-  async ({ filter }, { rejectWithValue }) => {
+  async (filter, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/courses?page=${filter.page}&size=${filter.size} : "" }`
+        `/api/courses?page=${filter.page}&size=${filter.size}`
       );
       return response.data.data;
     } catch (error: any) {

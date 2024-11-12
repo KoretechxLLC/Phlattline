@@ -69,12 +69,12 @@ export function MenuClassic() {
           </li>
         ))}
       </ul>
-      <li className="w-full">
+      {/* <li className="w-full">
         <MenuWidget
           isActive={activeMenu === "/Portal/ODaas"}
           onClick={() => handleMenuClick("/Portal/ODaas")}
         />
-      </li>
+      </li> */}
       {isDesktop && (
         <div className="pl-8 pb-8 w-full">
           {" "}

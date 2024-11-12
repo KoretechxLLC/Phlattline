@@ -30,18 +30,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userExists = await prisma.users.findUnique({
-      where: { id: Number(user_Id) },
-    });
+    const individualAssessment = await prisma.individual_assessments.findUnique(
+      {
+        where: { id: Number(individual_assessments_id) },
+        select: { title: true },
+      }
+    );
 
-    if (!userExists) {
-      return NextResponse.json(
-        {
-          message: "User not found",
-          success: false,
-        },
-        { status: 404 }
-      );
+    if (!individualAssessment) {
+      throw new Error("Individual assessment not found");
     }
 
     const assessmentPurchaseHistory = await prisma.$transaction(
@@ -62,6 +59,8 @@ export async function POST(request: NextRequest) {
           data: {
             user_id: Number(user_Id),
             individual_assessments_id: Number(individual_assessments_id),
+            title: individualAssessment.title, // Set the title
+            completed: false, // Optional if you want to explicitly set it
           },
         });
       }
