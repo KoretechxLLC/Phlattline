@@ -17,7 +17,7 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
   return (
     <div className="w-full">
       {/* Full header responsive layout */}
-      <div className="flex flex-wrap items-center justify-between py-4 md:pl-64 gap-5">
+      <div className="flex flex-wrap items-center justify-between py-4  xl:pl-64 gap-5">
         {/* Heading Section */}
         <div className="flex items-center gap-3 flex-1">
           {/* Heading and Description */}

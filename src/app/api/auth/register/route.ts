@@ -52,7 +52,6 @@ export async function POST(request: NextRequest) {
     const categoryId = formData.get("categoryId") as string;
     const subCategoryId = formData.get("SubCategoryId") as string;
 
-
     // Ensure categoryId and subCategoryId are valid
     if (!Number(categoryId) || !Number(subCategoryId)) {
       return NextResponse.json(

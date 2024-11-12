@@ -85,7 +85,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            {path !== "/Portal/" && (
+            {sideMenuPaths.includes(path) && (
               <div className="z-20 fixed left-12 top-12 ">
                 <Logo />
               </div>
