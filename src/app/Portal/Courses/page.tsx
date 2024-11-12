@@ -22,9 +22,9 @@ const Courses = () => {
 
   const [coursesData, setCoursesData] = useState([]);
   const [showAll, setShowAll] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const coursesPerPage = 12;
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [totalPage, setTotalPage] = useState(1);
+  // const coursesPerPage = 12;
 
   const {
     courses,
@@ -40,31 +40,39 @@ const Courses = () => {
 
   // Fetch total count of courses once
   useEffect(() => {
-    dispatch(fetchcoursesCount({}));
+    let filter = {
+      page: 0,
+      size: 0,
+    };
+    dispatch(fetchcourses(filter));
   }, [dispatch]);
 
   // Calculate total pages after courses count is successfully fetched
-  useEffect(() => {
-    if (coursesCountSuccess) {
-      const pages = Math.ceil(coursesCount / coursesPerPage);
-      setTotalPage(pages);
-    }
-  }, [coursesCountSuccess, coursesCount]);
+  // useEffect(() => {
+  //   if (coursesCountSuccess) {
+  //     const pages = Math.ceil(coursesCount / coursesPerPage);
+  //     setTotalPage(pages);
+  //   }
+  // }, [coursesCountSuccess, coursesCount]);
 
-  // Fetch courses for the current page whenever `currentPage` changes
-  useEffect(() => {
-    dispatch(
-      fetchcourses({
-        filter: { page: currentPage, size: coursesPerPage },
-      })
-    );
-  }, [dispatch, currentPage]);
-
+  // // Fetch courses for the current page whenever `currentPage` changes
+  // useEffect(() => {
+  //   dispatch(
+  //     fetchcourses({
+  //       filter: { page: currentPage, size: coursesPerPage },
+  //     })
+  //   );
+  // }, [dispatch, currentPage]);
 
   // Update `coursesData` when `coursesSuccess` changes
   useEffect(() => {
     if (coursesSuccess) {
-      let categoryCourses = courses && courses?.length>0 && courses?.filter((course:any)=> course?.categoryId == userData?.categoryId)
+      let categoryCourses =
+        courses &&
+        courses?.length > 0 &&
+        courses?.filter(
+          (course: any) => course?.categoryId == userData?.categoryId
+        );
       setCoursesData(categoryCourses);
     }
   }, [coursesSuccess, courses]);
@@ -79,17 +87,17 @@ const Courses = () => {
     );
   }
 
-  const handleNextPage = () => {
-    if (currentPage < totalPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
+  // const handleNextPage = () => {
+  //   if (currentPage < totalPage) {
+  //     setCurrentPage((prevPage) => prevPage + 1);
+  //   }
+  // };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
+  // const handlePreviousPage = () => {
+  //   if (currentPage > 1) {
+  //     setCurrentPage((prevPage) => prevPage - 1);
+  //   }
+  // };
 
   const displayedCourses = showAll ? coursesData : coursesData.slice(0, 6);
   if (error) {
@@ -145,7 +153,7 @@ const Courses = () => {
             </div>
           )}
           {/* Conditional Pagination Buttons */}
-          {showAll && (
+          {/* {showAll && (
             <div className="flex items-center justify-center gap-2 py-4">
               <Button
                 variant="outline"
@@ -169,7 +177,7 @@ const Courses = () => {
                 <ChevronRight className="w-5 h-5 text-default-900" />
               </Button>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Right side: Additional Content */}

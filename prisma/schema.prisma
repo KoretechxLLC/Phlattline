@@ -32,8 +32,8 @@ model users {
   app_provider              String                      @default("App")
   profile_image             String?                     @db.VarChar(255)
   assessment_status         Boolean                     @default(false)
-  categoryId                Int
-  subCategoryId             Int
+  categoryId                Int?
+  subCategoryId             Int?
   timeLogs                  TimeLog[]
   course_assignments        course_assignments[]
   purchased_assessments     purchased_assessments[]
@@ -70,8 +70,6 @@ model courses {
   subCategoryId             Int
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
-  categoryId                Int
-  subCategoryId             Int
   assessments               assessments[]
   course_assignments        course_assignments[]
   user_courses              user_courses[]
@@ -124,6 +122,7 @@ model purchased_assessments {
   id                        Int                    @id @default(autoincrement())
   user_id                   Int
   individual_assessments_id Int
+  title                     String                 @db.VarChar(255)
   completed                 Boolean                @default(false)
   purchasedAt               DateTime               @default(now()) @db.Timestamp(6)
   updatedAt                 DateTime               @updatedAt
