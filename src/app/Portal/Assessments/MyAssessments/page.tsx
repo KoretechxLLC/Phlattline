@@ -13,7 +13,7 @@ const MyAssessments = () => {
 
   useEffect(() => {
     if (userData) {
-      const pendingAssessmentsData = userData?.purchased_assessments.filter(
+      const pendingAssessmentsData = userData?.purchased_assessments?.filter(
         (assessment: any) => !assessment?.completed
       );
 
@@ -21,9 +21,10 @@ const MyAssessments = () => {
     }
   }, [userData]);
 
+
   useEffect(() => {
     if (userData) {
-      const completedAssessmentsData = userData?.purchased_assessments.filter(
+      const completedAssessmentsData = userData?.purchased_assessments?.filter(
         (assessment: any) => assessment?.completed
       );
 

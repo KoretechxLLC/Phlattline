@@ -15,6 +15,7 @@ import { Button } from "@/app/components/button-sidebar";
 import { fetchcourses, fetchcoursesCount } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const Courses = () => {
   const router = useRouter();
@@ -79,10 +80,13 @@ const Courses = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-full bg-black">
-        <p className="text-red-700 p-4 rounded-lg border border-red-300 text-center">
-          Error fetching courses: {error}
-        </p>
+      <div className="flex items-center justify-center mt-[15em] bg-black">
+        <div className="bg-black border-[0.8px] border-gray-700 text-gray-100 w-[33em] p-10 rounded-lg shadow-lg flex flex-col items-center space-y-4 pt-[3em] pb-[3em]">
+          <FaExclamationCircle className="text-red-500 text-4xl" />
+          <h2 className="text-2xl font-semibold">No Course available</h2>
+          <p className="text-red-300 text-center">{error}</p>
+
+        </div>
       </div>
     );
   }
