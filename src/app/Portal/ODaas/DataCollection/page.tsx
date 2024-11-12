@@ -35,7 +35,7 @@ const DataCollection = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[120vh] min-h-[40vh]">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <div>
         <Card className="border-[1px] border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
           <CardHeader className="h-16 rounded-3xl">
@@ -48,12 +48,11 @@ const DataCollection = () => {
         </Card>
       </div>
 
-      {/* Render each interview data item */}
       <div>
         <InterviewTab />
       </div>
 
-      <div>
+      <div className="col-span-1 md:col-span-2 border border-gray-500 rounded-3xl">
         <PerformanceReviews />
       </div>
     </div>

@@ -101,34 +101,14 @@ const CustomerCard = ({ item }: any) => {
 };
 
 const PerformanceReviews = () => {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: 300, // Scroll 300px to the right
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
-    <Card className="pb-2 border border-gray-500">
-      <div className="relative">
-        <div
-          ref={scrollRef}
-          className="flex space-x-5 overflow-x-auto scrollbar-thin pb-4"
-        >
+    <Card className="w-full pb-2 ">
+      <div className="relative w-full">
+        <div className="flex space-x-5  pb-3 w-full">
           {customers.map((item, i) => (
             <CustomerCard item={item} key={`customer-${i}`} />
           ))}
         </div>
-        <button
-          onClick={scrollRight}
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-gray-500 text-white rounded-full shadow-md"
-        >
-          <Icon icon="ph:chevron-right" className="w-5 h-5" />
-        </button>
       </div>
     </Card>
   );

@@ -34,7 +34,7 @@ const InterviewTab: React.FC = () => {
 
   return (
     <div>
-      <Card className="border border-gray-400">
+      <Card className="border border-gray-500 rounded-3xl">
         <CardHeader>
           <CardTitle>Interviews</CardTitle>
         </CardHeader>
@@ -48,7 +48,7 @@ const InterviewTab: React.FC = () => {
                   : ""
               }`}
             >
-              <CardContent className="flex items-center justify-between p-4 space-x-2">
+              <CardContent className="flex items-center justify-between p-8 space-x-2">
                 {/* Image and Name */}
                 <div className="flex items-center space-x-4">
                   <Avatar className="w-10 h-10">

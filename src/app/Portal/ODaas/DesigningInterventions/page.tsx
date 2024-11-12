@@ -72,16 +72,16 @@ const DesigningInterventions = () => {
       {/* Second Row: Assessments and Courses Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {/* Individual Assessments */}
-        <div className="border-[1px] border-gray-500 rounded-lg p-5">
+        <Card className="border-[1px] border-gray-500 rounded-lg p-8">
           <CardTitle className="text-xl">Individual Assessments</CardTitle>
           <HoverEffect
             items={assessmentCatalogueData} // Use static array
-            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+            className="grid grid-cols-1 md:grid-cols-2 gap-1 p-5"
           />
-        </div>
+        </Card>
 
         {/* Courses Section */}
-        <div className="flex flex-col space-y-4 border-[1px] border-gray-500 rounded-lg p-5">
+        <div className="flex flex-col space-y-4 border-[1px] border-gray-500 rounded-lg p-8">
           <CardTitle className="text-xl">Courses</CardTitle>
           <div className="flex space-x-4 overflow-x-auto">
             {courses.map((course) => (

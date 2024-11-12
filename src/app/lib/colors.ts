@@ -7,8 +7,10 @@ export const colors = {
   light: "#425466",
   success: "#50C793",
   default: "#0f172a",
-  'default-800': "#1e293b",
-  'default-600': "#475569",
-  'default-300': "#cbd5e1"
-
+  completed: "#FFD700",
+  overdue: "#8B4513",
+  remaining: "#FF0000",
+  "default-800": "#1e293b",
+  "default-600": "#475569",
+  "default-300": "#cbd5e1",
 };
