@@ -90,7 +90,7 @@ const Courseassessment = () => {
         type: "success",
       });
       dispatch(resetSuccess());
-      router.push("/Portal/Courses");
+    
     }
     if (error !== null) {
       setNotification({

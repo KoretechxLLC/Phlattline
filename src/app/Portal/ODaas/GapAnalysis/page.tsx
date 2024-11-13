@@ -88,6 +88,31 @@ const GapAnalysis = () => {
           </CardContent>
         </Card>
       </div>
+<<<<<<< HEAD
+=======
+
+      {/* Second row for Courses */}
+      <Card className="border-[1px] border-gray-500 rounded-3xl">
+        <CardHeader>
+          <CardTitle>
+            Your Organization needs these actions to reach your goals.
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex space-x-4 p-2">
+            {courses.map((course) => (
+              <CoursesTab
+                key={course.id}
+                id={course.id}
+                title={course.course_name}
+                description={course.description}
+                price={course.price}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+>>>>>>> 028baf0 (feat(pt-66):create talent management screens)
     </div>
   );
 };

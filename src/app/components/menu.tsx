@@ -18,27 +18,32 @@ export function MenuClassic() {
 
   const menus = [
     {
-      href: "Dashboard",
+      href: "/Dashboard",
       label: "Dashboard",
       icon: "/assets/DashboardLogo.png",
     },
     { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
     {
-      href: "DailyDose",
+      href: "/DailyDose",
       label: "Daily Dose",
       icon: "/assets/CalendarLogo.png",
     },
     {
-      href: "Assessments",
+      href: "/Assessments",
       label: "Assessments",
       icon: "/assets/AssessmentsLogo.png",
+    },
+    {
+      href: "TalentManagement",
+      label: "Talent Management",
+      icon: "/assets/TalentLogo.png",
     },
     {
       href: "PerformanceManagement",
       label: "Performance Management",
       icon: "/assets/PerformanceLogo.png",
     },
-    { href: "Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
+    { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
   ];
 
   const handleMenuClick = (href: string) => {
@@ -69,19 +74,22 @@ export function MenuClassic() {
           </li>
         ))}
       </ul>
-      {/* <li className="w-full">
+      {/* < className="w-full">
+
+      {/* Menu Widget without list dot */}
+      <li className="w-full list-none pl-2 pb-8">
         <MenuWidget
           isActive={activeMenu === "/Portal/ODaas"}
           onClick={() => handleMenuClick("/Portal/ODaas")}
         />
-      </li> */}
+      </li>
+
       {isDesktop && (
-        <div className="pl-8 pb-8 w-full">
-          {" "}
+        <div className="pl-8 pb-12 w-full">
           {/* Anchors to the bottom */}
           <MenuItem
             label="Settings"
-            href="Settings"
+            href="/Settings"
             icon="/assets/SettingsLogo.png"
           />
         </div>

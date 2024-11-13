@@ -260,6 +260,7 @@ const coursesSlice = createSlice({
         state.loading = false;
         state.responses = action.payload.data;
         state.success = action.payload.message; // Set success message
+        window.location.href = "/Portal/Courses";
       })
       .addCase(coursesAssessmentResponses.rejected, (state, action) => {
         state.loading = false;

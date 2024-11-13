@@ -6,8 +6,6 @@ import { RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchvideoprogress } from "@/redux/slices/courses.slice";
 import ButtonWrapper from "./Button";
-import { ShimmerText, ShimmerTable , ShimmerTitle } from "shimmer-effects-react";
-import Spinner from "./Spinner";
 import CustomShimmer from "./Customeshimmer";
 
 const ModuleList: React.FC = () => {
@@ -84,9 +82,9 @@ const ModuleList: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) { 
-    return <CustomShimmer/>
-    ;
+  if (loading) {
+    return <CustomShimmer />
+      ;
   }
 
   const handleButtonClick = () => {
@@ -97,7 +95,7 @@ const ModuleList: React.FC = () => {
 
   return (
     <>
-    
+
       {showModules && showModules.length > 0 && showModules.map((module: any) => (
         <div
           key={module.id}
@@ -114,19 +112,16 @@ const ModuleList: React.FC = () => {
           </span>
         </div>
       ))}
-      {/* <ButtonWrapper
-        text={assessmentCompleted ? "Assessment Completed" : "Start Assessment"}
-        className="text-3xl w-full text-center flex justify-center"
-        disabled={!isButtonEnabled || assessmentCompleted}
-        onClick={handleButtonClick}
-      /> */}
-      <ButtonWrapper
-      text={assessmentCompleted ? "Assessment Completed" : "Start Assessment"}
-      className="text-3xl w-full text-center flex justify-center"
-      disabled={!isButtonEnabled || assessmentCompleted}
-      onClick={handleButtonClick}
-    />
-  </>
+
+      {isButtonEnabled && (
+        <ButtonWrapper
+          text={assessmentCompleted ? "Assessment Completed" : "Start Assessment"}
+          className="text-3xl w-full text-center flex justify-center"
+          disabled={!isButtonEnabled || assessmentCompleted}
+          onClick={handleButtonClick}
+        />
+      )}
+    </>
 
   );
 };

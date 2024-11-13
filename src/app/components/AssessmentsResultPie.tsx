@@ -3,16 +3,34 @@ import dynamic from "next/dynamic";
 import { useConfig } from "@/app/hooks/use-config";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 import Spinner from "@/app/components/Spinner"; // Adjust the import based on the actual location of your Spinner component.
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const AssessmentResultPie = ({ height = 280 }) => {
   const [config] = useConfig();
+  const [isCompleted, setIsCompleted] = useState(0);
 
   // Use media query to determine if the screen size is below medium
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
+  const { userData } = useSelector((state: RootState) => state.auth);
 
-  const series = [55, 45]; // This data should be dynamic or fetched
+  useEffect(() => {
+    let totalCount = 0;
+    userData?.purchased_assessments?.forEach((e: any) => {
+      if (e?.completed) {
+        totalCount++;
+      }
+      setIsCompleted(isCompleted + totalCount);
+    });
+  }, [userData]);
+
+  const series = [
+    isCompleted,
+    userData?.purchased_assessments?.length - isCompleted,
+  ]; // This data should be dynamic or fetched
   const isLoading = false; // Set this to true while loading data (e.g., fetching from an API)
 
   const options: any = {
@@ -24,7 +42,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
     stroke: {
       width: 0,
     },
-    labels: ["Skipped", "Attempted"],
+    labels: ["Completed", "Not Attempted"],
     dataLabels: {
       enabled: true,
       style: {

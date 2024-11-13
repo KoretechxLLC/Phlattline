@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const SmartGoalForm = ({ handleAddGoal, success }: any) => {
+const AddPositionForm = ({ handleAddGoal, success }: any) => {
   const [goalName, setGoalName] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [completionDate, setCompletionDate] = useState<Date | null>(null);
@@ -35,58 +35,34 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
 
   return (
     <div className="bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] text-white 4xl:p-3 p-14 rounded-xl shadow-lg w-full">
-      <h2 className="text-xl font-semibold mb-4 text-center">
-        SMART Goals Creation
-      </h2>
+      <h2 className="text-xl font-semibold mb-4 text-center">Add Position</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <input
-            type="text"
-            placeholder="Goal Name"
-            value={goalName}
-            onChange={(e) => setGoalName(e.target.value)}
-            className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
-          />
-        </div>
-
-        {/* Start Date with focus outline */}
-        <div className="w-full rounded-xl h-14 bg-[#2d2c2c] focus-within:ring-2 focus-within:ring-[#626262] text-white focus:outline-none">
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            placeholderText="Start Date"
-            minDate={new Date()} // Prevent past dates
-            className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none"
-          />
-        </div>
-
-        {/* Completion Date with focus outline */}
-        <div className="w-full rounded-xl h-14 bg-[#2d2c2c] focus-within:ring-2 focus-within:ring-[#626262] text-white focus:outline-none">
-          <DatePicker
-            selected={completionDate}
-            onChange={(date) => setCompletionDate(date)}
-            placeholderText="Completion Date"
-            minDate={startDate || new Date()} // Ensure completion date is after start date
-            className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none"
-          />
-        </div>
-
-        {/* Goal Type */}
-        <div>
-          <select
-            value={goalType}
-            onChange={(e) => setGoalType(e.target.value)}
-            className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
-          >
-            <option value="" disabled>
-              Select Goal Type
-            </option>
-            <option value="Personal">Personal</option>
-            <option value="Professional">Professional</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Financial">Financial</option>
-          </select>
+          <div>
+            <select
+              value={goalType}
+              onChange={(e) => setGoalType(e.target.value)}
+              className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
+            >
+              <option value="" disabled>
+                Select Department
+              </option>
+              <option value="Personal">Personal</option>
+              <option value="Professional">Professional</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Financial">Financial</option>
+            </select>
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Add Position Name"
+              value={goalName}
+              onChange={(e) => setGoalName(e.target.value)}
+              className="w-full p-2 mt-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
+            />
+          </div>
         </div>
 
         {/* Description */}
@@ -102,7 +78,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
         {/* Buttons */}
         <div className="flex justify-between gap-3">
           <button
-            type="button"
+            type="reset"
             className="px-4 py-2 w-full sm:w-40 bg-gray-600 rounded-md hover:bg-gray-500 focus:outline-none"
             onClick={() => {
               setGoalName("");
@@ -126,4 +102,4 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
   );
 };
 
-export default SmartGoalForm;
+export default AddPositionForm;

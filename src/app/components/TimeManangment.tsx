@@ -13,7 +13,7 @@ export type NotificationType = {
 
 const TimeManagement = () => {
   const [clockedIn, setClockedIn] = useState(false);
-  const dispatch:any = useDispatch();
+  const dispatch: any = useDispatch();
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
   const [onBreak, setOnBreak] = useState(false);
@@ -32,68 +32,71 @@ const TimeManagement = () => {
   const handleClockIn = async () => {
     const startTime = Date.now();
     setClockedIn(true);
-    setOnBreak(false); 
+    setOnBreak(false);
+    savedElapsedTimeRef.current = 0; // Reset saved elapsed time
     await localforage.setItem("clockedIn", true);
     await localforage.setItem("startTime", startTime);
+    await localforage.setItem("onBreak", false); // Save onBreak state
+    await localforage.removeItem("savedElapsedTime"); // Clear saved elapsed time
     startTimer(startTime);
   };
 
   const handleClockOut = async () => {
     setClockedIn(false);
     setOnBreak(false);
-  
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  
+
     setShowTime({ hours: 0, minutes: 0, seconds: 0 });
     savedElapsedTimeRef.current = 0;
-  
-    const clockOutTime = new Date(); // Current time
-    const clockInTimeTimestamp = await localforage.getItem("startTime"); 
-  
-    // Ensure clockInTime is a valid number
-    if (typeof clockInTimeTimestamp !== 'number') {
+
+    const clockOutTime = Date.now();
+    const clockInTimeTimestamp = await localforage.getItem("startTime");
+
+    if (typeof clockInTimeTimestamp !== "number") {
       console.error("Invalid clock in time.");
-      return; // Exit if invalid
+      return;
     }
-  
-    const clockInTime = new Date(clockInTimeTimestamp); // Convert timestamp to Date object
-  
-    // Calculate time spent in seconds
-    const timeSpentInSeconds = Math.floor((clockOutTime.getTime() - clockInTime.getTime()) / 1000);
-  
-    // Prepare the data for dispatching
+
+    const timeSpentInSeconds = Math.floor((clockOutTime - clockInTimeTimestamp) / 1000);
+
     const timeData = {
       user_id: userData.id,
-      timeSpent: timeSpentInSeconds, // Ensure this is a number
+      timeSpent: timeSpentInSeconds,
     };
-  
-    // Dispatch the updateTimemanagement action with the timeData
+
     await dispatch(updateTimemanagement(timeData));
-  
-    // Local storage updates
     await localforage.setItem("clockedIn", false);
     await localforage.removeItem("startTime");
-    await localforage.setItem("performanceTimer", showTime);
+    await localforage.removeItem("savedElapsedTime");
+    await localforage.setItem("onBreak", false); // Reset onBreak state
   };
-  
 
   const handleTakeBreak = async () => {
     setOnBreak(true);
-    savedElapsedTimeRef.current +=
-      Date.now() - ((await localforage.getItem("startTime")) as number);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+
+    const elapsedTime = Date.now() - Number(await localforage.getItem("startTime"));
+    savedElapsedTimeRef.current = elapsedTime;
+    await localforage.setItem("savedElapsedTime", elapsedTime);
+    await localforage.setItem("onBreak", true); // Save onBreak state
   };
 
-  const handleResumeWork = () => {
+  const handleResumeWork = async () => {
     setOnBreak(false);
-    const resumeStartTime = Date.now() - savedElapsedTimeRef.current; 
-    localforage.setItem("startTime", resumeStartTime); 
+
+    const savedElapsedTime = (await localforage.getItem("savedElapsedTime")) as number;
+    const resumeStartTime = Date.now() - savedElapsedTime;
+    await localforage.setItem("startTime", resumeStartTime);
+    await localforage.setItem("onBreak", false); // Save onBreak state
+    await localforage.removeItem("savedElapsedTime"); // Clear saved elapsed time
+
     startTimer(resumeStartTime);
   };
 
@@ -119,12 +122,33 @@ const TimeManagement = () => {
     const loadData = async () => {
       const storedClockedIn = await localforage.getItem("clockedIn");
       const storedStartTime = await localforage.getItem("startTime");
+      const savedElapsedTime = (await localforage.getItem("savedElapsedTime")) as number;
+      const storedOnBreak = await localforage.getItem("onBreak");
 
       if (storedClockedIn) {
         setClockedIn(storedClockedIn as boolean);
+        setOnBreak(storedOnBreak as boolean);
+
         if (storedStartTime) {
           const startTime = storedStartTime as number;
-          startTimer(startTime); 
+          let totalElapsedTime = Date.now() - startTime;
+
+          // If the user is on a break, use the saved elapsed time and do not start the timer
+          if (storedOnBreak) {
+            totalElapsedTime = savedElapsedTime || 0;
+          }
+
+          const elapsedSeconds = Math.floor(totalElapsedTime / 1000);
+          const hours = Math.floor(elapsedSeconds / 3600);
+          const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+          const seconds = elapsedSeconds % 60;
+
+          setShowTime({ hours, minutes, seconds });
+
+          // Only start the timer if not on a break
+          if (!storedOnBreak) {
+            startTimer(Date.now() - totalElapsedTime);
+          }
         }
       }
     };
