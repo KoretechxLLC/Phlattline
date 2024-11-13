@@ -49,7 +49,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
         fontSize: isMediumScreen ? "17px" : "12px", // Adjust font size based on screen size
       },
     },
-    // Assign specific colors for each segment
+
     colors: ["#BAA716", "#FFFFFF"], // White, Orange, Yellow
     tooltip: {
       enabled: false,

@@ -206,7 +206,7 @@ const Login = () => {
                 Register
               </motion.div>
 
-              {/* <div className="hidden group-hover:block absolute z-10 w-40 bg-white text-red-500 py-2 px-4">
+              <div className="hidden group-hover:block absolute z-10 w-40 bg-white text-red-500 py-2 px-4">
                 <ul>
                   <li
                     className="cursor-pointer rounded-lg hover:bg-red-500 hover:text-white transition-colors pl-1"
@@ -222,7 +222,6 @@ const Login = () => {
                   </li>
                 </ul>
               </div>
-            </div> */}
             </div>
             <div className="cursor-pointer ">
               <button
