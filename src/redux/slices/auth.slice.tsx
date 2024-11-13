@@ -155,6 +155,9 @@ const authSlice = createSlice({
 
     setUpdateUserData: (state, action) => {
       state.userData = action.payload;
+      if (typeof window !== "undefined") {
+        window.location.href = "/Portal/Assessments";
+      }
     },
 
     setAssessmentUpdate: (state) => {
