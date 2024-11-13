@@ -7,7 +7,6 @@ import {
 } from "@/redux/slices/individualassessment.slice";
 import { fetchAssessmentsResponse } from "@/redux/slices/individualAssessmentResponse.slice";
 import { RootState } from "@/redux/store";
-import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
