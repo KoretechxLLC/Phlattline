@@ -1,20 +1,11 @@
 "use client";
-
 import { useConfig } from "@/app/hooks/use-config";
-import {
-  fetchAssessments,
-  resetSuccess,
-} from "@/redux/slices/individualassessment.slice";
-import { fetchAssessmentsResponse } from "@/redux/slices/individualAssessmentResponse.slice";
 import { RootState } from "@/redux/store";
-
 import dynamic from "next/dynamic";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import GraphLoader from "./graphLoader";
-
+import { fetchAssessmentResult } from "@/redux/slices/assessmentResults.slice";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface AssessmentTrackerProps {
@@ -22,63 +13,6 @@ interface AssessmentTrackerProps {
   chartType?: "bar" | "area";
   categories?: string[];
 }
-
-const generateColors = (numFields: number) => {
-  const colors = [];
-  for (let i = 0; i < numFields; i++) {
-    colors.push(i % 2 === 0 ? "#FF0700" : "#FDF53F");
-  }
-  return colors;
-};
-
-const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
-  let calculatedGraph =
-    assessments &&
-    assessments?.length > 0 &&
-    assessments
-      .map((index: any) => {
-        let responseData = assessmentsResponse
-          ?.map((e: any) => {
-            if (e?.question?.individual_assessment_id == index?.id) {
-              let assessementTrack = e?.question?.individual_assessment_options
-                .map((option: any) => {
-                  if (e?.selected_option == option?.option_text) {
-                    return option.percentage;
-                  }
-                })
-                .filter(Boolean);
-
-              return {
-                id: e?.question?.individual_assessment_id,
-                percentage: assessementTrack,
-              };
-            }
-          })
-          .filter(Boolean);
-
-        let totalPercentage = 0;
-
-        responseData.forEach((item: any) => {
-          const currentSum =
-            item?.percentage.length > 0
-              ? item?.percentage.reduce((sum: any, val: any) => sum + val, 0)
-              : 0;
-
-          totalPercentage += currentSum;
-        });
-
-        if (responseData && responseData.length > 0) {
-          return {
-            title: index.title,
-            percentage:
-              totalPercentage / index.individual_assessment_questions.length,
-          };
-        }
-      })
-      .filter(Boolean);
-
-  return calculatedGraph;
-};
 
 const PreviousResultsTracker = ({
   height = 170,
@@ -88,52 +22,46 @@ const PreviousResultsTracker = ({
   const { isRtl } = config;
 
   const [allCategories, setAllCategories] = useState<any>([]);
-  const { assessments, loading, error, success } = useSelector(
-    (state: RootState) => state.assessment
-  );
-
-  const {
-    responseLoading,
-    responseError,
-    assessmentsResponse,
-    responseSuccess,
-  } = useSelector((state: RootState) => state.assessmentResponse);
+  const [data, setData] = useState<any>([]);
 
   const { userData } = useSelector((state: RootState) => state.auth);
+  const { resultLoading, result, resultSuccess, resultError } = useSelector(
+    (state: RootState) => state.assessmnentResult
+  );
   const userId: any = userData?.id;
   const dispatch: any = useDispatch();
 
   useEffect(() => {
     dispatch(
-      fetchAssessments({
-        filter: {
-          page: 0,
-          size: 0,
-        },
+      fetchAssessmentResult({
+        userId,
       })
     );
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(fetchAssessmentsResponse({ userId }));
-  }, [dispatch, userId]);
+  const calculatedGraph = () => {
+    let percentages = result.map((e: any) => {
+      let trackPercentage =
+        e?.percentages?.length > 0 &&
+        e?.percentages?.reduce((prev: any, curr: any) => {
+          return prev + curr;
+        }, 0);
+      return {
+        title: e?.title,
+        percentages: trackPercentage / e?.percentages?.length,
+      };
+    });
+    return percentages;
+  };
 
   useEffect(() => {
-    if (responseSuccess) {
-      dispatch(resetSuccess());
+    if (resultSuccess && result.length > 0) {
+      setData(calculatedGraph().slice(0, 4));
     }
-  }, [responseSuccess]);
-  useEffect(() => {
-    if (assessments && assessments.length > 0) {
-      const categories =
-        assessments?.length > 0 ? assessments?.map((e: any) => e?.title) : [];
-      setAllCategories(categories);
-    }
-  }, [assessments]);
+  }, [resultSuccess]);
 
-  const data = calculatePercentages(assessmentsResponse, assessments);
+  const whiteColor = "#ffffff";
 
-  const chartColors = generateColors(allCategories.length);
   const series = [
     {
       name: "Assessments",
@@ -142,8 +70,8 @@ const PreviousResultsTracker = ({
         data.length > 0 &&
         data.map((value: any, index: any) => ({
           x: value?.title,
-          y: value?.percentage,
-          fillColor: chartColors[index],
+          y: value?.percentages,
+          fillColor: whiteColor,
         })),
     },
   ];
@@ -158,7 +86,7 @@ const PreviousResultsTracker = ({
       bar: {
         horizontal: false,
         endingShape: "rounded",
-        columnWidth: "5%",
+        columnWidth: "20%",
       },
     },
     legend: {
@@ -265,12 +193,12 @@ const PreviousResultsTracker = ({
 
   return (
     <>
-      {responseLoading ? (
+      {resultLoading ? (
         <div className="text-center text-gray-300">
           <GraphLoader />
         </div>
       ) : data && data.length > 0 ? (
-        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[150px] ">
+        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[250px]">
           <Chart
             options={options}
             series={series}

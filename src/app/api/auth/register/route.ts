@@ -4,28 +4,6 @@ import bcrypt from "bcryptjs";
 import fs from "fs/promises";
 import path from "path";
 
-const generateOrganizationCode = (): string => {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  return Array.from({ length: 8 }, () =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
-  ).join("");
-};
-
-const generateUniqueOrganizationCode = async (): Promise<string> => {
-  let code: string;
-  let existingOrganization: any;
-
-  do {
-    code = generateOrganizationCode();
-    existingOrganization = await prisma.organizations.findUnique({
-      where: { organization_code: code },
-    });
-  } while (existingOrganization);
-
-  return code;
-};
-
 const saveFile = async (file: File, folderPath: string): Promise<string> => {
   const fileName = `${Date.now()}_${file.name}`;
   const filePath = path.join(process.cwd(), folderPath, fileName);
@@ -45,9 +23,7 @@ export async function POST(request: NextRequest) {
     const password = formData.get("password") as string | null;
     const first_name = formData.get("first_name") as string | null;
     const last_name = formData.get("last_name") as string | null;
-    const organization_code = formData.get("organization_code") as
-      | string
-      | null;
+
     const profile_image = formData.get("profile_image") as File | null;
     const categoryId = formData.get("categoryId") as string;
     const subCategoryId = formData.get("SubCategoryId") as string;
@@ -127,21 +103,6 @@ export async function POST(request: NextRequest) {
     }
 
     // If organization code is provided, validate the organization
-    let organizationId: number | undefined = undefined;
-    if (organization_code) {
-      const organization = await prisma.organizations.findUnique({
-        where: { organization_code },
-      });
-
-      if (!organization) {
-        return NextResponse.json(
-          { message: "Invalid organization code.", success: false },
-          { status: 400 }
-        );
-      }
-
-      organizationId = organization.id;
-    }
 
     // Create the new user
     const newUser = await prisma.users.create({
@@ -151,8 +112,7 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         first_name,
         last_name,
-        user_type_id: organizationId ? 2 : 1,
-        organization_id: organizationId || undefined,
+        user_type_id: 1,
         profile_image: profileImagePath || undefined,
         categoryId: Number(categoryId),
         subCategoryId: Number(subCategoryId),
