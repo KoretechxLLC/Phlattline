@@ -18,27 +18,27 @@ export function MenuClassic() {
 
   const menus = [
     {
-      href: "Dashboard",
+      href: "/Dashboard",
       label: "Dashboard",
       icon: "/assets/DashboardLogo.png",
     },
     { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
     {
-      href: "DailyDose",
+      href: "/DailyDose",
       label: "Daily Dose",
       icon: "/assets/CalendarLogo.png",
     },
     {
-      href: "Assessments",
+      href: "/Assessments",
       label: "Assessments",
       icon: "/assets/AssessmentsLogo.png",
     },
     {
-      href: "PerformanceManagement",
+      href: "/PerformanceManagement",
       label: "Performance Management",
       icon: "/assets/PerformanceLogo.png",
     },
-    { href: "Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
+    { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
   ];
 
   const handleMenuClick = (href: string) => {
@@ -81,7 +81,7 @@ export function MenuClassic() {
           {/* Anchors to the bottom */}
           <MenuItem
             label="Settings"
-            href="Settings"
+            href="/Settings"
             icon="/assets/SettingsLogo.png"
           />
         </div>

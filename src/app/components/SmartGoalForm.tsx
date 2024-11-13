@@ -102,7 +102,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
         {/* Buttons */}
         <div className="flex justify-between gap-3">
           <button
-            type="reset"
+            type="button"
             className="px-4 py-2 w-full sm:w-40 bg-gray-600 rounded-md hover:bg-gray-500 focus:outline-none"
             onClick={() => {
               setGoalName("");

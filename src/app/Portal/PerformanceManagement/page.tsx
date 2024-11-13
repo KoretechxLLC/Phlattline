@@ -97,7 +97,7 @@ const PerformanceManagement = () => {
               showCompleted={true}
               showSaved={false}
               showTooltip={false}
-              label={"Assessments"}
+              label={"Goals"}
               isClickable={false}
             />
             <Card className="border border-[#62626280] rounded-3xl shadow-md w-full">
@@ -109,7 +109,6 @@ const PerformanceManagement = () => {
               </CardContent>
             </Card>
           </div>
-
           {/* Combined TasksTracker and PersonalGoals in one column */}
           <div>
             <TimeManagement />

@@ -10,7 +10,7 @@ import { RootState } from "@/redux/store";
 
 export const Hamburger = () => {
   return (
-    <div className="h-10 bg-neutral-100">
+    <div className="h-10  bg-neutral-100">
       <Nav />
     </div>
   );
@@ -49,7 +49,7 @@ const LinksContainer = ({
   setActive: Dispatch<SetStateAction<boolean>>;
 }) => {
   return (
-    <motion.div className="space-y-4 p-12 pl-4 md:pl-20">
+    <motion.div className="space-y-4 p-12 z-50 pl-4 md:pl-20">
       {LINKS.map((l, idx) => {
         return (
           <NavLink key={l.title} href={l.href} idx={idx} setActive={setActive}>
@@ -93,7 +93,7 @@ const NavLink = ({
       }}
       exit={{ opacity: 0, y: -8 }}
       onClick={() => handleNavigation(href)} // On click, navigate to the href
-      className="block text-3xl font-semibold text-white-400 transition-colors hover:text-red-600 md:text-5xl cursor-pointer"
+      className="block text-3xl z-50 font-semibold text-white-400 transition-colors hover:text-red-600 md:text-5xl cursor-pointer"
     >
       {children}
     </motion.div>
@@ -111,7 +111,7 @@ const NavLogo = () => {
       }}
       exit={{ opacity: 0, y: -12 }}
       href="#"
-      className="grid h-24 w-24 place-content-evenly  rounded-br-xl rounded-tl-xl bg-white transition-colors hover:bg-violet-50"
+      className="grid h-24 w-24 place-content-evenly z-50 rounded-br-xl rounded-tl-xl bg-white transition-colors hover:bg-violet-50"
     >
       <div className="ml-5">
         <Logo />
@@ -134,7 +134,7 @@ const HamburgerButton = ({
         animate={active ? "open" : "closed"}
         variants={UNDERLAY_VARIANTS}
         style={{ top: 16, right: 16 }}
-        className="fixed z-10 rounded-xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] shadow-lg shadow-violet-800/20"
+        className="fixed z-40 rounded-xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] shadow-lg shadow-violet-800/20"
       />
 
       <motion.button
@@ -212,7 +212,7 @@ const FooterCTAs = ({
       }}
       exit={{ opacity: 0, y: 8 }}
       onClick={handleLogout}
-      className="absolute bottom-2 right-2 flex items-center gap-2 rounded-full bg-gradient-to-b from-[#B50D34] to-[#BAA716] px-3 py-3 text-4xl uppercase text-white-200 transition-colors hover:bg-white hover:text-red-600 md:bottom-4 md:right-4 md:px-6 md:text-2xl"
+      className="absolute bottom-2 right-2 z-50 flex items-center gap-2 rounded-full bg-gradient-to-b from-[#B50D34] to-[#BAA716] px-3 py-3 text-4xl uppercase text-white-200 transition-colors hover:bg-white hover:text-red-600 md:bottom-4 md:right-4 md:px-6 md:text-2xl"
     >
       <span className="hidden md:block">Log out</span> <FiArrowRight />
     </motion.button>
