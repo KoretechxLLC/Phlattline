@@ -108,10 +108,9 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   src={
                     imgError
                       ? "/assets/DummyImg.png"
-                      : `/courses/thumbnails/${
-                          videoWithSequenceOne?.thumbnail_url ||
-                          "default-thumbnail.jpg"
-                        }`
+                      : `/courses/thumbnails/${videoWithSequenceOne?.thumbnail_url ||
+                      "default-thumbnail.jpg"
+                      }`
                   }
                   alt="Course Thumbnail"
                   className="w-full 4xl:h-64 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
@@ -123,8 +122,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
                     <Icon
                       icon="tdesign:play-circle"
-                      className="text-white w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
-                      onClick={handlePlayVideo}
+                      className="text-white w-32 h-32 text-3xl"
                     />
                   </div>
                 </div>
@@ -223,9 +221,12 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                       <Icon icon="ph:play" className="text-white text-3xl" />
                     </div>
                   </div>
-                  <div className="absolute bottom-0 left-0 p-2 text-white bg-opacity-60 rounded-br-lg rounded-tl-lg">
-                    <span className="text-lg font-bold">{video.title}</span>
+                  <div className="absolute bottom-0 left-0 mb-3 -ml-[10px]">
+                    <div className="bg-black bg-opacity-60 p-2 pl-4 pr-4 rounded-br-2xl">
+                      <span className="text-lg font-bold text-white">{video.title}</span>
+                    </div>
                   </div>
+
                 </div>
               ))}
             </div>
