@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
         }
 
         if (type === "file" && value instanceof File) {
-          const videoFilename = await saveFile(value, "public/courses/videos");
+          const videoFilename = await saveFile(value, "uploads/coursesvideos");
           videosData[index].video_url = videoFilename;
         } else if (type === "title") {
           videosData[index].title = String(value).trim();
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         } else if (type === "thumbnail" && value instanceof File) {
           const thumbnailFilename = await saveFile(
             value,
-            "public/courses/thumbnails"
+            "uploads/coursesthumbnails"
           );
           videosData[index].thumbnail_url = thumbnailFilename;
         } else if (type === "sequence") {
@@ -180,9 +180,8 @@ export async function DELETE(req: NextRequest) {
             await unlink(
               path.join(
                 process.cwd(),
-                "public",
-                "courses",
-                "videos",
+                "uploads",
+                "coursesvideos",
                 video.video_url
               )
             );
@@ -196,9 +195,8 @@ export async function DELETE(req: NextRequest) {
             await unlink(
               path.join(
                 process.cwd(),
-                "public",
-                "courses",
-                "thumbnails",
+                "uploads",
+                "coursesthumbnails",
                 video?.thumbnail_url
               )
             );
@@ -316,7 +314,7 @@ export async function PUT(req: NextRequest) {
           };
         }
         if (type === "file" && value instanceof File) {
-          const videoFilename = await saveFile(value, "public/courses/videos");
+          const videoFilename = await saveFile(value, "uploads/coursesvideos");
           videosData[index].video_url = videoFilename; // Save only the file name
         } else if (type === "title") {
           videosData[index].title = String(value).trim();
@@ -327,7 +325,7 @@ export async function PUT(req: NextRequest) {
         } else if (type === "thumbnail" && value instanceof File) {
           const thumbnailFilename = await saveFile(
             value,
-            "public/courses/thumbnails"
+            "uploads/coursesthumbnails"
           );
           videosData[index].thumbnail_url = thumbnailFilename; // Save only the file name
         } else if (type === "sequence") {
@@ -420,11 +418,91 @@ export async function PUT(req: NextRequest) {
   }
 }
 
+// export async function GET(req: NextRequest) {
+//   try {
+//     const { searchParams } = new URL(req.url);
+//     const courseId = searchParams.get("id"); // Get the course ID from query params
+
+//     if (courseId) {
+//       const course = await prisma.courses.findUnique({
+//         where: { id: Number(courseId) },
+//         include: {
+//           videos: true,
+//           assessments: {
+//             include: {
+//               questions: true,
+//             },
+//           },
+//         },
+//       });
+
+//       if (!course) {
+//         return NextResponse.json(
+//           { error: "Course not found." },
+//           { status: 404 }
+//         );
+//       }
+
+//       // Return the specific course
+//       return NextResponse.json(
+//         { success: true, data: course },
+//         { status: 200 }
+//       );
+//     }
+
+//     // If no courseId is provided, fetch all courses
+//     const allCourses = await prisma.courses.findMany({
+//       include: {
+//         videos: true, // Include videos for each course
+//         assessments: {
+//           include: {
+//             questions: true,
+//           },
+//         },
+//       },
+//     });
+
+//     if (allCourses.length === 0) {
+//       return NextResponse.json(
+//         { error: "Oops! It looks like there are no courses available right now." },
+//         { status: 404 }
+//       );
+//     }
+
+//     // Return all courses
+//     return NextResponse.json(
+//       { success: true, data: allCourses },
+//       { status: 200 }
+//     );
+//   } catch (error: any) {
+//     console.error("Error fetching courses:", error);
+//     return NextResponse.json(
+//       {
+//         error: error?.message || "Failed to fetch courses",
+//         details: error.message,
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("id"); // Get the course ID from query params
+    const includeCount = searchParams.get("count"); // Optional query param to get count
 
+    // If `count` query parameter is provided, return the count of all courses
+    if (includeCount) {
+      const courseCount = await prisma.courses.count();
+      return NextResponse.json(
+        { success: true, totalCourses: courseCount },
+        { status: 200 }
+      );
+    }
+
+    // Fetch a specific course if `courseId` is provided
     if (courseId) {
       const course = await prisma.courses.findUnique({
         where: { id: Number(courseId) },
@@ -452,10 +530,10 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // If no courseId is provided, fetch all courses
+    // Fetch all courses if no courseId is provided
     const allCourses = await prisma.courses.findMany({
       include: {
-        videos: true, // Include videos for each course
+        videos: true,
         assessments: {
           include: {
             questions: true,
@@ -466,14 +544,18 @@ export async function GET(req: NextRequest) {
 
     if (allCourses.length === 0) {
       return NextResponse.json(
-        { error: "Oops! It looks like there are no courses available right now." },
+        {
+          error: "Oops! It looks like there are no courses available right now.",
+        },
         { status: 404 }
       );
     }
 
-    // Return all courses
+    // Return all courses along with their count
+    const courseCount = allCourses.length;
+
     return NextResponse.json(
-      { success: true, data: allCourses },
+      { success: true, data: allCourses, totalCourses: courseCount },
       { status: 200 }
     );
   } catch (error: any) {

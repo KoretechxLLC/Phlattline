@@ -141,9 +141,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                   src={
                     imgError
                       ? "/assets/DummyImg.png"
-                      : `/courses/thumbnails/${
-                          videoData?.thumbnail_url || "default-thumbnail.jpg"
-                        }`
+                      : `/api/images?filename=${videoData?.thumbnail_url}&folder=coursesthumbnails`
                   }
                   alt="Course Thumbnail"
                   className="w-full 4xl:h-52 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
@@ -164,7 +162,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             ) : (
               <div className="4xl:h-64 h-96">
                 <ReactPlayer
-                  url={`/courses/videos/${videoData?.video_url}`}
+                  url={`/api/images?filename=${videoData?.video_url}&folder=coursesvideos`}
                   playing={isPlaying}
                   onPause={handlePause}
                   onPlay={handlePlay}

@@ -28,7 +28,7 @@ const CoursesTab: React.FC<CourseTabProps> = ({
 
   const thumbnail =
     videos.length > 0
-      ? `/courses/thumbnails/${videos[0].thumbnail_url}`
+      ? `/api/images?filename=${videos[0].thumbnail_url}&folder=coursesthumbnails`
       : "/default-thumbnail.jpg";
 
   const [imgError, setImgError] = useState(false);

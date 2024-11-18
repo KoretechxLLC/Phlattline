@@ -283,7 +283,7 @@ const ProfileImage = ({ setProfileImage }: any) => {
         <div className="w-60 h-60 ring-4 ring-[#B50D34] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
           <Image
             alt="User profile image"
-            src={image ? image : `/users/profileimage/${data.profile_image}`}
+            src={image ? image : `/api/images?filename=${userData.profile_image}&folder=profileImage`}
             layout="responsive" // Use responsive layout to control aspect ratio
             width={500} // Adjust width for better performance
             height={500} // Adjust height for better performance

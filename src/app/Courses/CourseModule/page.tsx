@@ -134,9 +134,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             {!videoRun ? (
               <>
                 <Image
-                  src={`/courses/thumbnails/${
-                    videoData?.thumbnail_url || "default-thumbnail.jpg"
-                  }`}
+                  src={`/api/images?filename=${videoData?.thumbnail_url}&folder=coursesthumbnails`}
                   alt="Course Thumbnail"
                   className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
                   width={1000}
@@ -154,7 +152,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
               </>
             ) : (
               <ReactPlayer
-                url={`/courses/videos/${videoData?.video_url}`}
+                url={`/api/images?filename=${videoData?.video_url}&folder=coursesvideos`}
                 playing={isPlaying}
                 onPause={handlePause}
                 onPlay={handlePlay}

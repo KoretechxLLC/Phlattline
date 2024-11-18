@@ -50,7 +50,7 @@ const ProfileInfo = () => {
           <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center rounded-full overflow-hidden">
             <Image
               alt="User profile image"
-              src={`/users/profileimage/${userData.profile_image}`}
+              src={`/api/images?filename=${userData.profile_image}&folder=profileImage`}
               layout="responsive"
               width={5000}
               height={5000}

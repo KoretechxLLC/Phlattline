@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
 
       profileImagePath = await saveFile(
         profile_image,
-        "public/users/profileimage"
+        "uploads/profileimage"
       );
     }
 

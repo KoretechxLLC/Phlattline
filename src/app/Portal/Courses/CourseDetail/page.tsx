@@ -81,6 +81,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
       }
     }
   }, [courseId, userData]);
+
   return (
     <>
       {loading ? (
@@ -108,9 +109,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   src={
                     imgError
                       ? "/assets/DummyImg.png"
-                      : `/courses/thumbnails/${videoWithSequenceOne?.thumbnail_url ||
-                      "default-thumbnail.jpg"
-                      }`
+                      : `/api/images?filename=${videoWithSequenceOne?.thumbnail_url}&folder=coursesthumbnails`
                   }
                   alt="Course Thumbnail"
                   className="w-full 4xl:h-64 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
@@ -208,7 +207,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                     src={
                       imgError
                         ? "/assets/DummyImg.png"
-                        : `/courses/thumbnails/${video.thumbnail_url}`
+                        : `/api/images?filename=${video.thumbnail_url}&folder=coursesthumbnails`
                     }
                     alt={`Video Thumbnail ${video.id}`}
                     className="w-full h-56 rounded-lg object-cover container"

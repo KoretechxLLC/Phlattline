@@ -109,7 +109,7 @@ export async function PUT(request: NextRequest) {
       if (profileImagePath) {
         const oldImagePath = path.join(
           process.cwd(),
-          "public/users/profileimage",
+          "uploads/profileimage",
           profileImagePath
         );
         try {
@@ -121,7 +121,7 @@ export async function PUT(request: NextRequest) {
       // Save the new profile image
       profileImagePath = await saveFile(
         profile_image,
-        "public/users/profileimage"
+        "uploads/profileimage"
       );
     }
 
@@ -214,8 +214,7 @@ export async function DELETE(request: NextRequest) {
     if (user.profile_image) {
       const imageFilePath = path.join(
         process.cwd(),
-        "public",
-        "users",
+        "uploads",
         "profileimage",
         user.profile_image
       );
