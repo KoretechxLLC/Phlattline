@@ -96,10 +96,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      profileImagePath = await saveFile(
-        profile_image,
-        "uploads/profileimage"
-      );
+      profileImagePath = await saveFile(profile_image, "uploads/profileimage");
     }
 
     // If organization code is provided, validate the organization
