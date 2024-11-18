@@ -54,7 +54,8 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.endsWith("subCategories") ||
       request.nextUrl.pathname.endsWith("categories") ||
       request.nextUrl.pathname.endsWith("/login") ||
-      request.nextUrl.pathname?.includes("auth")
+      request.nextUrl.pathname?.includes("auth") ||
+      request.nextUrl.pathname?.includes("images") 
     ) {
       return NextResponse.next();
     }

@@ -90,7 +90,7 @@ const EventModal = ({
 
           <div className="relative w-full mx-2 mb-2">
             <Image
-              src={`/courses/thumbnails/${firstImage}`}
+              src={`/api/images?filename=${firstImage}&folder=coursesthumbnails`}
               alt="Course Image"
               className="w-full h-full rounded-lg object-cover"
               width={1000}
@@ -231,10 +231,11 @@ const EventModal = ({
                           key={video.id}
                           className="relative border border-gray-500 rounded-lg"
                         >
+                          
                           <Image
-                            src={`/courses/thumbnails/${video.thumbnail_url}`}
+                            src={`/api/images?filename=${videos[0].thumbnail_url}&folder=coursesthumbnails`}
                             alt={`Video Thumbnail ${video.id}`}
-                            className="w-full h-full rounded-lg container"
+                            className="w-full h-full rounded-lg container border-2 border-red-600"
                             width={1000}
                             height={1000}
                           />

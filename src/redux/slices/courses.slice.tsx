@@ -20,6 +20,7 @@ interface CoursesState {
   videoProgress: any; // Assuming you want to store video progress
   usercourses: any;
   responses: any;
+  count: number;
   purchaseCourse: any | null;
   purchaseCourseLoader: boolean | null;
   purchaseCourseError: any | null;
@@ -36,6 +37,7 @@ const initialState: CoursesState = {
   error: null,
   success: null,
   courses: [],
+  count: 0,
   coursesSuccess: false,
   coursesCount: null,
   coursesCountLoading: false,
@@ -53,24 +55,23 @@ const initialState: CoursesState = {
   purchaseCourseSuccess: null,
 };
 
-export const fetchcoursesCount = createAsyncThunk<any, any>(
-  "assessment/fetchcoursesCount",
-  async ({ filter = {} }, thunkAPI) => {
+// Thunk to fetch the course count
+export const fetchcoursesCount = createAsyncThunk<number, { categoryId?: number }>(
+  "courses/fetchcoursesCount",
+  async ({ categoryId }, thunkAPI) => {
     try {
-      const queryParams = filter.categoryId
-        ? `?categoryId=${filter.categoryId}`
-        : "";
-      const response = await axiosInstance.get(
-        `/api/coursesCount${queryParams}`
-      );
-      return response?.data?.count;
+      // Add query parameters if categoryId is provided
+      const queryParams = categoryId ? `?categoryId=${categoryId}&count=true` : "?count=true";
+      const response = await axiosInstance.get(`/api/courses${queryParams}`);
+      return response?.data?.totalCourses;
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.error || "Failed to fetch courses Count";
+        error.response?.data?.error || "Failed to fetch courses count";
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
+
 // Thunk for fetching courses
 export const fetchcourses = createAsyncThunk<any, any>(
   "courses/fetchcourses",
@@ -250,7 +251,7 @@ const coursesSlice = createSlice({
         state.coursesSuccess = false;
       })
 
-      //Submit Courses Response
+      //Submit Courses Responsegit 
       .addCase(coursesAssessmentResponses.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -265,20 +266,6 @@ const coursesSlice = createSlice({
       .addCase(coursesAssessmentResponses.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      })
-      .addCase(fetchcoursesCount.pending, (state) => {
-        state.coursesCountLoading = true;
-        state.coursesCountError = null;
-        state.coursesCountSuccess = null;
-      })
-      .addCase(fetchcoursesCount.fulfilled, (state, action) => {
-        state.coursesCountLoading = false;
-        state.coursesCountSuccess =
-          action?.payload?.message || "Courses Counts fetched successfully!";
-
-        state.coursesCount = action.payload;
-
-        state.error = null;
       })
 
       // Fetch Video Progress
@@ -389,6 +376,24 @@ const coursesSlice = createSlice({
       .addCase(purchasingCourse.rejected, (state, action) => {
         state.purchaseCourseLoader = false;
         state.purchaseCourseError = action.payload as string;
+      })
+
+      //Fetch Courses Count
+      .addCase(fetchcoursesCount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.coursesCountSuccess = false;
+      })
+      // Handle fulfilled state
+      .addCase(fetchcoursesCount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.count = action.payload;
+        state.coursesCountSuccess = true;
+      })
+      // Handle rejected state
+      .addCase(fetchcoursesCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

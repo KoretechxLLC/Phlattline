@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const rows = jsonData.slice(1);
 
     const assessmentsData: any[] = [];
-    const imageFolder = path.join(process.cwd(), "public", "assessmentsImage");
+    const imageFolder = path.join(process.cwd(), "uploads", "assessmentsImage");
     if (!fs.existsSync(imageFolder)) {
       fs.mkdirSync(imageFolder, { recursive: true });
     }
