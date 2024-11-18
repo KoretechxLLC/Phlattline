@@ -26,7 +26,7 @@ const ManagingChange = () => {
       </div>
 
       {/* Second Row: Task Monitoring */}
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 border border-gray-500 rounded-3xl">
         <TaskMonitoring />
       </div>
 

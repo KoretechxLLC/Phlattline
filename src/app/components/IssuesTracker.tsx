@@ -6,7 +6,7 @@ import { useConfig } from "@/app/hooks/use-config";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 import Spinner from "@/app/components/Spinner"; // Adjust the import based on the actual location of your Spinner component.
 
-const BasicDonut = ({ height = 280 }) => {
+const BasicDonut = ({ height = 200 }) => {
   const [config] = useConfig();
 
   // Use media query to determine if the screen size is below medium
@@ -58,7 +58,7 @@ const BasicDonut = ({ height = 280 }) => {
   const isDataEmpty = !series || series.length === 0;
 
   return (
-    <div className="relative w-full h-[280px] sm:h-[320px] md:h-[400px] 4xl:h-[190px] lg:h-[280px]">
+    <div className="relative w-full h-[280px] sm:h-[320px] md:h-[400px] 4xl:h-[190px] lg:h-[200px]">
       {isLoading ? (
         <Spinner height="20vh" /> // Show spinner when loading
       ) : isDataEmpty ? (

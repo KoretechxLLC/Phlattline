@@ -193,19 +193,16 @@ const Login = () => {
           </motion.div>
 
           {/* Buttons */}
+          {/* Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-8 py-2 mx-4 mt-10">
             <div className="group relative inline-block">
               <motion.div
                 variants={primaryVariants}
                 whileTap={{ scale: 0.985 }}
-                onClick={() => {
-                  router.push("/IndividualSignup");
-                }}
                 className="cursor-pointer mb-1.5 w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium"
               >
                 Register
               </motion.div>
-
               <div className="hidden group-hover:block absolute z-10 w-40 bg-white text-red-500 py-2 px-4">
                 <ul>
                   <li
@@ -223,7 +220,7 @@ const Login = () => {
                 </ul>
               </div>
             </div>
-            <div className="cursor-pointer ">
+            <div className="cursor-pointer">
               <button
                 className="w-full cursor-pointer sm:w-40 rounded-lg bg-gradient-to-b from-[#BAA716] to-[#B50D34] px-4 py-2 text-center font-medium text-white text-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
                 type="submit"

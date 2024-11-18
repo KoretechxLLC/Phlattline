@@ -9,7 +9,7 @@ import ManagingChange from "./ManagingChange/page";
 import ProgramEvolutions from "./ProgramEvolutions/page";
 
 const OdaasStrategic = () => {
-  const [activeTab, setActiveTab] = useState<string>("Courses");
+  const [activeTab, setActiveTab] = useState<string>("Diagnostics");
   const [loading, setLoading] = useState<boolean>(false); // Initialize loading state
 
   const handleTabChange = (tab: string) => {

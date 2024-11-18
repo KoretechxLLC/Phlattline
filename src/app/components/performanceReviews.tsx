@@ -66,7 +66,7 @@ const customers = [
 const CustomerCard = ({ item }: any) => {
   return (
     <div
-      className={`relative z-[1] text-center p-4 rounded before:w-full before:h-[calc(100%-60px)] before:absolute before:left-0 before:top-[60px] before:rounded before:z-[-1] before:bg-opacity-[0.1] ${item.bg}`}
+      className={`relative z-[1] text-center my-1 rounded before:w-full before:h-[calc(100%-60px)] before:absolute before:left-0 before:top-[60px] before:rounded before:z-[-1] before:bg-opacity-[0.1] ${item.bg}`}
     >
       <div className={"h-[70px] w-[70px] rounded-full mx-auto mb-4 relative"}>
         <Image
@@ -100,35 +100,25 @@ const CustomerCard = ({ item }: any) => {
   );
 };
 
-const PerformanceReviews = () => {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+interface PerformanceReviewsProps {
+  numReviews?: number; // Optional prop to control the number of reviews
+}
 
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: 300, // Scroll 300px to the right
-        behavior: "smooth",
-      });
-    }
-  };
+const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
+  numReviews,
+}) => {
+  const displayedCustomers = numReviews
+    ? customers.slice(0, numReviews)
+    : customers;
 
   return (
-    <Card className="pb-2 border border-gray-500">
-      <div className="relative">
-        <div
-          ref={scrollRef}
-          className="flex space-x-5 overflow-x-auto scrollbar-thin pb-4"
-        >
-          {customers.map((item, i) => (
+    <Card className="w-full pb-2">
+      <div className="relative w-full">
+        <div className="flex space-x-2 pb-3 w-full">
+          {displayedCustomers.map((item, i) => (
             <CustomerCard item={item} key={`customer-${i}`} />
           ))}
         </div>
-        <button
-          onClick={scrollRight}
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-gray-500 text-white rounded-full shadow-md"
-        >
-          <Icon icon="ph:chevron-right" className="w-5 h-5" />
-        </button>
       </div>
     </Card>
   );

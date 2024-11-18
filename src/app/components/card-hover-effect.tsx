@@ -18,7 +18,7 @@ export const HoverEffect = ({
     title: string;
     image: string;
     price: number;
-  }[]
+  }[];
   className?: string; // Optional className prop
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -145,7 +145,7 @@ export const Card = ({
         className
       )}
     >
-      <div className="relative z-50">
+      <div className="relative">
         <div className="">{children}</div>
       </div>
     </div>

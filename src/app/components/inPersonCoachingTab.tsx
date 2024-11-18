@@ -14,12 +14,12 @@ const InpersonCoachingTab: React.FC = () => {
   // Static array of coaching session data
   const coachingData = [
     {
-      image: "/images/avatar1.jpg",
+      image: "/assets/UserProfile.png",
       name: "John Doe",
       designation: "Software Engineer",
     },
     {
-      image: "/images/avatar2.jpg",
+      image: "/assets/UserProfile.png",
       name: "Jane Smith",
       designation: "Product Manager",
     },
@@ -27,7 +27,7 @@ const InpersonCoachingTab: React.FC = () => {
 
   return (
     <div>
-      <Card className="border border-gray-400">
+      <Card className="border w-full border-gray-400 ">
         <CardHeader>
           <CardTitle>In-Person Coaching</CardTitle>
         </CardHeader>
@@ -51,7 +51,7 @@ const InpersonCoachingTab: React.FC = () => {
                 </Avatar>
                 <span className="font-semibold">{coach.name}</span>
                 <span className="text-yellow-400">{coach.designation}</span>
-                <Button className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+                <Button color="primary" className="rounded-3xl">
                   Take
                 </Button>
               </CardContent>

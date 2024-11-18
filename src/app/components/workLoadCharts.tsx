@@ -7,28 +7,24 @@ import { useTheme } from "next-themes";
 import { useConfig } from "@/app/hooks/use-config";
 import { getGridConfig, getYAxisConfig } from "@/app/lib/appex-chart-options";
 
-const WorkLoadBar = ({ height = 350 }) => {
+const WorkLoadBar = ({ height = 180 }) => {
   const [config] = useConfig();
   const { theme: mode } = useTheme();
 
   const series = [
     {
       name: "Completed",
-      data: [60, 45, 55, 40, 35, 50],
-      color: "#FFD700", // Explicit color for Completed series
+      data: [44, 55, 41, 37, 22, 43, 21],
     },
     {
       name: "Remaining",
-      data: [50, 30, 40, 55, 25, 45],
-      color: "#8B4513", // Explicit color for Remaining series
+      data: [53, 32, 33, 52, 13, 43, 32],
     },
     {
       name: "Overdue",
-      data: [10, 20, 15, 10, 30, 20],
-      color: "#FF0000", // Explicit color for Overdue series
+      data: [12, 17, 11, 9, 15, 11, 20],
     },
   ];
-
   const options: any = {
     chart: {
       toolbar: {
@@ -63,6 +59,7 @@ const WorkLoadBar = ({ height = 350 }) => {
         mode === "light" ? colors["default-600"] : colors["default-300"],
       ],
     },
+    colors: [colors.completed, colors.overdue, colors.remaining],
     tooltip: {
       theme: mode === "dark" ? "dark" : "light",
     },
@@ -71,7 +68,7 @@ const WorkLoadBar = ({ height = 350 }) => {
       mode === "light" ? colors["default-600"] : colors["default-300"]
     ),
     xaxis: {
-      categories: ["Mike", "Jennifer", "Brandon", "Sam", "George", "Alex"],
+      categories: ["Mike", "John", "Jennifer", "Brandon", "Sam"],
       axisBorder: {
         show: false,
       },
@@ -79,18 +76,12 @@ const WorkLoadBar = ({ height = 350 }) => {
         show: false,
       },
       labels: {
-        formatter: function (val: number) {
-          return val;
-        },
         style: {
           colors: [
             mode === "light" ? colors["default-600"] : colors["default-300"],
           ],
         },
       },
-      tickAmount: 3,
-      min: 0,
-      max: 8,
     },
     padding: {
       top: 0,
@@ -98,6 +89,7 @@ const WorkLoadBar = ({ height = 350 }) => {
       bottom: 0,
       left: 0,
     },
+
     legend: {
       position: "top",
       horizontalAlign: "left",
@@ -118,7 +110,6 @@ const WorkLoadBar = ({ height = 350 }) => {
       },
     },
   };
-
   return (
     <Chart
       options={options}

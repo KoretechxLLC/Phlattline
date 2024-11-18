@@ -15,7 +15,29 @@ const LeadersFeedback = () => {
         <CardHeader>
           <CardTitle>Leaders Feedback</CardTitle>
         </CardHeader>
-        <CardContent className="relative p-10">
+        <CardContent className="relative p-7">
+          <div className="mb-4">
+            <select className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]">
+              <option value="" disabled>
+                Department
+              </option>
+              <option value="Personal">Personal</option>
+              <option value="Professional">Professional</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Financial">Financial</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <select className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]">
+              <option value="" disabled>
+                Employee Name
+              </option>
+              <option value="Personal">Personal</option>
+              <option value="Professional">Professional</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Financial">Financial</option>
+            </select>
+          </div>
           {/* Transparent background for the input */}
           <textarea
             className="bg-transparent border border-gray-400 p-2 w-full h-32 rounded-md mb-10"

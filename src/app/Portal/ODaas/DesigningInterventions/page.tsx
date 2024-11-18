@@ -8,14 +8,6 @@ import AssignmentTabs from "@/app/components/AssignmentTabs";
 import InpersonCoachingTab from "@/app/components/inPersonCoachingTab";
 
 const DesigningInterventions = () => {
-  // Static array for AssignmentTabs data
-  const assignments = [
-    { title: "Goal 1", description: "Define objectives for team alignment" },
-    { title: "Goal 2", description: "Set measurable KPIs" },
-    { title: "Goal 3", description: "Assign accountability roles" },
-  ];
-
-  // Static array for CoursesTab data
   const courses = [
     {
       id: 1,
@@ -35,17 +27,16 @@ const DesigningInterventions = () => {
     },
   ];
 
-  // Static array for HoverEffect data
   const assessmentCatalogueData = [
     {
       image: "/assets/assessment1.png",
-      id: 1, // Added id
+      id: 1,
       title: "Team Assessment",
       price: 49,
     },
     {
       image: "/assets/assessment2.png",
-      id: 2, // Added id
+      id: 2,
       title: "Self Assessment",
       price: 29,
     },
@@ -59,29 +50,16 @@ const DesigningInterventions = () => {
           Your Organizations need these actions to reach your goals
         </CardTitle>
         <div className="flex space-x-2 my-1">
-          {assignments.map((assignment, index) => (
-            <AssignmentTabs
-              key={index}
-              title={assignment.title}
-              description={assignment.description}
-            />
-          ))}
+          <AssignmentTabs />
         </div>
       </div>
 
       {/* Second Row: Assessments and Courses Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {/* Individual Assessments */}
-        <div className="border-[1px] border-gray-500 rounded-lg p-5">
-          <CardTitle className="text-xl">Individual Assessments</CardTitle>
-          <HoverEffect
-            items={assessmentCatalogueData} // Use static array
-            className="grid grid-cols-1 md:grid-cols-2 gap-2"
-          />
-        </div>
 
         {/* Courses Section */}
-        <div className="flex flex-col space-y-4 border-[1px] border-gray-500 rounded-lg p-5">
+        <div className="flex flex-col space-y-4 border-[1px] border-gray-500 rounded-lg p-8">
           <CardTitle className="text-xl">Courses</CardTitle>
           <div className="flex space-x-4 overflow-x-auto">
             {courses.map((course) => (
@@ -95,10 +73,17 @@ const DesigningInterventions = () => {
             ))}
           </div>
         </div>
+        <Card className="border-[1px] border-gray-500 rounded-lg p-4">
+          <CardTitle className="text-xl">Individual Assessments</CardTitle>
+          <HoverEffect
+            items={assessmentCatalogueData}
+            className="grid grid-cols-1 md:grid-cols-2 mb-0 gap-1 p-5"
+          />
+        </Card>
       </div>
 
-      {/* Third Row: Coaching Tab and Tab Button in One Row */}
-      <div className="mt-4 flex space-x-4 w-full">
+      {/* Third Row: Full Width Coaching Tab and Tab Button */}
+      <div className="mt-4 flex space-x-4 w-full col-span-full">
         <InpersonCoachingTab />
         <TabButton
           backgroundColor="#FF0000"
