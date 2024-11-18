@@ -108,17 +108,6 @@ model questions {
   assessments               assessments                 @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
 }
 
-model user_courses {
-  id          Int           @id @default(autoincrement())
-  user_id     Int
-  course_id   Int
-  status      course_status @default(notStarted)
-  purchasedAt DateTime      @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime      @updatedAt
-  courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
-
 model purchased_assessments {
   id                        Int                    @id @default(autoincrement())
   user_id                   Int
@@ -281,11 +270,18 @@ model individual_assessments {
   image                           String
   categoryId                      Int
   subCategoryId                   Int
+  assessment_for                  assessment_for                    @default(individual)
   individual_assessment_questions individual_assessment_questions[]
   assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])
   assessment_subCategory          assessment_subCategory            @relation(fields: [subCategoryId], references: [id])
   purchased_assessments           purchased_assessments[]
   user_assessment_responses       user_assessment_responses[]
+}
+
+enum assessment_for {
+  individual
+  organization
+  team
 }
 
 model assessment_category {
@@ -313,6 +309,17 @@ model trainingOnDemand {
   select_date DateTime
   select_time String
   users       users    @relation(fields: [user_id], references: [id])
+}
+
+model user_courses {
+  id          Int           @id @default(autoincrement())
+  user_id     Int
+  course_id   Int
+  status      course_status @default(notStarted)
+  purchasedAt DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime      @updatedAt
+  courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 enum course_status {
