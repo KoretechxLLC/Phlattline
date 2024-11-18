@@ -4,7 +4,13 @@ import { Avatar, AvatarImage } from "@/app/components/avatar";
 import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 
-const GoalsAchievedTracker: React.FC = () => {
+interface GoalsAchievedTrackerProps {
+  showTargetImage?: boolean; // Prop to control the visibility of the target image
+}
+
+const GoalsAchievedTracker: React.FC<GoalsAchievedTrackerProps> = ({
+  showTargetImage = true,
+}) => {
   // Static array of goals data
   const goals = [
     { id: 1, goal: "Complete the onboarding process" },
@@ -56,16 +62,19 @@ const GoalsAchievedTracker: React.FC = () => {
               </li>
             ))}
           </ul>
-          {/* Target Image */}
-          <div className="p-10">
-            <Image
-              src={"/assets/TargetImage.png"}
-              alt="Goals Tracker"
-              width={100}
-              height={100}
-              className="w-40 h-40 "
-            />
-          </div>
+
+          {/* Conditionally render Target Image */}
+          {showTargetImage && (
+            <div className="p-10">
+              <Image
+                src={"/assets/TargetImage.png"}
+                alt="Goals Tracker"
+                width={100}
+                height={100}
+                className="w-40 h-40 "
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div className="text-center text-gray-500 py-8">No Goals Found</div>

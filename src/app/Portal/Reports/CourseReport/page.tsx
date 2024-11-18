@@ -30,7 +30,6 @@ const formatTimeSpent = (seconds: any) => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
-
   return (
     <span>
       <span>
@@ -55,7 +54,8 @@ const CourseReport = () => {
   const [coursesList, setcoursesList] = useState<any>([]);
   const { userData } = useSelector((state: RootState) => state.auth);
   const [loadings, setLoadings] = useState(true);
-  const { loading, error, success, logSuccess, goals, timeLogs }: any = useSelector((state: RootState) => state.performance);
+  const { loading, error, success, logSuccess, goals, timeLogs }: any =
+    useSelector((state: RootState) => state.performance);
   const [timelogsData, setTimeLogsData] = useState<any>([]);
   const [timeLogSpent, setTimeLogSpent] = useState(0);
 
@@ -67,19 +67,15 @@ const CourseReport = () => {
   // Fetch the courses for the current page
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = usercourses.slice(indexOfFirstCourse, indexOfLastCourse);
-
-
-
-
+  const currentCourses = usercourses.slice(
+    indexOfFirstCourse,
+    indexOfLastCourse
+  );
 
   // Handle page change
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
-
-
-
 
   // useEffect(() => {
   //   if (userId) {
@@ -92,15 +88,13 @@ const CourseReport = () => {
       setTimeLogsData(timeLogs?.timelogs);
       setTimeLogSpent(timeLogs?.totalTimeSpent);
     }
-  }, [logSuccess]);
+  }, [timeLogs?.timelogs, logSuccess, timeLogs?.totalTimeSpent]);
 
   useEffect(() => {
     if (userId) {
       dispatch(fetchusercourses(userId));
     }
   }, [dispatch, userId]);
-
-
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -155,44 +149,49 @@ const CourseReport = () => {
           <CardTitle className="flex-1 ml-6">Courses Completion</CardTitle>
         </CardHeader>
         <CardContent>
-      <div className="pb-3 pt-1">
-        {loading ? (
-        <Spinner/>
-        ) : (
-          <ul>
-            {currentCourses.map((course: any) => (
-              <li key={course.id} className="text-lg text-default-600 py-2 px-2">
-                <div className="flex items-center">
-                  <div
-                    className={`h-12 w-1 mr-4 ${course.status === 'completed'
-                      ? 'bg-green-500'
-                      : course.status === 'inprogress'
-                        ? 'bg-yellow-500'
-                        : 'bg-red-500'
-                      }`}
-                  ></div>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <span>{course.courses.course_name}</span>
-                      <span
-                        className={`${course.status === 'completed'
-                          ? 'text-green-500 capitalize'
-                          : course.status === 'inprogress'
-                            ? 'text-yellow-500 capitalize'
-                            : 'text-red-500 capitalize'
-                          }`}
-                      >
-                        {course.status}
-                      </span>
+          <div className="pb-3 pt-1">
+            {loading ? (
+              <Spinner />
+            ) : (
+              <ul>
+                {currentCourses.map((course: any) => (
+                  <li
+                    key={course.id}
+                    className="text-lg text-default-600 py-2 px-2"
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={`h-12 w-1 mr-4 ${
+                          course.status === "completed"
+                            ? "bg-green-500"
+                            : course.status === "inprogress"
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
+                        }`}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <span>{course.courses.course_name}</span>
+                          <span
+                            className={`${
+                              course.status === "completed"
+                                ? "text-green-500 capitalize"
+                                : course.status === "inprogress"
+                                ? "text-yellow-500 capitalize"
+                                : "text-red-500 capitalize"
+                            }`}
+                          >
+                            {course.status}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </CardContent>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </CardContent>
 
         {/* Pagination */}
         <div className="flex justify-center mt-4">
@@ -202,20 +201,15 @@ const CourseReport = () => {
             className="px-4 py-2  text-white rounded-l-lg"
           >
             <FaChevronLeft />
-
           </button>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage * coursesPerPage >= usercourses.length}
             className="px-4 py-2  text-white rounded-r-lg"
           >
-            
             <FaChevronRight />
-
-
           </button>
         </div>
-
       </Card>
     </div>
   );

@@ -37,7 +37,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
       >
         <button
           className={`flex items-center`}
-          onClick={() => router.push(`/Portal${href}`)}
+          onClick={() => router.push(`/Portal${href}/`)}
         >
           <div className="flex items-center">
             <Image
@@ -57,8 +57,10 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
   if (config.sidebar === "compact" && isDesktop) {
     return (
       <div
-        className={`flex h-auto py-1.5 px-3.5 capitalize font-semibold ${
-          isSelected ? "bg-black text-white rounded-l-3xl w-56" : ""
+        className={`justify-start text-sm font-medium capitalize h-auto py-3 md:px-3 px-3 transition-all duration-300  ${
+          isSelected
+            ? "bg-black  rounded-l-3xl w-l-54"
+            : "hover:bg-black hover:text-white hover:rounded-l-3xl hover:rounded-r-none hover:pl-5"
         }`}
       >
         <button
@@ -84,7 +86,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
     <div
       className={`justify-start text-sm font-medium capitalize h-auto py-3 md:px-3 px-3 transition-all duration-300  ${
         isSelected
-          ? "bg-black text-white rounded-l-3xl w-l-54"
+          ? "bg-black  rounded-l-3xl w-l-54"
           : "hover:bg-black hover:text-white hover:rounded-l-3xl hover:rounded-r-none hover:pl-5"
       }`}
     >

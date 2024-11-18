@@ -4,12 +4,15 @@ import { Card, CardContent } from "@/app/components/Card";
 import { Button } from "@/app/components/button-sidebar";
 import Spinner from "@/app/components/Spinner"; // Import Spinner component
 
-interface SuggestionTabsProps {
-  Suggestion: string;
-}
-
-const SuggestionTabs: React.FC<SuggestionTabsProps> = ({ Suggestion }) => {
+const SuggestionTabs: React.FC = () => {
   const [loading, setLoading] = useState(true);
+
+  // Define a static array of suggestions
+  const suggestions = [
+    "Improve time management",
+    "Increase productivity",
+    "Enhance team collaboration",
+  ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,15 +28,22 @@ const SuggestionTabs: React.FC<SuggestionTabsProps> = ({ Suggestion }) => {
         <Card className="w-full h-full 4xl:p-4 p-8 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <Spinner height="5vh" />
         </Card>
-      ) : Suggestion && Suggestion.length > 0 ? (
-        <Card className="w-full h-full 4xl:py-3 4xl:px-6 p-7 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-          <CardContent className="4xl:space-x-4 5xl:space-x-16 space-x-36">
-            <span className="5xl:text-md 4xl:text-sm lg:text-xl">
-              {Suggestion}
-            </span>
-            <Button color="primary" className="rounded-3xl">
-              Assign
-            </Button>
+      ) : suggestions.length > 0 ? (
+        <Card className="w-full  4xl:py-3 4xl:px-6 p-7">
+          <CardContent className="flex">
+            <ul className="flex space-x-12 rounded-lg 4xl:py-3 4xl:px-6 ">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  className="flex items-center space-x-4 p-7 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl lg:text-xl"
+                >
+                  <span className="5xl:text-md 4xl:text-sm">{suggestion}</span>
+                  <Button color="primary" className="rounded-3xl">
+                    Assign
+                  </Button>
+                </li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
       ) : (

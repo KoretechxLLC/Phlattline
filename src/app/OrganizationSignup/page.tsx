@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -9,9 +9,14 @@ import { RiTeamFill } from "react-icons/ri";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { ImListNumbered } from "react-icons/im";
 import { SparklesCore } from "../components/sparkles";
-import { AuroraBackground } from "../components/AuroraBackground";
-
-const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
+import { MdDomain, MdEmail, MdLock, MdPhone } from "react-icons/md";
+import { CustomPhoneInput } from "../components/phoneInput";
+import { Select } from "../components/select";
+import { Register, setError, setSuccess } from "@/redux/slices/auth.slice";
+import { RootState } from "@/redux/store";
+import StackedNotifications from "../components/Stackednotification";
+import { useDispatch, useSelector } from "react-redux";
+import { pass } from "three/webgpu";
 
 const SignupScreen = () => {
   return (
@@ -23,7 +28,130 @@ const SignupScreen = () => {
   );
 };
 
+export type NotificationType = {
+  id: number;
+  text: string;
+  type: "error" | "success";
+};
+
 const OrganizationSignup = () => {
+  const orgCategories = [
+    { id: 1, name: "Technology" },
+    { id: 2, name: "Healthcare" },
+    { id: 3, name: "Education" },
+    { id: 4, name: "Finance" },
+    { id: 5, name: "Retail" },
+    { id: 6, name: "Non-Profit" },
+    { id: 7, name: "Manufacturing" },
+  ];
+
+  const [orgName, setOrgName] = React.useState("");
+  const [orgEmail, setOrgEmail] = React.useState("");
+  const [orgPhone, setOrgPhone] = React.useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [employeeNumber, setEmployeeNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
+  const dispatch: any = useDispatch();
+  const { success, error } = useSelector((state: RootState) => state.auth);
+  const [errors, setErrors] = useState({
+    orgName: "",
+    orgEmail: "",
+    orgPhone: "",
+    orgType: "",
+    employeeNumber: "",
+    role: "",
+    password: "",
+  });
+
+  const validate = () => {
+    const newErrors = {
+      orgName: "",
+      orgEmail: "",
+      orgPhone: "",
+      orgType: "",
+      employeeNumber: "",
+      role: "",
+      password: "",
+    };
+    let isValid = true;
+
+    if (!orgName) {
+      newErrors.orgName = "Organization name is required";
+      isValid = false;
+    }
+
+    if (!orgEmail) {
+      newErrors.orgEmail = "Organizatio email is required";
+      isValid = false;
+    }
+
+    if (!orgPhone) {
+      newErrors.orgPhone = "Organization phone number is required";
+      isValid = false;
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    if (!selectedType) {
+      newErrors.orgType = "Organization Type is required";
+      isValid = false;
+    }
+
+    if (!employeeNumber) {
+      newErrors.employeeNumber = "Select number of Employees";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (validate()) {
+      const formData = new FormData();
+      formData.append("organization_name", orgName);
+      formData.append("organization_email", orgEmail);
+      formData.append("phone_number", orgPhone);
+      formData.append("organization_type", selectedType);
+      formData.append("no_employees", employeeNumber);
+
+      formData.append("password", password);
+
+      try {
+        await dispatch(Register(formData));
+      } catch (error) {
+        console.error("Registration failed", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (success !== null) {
+      setNotification({
+        id: Date.now(),
+        text: success,
+        type: "success",
+      });
+      dispatch(setSuccess());
+      router.push("/Login");
+    }
+    if (error !== null) {
+      setNotification({
+        id: Date.now(),
+        text: error,
+        type: "error",
+      });
+      dispatch(setError());
+    }
+  }, [success, error, dispatch]);
   const router: any = useRouter();
   return (
     <motion.div
@@ -35,6 +163,10 @@ const OrganizationSignup = () => {
       viewport={{ once: true }}
       className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
     >
+      <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       <div className="w-full max-w-lg">
         <div className="w-full flex flex-col items-center justify-center overflow-hidden rounded-md">
           <h1 className="md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
@@ -67,11 +199,7 @@ const OrganizationSignup = () => {
             </motion.p>
           </div>
         </div>
-        <form
-          noValidate
-          onSubmit={(e) => e.preventDefault()}
-          className="w-full"
-        >
+        <form onSubmit={handleSubmit} noValidate className="w-full">
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
@@ -79,25 +207,66 @@ const OrganizationSignup = () => {
             <Input
               id="org-name"
               type="text"
+              value={orgName}
+              onChange={(e: any) => setOrgName(e.target.value)}
               placeholder="Organization Name"
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
             <RiTeamFill className="absolute top-5 right-5 size-5 text-white" />
+            {errors.orgName && (
+              <p className="text-red-500 text-sm mt-1">{errors.orgName}</p>
+            )}
+          </motion.div>
+          <motion.div
+            variants={primaryVariants}
+            className="mb-2 w-full relative"
+          >
+            <Input
+              id="email-input"
+              placeholder="Enter Organization Email"
+              type="text"
+              value={orgEmail}
+              onChange={(e: any) => setOrgEmail(e.target.value)}
+              className="bg-black border-2 border-[#b74b279d] text-white"
+              required
+            />
+            <MdEmail className="absolute top-5 right-5 size-5 text-white" />
+            {errors.orgEmail && (
+              <p className="text-red-500 text-sm mt-1">{errors.orgEmail}</p>
+            )}
+          </motion.div>
+          <motion.div
+            variants={primaryVariants}
+            className="mb-2 w-full relative"
+          >
+            <CustomPhoneInput
+              value={orgPhone}
+              onChange={(phone) => setOrgPhone(phone)}
+            />
+            <MdPhone className="absolute top-5 right-5 size-5 text-white" />
+            {errors.orgPhone && (
+              <p className="text-red-500 text-sm mt-1">{errors.orgPhone}</p>
+            )}
           </motion.div>
 
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 w-full relative"
           >
-            <Input
-              id="role-input"
-              type="text"
-              placeholder="Role/Position"
-              className="bg-black border-2 border-[#b74b279d] text-white"
+            <Select
+              id="organization type"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="bg-black border-2 border-[#b74b279d] text-white w-full p-2"
+              options={orgCategories}
+              placeholder={"Select Organization Type"}
               required
             />
-            <BiSolidUserBadge className="absolute top-5 right-5 size-5 text-white" />
+            <MdDomain className="absolute top-5 right-6 size-5 text-white" />
+            {errors.orgType && (
+              <p className="text-red-500 text-sm mt-1">{errors.orgType}</p>
+            )}
           </motion.div>
 
           <motion.div
@@ -107,11 +276,18 @@ const OrganizationSignup = () => {
             <Input
               id="num-emp"
               type="number"
+              value={employeeNumber}
+              onChange={(e) => setEmployeeNumber(e.target.value)}
               placeholder="How many employees?"
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
             <ImListNumbered className="absolute top-5 right-5 size-5 text-white" />
+            {errors.employeeNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.employeeNumber}
+              </p>
+            )}
           </motion.div>
 
           <motion.div
@@ -119,12 +295,18 @@ const OrganizationSignup = () => {
             className="mb-2 w-full relative"
           >
             <Input
-              id="org-type"
-              type="text"
-              placeholder="Organization Type"
-              className="bg-black border-2 border-[#b74b279d] text-white  "
+              id="password-input"
+              placeholder="Enter Your Password"
+              type="password"
+              value={password}
+              onChange={(e: any) => setPassword(e.target.value)}
+              className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
+            <MdLock className="absolute top-5 right-5 size-5 text-white" />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </motion.div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2 mt-6">
@@ -175,402 +357,6 @@ const OrganizationSignup = () => {
         </motion.div>
       </div>
     </motion.div>
-  );
-};
-
-const SignUpImage = () => {
-  const globeConfig = {
-    pointSize: 10,
-    globeColor: "#062056", // Keep this as is for the globe color
-    showAtmosphere: true,
-    atmosphereColor: "#ffffff", // Atmosphere color
-    atmosphereAltitude: 0.1,
-    emissive: "#0078aa",
-    emissiveIntensity: 0.2,
-    shininess: 1,
-    polygonColor: "rgba(255, 255, 255, 1)", // Change opacity to 1 for bright white land
-    ambientLight: "#ffffff", // Ambient light color
-    directionalLeftLight: "#ffffff", // Left directional light
-    directionalTopLight: "#ffffff", // Top directional light
-    pointLight: "#ffffff", // Point light color
-    arcTime: 1000,
-    arcLength: 0.9,
-    rings: 1,
-    maxRings: 3,
-    initialPosition: { lat: 22.3193, lng: 114.1694 },
-    autoRotate: true,
-    autoRotateSpeed: 0.5,
-  };
-
-  const colors = ["#ffffff", "#ffffff", "#ffffff"];
-  const sampleArcs = [
-    {
-      order: 1,
-      startLat: -19.885592,
-      startLng: -43.951191,
-      endLat: -22.9068,
-      endLng: -43.1729,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 1,
-      startLat: 28.6139,
-      startLng: 77.209,
-      endLat: 3.139,
-      endLng: 101.6869,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 1,
-      startLat: -19.885592,
-      startLng: -43.951191,
-      endLat: -1.303396,
-      endLng: 36.852443,
-      arcAlt: 0.5,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 2,
-      startLat: 1.3521,
-      startLng: 103.8198,
-      endLat: 35.6762,
-      endLng: 139.6503,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 2,
-      startLat: 51.5072,
-      startLng: -0.1276,
-      endLat: 3.139,
-      endLng: 101.6869,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 2,
-      startLat: -15.785493,
-      startLng: -47.909029,
-      endLat: 36.162809,
-      endLng: -115.119411,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 3,
-      startLat: -33.8688,
-      startLng: 151.2093,
-      endLat: 22.3193,
-      endLng: 114.1694,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 3,
-      startLat: 21.3099,
-      startLng: -157.8581,
-      endLat: 40.7128,
-      endLng: -74.006,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 3,
-      startLat: -6.2088,
-      startLng: 106.8456,
-      endLat: 51.5072,
-      endLng: -0.1276,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 4,
-      startLat: 11.986597,
-      startLng: 8.571831,
-      endLat: -15.595412,
-      endLng: -56.05918,
-      arcAlt: 0.5,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 4,
-      startLat: -34.6037,
-      startLng: -58.3816,
-      endLat: 22.3193,
-      endLng: 114.1694,
-      arcAlt: 0.7,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 4,
-      startLat: 51.5072,
-      startLng: -0.1276,
-      endLat: 48.8566,
-      endLng: -2.3522,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 5,
-      startLat: 14.5995,
-      startLng: 120.9842,
-      endLat: 51.5072,
-      endLng: -0.1276,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 5,
-      startLat: 1.3521,
-      startLng: 103.8198,
-      endLat: -33.8688,
-      endLng: 151.2093,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 5,
-      startLat: 34.0522,
-      startLng: -118.2437,
-      endLat: 48.8566,
-      endLng: -2.3522,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 6,
-      startLat: -15.432563,
-      startLng: 28.315853,
-      endLat: 1.094136,
-      endLng: -63.34546,
-      arcAlt: 0.7,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 6,
-      startLat: 37.5665,
-      startLng: 126.978,
-      endLat: 35.6762,
-      endLng: 139.6503,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 6,
-      startLat: 22.3193,
-      startLng: 114.1694,
-      endLat: 51.5072,
-      endLng: -0.1276,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 7,
-      startLat: -19.885592,
-      startLng: -43.951191,
-      endLat: -15.595412,
-      endLng: -56.05918,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 7,
-      startLat: 48.8566,
-      startLng: -2.3522,
-      endLat: 52.52,
-      endLng: 13.405,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 7,
-      startLat: 52.52,
-      startLng: 13.405,
-      endLat: 34.0522,
-      endLng: -118.2437,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 8,
-      startLat: -8.833221,
-      startLng: 13.264837,
-      endLat: -33.936138,
-      endLng: 18.436529,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 8,
-      startLat: 49.2827,
-      startLng: -123.1207,
-      endLat: 52.3676,
-      endLng: 4.9041,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 8,
-      startLat: 1.3521,
-      startLng: 103.8198,
-      endLat: 40.7128,
-      endLng: -74.006,
-      arcAlt: 0.5,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 9,
-      startLat: 51.5072,
-      startLng: -0.1276,
-      endLat: 34.0522,
-      endLng: -118.2437,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 9,
-      startLat: 22.3193,
-      startLng: 114.1694,
-      endLat: -22.9068,
-      endLng: -43.1729,
-      arcAlt: 0.7,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 9,
-      startLat: 1.3521,
-      startLng: 103.8198,
-      endLat: -34.6037,
-      endLng: -58.3816,
-      arcAlt: 0.5,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 10,
-      startLat: -22.9068,
-      startLng: -43.1729,
-      endLat: 28.6139,
-      endLng: 77.209,
-      arcAlt: 0.7,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 10,
-      startLat: 34.0522,
-      startLng: -118.2437,
-      endLat: 31.2304,
-      endLng: 121.4737,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 10,
-      startLat: -6.2088,
-      startLng: 106.8456,
-      endLat: 52.3676,
-      endLng: 4.9041,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 11,
-      startLat: 41.9028,
-      startLng: 12.4964,
-      endLat: 34.0522,
-      endLng: -118.2437,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 11,
-      startLat: -6.2088,
-      startLng: 106.8456,
-      endLat: 31.2304,
-      endLng: 121.4737,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 11,
-      startLat: 22.3193,
-      startLng: 114.1694,
-      endLat: 1.3521,
-      endLng: 103.8198,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 12,
-      startLat: 34.0522,
-      startLng: -118.2437,
-      endLat: 37.7749,
-      endLng: -122.4194,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 12,
-      startLat: 35.6762,
-      startLng: 139.6503,
-      endLat: 22.3193,
-      endLng: 114.1694,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 12,
-      startLat: 22.3193,
-      startLng: 114.1694,
-      endLat: 34.0522,
-      endLng: -118.2437,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 13,
-      startLat: 52.52,
-      startLng: 13.405,
-      endLat: 22.3193,
-      endLng: 114.1694,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 13,
-      startLat: 11.986597,
-      startLng: 8.571831,
-      endLat: 35.6762,
-      endLng: 139.6503,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 13,
-      startLat: -22.9068,
-      startLng: -43.1729,
-      endLat: -34.6037,
-      endLng: -58.3816,
-      arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 14,
-      startLat: -33.936138,
-      startLng: 18.436529,
-      endLat: 21.395643,
-      endLng: 39.883798,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-  ];
-  return (
-    <div className="hidden lg:flex  items-end w-[100%] ml-28">
-      {typeof window !== "undefined" && (
-        <World data={sampleArcs} globeConfig={globeConfig} />
-      )}
-    </div>
   );
 };
 

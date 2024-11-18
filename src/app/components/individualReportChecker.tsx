@@ -11,7 +11,7 @@ import { Button } from "./button-sidebar";
 const IndividualReportChecker = () => {
   return (
     <div>
-      <Card className="border border-gray-400">
+      <Card className="border border-gray-500 p-8 rounded-3xl">
         <CardHeader>
           <CardTitle>Check Individual Report</CardTitle>
         </CardHeader>
@@ -25,7 +25,9 @@ const IndividualReportChecker = () => {
             <option value="Fitness">Fitness</option>
             <option value="Financial">Financial</option>
           </select>
-          <Button color="primary">Assign</Button>
+          <Button color="primary" className="my-3">
+            Apply
+          </Button>
         </CardContent>
       </Card>
     </div>

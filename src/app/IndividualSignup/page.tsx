@@ -57,7 +57,15 @@ const IndividualSignUp = () => {
     (state: RootState) => state.categories
   );
   const router = useRouter();
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    name: "",
+    lastname: "",
+    industry: "",
+    designation: "",
+    phone: "",
+  });
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
@@ -226,9 +234,9 @@ const IndividualSignUp = () => {
               required
             />
             <MdPerson className="absolute top-5 right-5 size-5 text-white" />
-            {/* {errors.name && (
+            {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )} */}
+            )}
           </motion.div>
 
           {/* Last Name */}
@@ -246,9 +254,9 @@ const IndividualSignUp = () => {
               required
             />
             <MdPerson className="absolute top-5 right-5 size-5 text-white" />
-            {/* {errors.lastname && (
+            {errors.lastname && (
               <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>
-            )} */}
+            )}
           </motion.div>
 
           {/* Industry Select */}
@@ -266,9 +274,9 @@ const IndividualSignUp = () => {
               required
             />
             <MdDomain className="absolute top-5 right-6 size-5 text-white" />
-            {/* {errors.industry && (
+            {errors.industry && (
               <p className="text-red-500 text-sm mt-1">{errors.industry}</p>
-            )} */}
+            )}
           </motion.div>
 
           <motion.div
@@ -285,9 +293,9 @@ const IndividualSignUp = () => {
               required
             />
             <MdWork className="absolute top-5 right-6 size-5 text-white" />
-            {/* {errors.designation && (
+            {errors.designation && (
               <p className="text-red-500 text-sm mt-1">{errors.designation}</p>
-            )} */}
+            )}
           </motion.div>
 
           {/* Email */}
@@ -320,9 +328,9 @@ const IndividualSignUp = () => {
               onChange={(phone) => setPhone(phone)}
             />
             <MdPhone className="absolute top-5 right-5 size-5 text-white" />
-            {/* {errors.phone && (
+            {errors.phone && (
               <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-            )} */}
+            )}
           </motion.div>
 
           {/* Password */}

@@ -33,8 +33,13 @@ export function MenuClassic() {
       label: "Assessments",
       icon: "/assets/AssessmentsLogo.png",
     },
+    // {
+    //   href: "TalentManagement",
+    //   label: "Talent Management",
+    //   icon: "/assets/TalentLogo.png",
+    // },
     {
-      href: "/PerformanceManagement",
+      href: "PerformanceManagement",
       label: "Performance Management",
       icon: "/assets/PerformanceLogo.png",
     },
@@ -69,15 +74,17 @@ export function MenuClassic() {
           </li>
         ))}
       </ul>
-      {/* <li className="w-full">
+
+      {/* Menu Widget without list dot */}
+      <li className="w-full list-none pl-2 pb-8">
         <MenuWidget
           isActive={activeMenu === "/Portal/ODaas"}
           onClick={() => handleMenuClick("/Portal/ODaas")}
         />
-      </li> */}
+      </li>
+
       {isDesktop && (
-        <div className="pl-8 pb-8 w-full">
-          {" "}
+        <div className="pl-8 pb-12 w-full">
           {/* Anchors to the bottom */}
           <MenuItem
             label="Settings"
