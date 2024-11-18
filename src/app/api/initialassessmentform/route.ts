@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file");
     const categoryName: any = formData.get("categoryName")?.toString();
     const subCategoryName: any = formData.get("subCategoryName")?.toString();
+    const assessment_for: any = formData.get("assessment_for")?.toString();
 
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
@@ -189,6 +190,7 @@ export async function POST(req: NextRequest) {
             categoryId: category.id,
             subCategoryId: subCategory.id,
             image: assessment.image_url,
+            assessment_for,
             individual_assessment_questions: {
               create: assessment.questions.map((q: any) => ({
                 question_text: q.question_text,
@@ -235,6 +237,7 @@ export async function GET(req: NextRequest) {
     const size = parseInt(searchParams.get("size")) || 10;
     const categoryId = searchParams.get("categoryId");
     const type = searchParams.get("type");
+    const assessment_for = searchParams.get("assessment_for");
 
     const skip = (page - 1) * size;
     let whereClause: any = {};
@@ -262,6 +265,10 @@ export async function GET(req: NextRequest) {
 
       // Exclude purchased assessments from the results
       whereClause.id = { notIn: purchasedIds };
+    }
+
+    if (assessment_for) {
+      whereClause.assessment_for = assessment_for;
     }
 
     // Fetch the assessments

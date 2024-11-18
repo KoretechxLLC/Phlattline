@@ -49,7 +49,6 @@ const AssessmentsCatalogue: React.FC<any> = ({ onViewAll }) => {
     );
   }, [dispatch, categoryId, userData]);
 
-
   useEffect(() => {
     if (recommendedAssessmentSuccess) {
       let recommendedassessmentDataArray: any = [];
