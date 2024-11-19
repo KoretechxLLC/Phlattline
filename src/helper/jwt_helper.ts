@@ -7,7 +7,8 @@ interface JwtPayload {
 
 export async function signAccessToken(
   userId: number,
-  role: string
+  role: string,
+  user_type_id: number
 ): Promise<string> {
   const secretKey: string = process.env.ACCESS_SECRET_KEY!;
   if (!secretKey) {
@@ -17,6 +18,7 @@ export async function signAccessToken(
   const payload: any = {
     id: userId?.toString(),
     role: role,
+    user_type_id: user_type_id,
   };
 
   try {

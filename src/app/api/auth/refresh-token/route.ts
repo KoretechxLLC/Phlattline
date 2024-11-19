@@ -24,7 +24,11 @@ export async function POST(request: NextRequest) {
       where: { id: Number(userId) },
     });
 
-    const accessToken = await signAccessToken(Number(userId), user.role);
+    const accessToken = await signAccessToken(
+      Number(userId),
+      user.role,
+      user.user_type_id
+    );
 
     const response = NextResponse.json({
       message: "Token Successfully retrieved",
