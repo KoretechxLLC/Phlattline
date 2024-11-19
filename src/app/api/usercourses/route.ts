@@ -21,7 +21,11 @@ export async function GET(request: NextRequest) {
         user_id: Number(userId),
       },
       include: {
-        courses: true,  // Include course details
+        courses: {
+          include:{
+            videos : true
+          }
+        },  // Include course details
         users: true,    // Include user details
       },
     });

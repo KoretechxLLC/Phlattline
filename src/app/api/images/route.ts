@@ -62,12 +62,15 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    
     return new Response(file, {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `inline; filename="${filename}"`,
       },
     });
+
+
   } catch (error) {
     console.error("Error reading file:", error);
     return NextResponse.json(

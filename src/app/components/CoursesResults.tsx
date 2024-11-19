@@ -13,6 +13,7 @@ const CoursesResults = ({ height = 280 }) => {
   const dispatch: any = useDispatch();
   const { usercourses } = useSelector((state: RootState) => state.courses);
 
+
   const { userData } = useSelector((state: RootState) => state.auth);
   const { theme: mode } = useTheme();
 
