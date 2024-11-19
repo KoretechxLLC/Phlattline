@@ -55,7 +55,7 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.endsWith("categories") ||
       request.nextUrl.pathname.endsWith("/login") ||
       request.nextUrl.pathname?.includes("auth") ||
-      request.nextUrl.pathname?.includes("images") 
+      request.nextUrl.pathname?.includes("images")
     ) {
       return NextResponse.next();
     }
@@ -75,9 +75,17 @@ export async function middleware(request: NextRequest) {
       }
 
       try {
-        const { userId, role }: any = await verifyAccessToken(token);
+        const { userId, role, user_type_id }: any = await verifyAccessToken(
+          token
+        );
 
         request.headers.set("id", userId);
+        if (
+          request.nextUrl.pathname?.includes("organization") &&
+          user_type_id !== 2
+        ) {
+          return NextResponse.redirect(new URL("/", request.url));
+        }
 
         if (request.nextUrl.pathname?.includes("admins") && role !== "admin") {
           return NextResponse.redirect(new URL("/", request.url));

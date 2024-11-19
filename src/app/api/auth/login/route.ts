@@ -19,12 +19,11 @@ export async function POST(request: NextRequest) {
       },
       include: {
         user_courses: true,
-        purchased_assessments:{
+        purchased_assessments: {
           include: {
-            individual_assessments: true, 
+            individual_assessments: true,
           },
-        }
-        
+        },
       },
     });
 
@@ -45,7 +44,11 @@ export async function POST(request: NextRequest) {
       throw new Error("Invalid Email/Password");
     }
 
-    const accessToken = await signAccessToken(user.id, user.role);
+    const accessToken = await signAccessToken(
+      user.id,
+      user.role,
+      user.user_type_id
+    );
     const refreshToken = await signRefreshToken(user.id);
 
     delete user.password;
