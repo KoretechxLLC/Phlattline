@@ -18,12 +18,12 @@ const Banner = () => {
   const [message, setMessage] = useState("");
 
   const handleButtonClick = () => {
-    if (userData?.assessment_status) {
+    if (userData?.assessment_status === true ) {
       setMessage("You have already taken the assessment.");
       setTimeout(() => {
         setMessage(""); // Clear the message after 5 seconds
       }, 5000);
-    } else {
+    } else if(userData?.assessment_status === false ) {
       router.push("/Individualassessment");
     }
   };

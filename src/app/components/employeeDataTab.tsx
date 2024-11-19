@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/app/components/Card";
 import { Progress } from "./progress";
-import ProgressBar from "@ramonak/react-progress-bar";
 
 const EmployeeDataTab = () => {
   return (

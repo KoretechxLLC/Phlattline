@@ -30,6 +30,7 @@ interface CoursesState {
 interface VideoProgressParams {
   courseId: number; // Change here to match the expected property names
   userId: number;
+ 
 }
 
 const initialState: CoursesState = {
@@ -91,14 +92,13 @@ export const fetchcourses = createAsyncThunk<any, any>(
   }
 );
 
-// Thunk for fetching video progress
 export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
   "courses/fetchvideoprogress",
-  async ({ courseId, userId }, { rejectWithValue }) => {
+  async ({courseId, userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
         `api/videoprogress?course_id=${courseId}&user_id=${userId}`
-      );
+      ); // Fixed query string
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -109,6 +109,7 @@ export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
     }
   }
 );
+
 
 // Thunk for fetching user-specific courses
 export const fetchusercourses = createAsyncThunk<any, number>(
@@ -121,7 +122,7 @@ export const fetchusercourses = createAsyncThunk<any, number>(
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.error ||
+      error.response?.data?.error ||
         error.message ||
         "Failed to fetch user courses";
       return rejectWithValue(errorMessage);
