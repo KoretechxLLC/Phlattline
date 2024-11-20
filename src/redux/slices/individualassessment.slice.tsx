@@ -1,5 +1,4 @@
 import axiosInstance from "@/app/utils/privateAxios";
-import { Category } from "@prisma/client";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AssessmentState {
