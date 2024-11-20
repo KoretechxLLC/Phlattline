@@ -16,6 +16,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/app/components/button-sidebar";
+// import {
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+// } from "@/app/components/table";
 import {
   Table,
   TableBody,
@@ -23,7 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/app/components/table";
+} from "./table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/app/components/badge";
 import { cn } from "@/app/lib/utils";

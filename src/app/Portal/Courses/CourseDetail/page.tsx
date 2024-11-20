@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { fetchcourses } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
+import EmployeeModal from "@/app/components/employeeModal";
 
 interface CourseDetailsProps {
   params: {
@@ -67,8 +68,16 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
     (video: any) => video.sequence === 1
   );
 
-  const handlePlayVideo = () => {
-    setIsPlaying(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Function to handle opening the modal
+  const handleViewAllClick = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to handle closing the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -165,19 +174,30 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                       Buy now for ${data?.price}
                     </Button>
                   ) : (
-                    <Button
-                      className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
-                      size="default"
-                      color="primary"
-                      style={{ fontFamily: "Sansation" }}
-                      onClick={() =>
-                        router.push(
-                          `/Portal/Courses/CourseModule?courseId=${data?.id}`
-                        )
-                      }
-                    >
-                      Get Started
-                    </Button>
+                    <>
+                      <Button
+                        className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
+                        size="default"
+                        color="primary"
+                        style={{ fontFamily: "Sansation" }}
+                        onClick={() =>
+                          router.push(
+                            `/Portal/Courses/CourseModule?courseId=${data?.id}`
+                          )
+                        }
+                      >
+                        Get Started
+                      </Button>
+                      <Button
+                        className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
+                        size="default"
+                        color="secondary"
+                        style={{ fontFamily: "Sansation" }}
+                        onClick={handleViewAllClick} // Open modal on button click
+                      >
+                        Assign
+                      </Button>
+                    </>
                   )}
                 </div>
 
@@ -238,6 +258,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             setIsBought={setIsBought}
             courseId={courseId}
           />
+          <EmployeeModal open={isModalOpen} onClose={handleCloseModal} />
         </div>
       )}
     </>
