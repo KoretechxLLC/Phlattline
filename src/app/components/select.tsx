@@ -5,7 +5,7 @@ import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
 
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  options: Array<{ id: number; name: string }>;
+  options: Array<{ id: number; name: string | number }>;
   placeholder?: string; // Add placeholder prop
 }
 
