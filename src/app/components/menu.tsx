@@ -51,6 +51,9 @@ export function MenuClassic() {
     router.push(href);
   };
 
+  
+
+
   return (
     <nav className="theme-gradient rounded-3xl h-full w-full transition-all duration-300 z-40 flex flex-col">
       <div className="flex justify-center items-center my-12">

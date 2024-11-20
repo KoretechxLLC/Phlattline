@@ -33,6 +33,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
   const { courses, videoProgressSuccess } = useSelector(
     (state: RootState) => state.courses
   );
+
   const { userData } = useSelector((state: RootState) => state.auth);
   const [filteredData, setFilteredData] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
