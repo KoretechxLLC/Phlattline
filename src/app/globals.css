@@ -233,3 +233,6 @@ li.country.highlight {
   border-width: 2em !important;
 }
 
+.react-datepicker-wrapper {
+  width: 100% !important;
+}

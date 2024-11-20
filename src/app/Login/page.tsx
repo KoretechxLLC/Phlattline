@@ -217,6 +217,15 @@ const Login = () => {
                   >
                     Organization
                   </li>
+
+                  <li
+                    className="cursor-pointer rounded-lg hover:bg-red-500 hover:text-white transition-colors pl-1"
+                    onClick={() => router.push("/EmployeeSignup")}
+                  >
+                    Employee
+                  </li>
+
+
                 </ul>
               </div>
             </div>
