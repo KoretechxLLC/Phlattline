@@ -222,10 +222,11 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   </div>
                   <div className="absolute bottom-0 left-0 mb-3 -ml-[10px]">
                     <div className="bg-black bg-opacity-60 p-2 pl-4 pr-4 rounded-br-2xl">
-                      <span className="text-lg font-bold text-white">{video.title}</span>
+                      <span className="text-lg font-bold text-white">
+                        {video.title}
+                      </span>
                     </div>
                   </div>
-
                 </div>
               ))}
             </div>
