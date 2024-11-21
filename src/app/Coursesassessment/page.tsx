@@ -130,7 +130,7 @@ const Courseassessment = () => {
               className="mb-6 p-0 bg-black rounded-lg shadow-md"
             >
               <div className="space-y-6">
-                {assessment.questions.map((question: any, index: number) => (
+                {assessment.questions?.map((question: any, index: number) => (
                   <div
                     key={question.id}
                     className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${
