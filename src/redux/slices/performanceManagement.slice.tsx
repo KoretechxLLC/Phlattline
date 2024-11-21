@@ -4,28 +4,27 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface GoalState {
   loading: boolean;
   error: string | null;
-  goals: any[]; 
+  goals: any[];
   success: string | null;
   data?: any;
-  timeLogs?:any[];
-  logSuccess:any;
+  timeLogs?: any[];
+  logSuccess: any;
 }
 
 const initialState: GoalState = {
   loading: false,
   error: null,
   success: null,
-  logSuccess:null,
+  logSuccess: null,
   goals: [],
-  timeLogs:[]
-  
+  timeLogs: [],
 };
 
 export const fetchGoals = createAsyncThunk<any, any>(
   "performanceManagement/fetchGoals",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`api/usergoal?id=${id}`);
+      const response = await axiosInstance.get(`/api/usergoal?id=${id}`);
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -38,13 +37,20 @@ export const fetchGoals = createAsyncThunk<any, any>(
 );
 
 export const updateTimemanagement = createAsyncThunk(
-  'timeLog/updateTimemanagement',
-  async (timeData: { user_id: number; timeSpent: number }, { rejectWithValue }) => { // Change string to number
+  "timeLog/updateTimemanagement",
+  async (
+    timeData: { user_id: number; timeSpent: number },
+    { rejectWithValue }
+  ) => {
+    // Change string to number
     try {
-      const response = await axiosInstance.put('/api/timeManagement', timeData);
+      const response = await axiosInstance.put("/api/timeManagement", timeData);
       return response.data;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to update clock-out time';
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to update clock-out time";
       return rejectWithValue(errorMessage);
     }
   }
@@ -52,15 +58,17 @@ export const updateTimemanagement = createAsyncThunk(
 
 export const fetchtimelog = createAsyncThunk(
   "timeLog/fetchtimelog",
-  async ({userId,duration}:any, { rejectWithValue }) => {
+  async ({ userId, duration }: any, { rejectWithValue }) => {
     try {
-
-
-      const response = await axiosInstance.get(`/api/timeManagement?id=${userId}&duration=${duration}`);
+      const response = await axiosInstance.get(
+        `/api/timeManagement?id=${userId}&duration=${duration}`
+      );
       return response.data;
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.error || error.message || "Failed to fetch time log";
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch time log";
       return rejectWithValue(errorMessage);
     }
   }
@@ -84,7 +92,7 @@ export const completeGoal = createAsyncThunk<any, any>(
   "performanceManagement/completeGoal",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.put(`api/usergoal`, { id: id });
+      const response = await axiosInstance.put(`/api/usergoal`, { id: id });
       return response.data;
     } catch (error: any) {
       const errorMessage =
@@ -98,7 +106,7 @@ export const deleteGoal = createAsyncThunk<any, any>(
   "performanceManagement/deleteGoal",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`api/usergoal?id=${id}`);
+      const response = await axiosInstance.delete(`/api/usergoal?id=${id}`);
       return id;
     } catch (error: any) {
       const errorMessage =
@@ -118,7 +126,6 @@ const performanceManagement = createSlice({
     resetError(state) {
       state.error = null;
     },
-
   },
   extraReducers: (builder) => {
     builder
@@ -154,7 +161,7 @@ const performanceManagement = createSlice({
       .addCase(fetchtimelog.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.logSuccess = null
+        state.logSuccess = null;
       })
       .addCase(fetchtimelog.fulfilled, (state, action) => {
         state.loading = false;
@@ -187,7 +194,7 @@ const performanceManagement = createSlice({
         state.error = action.payload as string;
         state.success = null;
       })
-      //Updated Time Managment 
+      //Updated Time Managment
       .addCase(updateTimemanagement.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -201,7 +208,6 @@ const performanceManagement = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-
 
       // delete Goal Responses
       .addCase(deleteGoal.pending, (state) => {

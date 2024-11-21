@@ -51,9 +51,6 @@ export function MenuClassic() {
     router.push(href);
   };
 
-  
-
-
   return (
     <nav className="theme-gradient rounded-3xl h-full w-full transition-all duration-300 z-40 flex flex-col">
       <div className="flex justify-center items-center my-12">
@@ -79,12 +76,12 @@ export function MenuClassic() {
       </ul>
 
       {/* Menu Widget without list dot */}
-      <li className="w-full list-none pl-2 pb-8">
+      {/* <li className="w-full list-none pl-2 pb-8">
         <MenuWidget
           isActive={activeMenu === "/Portal/ODaas"}
           onClick={() => handleMenuClick("/Portal/ODaas")}
         />
-      </li>
+      </li> */}
 
       {isDesktop && (
         <div className="pl-8 pb-12 w-full">

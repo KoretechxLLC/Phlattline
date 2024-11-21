@@ -40,6 +40,10 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
   const [videoRun, setVideoRun] = useState(false);
   const [videoDuration, setVideoDuration] = useState<number>(0);
   const [totalDuration, setTotalDuration] = useState<number>(0);
+  const [imgError, setImgError] = useState(false);
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
 
   const courseId = searchParams.get("courseId");
   const videoId = searchParams.get("videoId");
@@ -115,7 +119,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
 
   return (
     <div
-      className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-default-50 w-full h-full rounded-lg"
+      className="p- grid grid-cols-1 md:grid-cols-3 gap-6 bg-default-50 w-full h-full rounded-lg"
       style={{ fontFamily: "Sansation" }}
     >
       <div className="md:col-span-2">
@@ -131,21 +135,26 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             </Badge>
           </div>
 
-          <div className="relative w-full mx-2 pt-2">
+          <div className="relative w-full mx-2 py-1">
             {!videoRun ? (
               <>
                 <Image
-                  src={`/api/images?filename=${videoData?.thumbnail_url}&folder=coursesthumbnails`}
+                  src={
+                    imgError
+                      ? "/assets/DummyImg.png"
+                      : `/api/images?filename=${videoData?.thumbnail_url}&folder=coursesthumbnails`
+                  }
                   alt="Course Thumbnail"
-                  className="w-full h-full rounded-lg object-cover container border-[1px] border-slate-600 mt-3"
+                  className="w-full 4xl:h-52 h-96 rounded-lg object-cover container border-[1px] border-slate-600 my-2"
                   width={1000}
                   height={1000}
+                  onError={handleError}
                 />
                 <div className="absolute left-0 bottom-0 m-4">
                   <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
                     <Icon
                       icon="tdesign:play-circle"
-                      className="text-white w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
+                      className="text-white 4xl:w-20 4xl:h-20 w-32 h-32 text-3xl hover:text-red-500 cursor-pointer"
                       onClick={handlePlayVideo}
                     />
                   </div>
@@ -168,20 +177,12 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             )}
           </div>
 
-          <div className="space-y-5 my-5">
+          <div className="space-y-5 my-3">
             <Card className="bg-black p-2">
               <CardContent>
                 <div className="flex items-center justify-between text-default-900 text-sm lg:text-base font-normal">
                   <h1 className="text-3xl font-bold">About this course</h1>
                   <div className="flex items-center gap-1.5">
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-red-600" />
-                    <Icon icon="ph:star-fill" className="text-default-300/80" />
-                    <span className="ltr:pl-2 rtl:pr-2 text-default-500">
-                      {filteredData && filteredData.rating}
-                    </span>
                     <p className="text-gray-500 mx-5">|</p>
                     <Icon
                       icon="heroicons-solid:users"
@@ -250,7 +251,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
       </div>
 
       {/* Right Column: Course Modules and Information */}
-      <div className="md:col-span-1 my-16">
+      <div className="md:col-span-1 my-12">
         <Card className="border border-gray-500 rounded-xl p-5">
           <CardHeader
             className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]"

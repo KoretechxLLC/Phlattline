@@ -107,7 +107,7 @@ model courses {
   updated_at                DateTime                    @default(now()) @updatedAt
   categoryId                Int
   subCategoryId             Int
-  course_for                Int
+  course_for                Int?
   options                   String[]
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
