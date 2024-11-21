@@ -123,7 +123,7 @@ const TasksTracker = ({
             } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handlePendingTasksClick}
           >
-            Pending {label}
+            Goals
           </button>
         )}
         {showCompleted && (
@@ -135,7 +135,7 @@ const TasksTracker = ({
             } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handleCompletedTasksClick}
           >
-            Completed {label}
+            Tasks
           </button>
         )}
         {showSaved && (

@@ -9,12 +9,18 @@ import { logout } from "@/redux/slices/auth.slice";
 import Icon from "@/app/components/utility-icon";
 
 const ProfileInfo = () => {
+  const [image, setImage] = useState<string | undefined>();
+  const [imgError, setImgError] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const dispatch: any = useDispatch();
   const [loading, setLoading] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
 
   const handleLogout = async () => {
     try {
