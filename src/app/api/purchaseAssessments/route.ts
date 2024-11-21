@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const assessmentPurchaseHistory = await prisma.$transaction(
-      async (prisma) => {
+      async (prisma: any) => {
         const alreadyPurchasedAssessment =
           await prisma.purchased_assessments.findFirst({
             where: {

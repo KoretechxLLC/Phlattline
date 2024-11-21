@@ -56,11 +56,16 @@ const ProfileInfo = () => {
           <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center rounded-full overflow-hidden">
             <Image
               alt="User profile image"
-              src={`/api/images?filename=${userData.profile_image}&folder=profileImage`}
-              layout="responsive"
-              width={5000}
-              height={5000}
+              src={
+                image || imgError
+                  ? "/assets/DummyImg.png" // Show dummy image if there's an error or no image
+                  : `/api/images?filename=${userData.profile_image}&folder=profileImage`
+              }
+              layout="responsive" // Use responsive layout to control aspect ratio
+              width={500} // Adjust width for better performance
+              height={500} // Adjust height for better performance
               className="rounded-full object-cover"
+              onError={handleError} // Trigger error handler if the image fails to load
             />
           </div>
         ) : (

@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing training at the same date and time
-    const trainingSession = await prisma.$transaction(async (prisma) => {
+    const trainingSession = await prisma.$transaction(async (prisma: any) => {
       const existingTraining = await prisma.trainingOnDemand.findFirst({
         where: {
           user_id: Number(user_Id),
@@ -55,7 +55,9 @@ export async function POST(request: NextRequest) {
       });
 
       if (existingTraining) {
-        throw new Error("You already have a training session booked at this time.");
+        throw new Error(
+          "You already have a training session booked at this time."
+        );
       }
 
       // Create the new training session entry
@@ -74,12 +76,14 @@ export async function POST(request: NextRequest) {
       success: true,
       data: trainingSession,
     });
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error during transaction:", error);
 
     // Check if error is related to JSON parsing or transaction failure
     const errorMessage =
-      error instanceof SyntaxError ? "Invalid JSON format in request" : error.message;
+      error instanceof SyntaxError
+        ? "Invalid JSON format in request"
+        : error.message;
 
     return NextResponse.json(
       { message: errorMessage || "Internal Server Error", success: false },
@@ -87,4 +91,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

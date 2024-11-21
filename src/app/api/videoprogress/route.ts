@@ -42,10 +42,13 @@ export async function PUT(req: NextRequest) {
 
     if (existingProgress) {
       const currentProgress = existingProgress.videoProgress.find(
-        (vp) => vp.video_id === videoIdString
+        (vp: any) => vp.video_id === videoIdString
       );
 
-      if (currentProgress && progressDuration <= currentProgress.progressDuration) {
+      if (
+        currentProgress &&
+        progressDuration <= currentProgress.progressDuration
+      ) {
         return NextResponse.json(
           {
             message: "Rewind detected or no forward progress. No update made.",
@@ -72,12 +75,11 @@ export async function PUT(req: NextRequest) {
       const course = await prisma?.courses?.findUnique({
         where: { id: Number(course_id) },
         include: {
-          videos: true
-        }
-      })
+          videos: true,
+        },
+      });
 
-
-      let videoLength = course?.videos?.length
+      let videoLength = course?.videos?.length;
 
       const updatedProgress = await prisma.videoProgress.findFirst({
         where: {
@@ -98,33 +100,25 @@ export async function PUT(req: NextRequest) {
         });
       }
 
-
       const allVideoProgressRecords = await prisma.videoProgress.findMany({
         where: {
           course_id: course_id,
         },
         include: {
-          user_video_progress: true
-        }
+          user_video_progress: true,
+        },
       });
 
-      let videos = allVideoProgressRecords?.filter((video: any) => video?.user_video_progress?.user_id == user_id)
-
-  
-
-      
-    
-
+      let videos = allVideoProgressRecords?.filter(
+        (video: any) => video?.user_video_progress?.user_id == user_id
+      );
 
       if (videos?.length == videoLength) {
-
-
         const allVideosSeen = videos.every(
           (record: any) => record.completed == true
         );
 
         if (allVideosSeen) {
-
           await prisma.user_courses.updateMany({
             where: {
               user_id: user_id,
@@ -133,9 +127,7 @@ export async function PUT(req: NextRequest) {
             data: {
               status: "completed",
             },
-          })
-
-
+          });
         }
       }
 

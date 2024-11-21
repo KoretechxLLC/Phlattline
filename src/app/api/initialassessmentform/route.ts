@@ -182,7 +182,7 @@ export async function POST(req: NextRequest) {
     }
 
     const createdAssessments = await prisma.$transaction(
-      assessmentsData.map((assessment) =>
+      assessmentsData.map((assessment: any) =>
         prisma.individual_assessments.create({
           data: {
             title: assessment.title,
@@ -260,7 +260,7 @@ export async function GET(req: NextRequest) {
 
       // Extract the IDs into an array
       const purchasedIds = purchasedAssessments.map(
-        (assessment) => assessment.individual_assessments_id
+        (assessment: any) => assessment.individual_assessments_id
       );
 
       // Exclude purchased assessments from the results

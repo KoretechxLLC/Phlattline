@@ -1,15 +1,13 @@
 import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import moment from 'moment';
-
-
+import moment from "moment";
 
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
     const { user_id, timeSpent } = body;
 
-    if (!user_id || typeof timeSpent !== 'number') {
+    if (!user_id || typeof timeSpent !== "number") {
       return NextResponse.json(
         {
           error: "user_id and timeSpent are required fields.",
@@ -23,7 +21,9 @@ export async function PUT(req: NextRequest) {
     today.setHours(0, 0, 0, 0); // Set to midnight in local time
 
     // Adjust the local midnight to UTC for accurate comparison in the database
-    const utcToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
+    const utcToday = new Date(
+      today.getTime() - today.getTimezoneOffset() * 60000
+    );
 
     // Find the time log for today's UTC date
     const todayTimeLog = await prisma.timeLog.findFirst({
@@ -62,7 +62,8 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json(
         {
           success: true,
-          message: "Time spent recorded successfully as a new record for today.",
+          message:
+            "Time spent recorded successfully as a new record for today.",
           data: newTimeLog,
         },
         { status: 201 }
@@ -77,7 +78,6 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -91,9 +91,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-
-
-
     // if (!duration) {
 
     //   return NextResponse.json(
@@ -103,53 +100,36 @@ export async function GET(req: NextRequest) {
 
     // }
 
-    if (duration && duration != "week" && duration != "month" && duration != "year") {
-      return NextResponse.json(
-        { error: "Invalid duration." },
-        { status: 400 }
-      );
+    if (
+      duration &&
+      duration != "week" &&
+      duration != "month" &&
+      duration != "year"
+    ) {
+      return NextResponse.json({ error: "Invalid duration." }, { status: 400 });
     }
-
-
-
 
     let startDate;
     let endDate;
 
-
-
     if (duration?.toLowerCase() == "week") {
-
-      startDate = moment().startOf('week');
-      endDate = moment().endOf('week');
-
-
-    }
-
-    else if (duration?.toLowerCase() == "month") {
-
-      startDate = moment().startOf('month');
-      endDate = moment().endOf('month');
-
-
+      startDate = moment().startOf("week");
+      endDate = moment().endOf("week");
+    } else if (duration?.toLowerCase() == "month") {
+      startDate = moment().startOf("month");
+      endDate = moment().endOf("month");
     } else {
-      startDate = moment().startOf('year');
-      endDate = moment().endOf('year');
-
+      startDate = moment().startOf("year");
+      endDate = moment().endOf("year");
     }
-
-
-
 
     if (duration) {
-
       if (!startDate.isValid() || !endDate.isValid()) {
         return NextResponse.json(
           { error: "Invalid start or end date." },
           { status: 400 }
         );
       }
-
     }
 
     // Convert to JavaScript Date objects
@@ -166,27 +146,25 @@ export async function GET(req: NextRequest) {
           date: {
             gte: start,
             lte: end,
-          }
+          },
         },
 
-        orderBy: { date: 'asc' },
+        orderBy: { date: "asc" },
       });
-
-    }
-    else {
-
-
+    } else {
       timelogs = await prisma.timeLog.findMany({
         where: {
           userId,
         },
 
-        orderBy: { date: 'asc' },
+        orderBy: { date: "asc" },
       });
-
     }
 
-    const totalTimeSpent = timelogs.reduce((total, log) => total + log.timeSpent, 0);
+    const totalTimeSpent = timelogs.reduce(
+      (total: any, log: any) => total + log.timeSpent,
+      0
+    );
 
     return NextResponse.json(
       {
@@ -198,16 +176,10 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 }
     );
-
-
-  }
-  catch (error: any) {
+  } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Failed  to fetch time logs" },
       { status: 500 }
     );
   }
-
 }
-
-
