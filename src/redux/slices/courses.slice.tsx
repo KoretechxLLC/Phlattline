@@ -21,10 +21,12 @@ interface CoursesState {
   usercourses: any;
   responses: any;
   count: number;
+  recommendedCourses: any | null;
   purchaseCourse: any | null;
   purchaseCourseLoader: boolean | null;
   purchaseCourseError: any | null;
   purchaseCourseSuccess: any | null;
+  recomendedSuccess : any,
 }
 
 interface VideoProgressParams {
@@ -47,6 +49,8 @@ const initialState: CoursesState = {
   videoProgressLoading: false,
   videoProgressError: null,
   videoProgressSuccess: null,
+  recommendedCourses: [],
+  recomendedSuccess : null,
   videoProgress: [],
   usercourses: [],
   responses: null,
@@ -91,6 +95,25 @@ export const fetchcourses = createAsyncThunk<any, any>(
     }
   }
 );
+
+// Add a new thunk for fetching recommended courses
+export const getRecommendedCourses = createAsyncThunk<any, { userId: number }>(
+  "courses/getRecommendedCourses", 
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      // Assuming you have an endpoint for recommended courses
+      const response = await axiosInstance.get(`/api/getRecommendedCourses?userId=${userId}`);
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch recommended courses";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 
 export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
   "courses/fetchvideoprogress",
@@ -296,6 +319,23 @@ const coursesSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+
+      // Fetch Recommended Courses
+      .addCase(getRecommendedCourses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.recomendedSuccess = null;
+      })
+      .addCase(getRecommendedCourses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.recommendedCourses = action.payload; // Assuming you want to store them here
+        state.recomendedSuccess = "Recommended courses successfully fetched";
+      })
+      .addCase(getRecommendedCourses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
 
       // Update Video Progress
       .addCase(updateVideoProgress.pending, (state) => {

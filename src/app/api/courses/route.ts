@@ -42,8 +42,9 @@ export async function POST(req: NextRequest) {
     const price = parseFloat(body.get("price"));
     const categoryId = parseInt(body.get("categoryId"));
     const subCategoryId = parseInt(body.get("subCategoryId"));
-    let assessments = body.get("assessments");
-    assessments = JSON.parse(assessments);
+
+    // Parse and validate options as an array
+    const options = JSON.parse(body.get("options") || "[]");
 
     if (!course_name) {
       return NextResponse.json(
@@ -70,6 +71,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!Array.isArray(options) || options.length === 0) {
+      return NextResponse.json(
+        { error: "At least one option must be selected." },
+        { status: 400 }
+      );
+    }
+
+    const allowedOptions = [
+      "Self-Awareness",
+      "Communication",
+      "Decision-Making",
+      "Motivation and Engagement",
+      "Innovation and Adaptability",
+    ];
+
+    // Validate options
+    for (const option of options) {
+      if (!allowedOptions.includes(option)) {
+        return NextResponse.json(
+          { error: `Invalid option: ${option}` },
+          { status: 400 }
+        );
+      }
+    }
+
+    const assessments = JSON.parse(body.get("assessments") || "[]");
     if (!Array.isArray(assessments) || assessments.length === 0) {
       return NextResponse.json(
         { error: "At least one assessment is required." },
@@ -113,7 +140,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create course in the database
+    // Save the course with the options array
     const course = await prisma.courses.create({
       data: {
         course_name,
@@ -121,6 +148,7 @@ export async function POST(req: NextRequest) {
         price,
         categoryId,
         subCategoryId,
+        options, // Store the array directly
         videos: {
           create: videosData,
         },
@@ -418,91 +446,32 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// export async function GET(req: NextRequest) {
-//   try {
-//     const { searchParams } = new URL(req.url);
-//     const courseId = searchParams.get("id"); // Get the course ID from query params
-
-//     if (courseId) {
-//       const course = await prisma.courses.findUnique({
-//         where: { id: Number(courseId) },
-//         include: {
-//           videos: true,
-//           assessments: {
-//             include: {
-//               questions: true,
-//             },
-//           },
-//         },
-//       });
-
-//       if (!course) {
-//         return NextResponse.json(
-//           { error: "Course not found." },
-//           { status: 404 }
-//         );
-//       }
-
-//       // Return the specific course
-//       return NextResponse.json(
-//         { success: true, data: course },
-//         { status: 200 }
-//       );
-//     }
-
-//     // If no courseId is provided, fetch all courses
-//     const allCourses = await prisma.courses.findMany({
-//       include: {
-//         videos: true, // Include videos for each course
-//         assessments: {
-//           include: {
-//             questions: true,
-//           },
-//         },
-//       },
-//     });
-
-//     if (allCourses.length === 0) {
-//       return NextResponse.json(
-//         { error: "Oops! It looks like there are no courses available right now." },
-//         { status: 404 }
-//       );
-//     }
-
-//     // Return all courses
-//     return NextResponse.json(
-//       { success: true, data: allCourses },
-//       { status: 200 }
-//     );
-//   } catch (error: any) {
-//     console.error("Error fetching courses:", error);
-//     return NextResponse.json(
-//       {
-//         error: error?.message || "Failed to fetch courses",
-//         details: error.message,
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const courseId = searchParams.get("id"); // Get the course ID from query params
-    const includeCount = searchParams.get("count"); // Optional query param to get count
+    const courseId = searchParams.get("id"); // Get specific course ID
+    const includeOptions = searchParams.get("options"); // Check if options are requested
 
-    // If `count` query parameter is provided, return the count of all courses
-    if (includeCount) {
-      const courseCount = await prisma.courses.count();
+    // If only options are requested
+    if (includeOptions) {
+      const allOptions = await prisma.courses.findMany({
+        select: {
+          options: true,
+        },
+      });
+
+      // Combine all unique options
+      const uniqueOptions = Array.from(
+        new Set(allOptions.flatMap((course:any) => course.options))
+      );
+
       return NextResponse.json(
-        { success: true, totalCourses: courseCount },
+        { success: true, options: uniqueOptions },
         { status: 200 }
       );
     }
 
-    // Fetch a specific course if `courseId` is provided
+    // Fetch a single course by ID
     if (courseId) {
       const course = await prisma.courses.findUnique({
         where: { id: Number(courseId) },
@@ -513,6 +482,9 @@ export async function GET(req: NextRequest) {
               questions: true,
             },
           },
+          course_assignments: true,
+          user_courses: true,
+          user_video_progress: true,
         },
       });
 
@@ -523,48 +495,38 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      // Return the specific course
       return NextResponse.json(
         { success: true, data: course },
         { status: 200 }
       );
     }
 
-    // Fetch all courses if no courseId is provided
-    const allCourses = await prisma.courses.findMany({
+    // Fetch all courses
+    const courses = await prisma.courses.findMany({
       include: {
         videos: true,
-        assessments: {
-          include: {
-            questions: true,
-          },
-        },
+        assessments: true,
+        course_assignments: true,
+        user_courses: true,
+        user_video_progress: true,
       },
     });
 
-    if (allCourses.length === 0) {
+    if (courses.length === 0) {
       return NextResponse.json(
-        {
-          error: "Oops! It looks like there are no courses available right now.",
-        },
+        { error: "No courses available." },
         { status: 404 }
       );
     }
 
-    // Return all courses along with their count
-    const courseCount = allCourses.length;
-
     return NextResponse.json(
-      { success: true, data: allCourses, totalCourses: courseCount },
+      { success: true, data: courses, totalCourses: courses.length },
       { status: 200 }
     );
   } catch (error: any) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(
-      {
-        error: error?.message || "Failed to fetch courses",
-        details: error.message,
-      },
+      { error: error.message || "Failed to fetch courses" },
       { status: 500 }
     );
   }
