@@ -15,6 +15,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { logout } from "@/redux/slices/auth.slice";
 
 const ProfileInfo = () => {
+  const [image, setImage] = useState<string | undefined>();
+  const [imgError, setImgError] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
   const [open, setOpen] = useState(false);
 
@@ -23,6 +25,10 @@ const ProfileInfo = () => {
   const [loading, setLoading] = useState(false);
 
   const userId: any = userData?.id; // Access the user ID from userData
+
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
 
   const handleLogout = async () => {
     try {
@@ -55,11 +61,16 @@ const ProfileInfo = () => {
               <div className="w-10 h-10 ring-1 ring-[#fff] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
                 <Image
                   alt="User profile image"
-                  src={`/users/profileimage/${userData.profile_image}`}
+                  src={
+                    image || imgError
+                      ? "/assets/DummyImg.png" // Show dummy image if there's an error or no image
+                      : `/api/images?filename=${userData.profile_image}&folder=profileImage`
+                  }
                   layout="responsive" // Use responsive layout to control aspect ratio
-                  width={5000} // Adjust width for better performance
-                  height={5000} // Adjust height for better performance
-                  className="rounded-full object-cover" // Use object-cover to fill the container
+                  width={500} // Adjust width for better performance
+                  height={500} // Adjust height for better performance
+                  className="rounded-full object-cover"
+                  onError={handleError} // Trigger error handler if the image fails to load
                 />
               </div>
             ) : (

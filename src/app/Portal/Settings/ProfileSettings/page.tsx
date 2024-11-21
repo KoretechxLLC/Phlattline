@@ -242,6 +242,7 @@ export type NotificationType = {
 const ProfileImage = ({ setProfileImage }: any) => {
   const [image, setImage] = useState<string | undefined>();
   const [imageFile, setImageFile] = useState<any | null>();
+  const [imgError, setImgError] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
   const [data, setData] = useState<any>();
   const [notification, setNotification] = useState<NotificationType | null>(
@@ -277,17 +278,26 @@ const ProfileImage = ({ setProfileImage }: any) => {
     }
   };
 
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
-      {data?.profile_image || image ? (
+      {data?.profile_image || image || imgError ? (
         <div className="w-60 h-60 ring-4 ring-[#B50D34] md:mt-0 mt-3 flex items-center justify-center rounded-full overflow-hidden">
           <Image
             alt="User profile image"
-            src={image ? image : `/users/profileimage/${data.profile_image}`}
+            src={
+              image || imgError
+                ? "/assets/DummyImg.png" // Show dummy image if there's an error or no image
+                : `/api/images?filename=${userData.profile_image}&folder=profileImage`
+            }
             layout="responsive" // Use responsive layout to control aspect ratio
             width={500} // Adjust width for better performance
             height={500} // Adjust height for better performance
-            className="rounded-full object-cover" // Use object-cover to fill the container
+            className="rounded-full object-cover"
+            onError={handleError} // Trigger error handler if the image fails to load
           />
         </div>
       ) : (
