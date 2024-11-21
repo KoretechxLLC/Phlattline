@@ -9,24 +9,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
+import AssessmentsReport from "@/app/components/InitialAssessmentsReport";
 
 const AssessmentReport = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[120vh] min-h-[40vh]">
+    <div className="flex w-full gap-3 max-h-[120vh] min-h-[38vh]">
       {/* First component taking full width on small screens and half on medium screens */}
-      <Card className="border-[1px] border-gray-500 rounded-3xl h-full">
-        <CardHeader className="h-16 rounded-3xl">
+      <Card className="border-[1px] border-gray-500 rounded-3xl w-[60%]">
+        <CardHeader className="h-30 rounded-3xl">
           <div className="text-sm my-1 flex justify-between">
             <CardTitle>Previous Results</CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="p-2 pt-10">
-          <PreviousResultsTracker />
+        <CardContent className="p-2">
+          <AssessmentsReport />
         </CardContent>
       </Card>
 
       {/* Second component taking full width on small screens and half on medium screens */}
-      <Card className="border-[1px] border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
+      <Card className="border-[1px] border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full w-[40%]">
         <CardHeader className="h-16 rounded-3xl">
           <div className="text-sm flex justify-between">
             <CardTitle>Assessment Results</CardTitle>
