@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { Badge } from "@/app/components/badge";
 import { useSelector, useDispatch } from "react-redux";
@@ -35,56 +34,77 @@ const ModuleList: React.FC = () => {
 
   useEffect(() => {
     if (videoProgress && videoProgress?.length > 0) {
-      const modules = currentCourse?.videos.map((video: any, index: number) => {
-        const progress = videoProgress.find((progress: any) => progress.video_id == video.id);
-        return {
-          id: video.id,
-          sequence: index + 1,
-          title: video.title,
-          completed: progress?.completed,
-          clickable: index === 0 || videoProgress[index - 1]?.completed,
-        };
-      }) || [];
+      const modules =
+        currentCourse?.videos.map((video: any, index: number) => {
+          const progress = videoProgress.find(
+            (progress: any) => progress.video_id == video.id
+          );
+          return {
+            id: video.id,
+            sequence: index + 1,
+            title: video.title,
+            completed: progress?.completed,
+            clickable: index === 0 || videoProgress[index - 1]?.completed,
+          };
+        }) || [];
 
       setShowModules(modules);
+
+      // Check if all modules are completed
       const allCompleted = modules.every((module: any) => module.completed);
       setIsButtonEnabled(allCompleted);
 
-      const assessmentStatus = videoProgress.every((progress: any) => progress.user_video_progress?.assessment === true);
+      // Check if assessments are completed
+      const assessmentStatus = videoProgress.every(
+        (progress: any) => progress.user_video_progress?.assessment === true
+      );
       setAssessmentCompleted(assessmentStatus);
 
+      // Redirect to the first incomplete module
+      const firstIncompleteModule = modules.find(
+        (module: any) => !module.completed
+      );
+      if (firstIncompleteModule) {
+        router.push(
+          `/Portal/Courses/CourseModule?courseId=${courseId}&videoId=${firstIncompleteModule.id}`
+        );
+      }
     }
-  }, [videoProgress, videoProgress?.length, currentCourse, videoProgressSuccess?.length]);
+  }, [
+    videoProgress,
+    videoProgress?.length,
+    currentCourse,
+    videoProgressSuccess?.length,
+  ]);
 
   useEffect(() => {
-    const modules = currentCourse?.videos.map((video: any, index: number) => ({
-      id: video.id,
-      sequence: index + 1,
-      title: video.title,
-      completed: false,
-      clickable: index === 0 || videoProgress[index - 1]?.completed,
-    })) || [];
+    const modules =
+      currentCourse?.videos.map((video: any, index: number) => ({
+        id: video.id,
+        sequence: index + 1,
+        title: video.title,
+        completed: false,
+        clickable: index === 0 || videoProgress[index - 1]?.completed,
+      })) || [];
 
     setShowModules(modules);
   }, [currentCourse]);
 
-
-
   const handleModuleClick = (videoId: number, clickable: boolean) => {
     if (clickable) {
-      router.push(`/Portal/Courses/CourseModule?courseId=${courseId}&videoId=${videoId}`);
+      router.push(
+        `/Portal/Courses/CourseModule?courseId=${courseId}&videoId=${videoId}`
+      );
     }
   };
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 6000);
-
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    return <CustomShimmer />
-      ;
+    return <CustomShimmer />;
   }
 
   const handleButtonClick = () => {
@@ -95,34 +115,36 @@ const ModuleList: React.FC = () => {
 
   return (
     <>
-
-      {showModules && showModules.length > 0 && showModules.map((module: any) => (
-        <div
-          key={module.id}
-          className="flex items-center rounded-lg pt-6 mb-2 cursor-pointer"
-          onClick={() => handleModuleClick(module.id, module.clickable)}
-        >
-          <Badge
-            className={`font-bold rounded-full text-sm text-white w-8 h-8 flex items-center justify-center mr-4 ${module.completed ? 'bg-green-500' : 'bg-red-800'}`}
+      {showModules &&
+        showModules.length > 0 &&
+        showModules.map((module: any) => (
+          <div
+            key={module.id}
+            className="flex items-center rounded-lg pt-6 mb-2 cursor-pointer"
+            onClick={() => handleModuleClick(module.id, module.clickable)}
           >
-            {module.sequence}
-          </Badge>
-          <span className="text-xl font-bold">
-            {module.title}
-          </span>
-        </div>
-      ))}
+            <Badge
+              className={`font-bold rounded-full text-sm text-white w-8 h-8 flex items-center justify-center mr-4 ${
+                module.completed ? "bg-green-500" : "bg-red-800"
+              }`}
+            >
+              {module.sequence}
+            </Badge>
+            <span className="text-xl font-bold">{module.title}</span>
+          </div>
+        ))}
 
       {isButtonEnabled && (
         <ButtonWrapper
-          text={assessmentCompleted ? "Assessment Completed" : "Start Assessment"}
+          text={
+            assessmentCompleted ? "Assessment Completed" : "Start Assessment"
+          }
           className="text-3xl w-full text-center flex justify-center"
           disabled={!isButtonEnabled || assessmentCompleted}
           onClick={handleButtonClick}
         />
       )}
     </>
-
   );
 };
 

@@ -10,6 +10,7 @@ const MyAssessments = () => {
   const [completedAssessments, setCompletedAssessments] = useState([]);
 
   const { userData } = useSelector((state: RootState) => state.auth);
+  const userId = userData?.user_type_id;
 
   useEffect(() => {
     if (userData) {
@@ -20,7 +21,6 @@ const MyAssessments = () => {
       setPendingAssessments(pendingAssessmentsData);
     }
   }, [userData]);
-
 
   useEffect(() => {
     if (userData) {
@@ -35,32 +35,32 @@ const MyAssessments = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <AssessmentTaskTracker
-        showPending={true}
-        showCompleted={false}
-        showSaved={false}
-        showTooltip={false}
-        label={"Assessments"}
-        isClickable={false}
-        pendingAssessments={pendingAssessments}
-      />
-
-      <AssessmentTaskTracker
-        showPending={false}
+        showPurchased={false}
         showCompleted={true}
-        showSaved={false}
         showTooltip={false}
         label={"Assessments"}
         isClickable={false}
         completedAssessments={completedAssessments}
       />
-      {/* <AssessmentTaskTracker
-        showPending={false}
+      {userId === 2 && (
+        <AssessmentTaskTracker
+          showPurchased={false}
+          showCompleted={true}
+          showTooltip={true}
+          label={"Assessments"}
+          isClickable={false}
+          completedAssessments={completedAssessments}
+        />
+      )}
+
+      <AssessmentTaskTracker
+        showPurchased={true}
         showCompleted={false}
-        showSaved={true}
         showTooltip={false}
         label={"Assessments"}
         isClickable={false}
-      /> */}
+        purchasedAssessments={pendingAssessments}
+      />
     </div>
   );
 };

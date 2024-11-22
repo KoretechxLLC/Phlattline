@@ -36,6 +36,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
+  const userType = userData?.user_type_id;
 
   const handleError = () => {
     setImgError(true); // Set error flag when image fails to load
@@ -175,28 +176,32 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                     </Button>
                   ) : (
                     <>
-                      <Button
-                        className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
-                        size="default"
-                        color="primary"
-                        style={{ fontFamily: "Sansation" }}
-                        onClick={() =>
-                          router.push(
-                            `/Portal/Courses/CourseModule?courseId=${data?.id}`
-                          )
-                        }
-                      >
-                        Get Started
-                      </Button>
-                      <Button
-                        className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
-                        size="default"
-                        color="secondary"
-                        style={{ fontFamily: "Sansation" }}
-                        onClick={handleViewAllClick} // Open modal on button click
-                      >
-                        Assign
-                      </Button>
+                      <div className="flex space-x-4">
+                        <Button
+                          className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
+                          size="default"
+                          color="primary"
+                          style={{ fontFamily: "Sansation" }}
+                          onClick={() =>
+                            router.push(
+                              `/Portal/Courses/CourseModule?courseId=${data?.id}`
+                            )
+                          }
+                        >
+                          Get Started
+                        </Button>
+                        {userType === 2 && (
+                          <Button
+                            className="text-white px-5 text-sm md:text-base lg:text-base flex w-full justify-center items-center rounded-3xl"
+                            size="default"
+                            color="secondary"
+                            style={{ fontFamily: "Sansation" }}
+                            onClick={handleViewAllClick} // Open modal on button click
+                          >
+                            Assign
+                          </Button>
+                        )}
+                      </div>
                     </>
                   )}
                 </div>

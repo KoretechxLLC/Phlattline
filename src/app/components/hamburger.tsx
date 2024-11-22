@@ -212,9 +212,9 @@ const FooterCTAs = ({
       }}
       exit={{ opacity: 0, y: 8 }}
       onClick={handleLogout}
-      className="absolute bottom-2 right-2 z-50 flex items-center gap-2 rounded-full bg-gradient-to-b from-[#B50D34] to-[#BAA716] px-3 py-3 text-4xl uppercase text-white-200 transition-colors hover:bg-white hover:text-red-600 md:bottom-4 md:right-4 md:px-6 md:text-2xl"
+      className="absolute bottom-2 right-2 z-50 flex items-center gap-2 rounded-full bg-gradient-to-b from-[#B50D34] to-[#BAA716] px-3 py-3 text-lg uppercase text-white-200 transition-colors hover:bg-white hover:text-red-600 md:bottom-4 md:right-4 md:px-6 md:text-4xl"
     >
-      <span className="hidden md:block">Log out</span> <FiArrowRight />
+      <span>Log out</span> <FiArrowRight />
     </motion.button>
   );
 };

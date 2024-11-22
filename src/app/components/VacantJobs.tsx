@@ -12,12 +12,13 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
   };
 
   return (
-    <div className="border-[1px] border-gray-500 rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] w-full max-w-[700px] p-8 mx-auto">
-
+    <div className="border-[1px] border-gray-500 rounded-3xl  w-full max-w-[700px] p-8 mx-auto">
       <div className="text-center text-white text-lg font-bold mb-4">
         Vacant Jobs
       </div>
-      <ul className="space-y-6"> {/* Added more spacing between items */}
+      <ul className="space-y-6">
+        {" "}
+        {/* Added more spacing between items */}
         {jobs.map((job) => (
           <li
             key={job.id}

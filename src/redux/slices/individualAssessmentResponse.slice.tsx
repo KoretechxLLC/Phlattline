@@ -20,7 +20,7 @@ export const fetchAssessmentsResponse = createAsyncThunk<any, any>(
   async ({ userId }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `api/getAssessmentResponse?userId=${userId}`
+        `/api/getAssessmentResponse?userId=${userId}`
       );
 
       return response.data.data;

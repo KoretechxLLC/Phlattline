@@ -7,7 +7,10 @@ export async function GET(req: NextRequest) {
     const userId = searchParams.get("userId");
 
     if (!userId) {
-      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
     }
 
     const userResponses = await prisma.user_assessment_responses.findMany({
@@ -36,15 +39,15 @@ export async function GET(req: NextRequest) {
     }
 
     // Step 2: Calculate percentages for each assessment
-    const results = userResponses.reduce((acc: any[], response:any) => {
+    const results = userResponses.reduce((acc: any[], response: any) => {
       const { assessment } = response;
       const question = assessment.individual_assessment_questions.find(
-        (q:any) => q.id === response.question_id
+        (q: any) => q.id === response.question_id
       );
 
       if (question) {
         const matchingOption = question.individual_assessment_options.find(
-          (option:any) => option.option_text === response.selected_option
+          (option: any) => option.option_text === response.selected_option
         );
 
         if (matchingOption) {
@@ -68,11 +71,11 @@ export async function GET(req: NextRequest) {
     }, []);
 
     // Step 3: Filter assessments with average percentage below 90%
-    const belowThresholdAssessments = results.filter((assessment:any) => {
+    const belowThresholdAssessments = results.filter((assessment: any) => {
       const avgPercentage =
-        assessment.percentages.reduce((sum:any, val:any) => sum + val, 0) /
+        assessment.percentages.reduce((sum: any, val: any) => sum + val, 0) /
         assessment.percentages.length;
-      return avgPercentage < 90; 
+      return avgPercentage < 90;
     });
 
     if (!belowThresholdAssessments.length) {
@@ -84,15 +87,15 @@ export async function GET(req: NextRequest) {
 
     // Step 4: Fetch courses matching the titles of below-threshold assessments
     const matchingCourses = await prisma.courses.findMany({
-        where: {
-          options: {
-            hasSome: belowThresholdAssessments.map((a:any) => a.title), // Match titles with course options
-          },
+      where: {
+        options: {
+          in: belowThresholdAssessments.map((a: any) => a.title), // Match titles with course options
         },
-        include: {
-          videos: true, // Assuming there's a 'videos' relation in the course model
-        },
-      });
+      },
+      include: {
+        videos: true, // Assuming there's a 'videos' relation in the course model
+      },
+    });
 
     if (!matchingCourses.length) {
       return NextResponse.json(

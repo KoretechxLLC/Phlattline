@@ -41,7 +41,7 @@ const GapAnalysis = () => {
           <Card className="border-[1px] border-gray-500 rounded-3xl h-auto">
             <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <div className="text-sm 4xl:mb-12 mb-16 flex justify-between">
-                <CardTitle>Assessments Reports</CardTitle>
+                <CardTitle>Operational Gaps</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="4xl:p-1 p-4">

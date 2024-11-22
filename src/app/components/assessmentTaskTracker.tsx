@@ -7,31 +7,29 @@ import { Button } from "@/app/components/button-sidebar";
 import Spinner from "@/app/components/Spinner";
 import { SlCalender } from "react-icons/sl";
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchGoals } from "@/redux/slices/performanceManagement.slice";
-import { RootState } from "@/redux/store";
+import EmployeeModal from "@/app/components/employeeModal";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface AssessmentTaskTrackerProps {
-  showPending?: boolean;
+  showPurchased?: boolean;
   showCompleted?: boolean;
-  showSaved?: boolean;
   showTooltip?: boolean;
   label: string;
   isClickable?: boolean;
   completedAssessments?: any;
-  pendingAssessments?: any;
+  purchasedAssessments?: any;
 }
 
 const AssessmentTaskTracker = ({
-  showPending = true,
+  showPurchased = true,
   showCompleted = true,
-  showSaved = true,
   showTooltip = true,
   label,
   isClickable = true,
   completedAssessments,
-  pendingAssessments,
+  purchasedAssessments,
 }: AssessmentTaskTrackerProps) => {
   const tooltipItems = [
     {
@@ -55,19 +53,27 @@ const AssessmentTaskTracker = ({
   ];
 
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("pending");
+  const [activeTab, setActiveTab] = useState("Purchased");
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId = userData?.user_type_id;
 
   useEffect(() => {
-    if (showPending) setActiveTab("pending");
+    if (showPurchased) setActiveTab("pending");
     else if (showCompleted) setActiveTab("completed");
-    else if (showSaved) setActiveTab("saved");
-  }, [showPending, showCompleted, showSaved]);
+  }, [showPurchased, showCompleted]);
 
-  const handlePendingTasksClick = () => setActiveTab("pending");
+  const handlePurchasedTasksClick = () => setActiveTab("purchased");
   const handleCompletedTasksClick = () => setActiveTab("completed");
-  const handleSavedTasksClick = () => setActiveTab("saved");
+  const handleViewAllClick = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to handle closing the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleButtonClick = (id: any) => {
     if (id) {
@@ -78,16 +84,16 @@ const AssessmentTaskTracker = ({
   return (
     <div>
       <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-full">
-        {showPending && (
+        {showPurchased && (
           <button
             className={`text-xs sm:text-xs h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
               activeTab === "pending"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
             } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
-            onClick={handlePendingTasksClick}
+            onClick={handlePurchasedTasksClick}
           >
-            Pending {label}
+            Purchased {label}
           </button>
         )}
         {showCompleted && (
@@ -102,18 +108,6 @@ const AssessmentTaskTracker = ({
             Completed {label}
           </button>
         )}
-        {showSaved && (
-          <button
-            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
-              activeTab === "saved"
-                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-                : "text-default-600"
-            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
-            onClick={handleSavedTasksClick}
-          >
-            Saved {label}
-          </button>
-        )}
       </div>
 
       <ul
@@ -124,8 +118,8 @@ const AssessmentTaskTracker = ({
             <Spinner height="20vh" />
           </div>
         ) : activeTab === "pending" ? (
-          pendingAssessments && pendingAssessments.length > 0 ? (
-            pendingAssessments.map((item: any) => {
+          purchasedAssessments && purchasedAssessments.length > 0 ? (
+            purchasedAssessments.map((item: any) => {
               return (
                 <li
                   className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
@@ -133,20 +127,12 @@ const AssessmentTaskTracker = ({
                 >
                   <div className="flex items-center md:mx-5 justify-between w-full">
                     <div className="flex items-center">
-                      <Avatar className="w-6 h-6">
-                        <AvatarImage
-                          src="/assets/ongoing.png"
-                          alt="pending-avatar"
-                          className="w-5 h-5"
-                        />
-                      </Avatar>
                       <span className="text-xs sm:text-sm px-2">
                         {item?.title}
                       </span>
                     </div>
 
                     <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
-                      {showTooltip && <AnimatedTooltip items={tooltipItems} />}
                       <button
                         className={`inline-block w-[70px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
                           new Date(item?.purchasedAt).toDateString() ===
@@ -180,8 +166,21 @@ const AssessmentTaskTracker = ({
                       >
                         Take Assessment
                       </Button>
+                      {userId === 2 && (
+                        <Button
+                          className="text-md md:text-2 w-full sm:w-auto rounded-2xl px-3 py-2 sm:px-6 cursor-pointer"
+                          color="primary"
+                          onClick={handleViewAllClick} // Open modal on button click
+                        >
+                          Assign
+                        </Button>
+                      )}
                     </div>
                   </div>
+                  <EmployeeModal
+                    open={isModalOpen}
+                    onClose={handleCloseModal}
+                  />
                 </li>
               );
             })
@@ -194,34 +193,33 @@ const AssessmentTaskTracker = ({
           completedAssessments && completedAssessments.length > 0 ? (
             completedAssessments.map((item: any) => (
               <li
-                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                className="flex flex-row justify-between items-center w-full 4xl:h-16 h-20 gap-4 border-b border-gray-500 py-4 last:pb-0 last:border-b-0"
                 key={item.id}
               >
-                <div className="flex items-center md:mx-5 justify-between w-full">
-                  <div className="flex items-center">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage
-                        src="/assets/greentick.png"
-                        alt="completed-avatar"
-                        className="w-5 h-5"
-                      />
-                    </Avatar>
-                    <span className="text-xs px-2 sm:text-sm">
-                      {item?.title}
-                    </span>
-                  </div>
+                {/* Avatar and Title Section */}
+                <div className="flex items-center gap-2">
+                  <Avatar className="w-6 h-6">
+                    <AvatarImage
+                      src="/assets/greentick.png"
+                      alt="completed-avatar"
+                      className="w-5 h-5"
+                    />
+                  </Avatar>
+                  <span className="text-xs sm:text-sm">{item?.title}</span>
+                  {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                </div>
 
-                  <div className="flex items-center ml-5">
-                    <span>
-                      {new Date(item?.updatedAt)
-                        .toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                        })
-                        .replace(" ", "-")
-                        .toUpperCase()}
-                    </span>
-                  </div>
+                {/* Date Section */}
+                <div className="flex items-center">
+                  <span>
+                    {new Date(item?.updatedAt)
+                      .toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                      })
+                      .replace(" ", "-")
+                      .toUpperCase()}
+                  </span>
                 </div>
               </li>
             ))

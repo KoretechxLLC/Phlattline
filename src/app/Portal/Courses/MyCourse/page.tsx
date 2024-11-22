@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import CoursesTab from "@/app/components/CoursesTab";
 import { Button } from "@/app/components/button-sidebar";
-import { fetchcourses, fetchcoursesCount, fetchusercourses } from "@/redux/slices/courses.slice";
+import {
+  fetchcourses,
+  fetchcoursesCount,
+  fetchusercourses,
+} from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
 
@@ -15,9 +19,9 @@ const MyCourses = () => {
   const [coursesData, setCoursesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [showAll, setShowAll] = useState(false);  // State to toggle between showing all courses or just 6
-  const coursesPerPage = showAll ? 9 : 6;  // When showAll is true, show all courses, otherwise 6 per page
-
+  const [showAll, setShowAll] = useState(false); // State to toggle between showing all courses or just 6
+  const coursesPerPage = showAll ? 9 : 6; // When showAll is true, show all courses, otherwise 6 per page
+  const { userData } = useSelector((state: RootState) => state.auth);
   const {
     courses,
     loading,
@@ -30,7 +34,6 @@ const MyCourses = () => {
     coursesCountSuccess,
   } = useSelector((state: any) => state.courses);
 
-  const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
 
   // Fetch the total count of courses once
@@ -65,18 +68,6 @@ const MyCourses = () => {
     }
   }, [coursesSuccess, courses, userData]);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
-
   // Display only a subset of the courses based on the current state
   let displayedCourses: any = [];
   if (usercourses && usercourses.length > 0) {
@@ -109,17 +100,17 @@ const MyCourses = () => {
               </>
             ) : (
               <div className="flex items-center justify-center col-span-3">
-                <p className="text-red-700 p-4 rounded-lg border border-red-300 text-center">
-                  No courses available.
-                </p>
+                <div className="text-center text-gray-300 ">
+                  No Courses Available!
+                </div>
               </div>
             )}
           </div>
 
-          <div className="mt-6">
-            {!showAll && (
+          <div>
+            {!showAll && !loading && (
               <Button
-                className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-10 justify-center items-center rounded-3xl mt-6"
+                className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-10 justify-center items-center rounded-3xl my-2"
                 size="default"
                 variant="default"
                 color="primary"

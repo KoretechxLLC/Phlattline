@@ -6,9 +6,10 @@ import PerformanceReview from "../../components/performanceReview";
 import Report from "./Report/page";
 import Supervisor from "./Supervisor/page";
 import Spinner from "@/app/components/Spinner";
+import Employee from "./Employee/page";
 
 const PerformanceManagement = () => {
-  const [activeTab, setActiveTab] = useState<string>("Performance Review");
+  const [activeTab, setActiveTab] = useState<string>("Employee");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
     null
   );
@@ -26,15 +27,17 @@ const PerformanceManagement = () => {
 
   const handleEmployeeSelect = (employeeId: number) => {
     setSelectedEmployeeId(employeeId);
-    setActiveTab("Employee");
+    setActiveTab("Performance Review");
   };
 
   const renderContent = () => {
-    if (activeTab === "Employee" && selectedEmployeeId) {
+    if (activeTab === "Performance Review" && selectedEmployeeId) {
       return <EmployeeDetail employeeId={selectedEmployeeId} />;
     }
 
     switch (activeTab) {
+      case "Employee":
+        return <Employee />;
       case "Performance Review":
         return <PerformanceReview onEmployeeSelect={handleEmployeeSelect} />;
       case "Supervisor":
@@ -55,6 +58,13 @@ const PerformanceManagement = () => {
       ) : (
         <>
           <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 justify-start items-start my-2">
+            <Button
+              className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+              color={activeTab === "Employee" ? "primary" : "default"}
+              onClick={() => handleTabChange("Employee")}
+            >
+              Employee
+            </Button>
             <Button
               className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
               color={activeTab === "Performance Review" ? "primary" : "default"}

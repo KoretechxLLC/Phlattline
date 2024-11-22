@@ -54,18 +54,34 @@ const TabButton: React.FC<TabButtonProps> = ({
   return (
     <div>
       <div
-        className={`w-full 4xl:py-2 lg:py-3 rounded-lg flex items-center justify-between ${isClickable ? "cursor-pointer" : ""
-          }`}
+        className={`w-full 4xl:py-2 lg:py-3 rounded-lg flex items-center justify-between ${
+          isClickable ? "cursor-pointer" : ""
+        }`}
         style={{ backgroundColor }}
         onClick={handleButtonClick}
       >
         <div className="flex items-center">
-          <Image width={25} height={25} src={imageSrc} alt="" className="mx-5" />
-          <span className="4xl:text-sm lg:text-xl mx-1" style={{ color: textColor }}>
+          <Image
+            width={25}
+            height={25}
+            src={imageSrc}
+            alt=""
+            className="mx-5"
+          />
+          <span
+            className="4xl:text-sm lg:text-xl mx-1"
+            style={{ color: textColor }}
+          >
             {text}
           </span>
         </div>
-        <Image width={100} height={100} src={arrowImageSrc} alt="" className="w-5 h-5 mx-5" />
+        <Image
+          width={100}
+          height={100}
+          src={arrowImageSrc}
+          alt=""
+          className="w-5 h-5 mx-5"
+        />
       </div>
 
       <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -89,12 +105,16 @@ const SpringModal = ({
   const dispatch: any = useDispatch();
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId = userData?.id;
-  const { success, error } = useSelector((state: RootState) => state.trainingOnDemand);
+  const { success, error } = useSelector(
+    (state: RootState) => state.trainingOnDemand
+  );
   const [matter, setMatter] = useState("");
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
 
   const handleContinue = async () => {
     setLoading(true);
@@ -159,7 +179,10 @@ const SpringModal = ({
   return (
     <AnimatePresence>
       {notification && (
-        <StackedNotifications notification={notification} setNotification={setNotification} />
+        <StackedNotifications
+          notification={notification}
+          setNotification={setNotification}
+        />
       )}
 
       {isOpen && (
@@ -175,7 +198,7 @@ const SpringModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-slate-900/80 p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             <h1 className="text-center text-3xl font-bold text-[#B51533] -mb-[1em]">
               Training-On Demand
@@ -209,10 +232,13 @@ const SpringModal = ({
                   onChange={(selectedDate) => {
                     if (selectedDate) {
                       setDate(selectedDate);
-                      const selectedTime = selectedDate.toLocaleTimeString("en-GB", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      });
+                      const selectedTime = selectedDate.toLocaleTimeString(
+                        "en-GB",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      );
                       setTime(selectedTime);
                     }
                   }}

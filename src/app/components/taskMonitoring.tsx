@@ -96,21 +96,30 @@ const TaskMonitoring: React.FC = () => {
                         {task.assignees.map((assignee, assigneeIndex) => (
                           <li
                             key={assigneeIndex}
-                            className="flex justify-between border-b border-gray-300 pb-2 last:border-0"
+                            className="flex justify-between items-center border-b border-gray-300 pb-2 last:border-0"
                           >
-                            <Icon
-                              icon={"f7:person-badge-minus"}
-                              className="w-5 h-5 text-red-600"
-                            />
-                            <Avatar className="w-6 h-6">
-                              <AvatarImage
-                                src={assignee.avatar}
-                                alt={`${assignee.name}-avatar`}
-                                className="w-7 h-7"
+                            {/* Icon and Avatar */}
+                            <div className="flex items-center gap-2">
+                              <Icon
+                                icon="f7:person-badge-minus"
+                                className="w-5 h-5 text-red-600"
                               />
-                            </Avatar>
-                            <span>{assignee.name}</span>
-                            <span>{assignee.completion}</span>
+                              <Avatar className="w-8 h-8">
+                                <AvatarImage
+                                  src={assignee.avatar}
+                                  alt={`${assignee.name}-avatar`}
+                                  className="w-7 h-7"
+                                />
+                              </Avatar>
+                            </div>
+
+                            {/* Name */}
+                            <span className="text-sm">{assignee.name}</span>
+
+                            {/* Completion */}
+                            <span className="text-sm">
+                              {assignee.completion}
+                            </span>
                           </li>
                         ))}
                       </ul>

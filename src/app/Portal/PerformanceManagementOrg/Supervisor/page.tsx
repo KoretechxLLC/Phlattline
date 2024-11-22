@@ -21,7 +21,7 @@ import {
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
 import EmployeesDesiredJobTab from "@/app/components/employeesDesiredJobTab";
-import LeadershipAssessmentChart from "@/app/components/leadershipAssessmentChart";
+
 import PerformanceReviews from "@/app/components/performanceReviews";
 import PerformanceDeptsChart from "@/app/components/performanceDeptCharts";
 import OrganizationGoalsTab from "@/app/components/orgGoalsTab";

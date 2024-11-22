@@ -19,7 +19,7 @@ export const fetchAssessmentResult = createAsyncThunk<any, any>(
   async ({ userId }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `api/getAssessmentResults?userId=${userId}`
+        `/api/getAssessmentResults?userId=${userId}`
       );
       return response?.data?.data;
     } catch (error: any) {

@@ -22,7 +22,7 @@ export const getCategories = createAsyncThunk<any, any>(
   "auth/getCategories",
   async ({}, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`api/categories`);
+      const response = await axios.get(`/api/categories`);
       return response.data.data;
     } catch (error: any) {
       const errorMessage =

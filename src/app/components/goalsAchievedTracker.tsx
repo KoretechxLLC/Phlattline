@@ -69,8 +69,8 @@ const GoalsAchievedTracker: React.FC<GoalsAchievedTrackerProps> = ({
               <Image
                 src={"/assets/TargetImage.png"}
                 alt="Goals Tracker"
-                width={100}
-                height={100}
+                width={5000}
+                height={5000}
                 className="w-40 h-40 "
               />
             </div>

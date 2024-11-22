@@ -2,49 +2,116 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import MenuItem from "@/app/components/menu-item";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 import { useRouter, usePathname } from "next/navigation";
 import MenuWidget from "./Widget";
 
+// Define the type for menu items
+interface MenuItem {
+  href: string;
+  label: string;
+  icon: string;
+}
+
 export function MenuClassic() {
+  const { userData } = useSelector((state: RootState) => state.auth);
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const router = useRouter();
   const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState(pathname);
 
+  const id = userData?.user_type_id;
+
   useEffect(() => {
     setActiveMenu(pathname);
   }, [pathname]);
 
-  const menus = [
-    {
-      href: "/Dashboard",
-      label: "Dashboard",
-      icon: "/assets/DashboardLogo.png",
-    },
-    { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
-    {
-      href: "/DailyDose",
-      label: "Daily Dose",
-      icon: "/assets/CalendarLogo.png",
-    },
-    {
-      href: "/Assessments",
-      label: "Assessments",
-      icon: "/assets/AssessmentsLogo.png",
-    },
-    // {
-    //   href: "TalentManagement",
-    //   label: "Talent Management",
-    //   icon: "/assets/TalentLogo.png",
-    // },
-    {
-      href: "PerformanceManagement",
-      label: "Performance Management",
-      icon: "/assets/PerformanceLogo.png",
-    },
-    { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
-  ];
+  // Explicitly type 'menus' as an array of MenuItem
+  let menus: MenuItem[] = [];
+
+  if (id === 1) {
+    menus = [
+      {
+        href: "/Dashboard",
+        label: "Dashboard",
+        icon: "/assets/DashboardLogo.png",
+      },
+      { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
+      {
+        href: "/DailyDose",
+        label: "Daily Dose",
+        icon: "/assets/CalendarLogo.png",
+      },
+      {
+        href: "/Assessments",
+        label: "Assessments",
+        icon: "/assets/AssessmentsLogo.png",
+      },
+      {
+        href: "PerformanceManagement",
+        label: "Performance Management",
+        icon: "/assets/PerformanceLogo.png",
+      },
+      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
+    ];
+  } else if (id === 2) {
+    menus = [
+      {
+        href: "/Dashboard",
+        label: "Dashboard",
+        icon: "/assets/DashboardLogo.png",
+      },
+      { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
+      {
+        href: "/DailyDose",
+        label: "Daily Dose",
+        icon: "/assets/CalendarLogo.png",
+      },
+      {
+        href: "/Assessments",
+        label: "Assessments",
+        icon: "/assets/AssessmentsLogo.png",
+      },
+      {
+        href: "PerformanceManagementOrg",
+        label: "Performance Management",
+        icon: "/assets/PerformanceLogo.png",
+      },
+      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
+    ];
+  } else if (id === 3) {
+    menus = [
+      {
+        href: "/Dashboard",
+        label: "Dashboard",
+        icon: "/assets/DashboardLogo.png",
+      },
+      { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
+      {
+        href: "/DailyDose",
+        label: "Daily Dose",
+        icon: "/assets/CalendarLogo.png",
+      },
+      {
+        href: "/Assessments",
+        label: "Assessments",
+        icon: "/assets/AssessmentsLogo.png",
+      },
+      {
+        href: "PerformanceManagement",
+        label: "Performance Management",
+        icon: "/assets/PerformanceLogo.png",
+      },
+      {
+        href: "ExploreJobs",
+        label: "Explore Jobs",
+        icon: "/assets/ExploreJobsLogo.png",
+      },
+      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
+    ];
+  }
 
   const handleMenuClick = (href: string) => {
     setActiveMenu(href);
@@ -76,12 +143,14 @@ export function MenuClassic() {
       </ul>
 
       {/* Menu Widget without list dot */}
-      {/* <li className="w-full list-none pl-2 pb-8">
-        <MenuWidget
-          isActive={activeMenu === "/Portal/ODaas"}
-          onClick={() => handleMenuClick("/Portal/ODaas")}
-        />
-      </li> */}
+      {id === 2 && (
+        <li className="w-full list-none pl-3 pb-8">
+          <MenuWidget
+            isActive={activeMenu === "/Portal/ODaas"}
+            onClick={() => handleMenuClick("/Portal/ODaas")}
+          />
+        </li>
+      )}
 
       {isDesktop && (
         <div className="pl-8 pb-12 w-full">
