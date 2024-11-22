@@ -64,9 +64,9 @@ model organizations {
   assignedCourses    assignedCourses[]
   course_assignments course_assignments[]
   department         department[]
+  employee_review    employee_review[]
   employees          employees[]
   users              users[]
-  employee_review    employee_review[]
 }
 
 model employees {
@@ -86,21 +86,11 @@ model employees {
   profile_image      String?              @db.VarChar(255)
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
+  employee_review    employee_review[]
   department         department?          @relation(fields: [departmentId], references: [id])
   organization       organizations        @relation(fields: [organization_id], references: [id])
   user_goal          user_goal[]
   users              users[]
-  employee_review    employee_review[]
-}
-
-model employee_review {
-  id              Int           @id @default(autoincrement())
-  employee_id     Int
-  organization_id Int
-  review          String
-  no_of_stars     Int
-  employees       employees     @relation(fields: [employee_id], references: [id])
-  organization    organizations @relation(fields: [organization_id], references: [id])
 }
 
 model department {
@@ -150,18 +140,17 @@ model assignedCourses {
 }
 
 model assignedAssessment {
-  id                       Int                     @id @default(autoincrement())
+  id                       Int                    @id @default(autoincrement())
   user_id                  Int
   organization_id          Int
   employee_id              Int
   individual_assessment_id Int
-  assigned_at              DateTime                @default(now()) @db.Timestamp(6)
-  status                   course_status           @default(notStarted)
-  individual_assessment_Id Int?
-  employees                employees               @relation(fields: [employee_id], references: [id], onDelete: Cascade)
-  individual_assessments   individual_assessments? @relation(fields: [individual_assessment_Id], references: [id])
-  organizations            organizations           @relation(fields: [organization_id], references: [id], onDelete: Cascade)
-  users                    users                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  assigned_at              DateTime               @default(now()) @db.Timestamp(6)
+  status                   course_status          @default(notStarted)
+  employees                employees              @relation(fields: [employee_id], references: [id], onDelete: Cascade)
+  individual_assessments   individual_assessments @relation(fields: [individual_assessment_id], references: [id])
+  organizations            organizations          @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  users                    users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model videos {
@@ -403,6 +392,16 @@ model user_courses {
   updatedAt   DateTime      @updatedAt
   courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
   users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model employee_review {
+  id              Int           @id @default(autoincrement())
+  employee_id     Int
+  review          String
+  no_of_stars     Int
+  organization_id Int
+  employees       employees     @relation(fields: [employee_id], references: [id])
+  organizations   organizations @relation(fields: [organization_id], references: [id])
 }
 
 enum assessment_for {

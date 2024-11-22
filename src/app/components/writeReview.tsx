@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Icon from "@/app/components/utility-icon";
 import { Button } from "./button-sidebar";
+import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
 
 const WriteReviewModal = ({
   open,
@@ -16,6 +17,7 @@ const WriteReviewModal = ({
   const router = useRouter();
   const [rating, setRating] = useState<number>(0); // State to handle star rating
   const [review, setReview] = useState<string>(""); // State to handle review text
+  const [loading, setLoading] = useState<boolean>(false); // State to handle loading during submission
 
   if (!open) return null; // Conditional rendering for modal visibility
 
@@ -24,10 +26,13 @@ const WriteReviewModal = ({
   };
 
   const handleSubmit = () => {
-    // Handle form submission
-    console.log("Rating:", rating);
-    console.log("Review:", review);
-    onClose(); // Close the modal
+    setLoading(true); // Set loading to true when the form is being submitted
+    // Simulate the submission process
+    setTimeout(() => {
+      // After the "submission" completes, set loading to false
+      setLoading(false);
+      onClose(); // Close the modal
+    }, 1500);
   };
 
   return (
@@ -72,13 +77,17 @@ const WriteReviewModal = ({
         </div>
         {/* Submit Button */}
         <div className="flex justify-center py-4">
-          <Button
-            onClick={handleSubmit}
-            color="primary"
-            className="rounded-3xl px-5 py-2"
-          >
-            Submit
-          </Button>
+          {loading ? (
+            <Spinner height="30px" width="30px" /> // Display loader while submitting
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              color="primary"
+              className="rounded-3xl px-5 py-2"
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </div>
     </div>

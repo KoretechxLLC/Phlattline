@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/app/components/Card";
+import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
 
 const EmployeesDesiredJobTab: React.FC = () => {
   // Static array of job data
@@ -22,6 +23,16 @@ const EmployeesDesiredJobTab: React.FC = () => {
     },
   ];
 
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500); // Adjust loading time as necessary
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       {/* Centered Heading */}
@@ -36,28 +47,42 @@ const EmployeesDesiredJobTab: React.FC = () => {
             <span className="w-1/2 text-right">No. of Employees</span>
           </div>
         </CardHeader>
-        <ul>
-          {jobData.map((job, index) => (
-            <li
-              key={index}
-              className={`${
-                index < jobData.length - 1 ? "border-b border-gray-500" : ""
-              }`}
-            >
-              <CardContent className="flex items-center justify-between px-8 py-5">
-                {/* Job Title */}
-                <div className="w-1/2 text-left text-sm font-semibold">
-                  {job.jobTitle}
-                </div>
 
-                {/* Employee Count */}
-                <div className="w-1/2 text-right text-sm">
-                  {job.employeeCount}
-                </div>
-              </CardContent>
-            </li>
-          ))}
-        </ul>
+        <CardContent>
+          {/* Loader or Job List */}
+          {loading ? (
+            <div className="flex justify-center items-center py-6">
+              <Spinner height="30px" width="30px" />
+            </div>
+          ) : jobData.length === 0 ? (
+            <div className="text-center py-6 text-gray-500">
+              No Desired Jobs Found
+            </div>
+          ) : (
+            <ul>
+              {jobData.map((job, index) => (
+                <li
+                  key={index}
+                  className={`${
+                    index < jobData.length - 1 ? "border-b border-gray-500" : ""
+                  }`}
+                >
+                  <CardContent className="flex items-center justify-between px-8 py-5">
+                    {/* Job Title */}
+                    <div className="w-1/2 text-left text-sm font-semibold">
+                      {job.jobTitle}
+                    </div>
+
+                    {/* Employee Count */}
+                    <div className="w-1/2 text-right text-sm">
+                      {job.employeeCount}
+                    </div>
+                  </CardContent>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
       </Card>
     </div>
   );
