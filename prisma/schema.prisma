@@ -74,6 +74,8 @@ model employees {
   last_name          String               @db.VarChar(225)
   email              String               @unique @db.VarChar(225)
   phone_number       String               @db.VarChar(50)
+  date_of_birth      DateTime?            @db.Date
+  designation        String?              @db.VarChar(100)
   gender             EmployeeGender
   organization_code  String               @db.VarChar(255)
   organization_id    Int
@@ -85,6 +87,7 @@ model employees {
   departmentId       Int?
   assignedCourses    assignedCourses[]
   assignedAssessment assignedAssessment[]
+  user_goal          user_goal[]
 }
 
 model department {
@@ -108,7 +111,7 @@ model courses {
   categoryId                Int
   subCategoryId             Int
   course_for                Int?
-  options                   String[]
+  options                   String?
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   assessments               assessments[]
@@ -272,17 +275,19 @@ model user_assessment_responses {
 }
 
 model user_goal {
-  id              Int      @id @default(autoincrement())
-  goal_name       String   @db.VarChar(255)
-  start_date      DateTime @db.Date
-  completion_date DateTime @db.Date
-  goal_type       GoalType @default(Personal)
+  id              Int        @id @default(autoincrement())
+  goal_name       String     @db.VarChar(255)
+  start_date      DateTime   @db.Date
+  completion_date DateTime   @db.Date
+  goal_type       GoalType   @default(Personal)
   description     String?
   user_id         Int
-  status          Boolean  @default(false)
-  created_at      DateTime @default(now()) @db.Timestamp(6)
-  updated_at      DateTime @default(now()) @db.Timestamp(6)
-  user            users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  assignee_id     Int?
+  employees       employees? @relation(fields: [assignee_id], references: [id])
+  status          Boolean    @default(false)
+  created_at      DateTime   @default(now()) @db.Timestamp(6)
+  updated_at      DateTime   @default(now()) @db.Timestamp(6)
+  user            users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model user_video_progress {
