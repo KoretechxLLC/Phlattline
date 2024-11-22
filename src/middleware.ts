@@ -82,7 +82,8 @@ export async function middleware(request: NextRequest) {
         request.headers.set("id", userId);
         if (
           request.nextUrl.pathname?.includes("organization") &&
-          user_type_id !== 2
+          user_type_id !== 2 &&
+          user_type_id !== 3
         ) {
           return NextResponse.redirect(new URL("/", request.url));
         }
