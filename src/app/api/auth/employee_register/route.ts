@@ -30,6 +30,8 @@ export async function POST(request: NextRequest) {
     const first_name = formData.get("first_name") as string | null;
     const last_name = formData.get("last_name") as string | null;
     const gender = formData.get("gender") as string | null;
+    const DateofBirth = formData.get("dateofBirth") as string | null;
+    const designation = formData.get("designation") as string | null;
     const organization_code = formData.get("organization_code") as
       | string
       | null;
@@ -43,7 +45,9 @@ export async function POST(request: NextRequest) {
       !first_name ||
       !last_name ||
       !organization_code ||
-      !gender
+      !gender ||
+      !DateofBirth ||
+      !designation
     ) {
       return NextResponse.json(
         { message: "Missing required fields.", success: false },
@@ -85,11 +89,27 @@ export async function POST(request: NextRequest) {
 
       profileImagePath = await saveFile(profile_image, "uploads/profileimage");
     }
+
+    let date: Date | null = null;
+    if (DateofBirth) {
+      const [day, month, year] = DateofBirth.split("/").map(Number);
+      date = new Date(year, month - 1, day);
+    }
+
+    if (!date || isNaN(date.getTime())) {
+      return NextResponse.json(
+        { message: "Invalid date format for date of birth.", success: false },
+        { status: 400 }
+      );
+    }
+
     const newEmployee = await prisma.employees.create({
       data: {
         first_name,
         last_name,
         email,
+        date_of_birth: date,
+        designation,
         phone_number,
         gender: gender.toLowerCase() === "male" ? "Male" : "Female",
         organization_code,
@@ -102,6 +122,8 @@ export async function POST(request: NextRequest) {
         phone_number,
         password: hashedPassword,
         first_name,
+        date_of_birth: date,
+        designation,
         last_name,
         user_type_id: 3,
         profile_image: profileImagePath || undefined,

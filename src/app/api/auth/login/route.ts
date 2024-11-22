@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
         email: email,
       },
       include: {
+        organizations: true,
         user_courses: true,
         purchased_assessments: {
           include: {
