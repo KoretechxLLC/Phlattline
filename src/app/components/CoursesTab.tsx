@@ -63,7 +63,7 @@ const CoursesTab: React.FC<CourseTabProps> = ({
         </div>
 
         {/* Like button */}
-        <div className="absolute top-2 right-2 z-10">
+        {/* <div className="absolute top-2 right-2 z-10">
           <Button
             color="default"
             size="icon"
@@ -71,7 +71,7 @@ const CoursesTab: React.FC<CourseTabProps> = ({
           >
             <Icon icon="ph:heart" className="text-lg text-default-400" />
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div>

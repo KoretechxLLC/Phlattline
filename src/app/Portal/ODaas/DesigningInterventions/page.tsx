@@ -1,11 +1,13 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardTitle } from "@/app/components/Card";
 import { HoverEffect } from "@/app/components/card-hover-effect";
 import CoursesTab from "@/app/components/CoursesTab";
 import TabButton from "@/app/components/TabButton";
 import AssignmentTabs from "@/app/components/AssignmentTabs";
 import InpersonCoachingTab from "@/app/components/inPersonCoachingTab";
+import { userData } from "three/webgpu";
+import EmployeeModal from "@/app/components/employeeModal";
 
 const DesigningInterventions = () => {
   const courses = [
@@ -26,6 +28,7 @@ const DesigningInterventions = () => {
       assessments: 3,
     },
   ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const assessmentCatalogueData = [
     {
@@ -42,6 +45,14 @@ const DesigningInterventions = () => {
     },
   ];
 
+  const handleViewAllClick = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to handle closing the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Assignment Tabs Section */}
@@ -56,8 +67,6 @@ const DesigningInterventions = () => {
 
       {/* Second Row: Assessments and Courses Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        {/* Individual Assessments */}
-
         {/* Courses Section */}
         <div className="flex flex-col space-y-4 border-[1px] border-gray-500 rounded-lg p-8">
           <CardTitle className="text-xl">Courses</CardTitle>
@@ -73,6 +82,7 @@ const DesigningInterventions = () => {
             ))}
           </div>
         </div>
+        {/* Individual Assessments Section */}
         <Card className="border-[1px] border-gray-500 rounded-lg p-4">
           <CardTitle className="text-xl">Individual Assessments</CardTitle>
           <HoverEffect
@@ -95,6 +105,7 @@ const DesigningInterventions = () => {
           isClickable={true}
         />
       </div>
+      <EmployeeModal open={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };

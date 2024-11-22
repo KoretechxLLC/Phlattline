@@ -89,7 +89,7 @@ export const fetchSingleAssessments = createAsyncThunk<any, any>(
   async ({ filter }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `api/paidAssessment?userId=${filter.userId}&assessmentId=${filter.assessmentId}` // Added type query parameter
+        `/api/paidAssessment?userId=${filter.userId}&assessmentId=${filter.assessmentId}` // Added type query parameter
       );
 
       return response.data.data;
@@ -133,7 +133,7 @@ export const submitAssessmentResponses = createAsyncThunk<
   async ({ userId, assessmentId, responses }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        "api/initialassessmentformresponse",
+        "/api/initialassessmentformresponse",
         {
           userId,
           assessmentId,

@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const subCategoryId = parseInt(body.get("subCategoryId"));
 
     // Parse and validate options as an array
-    const options = JSON.parse(body.get("options") || "[]");
+    const options = String(body.get("options"));
 
     if (!course_name) {
       return NextResponse.json(
@@ -462,7 +462,7 @@ export async function GET(req: NextRequest) {
 
       // Combine all unique options
       const uniqueOptions = Array.from(
-        new Set(allOptions.flatMap((course:any) => course.options))
+        new Set(allOptions.flatMap((course: any) => course.options))
       );
 
       return NextResponse.json(

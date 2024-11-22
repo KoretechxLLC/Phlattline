@@ -166,10 +166,12 @@ const Login = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
+            <MdEmail className="absolute top-7 right-5 transform  text-white" />
+            <div className="min-h-[-1rem]">
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
+            </div>
           </motion.div>
 
           {/* Password Input */}
@@ -186,7 +188,7 @@ const Login = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdLock className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
+            <MdLock className="absolute top-7 right-5 transform  text-white" />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
@@ -224,8 +226,6 @@ const Login = () => {
                   >
                     Employee
                   </li>
-
-
                 </ul>
               </div>
             </div>

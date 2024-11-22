@@ -26,13 +26,12 @@ interface CoursesState {
   purchaseCourseLoader: boolean | null;
   purchaseCourseError: any | null;
   purchaseCourseSuccess: any | null;
-  recomendedSuccess : any,
+  recomendedSuccess: any;
 }
 
 interface VideoProgressParams {
   courseId: number; // Change here to match the expected property names
   userId: number;
- 
 }
 
 const initialState: CoursesState = {
@@ -50,7 +49,7 @@ const initialState: CoursesState = {
   videoProgressError: null,
   videoProgressSuccess: null,
   recommendedCourses: [],
-  recomendedSuccess : null,
+  recomendedSuccess: null,
   videoProgress: [],
   usercourses: [],
   responses: null,
@@ -61,21 +60,23 @@ const initialState: CoursesState = {
 };
 
 // Thunk to fetch the course count
-export const fetchcoursesCount = createAsyncThunk<number, { categoryId?: number }>(
-  "courses/fetchcoursesCount",
-  async ({ categoryId }, thunkAPI) => {
-    try {
-      // Add query parameters if categoryId is provided
-      const queryParams = categoryId ? `?categoryId=${categoryId}&count=true` : "?count=true";
-      const response = await axiosInstance.get(`/api/courses${queryParams}`);
-      return response?.data?.totalCourses;
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "Failed to fetch courses count";
-      return thunkAPI.rejectWithValue(errorMessage);
-    }
+export const fetchcoursesCount = createAsyncThunk<
+  number,
+  { categoryId?: number }
+>("courses/fetchcoursesCount", async ({ categoryId }, thunkAPI) => {
+  try {
+    // Add query parameters if categoryId is provided
+    const queryParams = categoryId
+      ? `?categoryId=${categoryId}&count=true`
+      : "?count=true";
+    const response = await axiosInstance.get(`/api/courses${queryParams}`);
+    return response?.data?.totalCourses;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.error || "Failed to fetch courses count";
+    return thunkAPI.rejectWithValue(errorMessage);
   }
-);
+});
 
 // Thunk for fetching courses
 export const fetchcourses = createAsyncThunk<any, any>(
@@ -98,11 +99,13 @@ export const fetchcourses = createAsyncThunk<any, any>(
 
 // Add a new thunk for fetching recommended courses
 export const getRecommendedCourses = createAsyncThunk<any, { userId: number }>(
-  "courses/getRecommendedCourses", 
+  "courses/getRecommendedCourses",
   async ({ userId }, { rejectWithValue }) => {
     try {
       // Assuming you have an endpoint for recommended courses
-      const response = await axiosInstance.get(`/api/getRecommendedCourses?userId=${userId}`);
+      const response = await axiosInstance.get(
+        `/api/getRecommendedCourses?userId=${userId}`
+      );
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -114,13 +117,12 @@ export const getRecommendedCourses = createAsyncThunk<any, { userId: number }>(
   }
 );
 
-
 export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
   "courses/fetchvideoprogress",
-  async ({courseId, userId }, { rejectWithValue }) => {
+  async ({ courseId, userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `api/videoprogress?course_id=${courseId}&user_id=${userId}`
+        `/api/videoprogress?course_id=${courseId}&user_id=${userId}`
       ); // Fixed query string
       return response.data.data;
     } catch (error: any) {
@@ -133,7 +135,6 @@ export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
   }
 );
 
-
 // Thunk for fetching user-specific courses
 export const fetchusercourses = createAsyncThunk<any, number>(
   "courses/fetchusercourses",
@@ -145,7 +146,7 @@ export const fetchusercourses = createAsyncThunk<any, number>(
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
-      error.response?.data?.error ||
+        error.response?.data?.error ||
         error.message ||
         "Failed to fetch user courses";
       return rejectWithValue(errorMessage);
@@ -161,7 +162,7 @@ export const coursesAssessmentResponses = createAsyncThunk<
   async ({ userId, courseId, responses }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        "api/coursesassessmentresponse",
+        "/api/coursesassessmentresponse",
         {
           userId,
           courseId,
@@ -275,7 +276,7 @@ const coursesSlice = createSlice({
         state.coursesSuccess = false;
       })
 
-      //Submit Courses Responsegit 
+      //Submit Courses Responsegit
       .addCase(coursesAssessmentResponses.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -335,7 +336,6 @@ const coursesSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-
 
       // Update Video Progress
       .addCase(updateVideoProgress.pending, (state) => {

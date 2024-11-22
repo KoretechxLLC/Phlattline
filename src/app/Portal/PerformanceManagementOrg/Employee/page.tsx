@@ -21,7 +21,6 @@ import {
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
 import EmployeesDesiredJobTab from "@/app/components/employeesDesiredJobTab";
-import LeadershipAssessmentChart from "@/app/components/leadershipAssessmentChart";
 
 export type NotificationType = {
   id: number;
@@ -107,14 +106,6 @@ const Employee = () => {
           {/* Combined TasksTracker and PersonalGoals in one column */}
           <div>
             <TimeManagement />
-            <Card className="  shadow-md w-full">
-              <CardContent>
-                <h1 className="text-center text-3xl font-bold my-5">
-                  Leadership Assesments
-                </h1>
-                <LeadershipAssessmentChart />
-              </CardContent>
-            </Card>
           </div>
 
           {/* Suggestions Section */}

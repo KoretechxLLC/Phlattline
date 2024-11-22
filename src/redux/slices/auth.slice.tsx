@@ -27,7 +27,7 @@ export const login = createAsyncThunk<any, any>(
   "auth/login",
   async ({ email, password }, thunkAPI) => {
     try {
-      const response = await axios.post(`api/auth/login`, {
+      const response = await axios.post(`/api/auth/login`, {
         email,
         password,
         provider: "app",
@@ -79,7 +79,7 @@ export const Register = createAsyncThunk<any, FormData>(
   "auth/Register",
   async (formData: FormData, thunkAPI) => {
     try {
-      const response = await axios.post(`api/auth/register`, formData, {
+      const response = await axios.post(`/api/auth/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

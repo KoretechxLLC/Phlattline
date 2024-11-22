@@ -154,7 +154,7 @@ const Profile = ({ profileImage }: any) => {
             type="text"
             placeholder="Last Name"
             value={lastName || data?.last_name} // Use state variable for input
-            onChange={(e) => setLastName(e.target.value)} // Update state on change
+            onChange={(e) => setLastName(e.target.value)}
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -170,7 +170,7 @@ const Profile = ({ profileImage }: any) => {
             type="tel"
             placeholder="Phone"
             value={phone || data?.phone_number} // Use state variable for input
-            onChange={(e) => setPhone(e.target.value)} // Update state on change
+            onChange={(e) => setPhone(e.target.value)}
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -182,7 +182,7 @@ const Profile = ({ profileImage }: any) => {
             type="email"
             placeholder="Email"
             value={data?.email} // Keep email as read-only
-            disabled
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -197,8 +197,8 @@ const Profile = ({ profileImage }: any) => {
             id="designation"
             type="text"
             placeholder="Designation"
-            value={designation || data?.designation} // Use state variable for input
-            onChange={(e) => setDesignation(e.target.value)} // Update state on change
+            value={data?.designation} // Use state variable for input
+            onChange={(e) => setDesignation(e.target.value)}
             className="w-full bg-black text-white py-2 px-4 rounded-xl focus:outline-none"
           />
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />

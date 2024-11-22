@@ -36,6 +36,8 @@ model users {
   subCategoryId             Int?
   employee_id               Int?
   timeLogs                  TimeLog[]
+  assignedAssessment        assignedAssessment[]
+  assignedCourses           assignedCourses[]
   course_assignments        course_assignments[]
   purchased_assessments     purchased_assessments[]
   trainingOnDemand          trainingOnDemand[]
@@ -43,11 +45,9 @@ model users {
   user_courses              user_courses[]
   user_goals                user_goal[]
   user_video_progress       user_video_progress[]
-  organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   employees                 employees?                  @relation(fields: [employee_id], references: [id])
+  organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
-  assignedCourses           assignedCourses[]
-  assignedAssessment        assignedAssessment[]
 }
 
 model organizations {
@@ -56,16 +56,16 @@ model organizations {
   organization_code  String               @unique @db.VarChar(255)
   email              String               @unique @db.VarChar(255)
   phone_number       String               @db.VarChar(50)
-  categoryId         Int
-  no_of_employees    Int
   created_at         DateTime             @default(now()) @db.Timestamptz(6)
   updated_at         DateTime             @updatedAt
-  course_assignments course_assignments[]
-  users              users[]
-  employees          employees[]
-  department         department[]
-  assignedCourses    assignedCourses[]
+  categoryId         Int
+  no_of_employees    Int
   assignedAssessment assignedAssessment[]
+  assignedCourses    assignedCourses[]
+  course_assignments course_assignments[]
+  department         department[]
+  employees          employees[]
+  users              users[]
 }
 
 model employees {
@@ -74,17 +74,20 @@ model employees {
   last_name          String               @db.VarChar(225)
   email              String               @unique @db.VarChar(225)
   phone_number       String               @db.VarChar(50)
-  gender             EmployeeGender
   organization_code  String               @db.VarChar(255)
   organization_id    Int
   created_at         DateTime             @default(now()) @db.Timestamptz(6)
   updated_at         DateTime             @updatedAt
-  organization       organizations        @relation(fields: [organization_id], references: [id])
-  users              users[]
-  department         department?          @relation(fields: [departmentId], references: [id])
+  gender             EmployeeGender
   departmentId       Int?
-  assignedCourses    assignedCourses[]
+  date_of_birth      DateTime?            @db.Date
+  designation        String?              @db.VarChar(100)
   assignedAssessment assignedAssessment[]
+  assignedCourses    assignedCourses[]
+  department         department?          @relation(fields: [departmentId], references: [id])
+  organization       organizations        @relation(fields: [organization_id], references: [id])
+  user_goal          user_goal[]
+  users              users[]
 }
 
 model department {
@@ -92,10 +95,10 @@ model department {
   name            String        @db.VarChar(225)
   department_size Int
   organization_id Int
-  organization    organizations @relation(fields: [organization_id], references: [id])
-  employees       employees[]
   created_at      DateTime      @default(now()) @db.Timestamptz(6)
   updated_at      DateTime      @updatedAt
+  organization    organizations @relation(fields: [organization_id], references: [id])
+  employees       employees[]
 }
 
 model courses {
@@ -107,8 +110,8 @@ model courses {
   updated_at                DateTime                    @default(now()) @updatedAt
   categoryId                Int
   subCategoryId             Int
+  options                   String?
   course_for                Int?
-  options                   String[]
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   assessments               assessments[]
@@ -127,10 +130,10 @@ model assignedCourses {
   course_id       Int
   assigned_at     DateTime      @default(now()) @db.Timestamp(6)
   status          course_status @default(notStarted)
-  users           users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  organizations   organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
-  employees       employees     @relation(fields: [employee_id], references: [id], onDelete: Cascade)
   courses         courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  employees       employees     @relation(fields: [employee_id], references: [id], onDelete: Cascade)
+  organizations   organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  users           users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model assignedAssessment {
@@ -141,11 +144,11 @@ model assignedAssessment {
   individual_assessment_id Int
   assigned_at              DateTime                @default(now()) @db.Timestamp(6)
   status                   course_status           @default(notStarted)
-  users                    users                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  organizations            organizations           @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  individual_assessment_Id Int?
   employees                employees               @relation(fields: [employee_id], references: [id], onDelete: Cascade)
   individual_assessments   individual_assessments? @relation(fields: [individual_assessment_Id], references: [id])
-  individual_assessment_Id Int?
+  organizations            organizations           @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  users                    users                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model videos {
@@ -272,17 +275,19 @@ model user_assessment_responses {
 }
 
 model user_goal {
-  id              Int      @id @default(autoincrement())
-  goal_name       String   @db.VarChar(255)
-  start_date      DateTime @db.Date
-  completion_date DateTime @db.Date
-  goal_type       GoalType @default(Personal)
+  id              Int        @id @default(autoincrement())
+  goal_name       String     @db.VarChar(255)
+  start_date      DateTime   @db.Date
+  completion_date DateTime   @db.Date
+  goal_type       GoalType   @default(Personal)
   description     String?
   user_id         Int
-  status          Boolean  @default(false)
-  created_at      DateTime @default(now()) @db.Timestamp(6)
-  updated_at      DateTime @default(now()) @db.Timestamp(6)
-  user            users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  status          Boolean    @default(false)
+  created_at      DateTime   @default(now()) @db.Timestamp(6)
+  updated_at      DateTime   @default(now()) @db.Timestamp(6)
+  assignee_id     Int?
+  employees       employees? @relation(fields: [assignee_id], references: [id])
+  user            users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model user_video_progress {
@@ -341,18 +346,12 @@ model individual_assessments {
   categoryId                      Int
   subCategoryId                   Int
   assessment_for                  assessment_for                    @default(individual)
+  assignedAssessment              assignedAssessment[]
   individual_assessment_questions individual_assessment_questions[]
   assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])
   assessment_subCategory          assessment_subCategory            @relation(fields: [subCategoryId], references: [id])
   purchased_assessments           purchased_assessments[]
   user_assessment_responses       user_assessment_responses[]
-  assignedAssessment              assignedAssessment[]
-}
-
-enum assessment_for {
-  individual
-  organization
-  team
 }
 
 model assessment_category {
@@ -391,6 +390,12 @@ model user_courses {
   updatedAt   DateTime      @updatedAt
   courses     courses       @relation(fields: [course_id], references: [id], onDelete: Cascade)
   users       users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+enum assessment_for {
+  individual
+  organization
+  team
 }
 
 enum course_status {
