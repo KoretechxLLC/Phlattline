@@ -34,6 +34,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       heading: "Purchase History",
       description: "",
     },
+    "/Portal/ExploreJobs": {
+      heading: "Hey Jack",
+      description:
+        "Discover Opportunities, Explore Careers—Your Next Job Awaits!",
+    },
+    // Add more paths as needed
   };
 
   if (userData?.user_type_id == 2) {

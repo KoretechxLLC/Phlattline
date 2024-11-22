@@ -2,10 +2,12 @@
 import React, { useState } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import Icon from "@/app/components/utility-icon";
+import EmployeeAddModal from "@/app/components/employeeAddModal";
 
 const Departments = () => {
   const [deptName, setDeptName] = useState("");
   const [deptSize, setDeptSize] = useState("");
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
 
   // Static array for department names
   const departmentNames = [
@@ -19,14 +21,13 @@ const Departments = () => {
     <div className="grid grid-cols-2 gap-4">
       {/* Left Column: Department Name and Size */}
       <div className="pr-4">
-        {/* Padding right for space between the separator */}
         <div className="relative py-2 border border-gray-500 rounded-2xl">
           <input
             id="dept-name"
             type="text"
             placeholder="Enter Department Name"
-            value={deptName} // Use state variable for input
-            onChange={(e) => setDeptName(e.target.value)} // Update state on change
+            value={deptName}
+            onChange={(e) => setDeptName(e.target.value)}
             className="w-full bg-black text-white py-4 px-4 rounded-xl border-none focus:outline-none"
             required
           />
@@ -67,16 +68,24 @@ const Departments = () => {
             >
               <p className="text-sm">{department.name}</p>
               <div className="flex space-x-2">
+                {/* Call Modal on Click */}
                 <Icon
                   icon="dashicons:welcome-write-blog"
-                  className="w-8 h-8 text-green-500"
+                  className="w-8 h-8 text-green-500 cursor-pointer"
+                  onClick={() => setShowModal(true)} // Show modal
                 />
-                <Icon icon="tabler:trash" className="w-8 h-8 text-red-500" />
+                <Icon
+                  icon="tabler:trash"
+                  className="w-8 h-8 text-red-500 cursor-pointer"
+                />
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Employee Modal */}
+      <EmployeeAddModal open={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

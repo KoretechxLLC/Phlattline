@@ -1,17 +1,28 @@
-"use client";
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { colors } from "@/app/lib/colors";
 import { useTheme } from "next-themes";
-
 import { useConfig } from "@/app/hooks/use-config";
 import { getGridConfig, getYAxisConfig } from "@/app/lib/appex-chart-options";
+import { useState, useEffect } from "react";
+import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
+
+// Define the type for the data structure
+type SeriesData = {
+  name: string;
+  data: number[];
+};
 
 const KeyPerformanceBar = ({ height = 280 }) => {
+  const [loading, setLoading] = useState(true);
+
+  // Explicitly define the type of 'data' as SeriesData[]
+  const [data, setData] = useState<SeriesData[]>([]);
+
   const [config] = useConfig();
   const { theme: mode } = useTheme();
 
-  const series = [
+  const series: SeriesData[] = [
     {
       name: "Key Performance Indicators",
       data: [44, 50, 60],
@@ -107,14 +118,32 @@ const KeyPerformanceBar = ({ height = 280 }) => {
     },
   };
 
+  // Simulate loading and data fetch
+  useEffect(() => {
+    setTimeout(() => {
+      setData(series); // Mocking data fetching
+      setLoading(false); // Set loading state to false after data is fetched
+    }, 1500);
+  }, []);
+
   return (
-    <Chart
-      options={options}
-      series={series}
-      type="bar"
-      height={height}
-      width={"100%"}
-    />
+    <div>
+      {loading ? (
+        <div className="flex justify-center items-center py-6">
+          <Spinner height="30px" width="30px" />
+        </div>
+      ) : data.length === 0 ? (
+        <div className="text-center py-6 text-gray-500">No Data Found</div>
+      ) : (
+        <Chart
+          options={options}
+          series={data}
+          type="bar"
+          height={height}
+          width="100%"
+        />
+      )}
+    </div>
   );
 };
 

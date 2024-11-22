@@ -15,7 +15,6 @@ const Reports = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const userType = userData?.user_type_id;
-  console.log("userType", userType);
 
   const handleTabChange = (tab: string) => {
     setLoading(true);

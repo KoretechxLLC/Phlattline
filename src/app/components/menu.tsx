@@ -58,7 +58,7 @@ export function MenuClassic() {
     );
   }
 
-  if (userData?.user_type_id === 3) {
+  if (userData?.user_type_id === 1) {
     menus.push(
       {
         href: "PerformanceManagement",
@@ -73,7 +73,7 @@ export function MenuClassic() {
       { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
     );
   }
-  if (userData?.user_type_id === 1) {
+  if (userData?.user_type_id === 3) {
     menus.push(
       {
         href: "PerformanceManagement",

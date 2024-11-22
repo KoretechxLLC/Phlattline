@@ -2,8 +2,9 @@
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { CardContent } from "@/app/components/Card";
 import { Button } from "@/app/components/button-sidebar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
 
 const PerformanceReview = ({
   onEmployeeSelect,
@@ -12,6 +13,7 @@ const PerformanceReview = ({
 }) => {
   const router = useRouter();
   const [selectedDept, setSelectedDept] = useState<string>("Operations");
+  const [loading, setLoading] = useState<boolean>(true); // State to handle loading
 
   const departments = ["Operations", "Sales", "Finance", "IT"];
 
@@ -169,9 +171,18 @@ const PerformanceReview = ({
     },
   ];
 
+  // Filter employees by selected department
   const filteredEmployees = employees.filter(
     (emp) => emp.department === selectedDept
   );
+
+  // Simulate loading state for data fetching
+  useEffect(() => {
+    setLoading(true); // Set loading to true when data is being fetched
+    setTimeout(() => {
+      setLoading(false); // Set loading to false after 1.5 seconds (mocking data load)
+    }, 1500);
+  }, [selectedDept]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[30%_70%] gap-4 p-2">
@@ -191,32 +202,47 @@ const PerformanceReview = ({
         ))}
       </div>
 
-      <div className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-3 rounded-xl shadow-xl ">
-        <ul className="divide-y divide-gray-500">
-          {filteredEmployees.map((employee) => (
-            <li key={employee.id} className="py-4 px-4">
-              <CardContent className="flex items-center justify-between px-8 py-8 space-x-2">
-                <div className="flex items-center space-x-4">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage
-                      src={employee.image}
-                      alt={`${employee.name}-avatar`}
-                      className="w-10 h-10"
-                    />
-                  </Avatar>
-                  <span className="font-semibold text-sm">{employee.name}</span>
-                </div>
+      <div className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-3 rounded-xl shadow-xl">
+        {/* Loader */}
+        {loading ? (
+          <div className="flex justify-center items-center py-4">
+            <Spinner height="30px" width="30px" />
+          </div>
+        ) : filteredEmployees.length === 0 ? (
+          // Display message if no employees match the selected department
+          <div className="text-center text-gray-500 py-4">
+            No employees found in this department.
+          </div>
+        ) : (
+          // Display employee list if there are filtered employees
+          <ul className="divide-y divide-gray-500">
+            {filteredEmployees.map((employee) => (
+              <li key={employee.id} className="py-4 px-4">
+                <CardContent className="flex items-center justify-between px-8 py-8 space-x-2">
+                  <div className="flex items-center space-x-4">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage
+                        src={employee.image}
+                        alt={`${employee.name}-avatar`}
+                        className="w-10 h-10"
+                      />
+                    </Avatar>
+                    <span className="font-semibold text-sm">
+                      {employee.name}
+                    </span>
+                  </div>
 
-                <Button
-                  color="primary"
-                  onClick={() => onEmployeeSelect(employee.id)}
-                >
-                  View
-                </Button>
-              </CardContent>
-            </li>
-          ))}
-        </ul>
+                  <Button
+                    color="primary"
+                    onClick={() => onEmployeeSelect(employee.id)}
+                  >
+                    View
+                  </Button>
+                </CardContent>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

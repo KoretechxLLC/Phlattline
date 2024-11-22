@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Card } from "@/app/components/Card";
 import { Badge } from "./badge";
 import Icon from "./utility-icon";
+import Spinner from "./Spinner";
 
 const customers = [
   {
@@ -166,41 +167,83 @@ const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
     ? customers.slice(0, numReviews)
     : customers;
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [loading, setLoading] = useState(false); // To manage the loading state
 
   const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const handleScrollRight = () => {
+  const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
-        left: 250, // Adjust scroll amount as necessary
+        left: -250, // Adjust scroll amount for the left scroll
         behavior: "smooth",
       });
     }
   };
 
+  const handleScrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 250, // Adjust scroll amount for the right scroll
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Simulate a loading state for the reviews
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500); // Adjust this time to simulate the loading duration
+  }, []);
+
   return (
     <Card className="w-full py-3">
       <div className="relative w-full">
-        {/* Scrollable container */}
-        <div
-          ref={scrollContainerRef}
-          className="flex space-x-2 pb-3 w-full overflow-hidden scrollbar-hide "
-        >
-          {displayedCustomers.map((item, i) => (
-            <CustomerCard item={item} key={`customer-${i}`} />
-          ))}
-        </div>
+        {/* Loader if reviews are loading */}
+        {loading ? (
+          <div className="flex justify-center items-center py-6">
+            <Spinner height="30px" width="30px" />
+          </div>
+        ) : displayedCustomers.length === 0 ? (
+          <div className="text-center text-lg text-gray-500 py-6">
+            No reviews found
+          </div>
+        ) : (
+          <>
+            {/* Scrollable container */}
+            <div
+              ref={scrollContainerRef}
+              className="flex space-x-2 pb-3 w-full overflow-hidden scrollbar-hide "
+            >
+              {displayedCustomers.map((item, i) => (
+                <CustomerCard item={item} key={`customer-${i}`} />
+              ))}
+            </div>
 
-        {/* Right Scroll Button */}
-        <button
-          onClick={handleScrollRight}
-          className="absolute right-2 z-50 top-1/2 transform -translate-y-1/2  p-2 rounded-full"
-        >
-          <Icon
-            icon="tabler:chevron-right"
-            className="w-10 h-10  text-[#B50D34]"
-          />
-        </button>
+            {/* Left Scroll Button */}
+            <button
+              onClick={handleScrollLeft}
+              className="absolute left-2 z-50 top-1/2 transform -translate-y-1/2 p-2 rounded-full"
+            >
+              <Icon
+                icon="tabler:chevron-left"
+                className="w-10 h-10 text-[#B50D34]"
+              />
+            </button>
+
+            {/* Right Scroll Button */}
+            <button
+              onClick={handleScrollRight}
+              className="absolute right-2 z-50 top-1/2 transform -translate-y-1/2 p-2 rounded-full"
+            >
+              <Icon
+                icon="tabler:chevron-right"
+                className="w-10 h-10 text-[#B50D34]"
+              />
+            </button>
+          </>
+        )}
       </div>
     </Card>
   );
