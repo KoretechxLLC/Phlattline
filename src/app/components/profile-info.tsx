@@ -44,7 +44,8 @@ const ProfileInfo = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  
+ 
   return (
     <div ref={menuRef} className="md:block hidden relative">
       <motion.div
@@ -64,12 +65,20 @@ const ProfileInfo = () => {
             />
           </div>
         ) : (
+          userData && userData?.user_type_id == 2 ? (
+          <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
+            <span className="text-white text-sm font-bold">
+              {userData?.organizations?.organization_name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          ) : (
           <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
             <span className="text-white text-sm font-bold">
               {userData?.first_name?.charAt(0).toUpperCase() +
                 userData?.last_name?.charAt(0).toUpperCase()}
             </span>
           </div>
+          )    
         )}
         <motion.span variants={iconVariants}>
           <Icon icon="heroicons-outline:chevron-down" />

@@ -225,6 +225,7 @@ export async function PUT(request: NextRequest) {
     const formData = await request.formData();
 
     const organization_id = formData.get("organization_id") as string | null;
+    const user_id = formData.get("user_id") as string | null;
     const email = formData.get("email") as string | null;
     const phone_number = formData.get("phone_number") as string | null;
     const password = formData.get("password") as string | null;
@@ -235,9 +236,9 @@ export async function PUT(request: NextRequest) {
     const no_of_employees = formData.get("no_of_employees") as string | null;
     const profile_image = formData.get("profile_image") as File | null;
 
-    if (!organization_id) {
+    if (!organization_id || !user_id) {
       return NextResponse.json(
-        { message: "Organization ID is required.", success: false },
+        { message: "Organization ID and user Id is required.", success: false },
         { status: 400 }
       );
     }
@@ -253,8 +254,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const user = await prisma.users.findFirst({
-      where: { organization_id: Number(organization_id) },
+    const user = await prisma.users.findUnique({
+      where: { id: Number(user_id) },
     });
 
     if (!user) {

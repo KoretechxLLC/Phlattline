@@ -16,7 +16,6 @@ import ProfilePage from "@/app/components/profilePage";
 
 const Settings = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
-
   const [loading, setLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("profilesettings");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
@@ -25,6 +24,17 @@ const Settings = () => {
 
   const userType = userData?.user_type_id;
 
+  
+  const id = userData?.user_type_id;
+  useEffect(()=>{
+    if(id==2){
+      setActiveTab("organizationsetting")
+    }
+    else{
+      setActiveTab("profilesettings")
+      
+    }
+      },[id])
   const handleTabChange = (tab: string) => {
     setLoading(true);
     setActiveTab(tab);

@@ -172,6 +172,8 @@ const IndividualSignUp = () => {
     }
   }, [success, error, dispatch]);
 
+  
+
   return (
     <motion.div
       initial="initial"
