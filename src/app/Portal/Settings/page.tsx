@@ -121,7 +121,7 @@ const Settings = () => {
                 </div>
 
                 {/* Billing Method */}
-                <div className="relative">
+                <div className="relative" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
                   <Button
                     className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "billingmethod"

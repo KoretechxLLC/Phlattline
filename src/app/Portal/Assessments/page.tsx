@@ -31,10 +31,12 @@ const Assessments = () => {
       setActiveTab("organizationAssessments");
     } else if (view === "team") {
       setActiveTab("teamAssessments");
+    } else if (view === "myAssessments" || userType === 3) {
+      setActiveTab("myAssessments");
     } else {
       setActiveTab("catalogue");
     }
-  }, []);
+  }, [userType]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -75,7 +77,7 @@ const Assessments = () => {
       setLoading(false); // Stop loading after a delay
     }, 500); // Simulate loading time (adjust as needed)
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, [activeTab]);
 
   return (

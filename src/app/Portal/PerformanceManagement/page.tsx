@@ -12,7 +12,7 @@ import {
 } from "@/redux/slices/performanceManagement.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
-import VacantJobs from "@/app/components/Vacantjobs";
+import VacantJobs from "@/app/components/vacantjobs";
 
 export type NotificationType = {
   id: number;
@@ -35,7 +35,7 @@ const PerformanceManagement = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
   const userType = userData?.user_type_id;
   const dispatch: any = useDispatch();
-  const [loading, setLoading] = useState<boolean>(false); // Initialize loading state
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleAddGoal = (goalData: any) => {
     const id = userData?.id;

@@ -148,19 +148,27 @@ export async function GET(req: NextRequest) {
       : null;
 
     // Validate user_id
-    if (!user_id) {
-      return NextResponse.json(
-        { error: "User ID is required." },
-        { status: 400 }
-      );
+    // if (!user_id) {
+    //   return NextResponse.json(
+    //     { error: "User ID is required." },
+    //     { status: 400 }
+    //   );
+    // }
+
+
+    let where : any = {}
+
+    if(user_id){
+      where.user_id = user_id
     }
+    if(assignee_id){
+      where.assignee_id = assignee_id
+    }
+
 
     // Fetch goals based on the presence of assignee_id
     const goals = await prisma.user_goal.findMany({
-      where: {
-        user_id,
-        ...(assignee_id && { assignee_id }), // Add assignee_id conditionally
-      },
+      where: where,
     });
 
     // Check if no goals are found

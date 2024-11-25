@@ -8,6 +8,7 @@ interface GoalState {
   success: string | null;
   data?: any;
   timeLogs?: any[];
+  EmployeeGoals: any[];
   logSuccess: any;
 }
 
@@ -16,6 +17,7 @@ const initialState: GoalState = {
   error: null,
   success: null,
   logSuccess: null,
+  EmployeeGoals: [],
   goals: [],
   timeLogs: [],
 };
@@ -35,6 +37,28 @@ export const fetchGoals = createAsyncThunk<any, any>(
     }
   }
 );
+
+
+//Employee Fetch Goals Assigned By Organztion
+export const EmployeefetchGoals = createAsyncThunk<any, number>(
+  "performanceManagement/EmployeefetchGoals",
+  async (assignee_id, { rejectWithValue }) => {
+    try {
+      // Constructing the API URL with only assignee_id
+      const response = await axiosInstance.get(`/api/organization/assignGoal?assignee_id=${assignee_id}`);
+      return response.data.data; // Return the fetched data
+    } catch (error: any) {
+      // Handle and return error message properly
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch goals assigned by the organization.";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
 
 export const updateTimemanagement = createAsyncThunk(
   "timeLog/updateTimemanagement",
@@ -141,6 +165,22 @@ const performanceManagement = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+
+      //Employee Assign Goals Cases
+      .addCase(EmployeefetchGoals.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(EmployeefetchGoals.fulfilled, (state, action) => {
+        state.loading = false;
+        state.EmployeeGoals = action.payload;
+      })
+      .addCase(EmployeefetchGoals.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+
       .addCase(submitGoal.pending, (state) => {
         state.loading = true;
         state.error = null;

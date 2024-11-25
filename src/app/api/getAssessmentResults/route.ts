@@ -55,6 +55,8 @@ export async function GET(req: NextRequest) {
         }
       });
 
+      
+
       return {
         assessmentId: individualAssessment.id,
         title: individualAssessment.title,
