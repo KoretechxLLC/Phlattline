@@ -12,11 +12,19 @@ import { SparklesCore } from "../components/sparkles";
 import { MdDomain, MdEmail, MdLock, MdPhone } from "react-icons/md";
 import { CustomPhoneInput } from "../components/phoneInput";
 import { Select } from "../components/select";
-import { Register, setError, setSuccess } from "@/redux/slices/auth.slice";
+import {
+  organizationRegister,
+  Register,
+  setError,
+  setOrganizationError,
+  setOrganizationSuccess,
+  setSuccess,
+} from "@/redux/slices/auth.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications from "../components/Stackednotification";
 import { useDispatch, useSelector } from "react-redux";
 import { pass } from "three/webgpu";
+import { getCategories } from "@/redux/slices/categories.slice";
 
 const SignupScreen = () => {
   return (
@@ -35,15 +43,16 @@ export type NotificationType = {
 };
 
 const OrganizationSignup = () => {
-  const orgCategories = [
-    { id: 1, name: "Technology" },
-    { id: 2, name: "Healthcare" },
-    { id: 3, name: "Education" },
-    { id: 4, name: "Finance" },
-    { id: 5, name: "Retail" },
-    { id: 6, name: "Non-Profit" },
-    { id: 7, name: "Manufacturing" },
-  ];
+  const { userCategories } = useSelector(
+    (state: RootState) => state.categories
+  );
+  let orgCategories = [];
+  useEffect(() => {
+    dispatch(getCategories({}));
+  }, []);
+  if (userCategories) {
+    orgCategories = userCategories;
+  }
 
   const [orgName, setOrgName] = React.useState("");
   const [orgEmail, setOrgEmail] = React.useState("");
@@ -56,7 +65,13 @@ const OrganizationSignup = () => {
     null
   );
   const dispatch: any = useDispatch();
-  const { success, error } = useSelector((state: RootState) => state.auth);
+  const {
+    success,
+    error,
+    organizationSuccess,
+    organizationError,
+    organizationIsLoading,
+  } = useSelector((state: RootState) => state.auth);
   const [errors, setErrors] = useState({
     orgName: "",
     orgEmail: "",
@@ -118,15 +133,15 @@ const OrganizationSignup = () => {
     if (validate()) {
       const formData = new FormData();
       formData.append("organization_name", orgName);
-      formData.append("organization_email", orgEmail);
+      formData.append("email", orgEmail);
       formData.append("phone_number", orgPhone);
-      formData.append("organization_type", selectedType);
-      formData.append("no_employees", employeeNumber);
+      formData.append("categoryId", selectedType);
+      formData.append("no_of_employees", employeeNumber);
 
       formData.append("password", password);
 
       try {
-        await dispatch(Register(formData));
+        await dispatch(organizationRegister(formData));
       } catch (error) {
         console.error("Registration failed", error);
       }
@@ -134,24 +149,26 @@ const OrganizationSignup = () => {
   };
 
   useEffect(() => {
-    if (success !== null) {
+    if (organizationSuccess !== null) {
       setNotification({
         id: Date.now(),
-        text: success,
+        text: organizationSuccess,
         type: "success",
       });
-      dispatch(setSuccess());
-      router.push("/Login");
+      dispatch(setOrganizationSuccess());
+      setTimeout(() => {
+        router.push("/Login");
+      }, 3000);
     }
-    if (error !== null) {
+    if (organizationError !== null) {
       setNotification({
         id: Date.now(),
-        text: error,
+        text: organizationError,
         type: "error",
       });
-      dispatch(setError());
+      dispatch(setOrganizationError());
     }
-  }, [success, error, dispatch]);
+  }, [organizationSuccess, organizationError, dispatch]);
   const router: any = useRouter();
   return (
     <motion.div
@@ -330,7 +347,7 @@ const OrganizationSignup = () => {
               type="submit"
               className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
             >
-              Sign Up
+              Sign up
             </motion.button>
           </div>
         </form>

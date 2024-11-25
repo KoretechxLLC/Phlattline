@@ -17,14 +17,15 @@ export async function POST(request: NextRequest) {
       where: {
         email: email,
       },
-      // include: {
-      //   user_courses: true,
-      //   purchased_assessments: {
-      //     include: {
-      //       individual_assessments: true,
-      //     },
-      //   },
-      // },
+      include: {
+        organizations: true,
+        user_courses: true,
+        purchased_assessments: {
+          include: {
+            individual_assessments: true,
+          },
+        },
+      },
     });
 
     if (!user) {

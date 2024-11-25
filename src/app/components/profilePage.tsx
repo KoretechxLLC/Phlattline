@@ -286,6 +286,7 @@ const ProfileImage = ({ setProfileImage }: any) => {
     setImgError(true); // Set error flag when image fails to load
   };
 
+
   return (
     <div className="flex flex-col items-center justify-center">
       {data?.profile_image || image || imgError ? (
@@ -295,7 +296,7 @@ const ProfileImage = ({ setProfileImage }: any) => {
             src={
               image || imgError
                 ? "/assets/DummyImg.png" // Show dummy image if there's an error or no image
-                : `/api/images?filename=${userData.profile_image}&folder=profileImage`
+                : `/api/images?filename=${userData?.profile_image}&folder=profileImage`
             }
             layout="responsive" // Use responsive layout to control aspect ratio
             width={500} // Adjust width for better performance
@@ -305,12 +306,16 @@ const ProfileImage = ({ setProfileImage }: any) => {
           />
         </div>
       ) : (
+
+        
+        
         <div className="w-60 h-60 ring-4 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
           <span className="text-white text-2xl md:text-8xl font-bold pt-3">
             {data?.first_name?.charAt(0).toUpperCase() +
               data?.last_name?.charAt(0).toUpperCase()}
           </span>
         </div>
+      
       )}
       <h2 className="text-white text-xl font-medium mt-4 uppercase">
         {data && data?.first_name + " " + data?.last_name}

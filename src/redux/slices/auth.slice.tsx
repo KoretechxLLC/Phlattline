@@ -11,6 +11,18 @@ interface AuthState {
   refreshToken: string | null;
   success: string | null;
   updateUserData: any | null;
+  organizationIsLoading: boolean;
+  organizationError: any | null;
+  organizationSuccess: string | null;
+  updateOrganizationIsLoading: boolean;
+  updateOrganizationError: any | null;
+  updateOrganizationSuccess: string | null;
+  updatedOrganization: any;
+  deleteProfileIsLoading: boolean;
+  deleteProfileError: any | null;
+  deleteProfileSuccess: string | null;
+  deleteUserProfileSuccess: string | null;
+  deleteUserProfileError: any | null;
 }
 
 const initialState: AuthState = {
@@ -21,6 +33,18 @@ const initialState: AuthState = {
   refreshToken: null,
   success: null,
   updateUserData: null,
+  organizationIsLoading: false,
+  organizationError: null,
+  organizationSuccess: null,
+  updateOrganizationIsLoading: false,
+  updateOrganizationError: null,
+  updateOrganizationSuccess: null,
+  updatedOrganization: null,
+  deleteProfileIsLoading: false,
+  deleteProfileError: null,
+  deleteProfileSuccess: null,
+  deleteUserProfileError: null,
+  deleteUserProfileSuccess: null,
 };
 
 export const login = createAsyncThunk<any, any>(
@@ -98,7 +122,72 @@ export const Employeeregister = createAsyncThunk<any, FormData>(
   "auth/Employeeregister",
   async (formData: FormData, thunkAPI) => {
     try {
-      const response = await axios.post(`/api/auth/employeeregister`, formData, {
+      const response = await axios.post(
+        `/api/auth/employeeregister`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+export const organizationRegister = createAsyncThunk<any, FormData>(
+  "auth/organizationRegister",
+  async (formData: FormData, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `/api/auth/organization_register`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
+export const updateOrganization = createAsyncThunk<any, FormData>(
+  "auth/updateOrganization",
+  async (formData: FormData, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `/api/auth/organization_register`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
+export const UpdateUser = createAsyncThunk<any, any>(
+  "auth/UpdateUser",
+  async (formData: any, thunkAPI) => {
+    try {
+      const response = await axiosInstance.put(`/api/user`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -111,25 +200,6 @@ export const Employeeregister = createAsyncThunk<any, FormData>(
     }
   }
 );
-
-
-export const UpdateUser = createAsyncThunk<any, any>(
-  "auth/UpdateUser",
-  async (formData: any, thunkAPI) => {
-    try {
-      const response = await axiosInstance.put(`api/user`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Internal Server Error"
-      );
-    }
-  }
-);  
 
 export const fetchPurchaseCourses = createAsyncThunk<any, any>(
   "auth/fetchPurchaseCourses",
@@ -175,6 +245,22 @@ export const fetchPurchaseAssessment = createAsyncThunk<any, any>(
   }
 );
 
+export const DeleteUserProfile = createAsyncThunk<any, any>(
+  "auth/DeleteUserProfile",
+  async (userId: any, thunkAPI) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/api/auth/remove_image?id=${userId}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -209,6 +295,25 @@ const authSlice = createSlice({
     setSuccess: (state) => {
       state.success = null;
     },
+    setOrganizationSuccess: (state) => {
+      state.organizationSuccess = null;
+    },
+    setOrganizationError: (state) => {
+      state.organizationError = null;
+    },
+    setUpdateOrganizationSuccess: (state) => {
+      state.updateOrganizationSuccess = null;
+    },
+    setUpdateOrganizationError: (state) => {
+      state.updateOrganizationError = null;
+    },
+
+    setDeleteUserProfileSuccess: (state) => {
+      state.deleteUserProfileSuccess = null;
+    },
+    setDeleteUserProfileError: (state) => {
+      state.deleteUserProfileError = null;
+    },
     setLoading: (state) => {
       state.isLoading = true;
       state.error = null;
@@ -218,6 +323,7 @@ const authSlice = createSlice({
     },
 
     setUpdateUserData: (state, action) => {
+    
       state.userData = action.payload;
       // if (typeof window !== "undefined") {
       //   window.location.href = "/Portal/Assessments";
@@ -264,6 +370,33 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload ?? "Unknown error";
       })
+      .addCase(organizationRegister.pending, (state) => {
+        state.organizationIsLoading = true;
+        state.organizationError = null;
+      })
+      .addCase(organizationRegister.fulfilled, (state, action) => {
+        state.organizationIsLoading = false;
+        state.organizationSuccess = action.payload.message;
+      })
+      .addCase(organizationRegister.rejected, (state, action) => {
+        state.organizationIsLoading = false;
+        state.organizationError = action.payload ?? "Unknown error";
+      })
+
+      .addCase(updateOrganization.pending, (state) => {
+        state.updateOrganizationIsLoading = true;
+        state.updateOrganizationError = null;
+        state.updateOrganizationSuccess = null;
+      })
+      .addCase(updateOrganization.fulfilled, (state, action) => {
+        state.updateOrganizationIsLoading = false;
+        state.updatedOrganization = action.payload.data;
+        state.updateOrganizationSuccess = "Organization Update Successfully";
+      })
+      .addCase(updateOrganization.rejected, (state, action) => {
+        state.updateOrganizationIsLoading = false;
+        state.updateOrganizationError = action.payload ?? "Unknown error";
+      })
 
       //Employee Register
       .addCase(Employeeregister.pending, (state) => {
@@ -279,7 +412,6 @@ const authSlice = createSlice({
         state.error = action.payload ?? "Unknown error";
       })
       //---//
-
 
       //Logout
       .addCase(logout.pending, (state) => {
@@ -346,6 +478,19 @@ const authSlice = createSlice({
       .addCase(fetchPurchaseAssessment.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? "Unknown error";
+      })
+      .addCase(DeleteUserProfile.pending, (state) => {
+        state.deleteProfileIsLoading = true;
+        state.deleteProfileError = null;
+      })
+      .addCase(DeleteUserProfile.fulfilled, (state, action) => {
+        state.deleteProfileIsLoading = false;
+        state.userData = action.payload.data;
+        state.deleteProfileSuccess = "Successfully profile deleted";
+      })
+      .addCase(DeleteUserProfile.rejected, (state, action) => {
+        state.deleteProfileIsLoading = false;
+        state.deleteProfileError = action.payload ?? "Unknown error";
       });
   },
 });
@@ -357,6 +502,12 @@ export const {
   setLoading,
   setError,
   setAssessmentUpdate,
+  setOrganizationSuccess,
+  setOrganizationError,
+  setUpdateOrganizationSuccess,
+  setUpdateOrganizationError,
+  setDeleteUserProfileSuccess,
+  setDeleteUserProfileError,
   setUpdateUserData,
 } = authSlice.actions;
 export default authSlice.reducer;
