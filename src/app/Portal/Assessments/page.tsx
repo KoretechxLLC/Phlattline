@@ -22,19 +22,21 @@ const Assessments = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const view = urlParams.get("view");
 
-    // Set the active tab based on query parameter
-    if (view === "recommended") {
-      setActiveTab("recommendedAssessments");
-    } else if (view === "individual") {
-      setActiveTab("individualAssessments");
-    } else if (view === "organization") {
-      setActiveTab("organizationAssessments");
-    } else if (view === "team") {
-      setActiveTab("teamAssessments");
-    } else {
-      setActiveTab("catalogue");
-    }
-  }, []);
+  // Set the active tab based on query parameter
+  if (view === "recommended") {
+    setActiveTab("recommendedAssessments");
+  } else if (view === "individual") {
+    setActiveTab("individualAssessments");
+  } else if (view === "organization") {
+    setActiveTab("organizationAssessments");
+  } else if (view === "team") {
+    setActiveTab("teamAssessments");
+  } else if (view === "myAssessments" || userType === 3) {
+    setActiveTab("myAssessments");
+  } else {
+    setActiveTab("catalogue");
+  }
+}, [userType]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -75,7 +77,12 @@ const Assessments = () => {
       setLoading(false); // Stop loading after a delay
     }, 500); // Simulate loading time (adjust as needed)
 
+<<<<<<< HEAD
     return () => clearTimeout(timer); 
+=======
+    return () => clearTimeout(timer);
+  
+>>>>>>> c000a03 (feat(pt-110):integrate employee goal api)
   }, [activeTab]);
 
   return (

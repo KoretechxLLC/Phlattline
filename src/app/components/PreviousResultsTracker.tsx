@@ -40,6 +40,8 @@ const PreviousResultsTracker = ({
     );
   }, [dispatch]);
 
+
+
   const calculatedGraph = () => {
     let percentages = result.map((e: any) => {
       let trackPercentage =

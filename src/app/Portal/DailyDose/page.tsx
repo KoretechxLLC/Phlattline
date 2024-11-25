@@ -11,8 +11,8 @@ import { useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchcourses } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
+import { RootState } from "@/redux/store";
 
-// Interface for events, including author info directly
 interface CalendarEvent {
   id: string;
   tabmessage: string;
@@ -97,11 +97,34 @@ const coursesData = [
 
 const DailyDose = () => {
   const dispatch = useDispatch<any>();
-
-  const { courses, success, loading } = useSelector(
+  const [updatedCourses, setUpdatedCourses] = useState<any>([]);
+  const { courses, success, loading, coursesAssign } = useSelector(
     (state: any) => state.courses
   );
 
+  
+  useEffect(() => {
+    const updatedCoursesAssign = coursesAssign.map((item:any) => {
+      const { assigned_at, ...rest } = item;
+      
+
+      
+      let data =  {
+          ...item.courses,
+          assigned_at: assigned_at,
+        
+      };
+
+      return data
+
+    });
+
+
+    setUpdatedCourses(updatedCoursesAssign); 
+  }, [coursesAssign]); 
+
+
+  const { userData } = useSelector((state: RootState) => state.auth);
   const [selectedEventDate, setSelectedEventDate] = useState<Date | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
@@ -200,7 +223,64 @@ const DailyDose = () => {
     <>
       <div className="flex flex-col w-full h-full overflow-hidden">
         <Card className="flex-grow py-2 border rounded-3xl border-gray-500 lg:my-20 4xl:my-0 5xl:my-0  w-full">
-          <div className="p-2 dashcode-app-calendar w-full h-full">
+         {/* For Employee Portal */}
+          <div className="p-2 dashcode-app-calendar w-full h-full" style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}>
+            <FullCalendar
+              plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
+              headerToolbar={{
+                right: "prev,next",
+                left: "title",
+              }}
+              events={
+                updatedCourses &&
+                updatedCourses?.length > 0 &&
+                updatedCourses.map((course: any) => ({
+                  id: course.id.toString(),
+                  title: course.course_name,
+                  start: course.assigned_at,
+                  allDay: true,
+                  extendedProps: {
+                    calendar: course.course_name,
+                    date: course.assigned_at,
+                    instructorname: course.instructorname,
+                    instructorimage: course.instructorimage,
+                    course_name: course?.course_name,
+                  },
+                }))
+              }
+              height="auto"
+              editable={false}
+              rerenderDelay={10}
+              eventDurationEditable={false}
+              selectable={false}
+              selectMirror={false}
+              droppable={false}
+              dayMaxEvents={1}
+              weekends={true}
+              eventClassNames={() => [
+                "fc-daygrid-event", // Ensure the custom full-width/full-height class is applied
+                "!bg-transparent",
+                "!border-none",
+                "!shadow-none",
+              ]}
+              eventContent={renderEventContent}
+              dateClick={handleDateClick}
+              eventClick={handleEventClick}
+              initialView="dayGridMonth"
+              dayHeaderClassNames="bg-gradient-to-b w-full cursor-pointer from-[#2D2C2C80] to-[#000] text-white text-3xl font-bold py-8"
+              dayCellClassNames={({ date }) => {
+                const today = new Date();
+                const isToday =
+                  date.getDate() === today.getDate() &&
+                  date.getMonth() === today.getMonth() &&
+                  date.getFullYear() === today.getFullYear();
+                return isToday ? "!bg-transparent !border-none text-white" : "";
+              }}
+            />
+          </div>
+         {/* For Employee Portal */}
+           {/* For Indvidiual  Portal */}
+           <div className="p-2 dashcode-app-calendar w-full h-full" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}>
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
               headerToolbar={{
@@ -254,6 +334,9 @@ const DailyDose = () => {
               }}
             />
           </div>
+         {/* For Indvidiual Portal */}
+
+
         </Card>
       </div>
       <EventModal

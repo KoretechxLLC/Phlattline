@@ -16,7 +16,6 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
   const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
-    // Simulate loading delay for job data
     setTimeout(() => {
       setLoading(false); // Stop loading after 2 seconds (simulate API call)
     }, 2000);

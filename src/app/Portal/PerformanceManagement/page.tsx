@@ -35,7 +35,8 @@ const PerformanceManagement = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
   const userType = userData?.user_type_id;
   const dispatch: any = useDispatch();
-  const [loading, setLoading] = useState<boolean>(false); // Initialize loading state
+  const [loading, setLoading] = useState<boolean>(false); 
+
 
   const handleAddGoal = (goalData: any) => {
     const id = userData?.id;
