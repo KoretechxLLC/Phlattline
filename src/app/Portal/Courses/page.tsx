@@ -10,11 +10,14 @@ import { Button } from "@/app/components/button-sidebar";
 import Spinner from "@/app/components/Spinner";
 import RecommendedCourses from "./RecommendedCourses/page";
 import MyCourses from "./MyCourse/page";
+import { RootState } from "@/redux/store";
+import EmployeeCourses from "./EmployeeCourses/page";
 
 const Courses = () => {
   const router = useRouter();
   const dispatch: any = useDispatch();
-  const [activeTab, setActiveTab] = useState<string>("RecommendedCourses"); // Set default to "RecommendedCourses"
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const [activeTab, setActiveTab] = useState<string>("RecommendedCourses"); 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
@@ -29,12 +32,12 @@ const Courses = () => {
   } = useSelector((state: any) => state.courses);
 
   const handleTabChange = (tab: string) => {
-    setIsLoading(true); // Set loading to true when changing tabs
+    setIsLoading(true); 
     setActiveTab(tab);
 
     setTimeout(() => {
-      setIsLoading(false); // Set loading to false after the delay
-    }, 500); // Adjust the delay as needed
+      setIsLoading(false); 
+    }, 500); 
   };
 
   const renderContent = () => {
@@ -50,9 +53,9 @@ const Courses = () => {
 
   return (
     <div>
-      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0">
+      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0"  >
         {/* Left side: Courses List */}
-        <div className="space-y-4 md:space-y-2 ml-4 w-full">
+        <div className="space-y-4 md:space-y-2 ml-4 w-full" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
           {isLoading ? (
             <div className="text-center text-gray-300 py-5">
               <Spinner height="30px" width="30px" />
@@ -85,7 +88,9 @@ const Courses = () => {
             </>
           )}
         </div>
-
+        <div className="w-[100em]" style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}>
+        <EmployeeCourses />
+        </div>
         {/* Right side: Additional Content */}
         <div className="4xl:my-0 space-y-8 md:space-y-3">
           <div>
@@ -129,7 +134,7 @@ const Courses = () => {
             </div>
           </div>
 
-          <div>
+          <div style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
             <TabButton
               backgroundColor="#FF0000"
               text="Training-On Demand"

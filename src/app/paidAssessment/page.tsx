@@ -48,17 +48,35 @@ const PaidAssessment = () => {
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
+  const usertype =userData?.user_type_id;
   const searchParams = useSearchParams();
   const assessmentId: any = searchParams.get("assessmentId");
+
+
+
   useEffect(() => {
+    if(usertype==3){
     dispatch(
       fetchSingleAssessments({
         filter: {
           userId: userId,
           assessmentId: assessmentId,
+          user_type_id: usertype,
         },
       })
     );
+
+  }else{
+    dispatch(
+      fetchSingleAssessments({
+        filter: {
+          userId: userId,
+          assessmentId: assessmentId,
+         
+        },
+      })
+    );
+  }
   }, [dispatch]);
 
   const handleOptionChange = (questionId: string, optionText: string) => {
@@ -140,6 +158,22 @@ const PaidAssessment = () => {
       return; // Don't submit if there are errors
     }
 
+
+    if(usertype==3){
+      dispatch(
+        submitAssessmentResponses({
+          userId,
+          assessmentId,
+          responses: Object.entries(responses).map(([questionId, answer]) => ({
+            questionId,
+            answer,
+          })),
+          user_type_id:usertype,
+        })
+      );
+
+    }
+    else{
     dispatch(
       submitAssessmentResponses({
         userId,
@@ -147,9 +181,12 @@ const PaidAssessment = () => {
         responses: Object.entries(responses).map(([questionId, answer]) => ({
           questionId,
           answer,
+          
         })),
+        user_type_id:usertype,
       })
-    );
+    )
+  }
   };
 
   return (

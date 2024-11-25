@@ -86,6 +86,8 @@ export async function POST(req: NextRequest) {
       "Innovation and Adaptability",
     ];
 
+    const serializedOptions = JSON.stringify(options);
+
     // Validate options
     for (const option of options) {
       if (!allowedOptions.includes(option)) {
@@ -148,7 +150,7 @@ export async function POST(req: NextRequest) {
         price,
         categoryId,
         subCategoryId,
-        options, // Store the array directly
+        options: serializedOptions,
         videos: {
           create: videosData,
         },

@@ -20,22 +20,22 @@ const deleteFile = async (filePath: string) => {
     console.error("Error deleting file:", error.message);
   }
 };
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
     const email = formData.get("email") as string | null;
-    const phone_number = formData.get("phone_number") as string | null;
+    const phone_number = formData.get("phoneNumber") as string | null;
     const password = formData.get("password") as string | null;
-    const first_name = formData.get("first_name") as string | null;
-    const last_name = formData.get("last_name") as string | null;
+    const first_name = formData.get("firstName") as string | null;
+    const last_name = formData.get("lastName") as string | null;
     const gender = formData.get("gender") as string | null;
     const DateofBirth = formData.get("dateofBirth") as string | null;
     const designation = formData.get("designation") as string | null;
     const organization_code = formData.get("organization_code") as
       | string
       | null;
-
     const profile_image = formData.get("profile_image") as File | null;
 
     if (

@@ -23,14 +23,15 @@ export type NotificationType = {
 
 const IndividualAssessmentForm = () => {
   const router = useRouter();
+  const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
+  const usertype =userData?.user_type_id;
   const { assessments, loading, error, success } = useSelector(
     (state: RootState) => state.assessment
   );
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
-  const { userData } = useSelector((state: RootState) => state.auth);
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
@@ -109,6 +110,7 @@ const IndividualAssessmentForm = () => {
           questionId,
           answer,
         })),
+        user_type_id:usertype,
       })
     );
   };
