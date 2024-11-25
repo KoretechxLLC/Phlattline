@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { userId, assessmentId, responses } = body;
+    const { userId, assessmentId, responses, user_type_id } = body;
 
     // Validate inputs
     if (!userId || !assessmentId || !Array.isArray(responses)) {
@@ -57,34 +57,72 @@ export async function POST(req: NextRequest) {
     const savedResponses = await prisma.user_assessment_responses.createMany({
       data: userResponses,
     });
-    const purchasedRecord = await prisma.purchased_assessments.findFirst({
-      where: {
-        user_id: parsedUserId,
-        individual_assessments_id: parsedAssessmentId,
-      },
-    });
 
-    // If the assessment was purchased, mark it as completed
-    if (purchasedRecord) {
-      await prisma.purchased_assessments.update({
-        where: {
-          id: purchasedRecord.id,
-        },
-        data: {
-          completed: true,
-        },
-      });
-    }
 
-    await prisma.users.update({
+
+if(user_type_id==3){
+  const purchasedRecord = await prisma.assignedAssessment.findFirst({
+    where: {
+      user_id: parsedUserId,
+      individual_assessment_id: parsedAssessmentId,
+    },
+  });
+
+  // If the assessment was purchased, mark it as completed
+  if (purchasedRecord) {
+    await prisma.assignedAssessment.update({
       where: {
-        id: parsedUserId,
+        id: purchasedRecord.id,
       },
       data: {
-        assessment_status: true,
+        status: "completed",
       },
     });
+  }
 
+  await prisma.users.update({
+    where: {
+      id: parsedUserId,
+    },
+    data: {
+      assessment_status: true,
+    },
+  });
+
+}
+else{
+  const purchasedRecord = await prisma.purchased_assessments.findFirst({
+    where: {
+      user_id: parsedUserId,
+      individual_assessments_id: parsedAssessmentId,
+    },
+  });
+
+  // If the assessment was purchased, mark it as completed
+  if (purchasedRecord) {
+    await prisma.purchased_assessments.update({
+      where: {
+        id: purchasedRecord.id,
+      },
+      data: {
+        completed: true,
+      },
+    });
+  }
+
+  await prisma.users.update({
+    where: {
+      id: parsedUserId,
+    },
+    data: {
+      assessment_status: true,
+    },
+  });
+
+}
+
+
+   
     return NextResponse.json(
       {
         success: true,

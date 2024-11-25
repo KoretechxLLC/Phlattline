@@ -24,7 +24,7 @@ const CoursesResults = ({ height = 280 }) => {
     completed: 0,
   };
 
-  usercourses.forEach((course: any) => {
+  usercourses?.forEach((course:any) => {
     if (course.status === "notStarted") courseStatusCounts.notStarted++;
     else if (course.status === "inprogress") courseStatusCounts.inProgress++;
     else if (course.status === "completed") courseStatusCounts.completed++;

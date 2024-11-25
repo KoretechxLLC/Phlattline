@@ -67,7 +67,7 @@ const CourseReport = () => {
   // Fetch the courses for the current page
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = usercourses.slice(
+  const currentCourses = usercourses?.slice(
     indexOfFirstCourse,
     indexOfLastCourse
   );
@@ -134,16 +134,18 @@ const CourseReport = () => {
         </CardContent>
       </Card>
 
-      <TabButton
-        backgroundColor="#FF0000"
-        text="Training-On Demand"
-        imageSrc="/assets/LiveIcon.png"
-        textColor="#FFFFFF"
-        arrowImageSrc="/assets/ArrowRightUp.png"
-        showModalOnClick={true}
-        isClickable={true}
-        modalType="spring"
-      />
+      <div style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}>
+        <TabButton
+          backgroundColor="#FF0000"
+          text="Training-On Demand"
+          imageSrc="/assets/LiveIcon.png"
+          textColor="#FFFFFF"
+          arrowImageSrc="/assets/ArrowRightUp.png"
+          showModalOnClick={true}
+          isClickable={true}
+        />
+      </div>
+
 
       <Card className="border h-full border-gray-500 rounded-3xl">
         <CardHeader className="flex-row gap-3">
@@ -155,32 +157,30 @@ const CourseReport = () => {
               <Spinner height="30px" width="30px" />
             ) : (
               <ul>
-                {currentCourses.map((course: any) => (
+                {currentCourses?.map((course: any) => (
                   <li
                     key={course.id}
                     className="text-lg text-default-600 py-2 px-2"
                   >
                     <div className="flex items-center">
                       <div
-                        className={`h-12 w-1 mr-4 ${
-                          course.status === "completed"
+                        className={`h-12 w-1 mr-4 ${course.status === "completed"
                             ? "bg-green-500"
                             : course.status === "inprogress"
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
-                        }`}
+                              ? "bg-yellow-500"
+                              : "bg-red-500"
+                          }`}
                       ></div>
                       <div className="flex-1">
                         <div className="flex justify-between">
                           <span>{course.courses.course_name}</span>
                           <span
-                            className={`${
-                              course.status === "completed"
+                            className={`${course.status === "completed"
                                 ? "text-green-500 capitalize"
                                 : course.status === "inprogress"
-                                ? "text-yellow-500 capitalize"
-                                : "text-red-500 capitalize"
-                            }`}
+                                  ? "text-yellow-500 capitalize"
+                                  : "text-red-500 capitalize"
+                              }`}
                           >
                             {course.status}
                           </span>
@@ -205,7 +205,7 @@ const CourseReport = () => {
           </button>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage * coursesPerPage >= usercourses.length}
+            disabled={currentPage * coursesPerPage >= usercourses?.length}
             className="px-4 py-2  text-white rounded-r-lg"
           >
             <FaChevronRight />

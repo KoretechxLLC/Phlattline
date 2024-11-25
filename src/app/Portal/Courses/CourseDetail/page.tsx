@@ -206,7 +206,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   )}
                 </div>
 
-                <div className="my-0">
+                <div className="my-0" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
                   <TabButton
                     backgroundColor="#FF0000"
                     text="Training-On Demand"

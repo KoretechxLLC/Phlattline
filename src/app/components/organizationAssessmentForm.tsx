@@ -31,6 +31,7 @@ const OrganizationAssessmentForm = () => {
     null
   );
   const { userData } = useSelector((state: RootState) => state.auth);
+  const usertype =userData?.user_type_id;
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
@@ -103,6 +104,7 @@ const OrganizationAssessmentForm = () => {
           questionId,
           answer,
         })),
+        user_type_id:usertype,
       })
     );
   };

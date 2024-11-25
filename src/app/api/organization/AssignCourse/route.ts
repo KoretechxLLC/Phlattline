@@ -161,9 +161,12 @@ export async function GET(request: NextRequest) {
     const assignedCourses = await prisma.assignedCourses.findMany({
       where: filter,
       include: {
-        employees: true,
-        courses: true,
-      },
+        courses: {
+          include:{
+            videos : true
+          }
+        },
+      }, 
     });
 
     return NextResponse.json({

@@ -21,6 +21,7 @@ interface CoursesState {
   usercourses: any;
   responses: any;
   count: number;
+  coursesAssign: any;
   recommendedCourses: any | null;
   purchaseCourse: any | null;
   purchaseCourseLoader: boolean | null;
@@ -51,6 +52,7 @@ const initialState: CoursesState = {
   recommendedCourses: [],
   recomendedSuccess: null,
   videoProgress: [],
+  coursesAssign: [],
   usercourses: [],
   responses: null,
   purchaseCourse: null,
@@ -134,6 +136,24 @@ export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
     }
   }
 );
+
+// Thunk for fetching user-specific assigned courses
+export const fetchCoursesAssign = createAsyncThunk<any, number>(
+  "courses/fetchCoursesAssign",
+  async (employee_id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/api/organization/AssignCourse?employee_id=${employee_id}`);
+      return response.data.data; // Adjust according to the API response structure
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assigned courses";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 
 // Thunk for fetching user-specific courses
 export const fetchusercourses = createAsyncThunk<any, number>(
@@ -276,7 +296,22 @@ const coursesSlice = createSlice({
         state.coursesSuccess = false;
       })
 
-      //Submit Courses Responsegit
+      //Assigned Courses Cases
+      .addCase(fetchCoursesAssign.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error on new request
+      })
+      .addCase(fetchCoursesAssign.fulfilled, (state, action) => {
+        state.loading = false;
+        state.coursesAssign = action.payload; // Update state with fetched data
+        state.success = "AssignCourses Successfully fetched";
+      })
+      .addCase(fetchCoursesAssign.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string; // Update state with error message
+      })
+
+      //Submit Courses Responsegit 
       .addCase(coursesAssessmentResponses.pending, (state) => {
         state.loading = true;
         state.error = null;

@@ -89,7 +89,7 @@ export const fetchSingleAssessments = createAsyncThunk<any, any>(
   async ({ filter }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `/api/paidAssessment?userId=${filter.userId}&assessmentId=${filter.assessmentId}` // Added type query parameter
+        `/api/paidAssessment?userId=${filter.userId}&assessmentId=${filter.assessmentId}&user_type_id=${filter.user_type_id}` // Added type query parameter
       );
 
       return response.data.data;
@@ -127,18 +127,16 @@ export const fetchRecommendedAssessments = createAsyncThunk<any, any>(
 // Thunk for submitting assessment responses
 export const submitAssessmentResponses = createAsyncThunk<
   any,
-  { userId: string; assessmentId: string; responses: any[] }
+  { userId: string; assessmentId: string; responses: any[]; user_type_id:any}
 >(
   "assessment/submitAssessmentResponses",
-  async ({ userId, assessmentId, responses }, { rejectWithValue }) => {
+  async ({ userId, assessmentId, responses, user_type_id }, { rejectWithValue }) => {
     try {
+    const  data = user_type_id ? {  userId, assessmentId, responses, user_type_id} :
+    {  userId, assessmentId, responses}
       const response = await axiosInstance.post(
         "/api/initialassessmentformresponse",
-        {
-          userId,
-          assessmentId,
-          responses,
-        }
+        data
       );
       return response.data;
     } catch (error: any) {

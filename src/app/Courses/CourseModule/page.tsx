@@ -42,7 +42,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
   const [totalDuration, setTotalDuration] = useState<number>(0);
   const [imgError, setImgError] = useState(false);
   const handleError = () => {
-    setImgError(true); // Set error flag when image fails to load
+    setImgError(true); 
   };
 
   const courseId = searchParams.get("courseId");

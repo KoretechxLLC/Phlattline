@@ -69,14 +69,13 @@ const Assessments = () => {
     }
   };
 
-  // Use effect to simulate loading when the active tab changes
   useEffect(() => {
     setLoading(true); // Start loading when the active tab changes
     const timer = setTimeout(() => {
       setLoading(false); // Stop loading after a delay
     }, 500); // Simulate loading time (adjust as needed)
 
-    return () => clearTimeout(timer); // Clean up the timer
+    return () => clearTimeout(timer); 
   }, [activeTab]);
 
   return (

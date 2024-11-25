@@ -93,6 +93,26 @@ export const Register = createAsyncThunk<any, FormData>(
   }
 );
 
+//Employee Register Slice
+export const Employeeregister = createAsyncThunk<any, FormData>(
+  "auth/Employeeregister",
+  async (formData: FormData, thunkAPI) => {
+    try {
+      const response = await axios.post(`/api/auth/employeeregister`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
+
 export const UpdateUser = createAsyncThunk<any, any>(
   "auth/UpdateUser",
   async (formData: any, thunkAPI) => {
@@ -109,7 +129,7 @@ export const UpdateUser = createAsyncThunk<any, any>(
       );
     }
   }
-);
+);  
 
 export const fetchPurchaseCourses = createAsyncThunk<any, any>(
   "auth/fetchPurchaseCourses",
@@ -244,6 +264,22 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload ?? "Unknown error";
       })
+
+      //Employee Register
+      .addCase(Employeeregister.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(Employeeregister.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = action.payload.message;
+      })
+      .addCase(Employeeregister.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Unknown error";
+      })
+      //---//
+
 
       //Logout
       .addCase(logout.pending, (state) => {

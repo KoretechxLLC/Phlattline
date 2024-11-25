@@ -322,7 +322,7 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
             <CardContent>
               <div className="pb-3 pt-1">
                 <ul>
-                  {currentCourses.map((course: any) => (
+                  {currentCourses?.map((course: any) => (
                     <li
                       key={course.id}
                       className="text-lg text-default-600 py-2 px-2"

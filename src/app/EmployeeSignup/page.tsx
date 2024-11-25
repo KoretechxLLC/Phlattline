@@ -3,24 +3,18 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { Input } from "../components/Input";
 import { RiTeamFill } from "react-icons/ri";
-import { BiSolidUserBadge } from "react-icons/bi";
-import { ImListNumbered } from "react-icons/im";
 import { SparklesCore } from "../components/sparkles";
-import { MdDomain, MdEmail, MdLock, MdPhone, MdWork } from "react-icons/md";
+import { MdDomain, MdEmail, MdLock, MdOutlineDateRange, MdPhone, MdWork } from "react-icons/md";
 import { CustomPhoneInput } from "../components/phoneInput";
-import { Select } from "../components/select";
-import { Register, setError, setSuccess } from "@/redux/slices/auth.slice";
+import { Employeeregister, Register, setError, setSuccess } from "@/redux/slices/auth.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications from "../components/Stackednotification";
 import { useDispatch, useSelector } from "react-redux";
-import { pass } from "three/webgpu";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import the DatePicker styles
 import { MdBadge } from "react-icons/md";
-import { formatDate } from "react-datepicker/dist/date_utils";
 
 const SignupScreen = () => {
   return (
@@ -41,8 +35,6 @@ export type NotificationType = {
 const EmployeeSignup = () => {
   const [firstName, setfirstName] = React.useState("");
   const [lastName, setlastName] = React.useState("");
-  const [designtion, setdesigntion] = React.useState("");
-
   const [empEmail, setempEmail] = React.useState("");
   const [designation, setdesignation] = React.useState("");
   const [gender, setGender] = useState(""); // <-- Add this line
@@ -52,7 +44,6 @@ const EmployeeSignup = () => {
   const [password, setPassword] = useState("");
   const [employeeCode, setEmployeeCode] = useState("");
   const [dob, setDob] = useState(null); // Initialize as null
-
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
@@ -84,12 +75,12 @@ const EmployeeSignup = () => {
     };
     let isValid = true;
 
-    if (!newErrors.firstName) {
-      newErrors.firstName = "Employee name is required";
+    if (!firstName) {
+      newErrors.firstName = "First name is required";
       isValid = false;
     }
 
-    if (!newErrors.empEmail) {
+    if (!empEmail) {
       newErrors.empEmail = "Employee email is required";
       isValid = false;
     }
@@ -104,18 +95,17 @@ const EmployeeSignup = () => {
       isValid = false;
     }
 
-    if (!employeeCode) newErrors.employeeCode = "Employee Code is required";
-    isValid = false;
+
+    if (!employeeCode) {
+      newErrors.employeeCode = "Employee Code is required"
+      isValid = false;
+    }
 
     if (!gender) {
       newErrors.gender = "Gender is required";
       isValid = false;
     }
 
-    if (!employeeNumber) {
-      newErrors.employeeNumber = "Select number of Employees";
-      isValid = false;
-    }
 
     setErrors(newErrors);
     return isValid;
@@ -123,19 +113,22 @@ const EmployeeSignup = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+
     if (validate()) {
       const formData = new FormData();
-      formData.append("First Name", firstName);
-      formData.append("Last Name", lastName);
-      formData.append("Employee_email", empEmail);
-      formData.append("Employee Designation", designation);
-      formData.append("Employee_number", empPhone);
-      formData.append("Employee_Gender", gender);
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", empEmail);
+      formData.append("designation", designation);
+      formData.append("phoneNumber", empPhone);
+      formData.append("dob", dob ? new Date(dob).toLocaleDateString() : "");
+      formData.append("gender", gender);
       formData.append("password", password);
-      formData.append("Employee_Code", employeeCode);
+      formData.append("organization_code", employeeCode);
 
       try {
-        await dispatch(Register(formData));
+        await dispatch(Employeeregister(formData));
       } catch (error) {
         console.error("Registration failed", error);
       }
@@ -182,13 +175,11 @@ const EmployeeSignup = () => {
             SIGNUP
           </h1>
           <div className="w-[40rem] relative">
-            {/* Gradients */}
             <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#B50D34] to-transparent h-[2px] w-3/4 blur-sm" />
             <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-3/4" />
             <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#B50D34]  to-transparent h-[5px] w-1/4 blur-sm" />
             <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-1/4" />
 
-            {/* Core component */}
             <SparklesCore
               background="transparent"
               minSize={0.4}
@@ -198,7 +189,6 @@ const EmployeeSignup = () => {
               particleColor="#FFFFFF"
             />
 
-            {/* Radial Gradient to prevent sharp edges */}
             <div className="absolute inset-0 w-full h-full  [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
             <motion.p
               variants={primaryVariants}
@@ -273,8 +263,8 @@ const EmployeeSignup = () => {
             <Input
               id="your-designation"
               type="text"
-              value={designtion}
-              onChange={(e: any) => setdesigntion(e.target.value)}
+              value={designation}
+              onChange={(e: any) => setdesignation(e.target.value)}
               placeholder="Enter Your Designation"
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
@@ -299,7 +289,6 @@ const EmployeeSignup = () => {
             )}
           </motion.div>
 
-          {/* Gender Field */}
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
@@ -307,7 +296,7 @@ const EmployeeSignup = () => {
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="bg-black border-2 border-[#b74b279d] text-white w-full p-2 rounded"
+              className="bg-black border-2 border-[#b74b279d] text-white w-full p-2 rounded pt-4 pb-4 mt-2"
               required
             >
               <option value="" disabled>
@@ -315,27 +304,26 @@ const EmployeeSignup = () => {
               </option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="other">Other</option>
             </select>
             {errors.gender && (
               <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
             )}
           </motion.div>
-
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
           >
-            <div className="w-full">
-              {" "}
-              {/* Wrap DatePicker in a full-width div */}
+            <div className="w-full"> {/* Wrap DatePicker in a full-width div */}
               <DatePicker
                 selected={dob}
                 onChange={(date: any) => setDob(date)}
                 placeholderText="Select Your Date of Birth"
-                className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full" // Use w-full for the DatePicker itself
+                className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full pt-3 pb-3"
+                showMonthDropdown // Enable month dropdown
+                showYearDropdown // Enable year dropdown
                 dateFormat="MM/dd/yyyy"
               />
+              <MdOutlineDateRange className="absolute top-3 right-4 text-white" />
             </div>
             {errors.dob && (
               <p className="text-red-500 text-sm mt-1">{errors.dob}</p>
@@ -379,7 +367,6 @@ const EmployeeSignup = () => {
               <p className="text-red-500 text-sm mt-1">{errors.employeeCode}</p>
             )}
           </motion.div>
-
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2 mt-6">
             <motion.button
               variants={primaryVariants}
@@ -401,7 +388,7 @@ const EmployeeSignup = () => {
               type="submit"
               className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
             >
-              Sign Up
+              Register
             </motion.button>
           </div>
         </form>
