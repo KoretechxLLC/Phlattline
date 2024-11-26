@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import Diagnostics from "./Diagnostics/page";
 import DataCollection from "./DataCollection/page";
@@ -7,10 +7,27 @@ import GapAnalysis from "./GapAnalysis/page";
 import DesigningInterventions from "./DesigningInterventions/page";
 import ManagingChange from "./ManagingChange/page";
 import ProgramEvolutions from "./ProgramEvolutions/page";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
+import Spinner from "@/app/components/Spinner";
 
 const OdaasStrategic = () => {
   const [activeTab, setActiveTab] = useState<string>("Diagnostics");
-  const [loading, setLoading] = useState<boolean>(false); // Initialize loading state
+  const [loading, setLoading] = useState<boolean>(true); // Initialize as true for initial loading
+  const { userData } = useSelector((state: RootState) => state.auth);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userData) {
+      if (userData?.user_type_id !== 2) {
+        router.back();
+      } else {
+        setLoading(false); // Stop loading if user is authorized
+      }
+    }
+  }, [userData, router]);
 
   const handleTabChange = (tab: string) => {
     setLoading(true); // Set loading to true when changing tabs
@@ -40,6 +57,15 @@ const OdaasStrategic = () => {
         return null; // Handle default case
     }
   };
+
+  if (loading) {
+    // Display a loader while loading
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="4xl:my-0 lg:my-24 5xl:my-0 relative">

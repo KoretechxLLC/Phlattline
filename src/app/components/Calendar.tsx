@@ -2,8 +2,6 @@ import * as React from "react";
 import { DayPicker } from "react-day-picker";
 import { cn } from "@/app/lib/utils";
 import { startOfWeek } from "date-fns";
-import { fetchcourses } from "@/redux/slices/courses.slice";
-import { useDispatch, useSelector } from "react-redux";
 
 const today = new Date();
 const startOfWeekDate = startOfWeek(today);

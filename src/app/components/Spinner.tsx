@@ -1,16 +1,17 @@
 import React from "react";
 
 interface SpinnerProps {
-  height?: string; // Define height as a string to allow flexible sizing
+  height?: string;
+  width?: string; // Define height as a string to allow flexible sizing
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ height }) => {
+const Spinner: React.FC<SpinnerProps> = ({ height, width }) => {
   const spinnerStyle = {
     border: "3px solid #B50D34", // Light grey
     borderTop: "3px solid #BAA716", // Blue
     borderRadius: "50%",
-    width: "50px",
-    height: "50px",
+    width: width ? width : "50px",
+    height: height ? height : "50px",
     animation: "spin 1s linear infinite",
     display: "inline-block",
   };

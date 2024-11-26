@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { organization_id, course_id, employee_ids, user_id } =
+    const { organization_id, course_id, employee_ids, user_id, type } =
       await request.json();
 
     if (!organization_id || !course_id || !employee_ids || !user_id) {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     if (!purchasedCourse) {
       return NextResponse.json(
         {
-          message: "You have not own this course.",
+          message: "You do not own this course.",
           success: false,
         },
         { status: 403 }
@@ -49,6 +49,19 @@ export async function POST(request: NextRequest) {
       existingAssignments.map((assignment) => assignment.employee_id)
     );
 
+    if (
+      type &&
+      employee_ids.every((id) => existingEmployeeIds.has(Number(id)))
+    ) {
+      return NextResponse.json(
+        {
+          message: "Courses are already assigned to these employees.",
+          success: false,
+        },
+        { status: 400 }
+      );
+    }
+
     const employeesToUnassign = employee_ids
       .map(Number)
       .filter((id) => existingEmployeeIds.has(id));
@@ -57,7 +70,7 @@ export async function POST(request: NextRequest) {
       .map(Number)
       .filter((id) => !existingEmployeeIds.has(id));
 
-    if (employeesToUnassign.length > 0) {
+    if (!type && employeesToUnassign.length > 0) {
       await prisma.assignedCourses.deleteMany({
         where: {
           user_id: Number(user_id),
@@ -68,13 +81,28 @@ export async function POST(request: NextRequest) {
     }
 
     // **Assign Employees**
-    if (employeesToAssign.length > 0) {
+    if (type && employeesToAssign.length > 0) {
       const employees = await prisma.employees.findMany({
         where: {
-          id: { in: employeesToAssign },
+          id: { in: employeesToAssign.map(Number) }, // Ensure employee IDs are numbers
           organization_id: Number(organization_id),
         },
       });
+
+      if (employees.length !== employeesToAssign.length) {
+        const unmatchedEmployees = employeesToAssign.filter(
+          (id) => !employees.some((emp) => emp.id === id)
+        );
+        return NextResponse.json(
+          {
+            message: `Employees with IDs ${unmatchedEmployees.join(
+              ", "
+            )} do not belong to this organization.`,
+            success: false,
+          },
+          { status: 403 }
+        );
+      }
 
       if (employees.length !== employeesToAssign.length) {
         return NextResponse.json(
@@ -110,6 +138,7 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

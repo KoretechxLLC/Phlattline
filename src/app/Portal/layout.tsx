@@ -4,10 +4,12 @@ import LayoutContentProvider from "@/app/providers/content.provider";
 import Sidebar from "@/app/components/SideBar";
 import Header from "@/app/components/Header";
 import { usePathname } from "next/navigation";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { userData } = useSelector((state: RootState) => state.auth);
   const path = usePathname();
-
   const pathContentMap: {
     [key: string]: { heading: string; description: string };
   } = {
@@ -32,8 +34,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       heading: "Purchase History",
       description: "",
     },
-    // Add more paths as needed
   };
+
+  if (userData?.user_type_id == 2) {
+    pathContentMap["/Portal/Odaas"] = {
+      heading: "Odaas",
+      description: "",
+    };
+  }
 
   // Default fallback content if the path is not mapped
   const defaultContent = {

@@ -13,9 +13,29 @@ import PersonalGoals from "@/app/components/PersonalGoalsTracker";
 import TasksTracker from "@/app/components/TasksTracker";
 import TabButton from "@/app/components/TabButton";
 import NotesCalendar from "../../components/NotesCalendar";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchPurchaseAssessment,
+  fetchPurchaseCourses,
+} from "@/redux/slices/auth.slice";
+import { RootState } from "@/redux/store";
 
 const Dashboard = () => {
+  const { userData } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
+  const dispatch: any = useDispatch();
+  useEffect(() => {
+    if (!userData?.user_courses || userData.user_courses.length === 0) {
+      dispatch(fetchPurchaseCourses(userData?.id));
+    }
+
+    if (
+      !userData?.purchased_assessments ||
+      userData.purchased_assessments.length === 0
+    ) {
+      dispatch(fetchPurchaseAssessment(userData?.id));
+    }
+  }, [dispatch]); // Add dependencies for safety
 
   return (
     <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full 4xl:space-y-0 lg:space-y-24 5xl:space-y-9 overflow-hidden items-end">

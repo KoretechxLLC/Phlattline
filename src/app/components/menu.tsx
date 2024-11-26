@@ -22,95 +22,66 @@ export function MenuClassic() {
   const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState(pathname);
 
-  const id = userData?.user_type_id;
-
   useEffect(() => {
     setActiveMenu(pathname);
   }, [pathname]);
 
-  // Explicitly type 'menus' as an array of MenuItem
-  let menus: MenuItem[] = [];
+  // Define menus dynamically based on user type
+  const menus = [
+    {
+      href: "/Dashboard",
+      label: "Dashboard",
+      icon: "/assets/DashboardLogo.png",
+    },
+    { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
+    {
+      href: "/DailyDose",
+      label: "Daily Dose",
+      icon: "/assets/CalendarLogo.png",
+    },
+    {
+      href: "/Assessments",
+      label: "Assessments",
+      icon: "/assets/AssessmentsLogo.png",
+    },
+  ];
 
-  if (id === 1) {
-    menus = [
-      {
-        href: "/Dashboard",
-        label: "Dashboard",
-        icon: "/assets/DashboardLogo.png",
-      },
-      { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
-      {
-        href: "/DailyDose",
-        label: "Daily Dose",
-        icon: "/assets/CalendarLogo.png",
-      },
-      {
-        href: "/Assessments",
-        label: "Assessments",
-        icon: "/assets/AssessmentsLogo.png",
-      },
-      {
-        href: "PerformanceManagement",
-        label: "Performance Management",
-        icon: "/assets/PerformanceLogo.png",
-      },
-      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
-    ];
-  } else if (id === 2) {
-    menus = [
-      {
-        href: "/Dashboard",
-        label: "Dashboard",
-        icon: "/assets/DashboardLogo.png",
-      },
-      { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
-      {
-        href: "/DailyDose",
-        label: "Daily Dose",
-        icon: "/assets/CalendarLogo.png",
-      },
-      {
-        href: "/Assessments",
-        label: "Assessments",
-        icon: "/assets/AssessmentsLogo.png",
-      },
+  // Add "Odaas" if user_type_id is 3
+  if (userData?.user_type_id === 2) {
+    menus.push(
       {
         href: "PerformanceManagementOrg",
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
       },
-      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
-    ];
-  } else if (id === 3) {
-    menus = [
+      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
+    );
+  }
+
+  if (userData?.user_type_id === 3) {
+    menus.push(
       {
-        href: "/Dashboard",
-        label: "Dashboard",
-        icon: "/assets/DashboardLogo.png",
-      },
-      { href: "/Courses", label: "Courses", icon: "/assets/CoursesLogo.png" },
-      {
-        href: "/DailyDose",
-        label: "Daily Dose",
-        icon: "/assets/CalendarLogo.png",
-      },
-      {
-        href: "/Assessments",
-        label: "Assessments",
-        icon: "/assets/AssessmentsLogo.png",
+        href: "ExploreJobs",
+        label: "Explore Jobs",
+        icon: "/assets/ExploreJobsLogo.png",
       },
       {
         href: "PerformanceManagement",
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
       },
+      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
+    );
+  }
+  if (userData?.user_type_id === 1) {
+    menus.push(
       {
-        href: "ExploreJobs",
-        label: "Explore Jobs",
-        icon: "/assets/ExploreJobsLogo.png",
+        href: "PerformanceManagement",
+        label: "Performance Management",
+        icon: "/assets/PerformanceLogo.png",
       },
-      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" },
-    ];
+      { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
+    );
   }
 
   const handleMenuClick = (href: string) => {
@@ -143,7 +114,7 @@ export function MenuClassic() {
       </ul>
 
       {/* Menu Widget without list dot */}
-      {id === 2 && (
+      {userData && userData.length && userData?.user_type_id === 2 && (
         <li className="w-full list-none pl-3 pb-8">
           <MenuWidget
             isActive={activeMenu === "/Portal/ODaas"}
@@ -154,7 +125,6 @@ export function MenuClassic() {
 
       {isDesktop && (
         <div className="pl-8 pb-12 w-full">
-          {/* Anchors to the bottom */}
           <MenuItem
             label="Settings"
             href="/Settings"
