@@ -157,7 +157,7 @@ const TasksTracker = ({
       >
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-            <Spinner height="20vh" />
+            <Spinner height="30px" width="30px" />
           </div>
         ) : activeTab === "pending" ? (
           goals && goals.length > 0 ? (

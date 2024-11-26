@@ -32,7 +32,7 @@ const PersonalGoals: React.FC<PersonalGoalsProps> = ({ showAvatar }) => {
     <div>
       {loading ? (
         <div className="flex justify-center items-center h-full">
-          <Spinner height="10vh" />
+          <Spinner height="30px" width="30px" />
         </div>
       ) : goals && goals.length > 0 ? (
         goals.filter((item: any) => item.status === true).length > 0 ? (

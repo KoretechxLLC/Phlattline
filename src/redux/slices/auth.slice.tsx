@@ -111,6 +111,50 @@ export const UpdateUser = createAsyncThunk<any, any>(
   }
 );
 
+export const fetchPurchaseCourses = createAsyncThunk<any, any>(
+  "auth/fetchPurchaseCourses",
+  async (userId: any, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `api/purchaseCourse/?userId=${userId}`,
+
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
+export const fetchPurchaseAssessment = createAsyncThunk<any, any>(
+  "auth/fetchPurchaseAssessment",
+  async (userId: any, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `api/purchaseAssessments/?userId=${userId}`,
+
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Internal Server Error"
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -230,6 +274,40 @@ const authSlice = createSlice({
         state.success = "Successfully profile updated";
       })
       .addCase(UpdateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Unknown error";
+      })
+      .addCase(fetchPurchaseCourses.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPurchaseCourses.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Create `purchasedCourses` if it doesn't exist
+        if (!state.userData) {
+          state.userData = {}; // Ensure userData exists
+        }
+        state.userData.user_courses = action.payload.data;
+        state.success = "Successfully profile updated";
+      })
+      .addCase(fetchPurchaseCourses.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? "Unknown error";
+      })
+      .addCase(fetchPurchaseAssessment.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPurchaseAssessment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Create `purchasedCourses` if it doesn't exist
+        if (!state.userData) {
+          state.userData = {}; // Ensure userData exists
+        }
+        state.userData.purchased_assessments = action.payload.data;
+        state.success = "Successfully profile updated";
+      })
+      .addCase(fetchPurchaseAssessment.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? "Unknown error";
       });
