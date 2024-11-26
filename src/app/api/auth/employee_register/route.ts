@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
         email,
         date_of_birth: date,
         designation,
+        profile_image: profileImagePath,
         phone_number,
         gender: gender.toLowerCase() === "male" ? "Male" : "Female",
         organization_code,
@@ -126,7 +127,7 @@ export async function POST(request: NextRequest) {
         designation,
         last_name,
         user_type_id: 3,
-        profile_image: profileImagePath || undefined,
+        profile_image: profileImagePath,
         organization_id: organization.id,
         employee_id: newEmployee.id,
       },
@@ -153,6 +154,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const organizationId = searchParams.get("organization_id");
     const employeeId = searchParams.get("employee_id");
+    const departmentId = searchParams.get("department_Id");
 
     let employees;
 
@@ -164,6 +166,17 @@ export async function GET(request: NextRequest) {
       if (!employees) {
         return NextResponse.json(
           { message: "Employee not found.", success: false },
+          { status: 404 }
+        );
+      }
+    } else if (departmentId) {
+      employees = await prisma.employees.findMany({
+        where: { departmentId: Number(departmentId) },
+      });
+
+      if (!employees) {
+        return NextResponse.json(
+          { message: "No Employee found in this Department", success: false },
           { status: 404 }
         );
       }

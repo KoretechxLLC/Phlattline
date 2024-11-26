@@ -6,8 +6,8 @@ export async function GET(req: NextRequest) {
     const { searchParams }: any = new URL(req.url);
     const assessmentId = searchParams.get("assessmentId");
     const userId = searchParams.get("userId");
+    const user_type_id = searchParams.get("user_type_id");
 
-    // Validate the inputs
     if (!assessmentId || !userId) {
       return NextResponse.json(
         { error: "assessmentId and userId are required" },
@@ -15,7 +15,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Convert IDs to numbers
     const assessmentIdNum = Number(assessmentId);
     const userIdNum = Number(userId);
 
@@ -26,23 +25,36 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Check if the assessment is purchased by the user
-    const purchasedAssessment = await prisma.purchased_assessments.findFirst({
-      where: {
-        individual_assessments_id: assessmentIdNum,
-        user_id: userIdNum,
-      },
-    });
+    if (user_type_id == 3) {
+      const purchasedAssessment = await prisma.assignedAssessment.findFirst({
+        where: {
+          individual_assessment_id: assessmentIdNum,
+          user_id: userIdNum,
+        },
+      });
 
-    // If assessment is not purchased, return an error
-    if (!purchasedAssessment) {
-      return NextResponse.json(
-        { error: "Assessment not purchased by the user" },
-        { status: 403 }
-      );
+      if (!purchasedAssessment) {
+        return NextResponse.json(
+          { error: "Assessment Not Assigned by Your Organization" },
+          { status: 403 }
+        );
+      }
+    } else {
+      const purchasedAssessment = await prisma.purchased_assessments.findFirst({
+        where: {
+          individual_assessments_id: assessmentIdNum,
+          user_id: userIdNum,
+        },
+      });
+
+      if (!purchasedAssessment) {
+        return NextResponse.json(
+          { error: "Assessment not purchased by the user" },
+          { status: 403 }
+        );
+      }
     }
 
-    // Fetch the assessment details if purchased
     const assessment = await prisma.individual_assessments.findUnique({
       where: { id: assessmentIdNum },
       include: {
@@ -55,7 +67,6 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // Check if the assessment exists
     if (!assessment) {
       return NextResponse.json(
         { error: "Assessment not found" },
@@ -63,7 +74,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Return the assessment data
     return NextResponse.json(
       { success: true, data: assessment },
       { status: 200 }

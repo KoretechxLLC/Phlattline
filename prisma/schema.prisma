@@ -66,6 +66,7 @@ model organizations {
   department         department[]
   employees          employees[]
   users              users[]
+  employee_review    employee_review[]
 }
 
 model employees {
@@ -89,6 +90,17 @@ model employees {
   organization       organizations        @relation(fields: [organization_id], references: [id])
   user_goal          user_goal[]
   users              users[]
+  employee_review    employee_review[]
+}
+
+model employee_review {
+  id              Int           @id @default(autoincrement())
+  employee_id     Int
+  organization_id Int
+  review          String
+  no_of_stars     Int
+  employees       employees     @relation(fields: [employee_id], references: [id])
+  organization    organizations @relation(fields: [organization_id], references: [id])
 }
 
 model department {
