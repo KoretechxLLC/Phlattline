@@ -1,10 +1,26 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import JobPopup from "./JobPopup";
+import { Button } from "./button-sidebar";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/Card";
+import Spinner from "./Spinner"; // Assuming this is the loader component you have
 
 const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedJob, setSelectedJob] = useState<string>("");
+  const [loading, setLoading] = useState(true); // Added loading state
+
+  useEffect(() => {
+    // Simulate loading delay for job data
+    setTimeout(() => {
+      setLoading(false); // Stop loading after 2 seconds (simulate API call)
+    }, 2000);
+  }, []);
 
   const handleApplyClick = (jobTitle: string) => {
     setSelectedJob(jobTitle);
@@ -12,28 +28,46 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
   };
 
   return (
-    <div className="border-[1px] border-gray-500 rounded-3xl  w-full max-w-[700px] p-8 mx-auto">
-      <div className="text-center text-white text-lg font-bold mb-4">
-        Vacant Jobs
-      </div>
-      <ul className="space-y-6">
-        {" "}
-        {/* Added more spacing between items */}
-        {jobs.map((job) => (
-          <li
-            key={job.id}
-            className="flex justify-between items-center text-white border-b border-gray-700 pb-3"
-          >
-            <span className="text-md">{job.title}</span>
-            <button
-              onClick={() => handleApplyClick(job.title)}
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-red-500 text-white text-sm hover:scale-105 transition-transform"
-            >
-              Apply
-            </button>
-          </li>
-        ))}
-      </ul>
+    <Card>
+      {/* Title with Background */}
+      <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-gray-900">
+        <CardTitle className="text-center  text-white text-xs sm:text-md mb-0">
+          Your Desired Job
+        </CardTitle>
+      </CardHeader>
+
+      {/* Jobs List */}
+      <CardContent className="bg-black border border-[#62626280]  rounded-b-lg p-8">
+        {loading ? (
+          // Show loader if data is loading
+          <div className="flex justify-center items-center py-5">
+            <Spinner height="30px" width="30px" />
+          </div>
+        ) : jobs && jobs.length > 0 ? (
+          // Show message if no jobs are available
+          <ul className="space-y-8">
+            {jobs.map((job) => (
+              <li
+                key={job.id}
+                className="flex justify-between items-center text-white pb-5"
+              >
+                <span className="text-md">{job.title}</span>
+                <Button
+                  onClick={() => handleApplyClick(job.title)}
+                  color="primary"
+                  className="rounded-3xl"
+                >
+                  Apply
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="text-center text-gray-300 py-20">
+            No Desired Jobs Found
+          </div>
+        )}
+      </CardContent>
 
       {/* JobPopup */}
       <JobPopup
@@ -41,7 +75,7 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
         onClose={() => setShowPopup(false)}
         jobTitle={selectedJob}
       />
-    </div>
+    </Card>
   );
 };
 

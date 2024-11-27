@@ -194,7 +194,7 @@ const DailyDose = () => {
         justifyContent: "center",
       }}
     >
-      <Spinner />
+      <Spinner height="30px" width="30px" />
     </div>
   ) : (
     <>

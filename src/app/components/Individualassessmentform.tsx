@@ -116,7 +116,7 @@ const IndividualAssessmentForm = () => {
   if (loading) {
     return (
       <div className="text-center text-gray-300">
-        <Spinner />
+        <Spinner height="30px" width="30px" />
       </div>
     );
   }

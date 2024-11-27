@@ -108,6 +108,7 @@ const Dashboard = () => {
             arrowImageSrc="/assets/ArrowRightUp.png"
             showModalOnClick={true}
             isClickable={true}
+            modalType="spring"
           />
         </div>
       </div>

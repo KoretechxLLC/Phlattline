@@ -1,4 +1,5 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { colors } from "@/app/lib/colors";
@@ -6,25 +7,38 @@ import { useTheme } from "next-themes";
 
 import { useConfig } from "@/app/hooks/use-config";
 import { getGridConfig, getYAxisConfig } from "@/app/lib/appex-chart-options";
+import Spinner from "./Spinner"; // Assuming you have a spinner component
 
 const WorkLoadBar = ({ height = 180 }) => {
   const [config] = useConfig();
   const { theme: mode } = useTheme();
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [series, setSeries] = useState<any[]>([]); // Data state for the chart
 
-  const series = [
-    {
-      name: "Completed",
-      data: [44, 55, 41, 37, 22, 43, 21],
-    },
-    {
-      name: "Remaining",
-      data: [53, 32, 33, 52, 13, 43, 32],
-    },
-    {
-      name: "Overdue",
-      data: [12, 17, 11, 9, 15, 11, 20],
-    },
-  ];
+  useEffect(() => {
+    // Simulate data fetching or processing delay
+    const loadData = setTimeout(() => {
+      // Simulate empty or available data
+      setSeries([
+        {
+          name: "Completed",
+          data: [44, 55, 41, 37, 22, 43, 21],
+        },
+        {
+          name: "Remaining",
+          data: [53, 32, 33, 52, 13, 43, 32],
+        },
+        {
+          name: "Overdue",
+          data: [12, 17, 11, 9, 15, 11, 20],
+        },
+      ]); // Replace this with an empty array `[]` to simulate no data
+      setLoading(false); // Set loading to false after data is set
+    }, 2000); // Simulate 2 seconds delay
+
+    return () => clearTimeout(loadData); // Cleanup on unmount
+  }, []);
+
   const options: any = {
     chart: {
       toolbar: {
@@ -89,7 +103,6 @@ const WorkLoadBar = ({ height = 180 }) => {
       bottom: 0,
       left: 0,
     },
-
     legend: {
       position: "top",
       horizontalAlign: "left",
@@ -110,14 +123,28 @@ const WorkLoadBar = ({ height = 180 }) => {
       },
     },
   };
+
   return (
-    <Chart
-      options={options}
-      series={series}
-      type="bar"
-      height={height}
-      width={"100%"}
-    />
+    <div>
+      {loading ? (
+        // Show spinner while loading
+        <div className="flex justify-center items-center h-[180px]">
+          <Spinner height="30px" width="30px" />
+        </div>
+      ) : series.length > 0 ? (
+        // Show "No workload found" message if no data is present
+        <Chart
+          options={options}
+          series={series}
+          type="bar"
+          height={height}
+          width={"100%"}
+        />
+      ) : (
+        // Render chart once loading is complete and data is present
+        <div className="text-center text-gray-500 py-8">No workload Found</div>
+      )}
+    </div>
   );
 };
 

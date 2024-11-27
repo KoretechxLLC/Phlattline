@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import GraphLoader from "./graphLoader";
 import { fetchAssessmentResult } from "@/redux/slices/assessmentResults.slice";
+import Spinner from "./Spinner";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface AssessmentTrackerProps {
@@ -195,7 +196,7 @@ const PreviousResultsTracker = ({
     <>
       {resultLoading ? (
         <div className="text-center text-gray-300">
-          <GraphLoader />
+          <Spinner height="30px" width="30px" />
         </div>
       ) : data && data.length > 0 ? (
         <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[250px]">

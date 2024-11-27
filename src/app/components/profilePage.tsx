@@ -70,6 +70,7 @@ const Profile = ({ profileImage }: any) => {
 
   useEffect(() => {
     setData(userData);
+    console.log(data);
   }, [userData]);
   const submitHandleChange = async (e: any) => {
     e.preventDefault();

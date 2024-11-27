@@ -22,9 +22,6 @@ import "react-datepicker/dist/react-datepicker.css"; // Import the DatePicker st
 import { MdBadge } from "react-icons/md";
 import { formatDate } from "react-datepicker/dist/date_utils";
 
-
-
-
 const SignupScreen = () => {
   return (
     <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
@@ -42,9 +39,6 @@ export type NotificationType = {
 };
 
 const EmployeeSignup = () => {
-  
-
-
   const [firstName, setfirstName] = React.useState("");
   const [lastName, setlastName] = React.useState("");
   const [designtion, setdesigntion] = React.useState("");
@@ -59,15 +53,12 @@ const EmployeeSignup = () => {
   const [employeeCode, setEmployeeCode] = useState("");
   const [dob, setDob] = useState(null); // Initialize as null
 
- 
- 
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
   const dispatch: any = useDispatch();
   const { success, error } = useSelector((state: RootState) => state.auth);
   const [errors, setErrors] = useState({
-
     firstName: "",
     lastName: "",
     empEmail: "",
@@ -77,17 +68,16 @@ const EmployeeSignup = () => {
     gender: "",
     password: "",
     employeeCode: "",
-
   });
 
   const validate = () => {
-    const newErrors : any = {
+    const newErrors: any = {
       firstName: "",
       lastName: "",
       empEmail: "",
       designtion: "",
       empPhone: "",
-     dob: "",
+      dob: "",
       gender: "",
       password: "",
       employeeCode: "",
@@ -98,7 +88,6 @@ const EmployeeSignup = () => {
       newErrors.firstName = "Employee name is required";
       isValid = false;
     }
-
 
     if (!newErrors.empEmail) {
       newErrors.empEmail = "Employee email is required";
@@ -115,9 +104,7 @@ const EmployeeSignup = () => {
       isValid = false;
     }
 
-
-    if (!employeeCode)
-      newErrors.employeeCode = "Employee Code is required"
+    if (!employeeCode) newErrors.employeeCode = "Employee Code is required";
     isValid = false;
 
     if (!gender) {
@@ -134,10 +121,6 @@ const EmployeeSignup = () => {
     return isValid;
   };
 
-
-
-
-  
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (validate()) {
@@ -245,7 +228,6 @@ const EmployeeSignup = () => {
             )}
           </motion.div>
 
-
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
@@ -264,7 +246,6 @@ const EmployeeSignup = () => {
               <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
             )}
           </motion.div>
-
 
           <motion.div
             variants={primaryVariants}
@@ -285,7 +266,6 @@ const EmployeeSignup = () => {
             )}
           </motion.div>
 
-
           <motion.div
             variants={primaryVariants}
             className="mb-4 w-full relative"
@@ -299,12 +279,11 @@ const EmployeeSignup = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-           <MdWork className="absolute top-5 right-5 size-5 text-white" />
+            <MdWork className="absolute top-5 right-5 size-5 text-white" />
             {errors.designtion && (
               <p className="text-red-500 text-sm mt-1">{errors.designtion}</p>
             )}
           </motion.div>
-
 
           <motion.div
             variants={primaryVariants}
@@ -320,61 +299,48 @@ const EmployeeSignup = () => {
             )}
           </motion.div>
 
+          {/* Gender Field */}
+          <motion.div
+            variants={primaryVariants}
+            className="mb-4 w-full relative"
+          >
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="bg-black border-2 border-[#b74b279d] text-white w-full p-2 rounded"
+              required
+            >
+              <option value="" disabled>
+                Select Your Gender
+              </option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            {errors.gender && (
+              <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+            )}
+          </motion.div>
 
-
-{/* Gender Field */}
-<motion.div
-  variants={primaryVariants}
-  className="mb-4 w-full relative"
->
-  <select
-    value={gender}
-    onChange={(e) => setGender(e.target.value)}
-    className="bg-black border-2 border-[#b74b279d] text-white w-full p-2 rounded"
-    required
-  >
-    <option value="" disabled>
-      Select Your Gender
-    </option>
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-    <option value="other">Other</option>
-  </select>
-  {errors.gender && (
-    <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
-  )}
-</motion.div>
-
-
-         
-
-       <motion.div
-  variants={primaryVariants}
-  className="mb-4 w-full relative"
->
-  <div className="w-full"> {/* Wrap DatePicker in a full-width div */}
-    <DatePicker
-      selected={dob}
-      onChange={(date:any) => setDob(date)}
-      placeholderText="Select Your Date of Birth"
-      className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full" // Use w-full for the DatePicker itself
-
-      dateFormat="MM/dd/yyyy"
-    />
-  </div>
-  {errors.dob && (
-    <p className="text-red-500 text-sm mt-1">{errors.dob}</p>
-  )}
-</motion.div>
-
-
-
-
-
-
-
-
-          
+          <motion.div
+            variants={primaryVariants}
+            className="mb-4 w-full relative"
+          >
+            <div className="w-full">
+              {" "}
+              {/* Wrap DatePicker in a full-width div */}
+              <DatePicker
+                selected={dob}
+                onChange={(date: any) => setDob(date)}
+                placeholderText="Select Your Date of Birth"
+                className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full" // Use w-full for the DatePicker itself
+                dateFormat="MM/dd/yyyy"
+              />
+            </div>
+            {errors.dob && (
+              <p className="text-red-500 text-sm mt-1">{errors.dob}</p>
+            )}
+          </motion.div>
 
           <motion.div
             variants={primaryVariants}
@@ -395,29 +361,24 @@ const EmployeeSignup = () => {
             )}
           </motion.div>
 
-
           <motion.div
-  variants={primaryVariants}
-  className="mb-2 w-full relative"
->
-  <Input
-    id="employee-code-input"
-    placeholder="Enter Your Employee Code"
-    type="text"
-    value={employeeCode}
-    onChange={(e: any) => setEmployeeCode(e.target.value)}
-    className="bg-black border-2 border-[#b74b279d] text-white"
-    required
-  />
-  <MdBadge className="absolute top-5 right-5 size-5 text-white" />
-  {errors.employeeCode && (
-    <p className="text-red-500 text-sm mt-1">{errors.employeeCode}</p>
-  )}
-</motion.div>
-
-
-
-
+            variants={primaryVariants}
+            className="mb-2 w-full relative"
+          >
+            <Input
+              id="employee-code-input"
+              placeholder="Enter Your Employee Code"
+              type="text"
+              value={employeeCode}
+              onChange={(e: any) => setEmployeeCode(e.target.value)}
+              className="bg-black border-2 border-[#b74b279d] text-white"
+              required
+            />
+            <MdBadge className="absolute top-5 right-5 size-5 text-white" />
+            {errors.employeeCode && (
+              <p className="text-red-500 text-sm mt-1">{errors.employeeCode}</p>
+            )}
+          </motion.div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2 mt-6">
             <motion.button
@@ -440,7 +401,7 @@ const EmployeeSignup = () => {
               type="submit"
               className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
             >
-              Done
+              Sign Up
             </motion.button>
           </div>
         </form>

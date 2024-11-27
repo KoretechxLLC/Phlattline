@@ -13,11 +13,10 @@ const CoursesResults = ({ height = 280 }) => {
   const dispatch: any = useDispatch();
   const { usercourses } = useSelector((state: RootState) => state.courses);
 
-
   const { userData } = useSelector((state: RootState) => state.auth);
   const { theme: mode } = useTheme();
 
-  const isLoading = false; 
+  const isLoading = false;
 
   const courseStatusCounts = {
     notStarted: 0,
@@ -25,7 +24,7 @@ const CoursesResults = ({ height = 280 }) => {
     completed: 0,
   };
 
-  usercourses.forEach((course:any) => {
+  usercourses.forEach((course: any) => {
     if (course.status === "notStarted") courseStatusCounts.notStarted++;
     else if (course.status === "inprogress") courseStatusCounts.inProgress++;
     else if (course.status === "completed") courseStatusCounts.completed++;
@@ -103,7 +102,7 @@ const CoursesResults = ({ height = 280 }) => {
     <div className="relative w-full min-h-[200px]  md:h-[250px] 4xl:h-[220px] lg:h-[330px]">
       {isLoading ? (
         <div className="flex items-center justify-center h-full">
-          <Spinner height="80vh" /> 
+          <Spinner height="30px" width="30px" />
         </div>
       ) : isDataEmpty ? (
         <div className="flex items-center justify-center h-full">
@@ -121,7 +120,9 @@ const CoursesResults = ({ height = 280 }) => {
           {/* Custom labels */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-white text-xl font-bold">inProgress</span>
-            <span className="text-[#FDF53F] text-xl">{courseStatusCounts.inProgress}</span>
+            <span className="text-[#FDF53F] text-xl">
+              {courseStatusCounts.inProgress}
+            </span>
           </div>
         </>
       )}

@@ -16,13 +16,14 @@ import ProfilePage from "@/app/components/profilePage";
 
 const Settings = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
-  const [activeTab, setActiveTab] = useState<string>("profilesettings");
+
   const [loading, setLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("profilesettings");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
     null
   );
 
-  const id = userData?.user_type_id;
+  const userType = userData?.user_type_id;
 
   const handleTabChange = (tab: string) => {
     setLoading(true);
@@ -50,16 +51,16 @@ const Settings = () => {
   };
 
   const renderContent = () => {
-    if (id === 1 || id === 3) {
+    if (userType === 1 || userType === 3) {
       switch (activeTab) {
         case "profilesettings":
           return <ProfileSettings />;
         case "billingmethod":
           return <BillingMethod />;
         default:
-          return <div>Select a tab to get started.</div>;
+          return <ProfileSettings />;
       }
-    } else if (id === 2) {
+    } else if (userType === 2) {
       if (activeTab === "employee" && selectedEmployeeId) {
         return <ProfilePage employeeId={selectedEmployeeId} />;
       }
@@ -76,9 +77,9 @@ const Settings = () => {
           return <SystemLogs />;
         case "departments":
           return <Departments />;
+        default:
+          return <OrganizationSetting />;
       }
-    } else {
-      return <div>User type not recognized.</div>;
     }
   };
 
@@ -86,12 +87,12 @@ const Settings = () => {
     <>
       {loading ? (
         <div className="text-center text-gray-300">
-          <Spinner height="20vh" />
+          <Spinner height="30px" width="30px" />
         </div>
       ) : (
         <div className="4xl:my-0 lg:my-24 5xl:my-0">
           <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 justify-start items-start my-2">
-            {id === 1 && (
+            {(userType === 1 || userType === 3) && (
               <>
                 <div className="relative">
                   <Button
@@ -128,8 +129,8 @@ const Settings = () => {
               </>
             )}
 
-            {/* Additional Tabs for Admin (ID 2) */}
-            {id === 2 && (
+            {/* Admin UserType 2 Tabs */}
+            {userType === 2 && (
               <>
                 {/* Organization Setting */}
                 <div className="relative">

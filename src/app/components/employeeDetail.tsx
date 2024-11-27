@@ -19,6 +19,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useSearchParams } from "next/navigation";
+import WriteReviewModal from "./writeReview";
 
 interface Employee {
   id: number;
@@ -62,6 +63,7 @@ interface PageProps {
 
 const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
   const [timeLogSpent, setTimeLogSpent] = useState(0);
+  const [isReviewModalOpen, setReviewModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState<any>();
@@ -291,7 +293,12 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
             </div>
             <span className="text-lg text-white">4.8</span>
           </div>
-          <Button color="primary">Write Review</Button>
+          <Button
+            color="primary"
+            onClick={() => setReviewModalOpen(true)} // Open modal
+          >
+            Write Review
+          </Button>
         </div>
       </div>
       <div className="lg:col-span-1">
@@ -408,6 +415,11 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
           </Card>
         </div>
       </div>
+      <WriteReviewModal
+        open={isReviewModalOpen}
+        onClose={() => setReviewModalOpen(false)} // Close modal
+        employeeName={data.name} // Pass employee name to modal
+      />
     </div>
   );
 };

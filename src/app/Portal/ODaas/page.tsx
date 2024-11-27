@@ -62,7 +62,7 @@ const OdaasStrategic = () => {
     // Display a loader while loading
     return (
       <div className="flex items-center justify-center h-screen">
-        <Spinner />
+        <Spinner height="30px" width="30px" />
       </div>
     );
   }

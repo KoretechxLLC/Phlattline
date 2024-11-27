@@ -1,29 +1,43 @@
 "use client";
 import React from "react";
+import { Badge } from "./badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/Card";
 
 const EmpRating = ({ rating }: { rating: number }) => {
   const maxStars = 5; // Total number of stars
 
   return (
-    <div className="border-[1px] border-gray-500 rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] p-12 w-[80%] mx-auto">
-      <div className="text-center text-white text-2xl font-bold mb-2">Rating</div>
-      {/* Stars */}
-      <div className="flex justify-center items-center space-x-1 mb-4">
-        {/* Always Full Stars */}
-        {[...Array(maxStars)].map((_, index) => (
-          <span key={`full-${index}`} className="text-white text-3xl">
-            ★
-          </span>
-        ))}
-      </div>
+    <Card>
+      <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-gray-900">
+        <CardTitle className="text-center text-white text-xs sm:text-md mb-0">
+          Rating
+        </CardTitle>
+      </CardHeader>
 
-      {/* Rating Score */}
-      <div className="flex justify-center">
-        <span className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-red-500 text-white font-bold text-lg rounded-full">
-          {rating.toFixed(1)} / {maxStars}
-        </span>
-      </div>
-    </div>
+      {/* Stars */}
+      <CardContent className="bg-black border border-[#62626280] flex flex-col items-center justify-center rounded-b-lg p-16">
+        {/* Full Stars */}
+        <div className="flex justify-center mb-4">
+          {[...Array(maxStars)].map((_, index) => (
+            <span key={`full-${index}`} className="text-white text-3xl">
+              ★
+            </span>
+          ))}
+        </div>
+
+        {/* Rating Badge */}
+        <div className="inline-block bg-default-900 text-default-100 px-2.5 py-1 text-xl font-medium rounded-full min-w-[60px]">
+          <Badge className="bg-gradient-to-b text-xl from-[#B50D34] to-[#BAA716] whitespace-nowrap">
+            {rating.toFixed(1)}
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

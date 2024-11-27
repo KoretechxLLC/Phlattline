@@ -330,7 +330,7 @@ const OrganizationSignup = () => {
               type="submit"
               className="theme-gradient mb-1.5 w-full sm:w-40 rounded-lg px-4 py-2 text-center font-medium text-white transition-colors"
             >
-              Done
+              Sign Up
             </motion.button>
           </div>
         </form>

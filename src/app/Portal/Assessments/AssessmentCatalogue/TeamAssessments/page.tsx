@@ -13,7 +13,7 @@ import { Button } from "@/app/components/button-sidebar";
 import GraphLoader from "@/app/components/graphLoader";
 import Spinner from "@/app/components/Spinner";
 
-const IndividualAssessments = () => {
+const TeamAssessments = () => {
   const [assessmentData, setAssessmentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -116,4 +116,4 @@ const IndividualAssessments = () => {
   );
 };
 
-export default IndividualAssessments;
+export default TeamAssessments;

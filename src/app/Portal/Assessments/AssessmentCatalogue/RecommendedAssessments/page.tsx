@@ -11,8 +11,9 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/app/components/button-sidebar";
 import GraphLoader from "@/app/components/graphLoader"; // Import GraphLoader
+import Spinner from "@/app/components/Spinner";
 
-const AssessmentsCatalogue = () => {
+const RecommendedAssessments = () => {
   const [assessmentData, setAssessmentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -76,7 +77,7 @@ const AssessmentsCatalogue = () => {
     <div className="w-full mx-auto px-8">
       {loading ? (
         <div className="text-center text-gray-300 py-12">
-          <GraphLoader />
+          <Spinner height="30px" width="30px" />
         </div>
       ) : assessmentData && assessmentData.length > 0 ? (
         <>
@@ -120,4 +121,4 @@ const AssessmentsCatalogue = () => {
   );
 };
 
-export default AssessmentsCatalogue;
+export default RecommendedAssessments;

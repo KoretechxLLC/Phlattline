@@ -60,7 +60,7 @@ const BasicDonut = ({ height = 200 }) => {
   return (
     <div className="relative w-full h-[280px] sm:h-[320px] md:h-[400px] 4xl:h-[190px] lg:h-[200px]">
       {isLoading ? (
-        <Spinner height="20vh" /> // Show spinner when loading
+        <Spinner height="30px" width="30px" />
       ) : isDataEmpty ? (
         <div className="text-gray-500">No data found</div> // Message when no data is found
       ) : (

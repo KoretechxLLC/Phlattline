@@ -103,6 +103,7 @@ const DesigningInterventions = () => {
           arrowImageSrc="/assets/ArrowRightUp.png"
           showModalOnClick={true}
           isClickable={true}
+          modalType="employee"
         />
       </div>
       <EmployeeModal open={isModalOpen} onClose={handleCloseModal} />

@@ -75,7 +75,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
   return (
     <div className="relative  h-[280px] sm:h-[320px] md:h-[400px] 4xl:h-[190px] lg:h-[280px]">
       {isLoading ? (
-        <Spinner height="20vh" /> // Show spinner when loading
+        <Spinner height="30px" width="30px" />
       ) : series.length === 0 ? (
         <div className="text-gray-500">No data found</div> // Message when no data is found
       ) : (

@@ -6,26 +6,24 @@ import SmartGoalForm from "@/app/components/SmartGoalForm";
 import TimeManagement from "@/app/components/TimeManangment";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/Card";
-import PersonalGoals from "@/app/components/PersonalGoalsTracker";
-import SuggestionTabs from "@/app/components/SuggestionTabs";
-import {
   resetError,
   resetSuccess,
   submitGoal,
 } from "@/redux/slices/performanceManagement.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
+import VacantJobs from "@/app/components/vacantjobs";
 
 export type NotificationType = {
   id: number;
   text: string;
   type: "error" | "success";
 };
+
+const jobs = [
+  { id: 1, title: "Finance Officer" },
+  { id: 2, title: "Taxation" },
+];
 
 const PerformanceManagement = () => {
   const [notification, setNotification] = useState<NotificationType | null>(
@@ -35,6 +33,7 @@ const PerformanceManagement = () => {
     (state: RootState) => state.performance
   );
   const { userData } = useSelector((state: RootState) => state.auth);
+  const userType = userData?.user_type_id;
   const dispatch: any = useDispatch();
   const [loading, setLoading] = useState<boolean>(false); // Initialize loading state
 
@@ -88,10 +87,12 @@ const PerformanceManagement = () => {
           }}
           className="mx-auto grid max-w-[100%] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
-          <div>
-            <SmartGoalForm handleAddGoal={handleAddGoal} success={success} />
-          </div>
-          <div className="space-y-5">
+          {userType === 1 && (
+            <div>
+              <SmartGoalForm handleAddGoal={handleAddGoal} success={success} />
+            </div>
+          )}
+          <div className="col-span-1 space-y-5">
             <TasksTracker
               showPending={true}
               showCompleted={true}
@@ -100,29 +101,13 @@ const PerformanceManagement = () => {
               label={"Goals"}
               isClickable={false}
             />
-            <Card className="border border-[#62626280] rounded-3xl shadow-md w-full">
-              <CardHeader className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
-                <CardTitle>Your Desired Job</CardTitle>
-              </CardHeader>
-              <CardContent className="4xl:my-8 my-16">
-                <PersonalGoals showAvatar={true} />
-              </CardContent>
-            </Card>
-          </div>
-          {/* Combined TasksTracker and PersonalGoals in one column */}
-          <div>
-            <TimeManagement />
+            <VacantJobs jobs={jobs} />
           </div>
 
-          {/* Suggestions Section */}
-          {/* <div className="my-2 flex flex-col col-span-1  md:col-span-2 lg:col-span-3">
-            <CardTitle>Your Desired Personal Goals</CardTitle>
-            <div className="flex space-x-4 my-1">
-              {suggestions.map((suggestion, index) => (
-                <SuggestionTabs key={index} Suggestion={suggestion} />
-              ))}
-            </div>
-          </div> */}
+          {/* Combined TasksTracker and PersonalGoals in one column */}
+          <div className="col-span-2">
+            <TimeManagement />
+          </div>
         </motion.div>
       </div>
     </>

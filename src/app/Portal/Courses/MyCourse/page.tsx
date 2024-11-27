@@ -81,8 +81,8 @@ const MyCourses = () => {
         <div className="space-y-4 md:space-y-2 ml-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {loading ? (
-              <div className="col-span-3 flex justify-center items-center">
-                <Spinner height="20vh" />
+              <div className="col-span-3 flex justify-center items-center py-5">
+                <Spinner height="30px" width="30px" />
               </div>
             ) : displayedCourses && displayedCourses.length > 0 ? (
               <>
@@ -108,7 +108,7 @@ const MyCourses = () => {
           </div>
 
           <div>
-            {!showAll && !loading && (
+            {!showAll && !loading && courses.length === 0 && (
               <Button
                 className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-10 justify-center items-center rounded-3xl my-2"
                 size="default"

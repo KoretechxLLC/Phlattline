@@ -1,11 +1,66 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Card } from "@/app/components/Card";
 import { Badge } from "./badge";
 import Icon from "./utility-icon";
 
 const customers = [
+  {
+    title: "Nicole Kidman",
+    img: "/assets/UserProfile.png",
+    designation: "Finance",
+    value: 3.8,
+    bg: "before:bg-info/30",
+    barColor: "info",
+    number: 2,
+  },
+  {
+    title: "Monica Bellucci",
+    img: "/assets/UserProfile.png",
+    designation: "Finance",
+    value: 3.8,
+    bg: "before:bg-warning/30",
+    barColor: "warning",
+    active: true,
+    number: 1,
+  },
+  {
+    title: "Pamela Anderson",
+    img: "/assets/UserProfile.png",
+    designation: "Finance",
+    value: 3.8,
+    bg: "before:bg-success/30",
+    barColor: "success",
+    number: 3,
+  },
+  {
+    title: "Dianne Russell",
+    img: "/assets/UserProfile.png",
+    designation: "Finance",
+    value: 3.8,
+    bg: "before:bg-info/30",
+    barColor: "info",
+    number: 4,
+  },
+  {
+    title: "Robert De Niro",
+    img: "/assets/UserProfile.png",
+    designation: "Finance",
+    value: 3.8,
+    bg: "before:bg-warning/30",
+    barColor: "warning",
+    number: 5,
+  },
+  {
+    title: "De Niro",
+    img: "/assets/UserProfile.png",
+    designation: "Finance",
+    value: 3.8,
+    bg: "before:bg-warning/30",
+    barColor: "warning",
+    number: 6,
+  },
   {
     title: "Nicole Kidman",
     img: "/assets/UserProfile.png",
@@ -110,15 +165,42 @@ const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
   const displayedCustomers = numReviews
     ? customers.slice(0, numReviews)
     : customers;
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
+
+  const handleScrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 250, // Adjust scroll amount as necessary
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
-    <Card className="w-full pb-2">
+    <Card className="w-full py-3">
       <div className="relative w-full">
-        <div className="flex space-x-2 pb-3 w-full">
+        {/* Scrollable container */}
+        <div
+          ref={scrollContainerRef}
+          className="flex space-x-2 pb-3 w-full overflow-hidden scrollbar-hide "
+        >
           {displayedCustomers.map((item, i) => (
             <CustomerCard item={item} key={`customer-${i}`} />
           ))}
         </div>
+
+        {/* Right Scroll Button */}
+        <button
+          onClick={handleScrollRight}
+          className="absolute right-2 z-50 top-1/2 transform -translate-y-1/2  p-2 rounded-full"
+        >
+          <Icon
+            icon="tabler:chevron-right"
+            className="w-10 h-10  text-[#B50D34]"
+          />
+        </button>
       </div>
     </Card>
   );

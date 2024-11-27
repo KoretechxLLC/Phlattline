@@ -142,6 +142,7 @@ const CourseReport = () => {
         arrowImageSrc="/assets/ArrowRightUp.png"
         showModalOnClick={true}
         isClickable={true}
+        modalType="spring"
       />
 
       <Card className="border h-full border-gray-500 rounded-3xl">
@@ -151,7 +152,7 @@ const CourseReport = () => {
         <CardContent>
           <div className="pb-3 pt-1">
             {loading ? (
-              <Spinner />
+              <Spinner height="30px" width="30px" />
             ) : (
               <ul>
                 {currentCourses.map((course: any) => (
