@@ -252,12 +252,12 @@ const TasksTracker = ({
                 ))
             ) : (
               <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-                No pending goals found
+                No goals found
               </li> // Fallback for no pending goals
             )
           ) : (
             <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-              No pending goals found
+              No goals found
             </li> // Fallback if no goals exist at all
           )
         ) : activeTab === "completed" ? (
@@ -314,13 +314,13 @@ const TasksTracker = ({
                 ))
             ) : (
               <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-                No completed goals found
+                No tasks found
               </li> // Fallback for no completed goals
             )
           ) : (
             <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
               {" "}
-              No completed goals found
+              No tasks found
             </li> // Fallback if no goals exist at all
           )
         ) : (

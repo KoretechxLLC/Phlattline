@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createTrainingOnDemand } from "@/redux/slices/traningdemand.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications from "./Stackednotification";
+import EmployeeModal from "./employeeModal";
 
 interface TabButtonProps {
   backgroundColor: string;
@@ -22,6 +23,7 @@ interface TabButtonProps {
   showModalOnClick: boolean;
   isClickable: boolean;
   redirectTo?: string;
+  modalType?: "spring" | "employee"; // New prop to decide modal type
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
@@ -33,22 +35,26 @@ const TabButton: React.FC<TabButtonProps> = ({
   showModalOnClick,
   isClickable,
   redirectTo,
+  modalType = "spring", // Default to "spring"
 }) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-
-  // const handleButtonClick = () => {
-  //   if (showModalOnClick) {
-  //     setIsOpen(true);
-  //   }
-  // };
+  const [isSpringModalOpen, setIsSpringModalOpen] = useState(false);
+  const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
 
   const handleButtonClick = () => {
     if (redirectTo) {
       router.push(redirectTo); // Redirect if URL is provided
     } else if (showModalOnClick) {
-      setIsOpen(true); // Open modal if showModalOnClick is true
+      if (modalType === "spring") {
+        setIsSpringModalOpen(true);
+      } else if (modalType === "employee") {
+        setIsEmployeeModalOpen(true);
+      }
     }
+  };
+
+  const handleCloseEmployeeModal = () => {
+    setIsEmployeeModalOpen(false);
   };
 
   return (
@@ -84,7 +90,15 @@ const TabButton: React.FC<TabButtonProps> = ({
         />
       </div>
 
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      {/* Conditionally render modals */}
+      <SpringModal
+        isOpen={isSpringModalOpen}
+        setIsOpen={setIsSpringModalOpen}
+      />
+      <EmployeeModal
+        open={isEmployeeModalOpen}
+        onClose={handleCloseEmployeeModal}
+      />
     </div>
   );
 };

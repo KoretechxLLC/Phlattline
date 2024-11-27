@@ -82,6 +82,7 @@ model employees {
   departmentId       Int?
   date_of_birth      DateTime?            @db.Date
   designation        String?              @db.VarChar(100)
+  profile_image      String?              @db.VarChar(255)
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
   department         department?          @relation(fields: [departmentId], references: [id])

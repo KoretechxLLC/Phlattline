@@ -26,7 +26,7 @@ const SuggestionTabs: React.FC = () => {
     <div>
       {loading ? (
         <Card className="w-full h-full 4xl:p-4 p-8 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-          <Spinner height="5vh" />
+          <Spinner height="30px" width="30px" />
         </Card>
       ) : suggestions.length > 0 ? (
         <Card className="w-full  4xl:py-3 4xl:px-6 p-7">

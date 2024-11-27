@@ -61,14 +61,14 @@ export function MenuClassic() {
   if (userData?.user_type_id === 3) {
     menus.push(
       {
-        href: "ExploreJobs",
-        label: "Explore Jobs",
-        icon: "/assets/ExploreJobsLogo.png",
-      },
-      {
         href: "PerformanceManagement",
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
+      },
+      {
+        href: "ExploreJobs",
+        label: "Explore Jobs",
+        icon: "/assets/ExploreJobsLogo.png",
       },
       { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
     );
@@ -114,7 +114,7 @@ export function MenuClassic() {
       </ul>
 
       {/* Menu Widget without list dot */}
-      {userData && userData.length && userData?.user_type_id === 2 && (
+      {userData && userData?.user_type_id === 2 && (
         <li className="w-full list-none pl-3 pb-8">
           <MenuWidget
             isActive={activeMenu === "/Portal/ODaas"}

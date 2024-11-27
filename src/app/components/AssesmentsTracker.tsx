@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import GraphLoader from "./graphLoader";
+import Spinner from "./Spinner";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -267,11 +267,11 @@ const AsessmentTracker = ({
   return (
     <>
       {responseLoading ? (
-        <div className="text-center text-gray-300">
-          <GraphLoader />
+        <div className="text-center text-gray-300 py-5">
+          <Spinner height="30px" width="30px" />
         </div>
       ) : data && data.length > 0 ? (
-        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[150px] ">
+        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[180px] ">
           <Chart
             options={options}
             series={series}

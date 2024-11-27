@@ -37,7 +37,7 @@ const AssignmentTabs: React.FC = () => {
     <div className="flex overflow-x-auto space-x-4">
       {loading ? (
         <Card className="w-full h-full 4xl:p-4 p-8 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80]">
-          <Spinner height="5vh" />
+          <Spinner height="30px" width="30px" />
         </Card>
       ) : (
         <>

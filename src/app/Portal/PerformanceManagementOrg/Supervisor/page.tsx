@@ -22,7 +22,7 @@ import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
 import EmployeesDesiredJobTab from "@/app/components/employeesDesiredJobTab";
 
-import PerformanceReviews from "@/app/components/performanceReviews";
+import PerformanceReviews from "@/app/components/performanceReviewsTab";
 import PerformanceDeptsChart from "@/app/components/performanceDeptCharts";
 import OrganizationGoalsTab from "@/app/components/orgGoalsTab";
 
@@ -72,12 +72,6 @@ const Supervisor = () => {
     }
   }, [success, error, dispatch]);
 
-  const suggestions = [
-    "Define Clear Strategic Goals",
-    "Improve Time Management Skills",
-    "Increase Team Collaboration",
-  ];
-
   return (
     <>
       <div className="px-4 text-zinc-50">
@@ -109,7 +103,7 @@ const Supervisor = () => {
               <CardHeader className="h-16 rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80]">
                 <CardTitle>Performance Reviews</CardTitle>
               </CardHeader>
-              <PerformanceReviews numReviews={3} />
+              <PerformanceReviews />
             </div>
           </div>
           {/* Combined TasksTracker and PersonalGoals in one column */}
@@ -117,8 +111,6 @@ const Supervisor = () => {
             <OrganizationGoalsTab />
             <PerformanceDeptsChart />
           </div>
-
-          {/* Suggestions Section */}
         </motion.div>
       </div>
     </>

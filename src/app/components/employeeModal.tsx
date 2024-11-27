@@ -46,22 +46,18 @@ const EmployeeModal = ({
         {/* Adjusted width */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-700 hover:text-red-500"
+          className="absolute top-4 right-3 text-gray-700 hover:text-red-500"
         >
           <Icon icon="ic:outline-close" className="text-3xl" />
         </button>
         {/* Title Section */}
-        <div className="px-5 py-2 text-center">
-          <select className="w-full p-2 rounded-xl h-14 bg-[#fff]] text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#626262]">
-            <option value="" disabled>
-              Department
-            </option>
-            <option value="Personal">Personal</option>
-            <option value="Professional">Professional</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Financial">Financial</option>
+        <div className="px-5 py-4 text-center ">
+          <select className="w-full p-2 rounded-xl h-14 bg-[#fff]] border border-[#626262]  text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#626262]">
+            <option value="">Department</option>
+            <option value="IT">IT</option>
+            <option value="Sales">Sales</option>
+            <option value="Marketing">Marketing</option>
           </select>
-          <h1 className="text-3xl font-bold text-black">Employee List</h1>
         </div>
         {/* Employee List Section */}
         <div className="overflow-y-auto flex-grow">
@@ -71,7 +67,7 @@ const EmployeeModal = ({
                 key={index}
                 className={`${
                   index < coachingData.length - 1
-                    ? "border-b border-gray-500"
+                    ? "border-b border-gray-200"
                     : ""
                 }`}
               >
@@ -88,7 +84,7 @@ const EmployeeModal = ({
                       <span className="font-semibold text-black">
                         {coach.name}
                       </span>
-                      <span className="text-gray-600 text-sm">
+                      <span className="text-red-600 text-sm">
                         {coach.email}
                       </span>{" "}
                       {/* Email below name */}

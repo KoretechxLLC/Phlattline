@@ -95,7 +95,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   return (
     <>
       {loading ? (
-        <Spinner />
+        <Spinner height="30px" width="30px" />
       ) : (
         <div
           className="p-5 grid grid-cols-1 md:grid-cols-[70%_30%] gap-5 bg-default-50 w-full h-full rounded-lg"
@@ -215,6 +215,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                     arrowImageSrc="/assets/ArrowRightUp.png"
                     showModalOnClick={true}
                     isClickable={true}
+                    modalType="spring"
                   />
                 </div>
               </div>

@@ -110,7 +110,7 @@ const OrganizationAssessmentForm = () => {
   if (loading) {
     return (
       <div className="text-center text-gray-300">
-        <Spinner height="80vh" />
+        <Spinner height="30px" width="30px" />
       </div>
     );
   }

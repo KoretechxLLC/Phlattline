@@ -9,7 +9,7 @@ import {
 } from "@/app/components/Card";
 
 import InterviewTab from "@/app/components/interviewsTab";
-import PerformanceReviews from "@/app/components/performanceReviews";
+import PerformanceReviews from "@/app/components/performanceReviewsTab";
 
 const DataCollection = () => {
   // Static array of interview data

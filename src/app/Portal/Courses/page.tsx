@@ -54,8 +54,8 @@ const Courses = () => {
         {/* Left side: Courses List */}
         <div className="space-y-4 md:space-y-2 ml-4 w-full">
           {isLoading ? (
-            <div className="text-center text-gray-300 ">
-              <Spinner height="20vh" />
+            <div className="text-center text-gray-300 py-5">
+              <Spinner height="30px" width="30px" />
             </div>
           ) : (
             <>
@@ -138,6 +138,7 @@ const Courses = () => {
               arrowImageSrc="/assets/ArrowRightUp.png"
               showModalOnClick={true}
               isClickable={true}
+              modalType="spring"
             />
           </div>
         </div>
