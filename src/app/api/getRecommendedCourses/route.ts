@@ -66,7 +66,6 @@ export async function GET(req: NextRequest) {
           }
         }
       }
-
       return acc;
     }, []);
 
@@ -75,8 +74,9 @@ export async function GET(req: NextRequest) {
       const avgPercentage =
         assessment.percentages.reduce((sum: any, val: any) => sum + val, 0) /
         assessment.percentages.length;
-      return avgPercentage < 90;
+      return avgPercentage < 50;
     });
+
 
     if (!belowThresholdAssessments.length) {
       return NextResponse.json(

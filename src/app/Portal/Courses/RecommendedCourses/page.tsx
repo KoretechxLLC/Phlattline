@@ -13,6 +13,7 @@ import {
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
 import { FaExclamationCircle } from "react-icons/fa";
+import { log } from "console";
 
 const RecommendedCourses = () => {
   const router = useRouter();
@@ -109,8 +110,8 @@ const RecommendedCourses = () => {
 
       // Combine coursesData and recommendedCourses
       const combinedCourses = [
-        ...(coursesData || []),
         ...(recommendedCourses || []),
+        ...(coursesData || []),
       ];
 
       // Filter out duplicates and purchased courses
