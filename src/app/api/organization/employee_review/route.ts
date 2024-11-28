@@ -118,9 +118,9 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error fetching assessment", error);
+    console.error("Error fetching reviews", error);
     return NextResponse.json(
-      { error: error.message || "Failed to fetch assessment" },
+      { error: error.message || "Failed to fetch review" },
       { status: 500 }
     );
   }
