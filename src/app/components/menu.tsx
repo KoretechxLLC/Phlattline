@@ -65,11 +65,11 @@ export function MenuClassic() {
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
       },
-      {
-        href: "ExploreJobs",
-        label: "Explore Jobs",
-        icon: "/assets/ExploreJobsLogo.png",
-      },
+      // {
+      //   href: "ExploreJobs",
+      //   label: "Explore Jobs",
+      //   icon: "/assets/ExploreJobsLogo.png",
+      // },
       { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
     );
   }
