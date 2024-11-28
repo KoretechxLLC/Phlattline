@@ -12,20 +12,17 @@ import Spinner from "./Spinner"; // Assuming this is your spinner component
 import WorkshopModal from "./WorkshopModal"; // Import the modal component
 
 const Workshops = () => {
-  // State to manage workshop data
   const [workshops, setWorkshops] = useState<
     { id: number; image: string; title: string; description: string }[]
   >([]);
-  const [loading, setLoading] = useState<boolean>(true); // State for loader
-  const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null); // State for selected workshop
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Modal visibility
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    // Simulating an API call to fetch workshops
     const fetchWorkshops = async () => {
       setLoading(true);
       setTimeout(() => {
-        // Simulate data
         const data = [
           {
             id: 1,
@@ -49,7 +46,7 @@ const Workshops = () => {
 
         setWorkshops(data);
         setLoading(false);
-      }, 2000); // 2-second delay to simulate API call
+      }, 2000);
     };
 
     fetchWorkshops();
@@ -66,54 +63,59 @@ const Workshops = () => {
   };
 
   return (
-    <div>
-      <Card className="border border-gray-500 p-3 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-        <CardHeader>
-          <CardTitle>Workshops</CardTitle>
+    <div className="px-1 ">
+      <Card className="border border-gray-500 rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] shadow-lg">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-white">
+            Workshops
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           {loading ? (
-            // Show loader when data is being fetched
-            <div className="flex justify-center items-center h-48">
-              <Spinner height="30px" width="30px" />
+            <div className="flex justify-center items-center h-64">
+              <Spinner height="40px" width="40px" />
             </div>
           ) : workshops.length > 0 ? (
-            // Render workshops if found
-            <div className="flex space-x-12">
-              {workshops.map((workshop, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {workshops.map((workshop) => (
                 <div
-                  className="border border-gray-500 rounded-3xl p-5"
                   key={workshop.id}
+                  className="border border-gray-400 rounded-2xl p-5  shadow-md hover:shadow-lg transition-shadow"
                 >
                   <Image
                     src={workshop.image}
                     width={1000}
                     height={1000}
                     alt={workshop.title}
-                    className="w-full h-24 object-cover"
+                    className="w-full h-36 object-cover rounded-lg"
                   />
-                  <span className="block text-lg font-semibold mt-2">
-                    {workshop.title}
-                  </span>
-                  <Button
-                    color="primary"
-                    onClick={() => handleViewClick(workshop)}
-                  >
-                    View
-                  </Button>
+                  <div className="flex justify-between items-center mt-4">
+                    <h3 className="text-md font-semibold text-white">
+                      {workshop.title}
+                    </h3>
+                    <Button
+                      color="primary"
+                      size="sm"
+                      onClick={() => handleViewClick(workshop)}
+                      className="py-1 px-2 text-sm rounded-3xl"
+                    >
+                      View
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-300 mt-2">
+                    {workshop.description}
+                  </p>
                 </div>
               ))}
             </div>
           ) : (
-            // Render "No workshops found" message if no workshops are available
-            <div className="text-center text-gray-500 py-8">
-              No Workshops Found
+            <div className="flex flex-col justify-center items-center h-64 text-gray-500">
+              <p className="text-lg font-medium">No Workshops Found</p>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Workshop Modal */}
       {isModalOpen && (
         <WorkshopModal open={isModalOpen} onClose={handleCloseModal} />
       )}

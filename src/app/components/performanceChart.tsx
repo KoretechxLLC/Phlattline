@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { hexToRGB } from "@/app/lib/utils";
 import { useConfig } from "@/app/hooks/use-config";
 
-const PerformanceChart = ({ height = 350 }) => {
+const PerformanceChart = ({ height = 210 }) => {
   const [config] = useConfig();
   const { theme: mode } = useTheme();
 

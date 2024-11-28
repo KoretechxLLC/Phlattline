@@ -117,7 +117,11 @@ const CoursesAssigner = ({
           </select>
 
           {/* Assign Button */}
-          <Button onClick={handleAssign} color="primary" className="my-2">
+          <Button
+            onClick={handleAssign}
+            color="primary"
+            className="my-2 rounded-3xl"
+          >
             {loading ? <Spinner height="20px" width="20px" /> : "Assign"}
           </Button>
         </CardContent>

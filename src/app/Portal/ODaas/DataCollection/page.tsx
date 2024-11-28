@@ -52,9 +52,12 @@ const DataCollection = () => {
         <InterviewTab />
       </div>
 
-      <div className="col-span-1 md:col-span-2 border border-gray-500 rounded-3xl">
+      <Card className="col-span-1 md:col-span-2 border-[1px] border-gray-500 rounded-3xl  h-full">
+        <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] ">
+          <CardTitle>Performance Reviews</CardTitle>
+        </CardHeader>
         <PerformanceReviews />
-      </div>
+      </Card>
     </div>
   );
 };

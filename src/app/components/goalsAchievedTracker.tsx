@@ -33,7 +33,7 @@ const GoalsAchievedTracker: React.FC<GoalsAchievedTrackerProps> = ({
   return (
     <div>
       {loading ? (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-full py-28">
           <Spinner height="30px" width="30px" />
         </div>
       ) : goals.length > 0 ? (
@@ -77,7 +77,7 @@ const GoalsAchievedTracker: React.FC<GoalsAchievedTrackerProps> = ({
           )}
         </div>
       ) : (
-        <div className="text-center text-gray-500 py-8">No Goals Found</div>
+        <div className="text-center text-gray-500 py-28">No Goals Found</div>
       )}
     </div>
   );

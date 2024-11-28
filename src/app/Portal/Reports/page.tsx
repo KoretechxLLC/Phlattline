@@ -66,7 +66,7 @@ const Reports = () => {
   return (
     <div className="4xl:my-0 lg:my-24 5xl:my-0 relative">
       {loading ? (
-        <div className="text-center text-gray-300">
+        <div className="flex justify-center items-center w-full h-full py-72">
           <Spinner height="30px" width="30px" />
         </div>
       ) : (

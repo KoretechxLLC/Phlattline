@@ -65,7 +65,7 @@ const KeyPerformanceBar = ({ height = 280 }) => {
     },
     colors: [colors.kpi],
     tooltip: {
-      theme: mode === "dark" ? "dark" : "light",
+      theme: "dark",
     },
     grid: getGridConfig(),
     yaxis: getYAxisConfig(
@@ -128,8 +128,8 @@ const KeyPerformanceBar = ({ height = 280 }) => {
 
   return (
     <div>
-      {loading ? (
-        <div className="flex justify-center items-center py-6">
+      {!loading ? (
+        <div className="flex justify-center items-center py-24">
           <Spinner height="30px" width="30px" />
         </div>
       ) : data.length === 0 ? (

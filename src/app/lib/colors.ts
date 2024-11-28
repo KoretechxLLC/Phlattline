@@ -12,6 +12,7 @@ export const colors = {
   remaining: "#FF0000",
   chartred: "#B51532",
   chartyellow: "#B98D1B",
+  dark: "#000",
   kpi: "#656565",
   "default-800": "#1e293b",
   "default-600": "#475569",

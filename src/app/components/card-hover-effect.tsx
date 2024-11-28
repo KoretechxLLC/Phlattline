@@ -87,7 +87,7 @@ export const HoverEffect = ({
                 />
               )}
             </AnimatePresence>
-            <Card className="flex items-center justify-center">
+            <Card className="flex items-center justify-center border border-[#626262]">
               <div className="flex items-center justify-center">
                 <Image
                   src={
@@ -141,7 +141,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full 4xl:p-0 p-4 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-[#626262] relative z-20",
+        "rounded-2xl h-full w-full 4xl:p-0 p-7 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-[#626262] relative z-20",
         className
       )}
     >

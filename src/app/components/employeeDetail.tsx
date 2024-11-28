@@ -126,11 +126,10 @@ const EmployeeDetail: React.FC<PageProps> = ({
     );
   }
 
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4">
       {/* First Row: Employee Info and Goals Achieved */}
-      <div className="lg:col-span-1 flex items-center gap-6 border border-gray-500 rounded-xl p-4">
+      <div className="lg:col-span-1 flex items-center gap-6 border border-gray-500 rounded-xl px-16 py-2">
         <div className="w-40 h-40 ring-4 ring-[#B50D34] flex items-center justify-center rounded-full overflow-hidden">
           {employee?.profile_image || imgError ? (
             <Image
@@ -163,6 +162,9 @@ const EmployeeDetail: React.FC<PageProps> = ({
             <span className="block text-sm text-gray-400">
               {employee?.designation}
             </span>
+            <span className="block text-sm text-gray-400">
+              {department?.name}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
@@ -187,7 +189,11 @@ const EmployeeDetail: React.FC<PageProps> = ({
                 : employee.employee_review?.no_of_stars || 0}
             </span>
           </div>
-          <Button color="primary" onClick={() => setReviewModalOpen(true)}>
+          <Button
+            color="primary"
+            className="rounded-3xl"
+            onClick={() => setReviewModalOpen(true)}
+          >
             Write Review
           </Button>
         </div>
@@ -203,32 +209,19 @@ const EmployeeDetail: React.FC<PageProps> = ({
           </CardContent>
         </Card>
       </div>
-
-      {/* Department Info */}
-      {department && (
-        <div className="lg:col-span-2 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <Card className="border border-gray-500 rounded-3xl p-5">
-              <CardHeader>
-                <CardTitle>Department: {department.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <h3 className="text-xl font-semibold">
-                  Employees in this department:
-                </h3>
-                <ul>
-                  <li key={employee.id} className="text-lg py-2 px-2">
-                    {employee.name}
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )}
+      <div className="lg:col-span-1">
+        <Card>
+          <CardHeader>
+            <CardTitle>Performance</CardTitle>
+          </CardHeader>
+          <CardContent className="p-2">
+            <PerformanceChart />
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Second Row: Other Components */}
-      <div className="lg:col-span-2 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="lg:col-span-full grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <Card className="border h-full border-gray-500 rounded-3xl">
             <CardHeader className="flex-row gap-3">
@@ -294,41 +287,30 @@ const EmployeeDetail: React.FC<PageProps> = ({
             </div>
           </Card>
         </div>
-
-        {/* Other Components (Activity, Performance, etc.) */}
-        <div className="lg:col-span-1">
-          <Card className="border border-gray-500 rounded-3xl p-5">
+        <div className="lg:col-span-2">
+          <Card className="border border-gray-500 rounded-3xl p-0">
             <CardHeader className="flex-row gap-3">
               <CardTitle className="flex-1">Activity Hours</CardTitle>
             </CardHeader>
-            <div className="flex p-5">
+            <div className="flex space-x-2">
               <div className="w-full">
                 <ActivityHours />
               </div>
-              <div className="w-20 flex flex-col">
-                <div className="flex flex-col mt-[7em]">
-                  <span className="space-x-4 items-center flex justify-center">
-                    <span className="text-lg">
+              <div className="w-1/4 flex flex-col">
+                <div className="flex flex-col w-fit mb-3"></div>
+                <div className="flex flex-col mt-[8em]">
+                  <span className="space-x-8 items-center flex justify-center">
+                    <span className="text-2xl">
                       {timeLogSpent ? formatTimeSpent(timeLogSpent) : "0 secs"}
                     </span>
                   </span>
-                  <span className="font-bold my-1 text-lg flex justify-center items-center gap-1">
+                  <span className="font-bold my-1 text-xl flex justify-center items-center gap-1">
                     <CiClock1 />
                     Time Spent
                   </span>
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <PerformanceChart />
-            </CardContent>
           </Card>
         </div>
       </div>

@@ -105,7 +105,7 @@ const PerformanceManagement = () => {
           </div>
 
           {/* Combined TasksTracker and PersonalGoals in one column */}
-          <div className="col-span-2">
+          <div className="col-span-1">
             <TimeManagement />
           </div>
         </motion.div>

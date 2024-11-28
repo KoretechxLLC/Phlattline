@@ -110,7 +110,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   @apply bg-transparent;
 }
 
-
 .dashcode-app-calendar .fc-theme-standard td,
 .dashcode-app-calendar .fc-theme-standard th,
 .dashcode-app-calendar .fc-scrollgrid,
@@ -118,33 +117,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   @apply border-none;
 }
 
-
-
 .dashcode-app-calendar .fc-daygrid-day-top,
 .dashcode-app-calendar .fc-toolbar-title {
   @apply flex justify-center items-center 4xl:py-0 4xl:px-0 text-3xl px-2 py-1 text-center;
 }
 
-
 .dashcode-app-calendar .fc-col-header-cell {
   @apply border-none;
 }
 
-.dashcode-app-calendar .fc-daygrid-event-harness{
+.dashcode-app-calendar .fc-daygrid-event-harness {
   @apply -z-0;
 }
 
-.dashcode-app-calendar .fc-event-main{
+.dashcode-app-calendar .fc-event-main {
   @apply absolute -bottom-6 -my-3;
 }
 
-.dashcode-app-calendar .fc-daygrid-day-number{
-  @apply py-2
+.dashcode-app-calendar .fc-daygrid-day-number {
+  @apply py-2;
 }
 
- .dashcode-app-calendar .fc-daygrid-day-top{
-  @apply 4xl:h-8 4xl:text-3xl
-} 
+.dashcode-app-calendar .fc-daygrid-day-top {
+  @apply 4xl:h-8 4xl:text-3xl;
+}
+
 
 
 /* Shimmer Css */
@@ -174,50 +171,41 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 }
 
-
 .phone-input {
   @apply w-full bg-black  text-white p-5 !important;
 }
 .phone-input-button {
-
   background-color: #000 !important;
   margin-top: 0% !important;
   border: #2d2c2c80 !important;
   border-width: 0 !important;
- 
 }
-
 
 .phone-input-button:focus {
-
   background-color: #000 !important;
   margin-top: 0% !important;
   border: #2d2c2c80 !important;
   border-width: 0 !important;
 }
-.phone-input-button:hover{
-  background-color:#000 !important;
+.phone-input-button:hover {
+  background-color: #000 !important;
   margin-top: 0% !important;
   border: #2d2c2c80 !important;
   border-width: 0 !important;
 }
 
-.phone-input:hover{
-  background-color:#4a4a4a !important;
+.phone-input:hover {
+  background-color: #4a4a4a !important;
 }
-
 
 .phone-input-button:focus {
   background-color: #ff6600 !important; /* Orange background color on focus */
   color: white; /* White text color on focus */
 }
 
-
-
-
-li.country:hover, 
-li.country.highlight { 
-  background-color: #4a4a4a !important; 
+li.country:hover,
+li.country.highlight {
+  background-color: #4a4a4a !important;
   color: #fff;
 }
 
