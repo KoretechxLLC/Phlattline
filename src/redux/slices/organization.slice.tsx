@@ -1,12 +1,16 @@
 import axiosInstance from "@/app/utils/privateAxios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 interface organizationResponseState {
   responseLoading: boolean;
   responseError: string | null;
   organizationResponse: any[];
   responseSuccess: any | null;
+  addDepartmentSuccess: any | null;
+  addDepartmentError: any | null;
   employee: any[];
+  departments: any[];
   assignCoursesLoading: boolean;
   assignCoursesError: string | null;
   assignCoursesSuccess: string | null;
@@ -21,6 +25,9 @@ const initialState: organizationResponseState = {
   assignCoursesLoading: false,
   assignCoursesError: null,
   assignCoursesSuccess: null,
+  addDepartmentSuccess: null,
+  addDepartmentError: null,
+  departments: [],
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -62,6 +69,82 @@ export const assignCourses = createAsyncThunk<any, any>(
   }
 );
 
+export const fetchAllDepartment = createAsyncThunk<any, any>(
+  "organization/fetchAllDepartment",
+  async ({ organizationId }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `api/organization/manageDepartments/?organization_id=${organizationId}`
+      );
+
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const addDepartment = createAsyncThunk<any, any>(
+  "organization/addDepartment",
+  async ({ data }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `api/organization/manageDepartments`,
+        data
+      );
+
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchEmployeeByDepartment = createAsyncThunk<any, any>(
+  "organization/fetchEmployeeByDepartment",
+  async ({ departmentId }: any, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/api/auth/employee_register/?departmentId=${departmentId}`
+      );
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const addReview = createAsyncThunk<any, any>(
+  "organization/addReview",
+  async ({ data }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `api/organization/employee_review`,
+        data
+      );
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 const organizationSlice = createSlice({
   name: "organizationResponse",
   initialState,
@@ -69,10 +152,12 @@ const organizationSlice = createSlice({
     resetSuccess(state) {
       state.responseSuccess = false;
       state.assignCoursesSuccess = null;
+      state.addDepartmentSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
       state.assignCoursesError = null;
+      state.addDepartmentError = null;
     },
   },
   extraReducers: (builder) => {
@@ -80,8 +165,6 @@ const organizationSlice = createSlice({
       // Fetch Assessments
       .addCase(fetchAllEmployee.pending, (state) => {
         state.responseLoading = true;
-        state.responseError = null;
-        state.responseSuccess = false;
       })
       .addCase(fetchAllEmployee.fulfilled, (state, action) => {
         state.responseLoading = false;
@@ -104,6 +187,123 @@ const organizationSlice = createSlice({
         state.assignCoursesLoading = false;
         state.assignCoursesError =
           "Courses are already assigned to these employees.";
+      })
+      .addCase(fetchAllDepartment.pending, (state) => {
+        state.responseLoading = true;
+      })
+      .addCase(fetchAllDepartment.fulfilled, (state, action) => {
+        state.responseLoading = false;
+        state.departments = action.payload;
+        state.responseSuccess = true;
+      })
+      .addCase(fetchAllDepartment.rejected, (state, action) => {
+        state.responseLoading = false;
+        state.responseSuccess = false;
+        state.responseError = action.payload as string;
+      })
+      .addCase(addDepartment.pending, (state) => {
+        state.responseLoading = true;
+      })
+      .addCase(addDepartment.fulfilled, (state, action) => {
+        state.responseLoading = false;
+        state.departments = [...state.departments, action.payload];
+        state.addDepartmentSuccess = "department created successfully";
+      })
+      .addCase(addDepartment.rejected, (state, action) => {
+        state.responseLoading = false;
+        state.addDepartmentSuccess = false;
+        state.addDepartmentError = action.payload as string;
+      })
+      .addCase(fetchEmployeeByDepartment.pending, (state) => {
+        state.responseLoading = true;
+      })
+      .addCase(fetchEmployeeByDepartment.fulfilled, (state, action) => {
+        state.responseLoading = false;
+
+        // Extract employees from the action payload
+        const employees = action.payload;
+
+        // Update state.departments by adding employees to the matching department
+        state.departments = state.departments.map((department) => {
+          // Filter employees whose departmentId matches the current department id
+          const departmentEmployees = employees.filter(
+            (employee: any) => employee.departmentId === department.id
+          );
+
+          // Add an `employees` key to the department object
+          return {
+            ...department,
+            employees: departmentEmployees, // Add employees as a new key
+          };
+        });
+
+        state.responseSuccess = true;
+      })
+
+      .addCase(fetchEmployeeByDepartment.rejected, (state, action) => {
+        state.responseLoading = false;
+        state.responseSuccess = false;
+        state.responseError = action.payload as string;
+      })
+      .addCase(addReview.pending, (state) => {
+        state.responseLoading = true;
+      })
+      .addCase(addReview.fulfilled, (state, action) => {
+        state.responseLoading = false;
+
+        // Extract review data from action payload
+        const reviewData = action.payload;
+
+        // Update the state by mapping through departments and adding the review to the corresponding employee
+        state.departments = state.departments.map((department) => {
+          // Update each department's employees
+          return {
+            ...department,
+            employees: department.employees.map((employee: any) => {
+              // Check if the employee ID matches the review's employee ID
+              if (employee.id === reviewData.employee_id) {
+                // Check if the employee already has a review with the same review ID
+                const existingReview = employee.employee_review;
+
+                if (existingReview && existingReview.id === reviewData.id) {
+                  // Update the existing review
+                  return {
+                    ...employee,
+                    employee_review: {
+                      ...existingReview,
+                      review: reviewData.review, // Update the review text
+                      no_of_stars: reviewData.no_of_stars, // Update the rating
+                      updated_at: reviewData.updated_at, // Update the timestamp
+                    },
+                  };
+                } else {
+                  // If no existing review or different review ID, add the new review
+                  return {
+                    ...employee,
+                    employee_review: {
+                      id: reviewData.id,
+                      review: reviewData.review,
+                      no_of_stars: reviewData.no_of_stars,
+                      created_at: reviewData.created_at,
+                      updated_at: reviewData.updated_at,
+                    },
+                  };
+                }
+              }
+
+              // If the employee doesn't match the review, return the employee as-is
+              return employee;
+            }),
+          };
+        });
+
+        state.responseSuccess = true;
+      })
+
+      .addCase(addReview.rejected, (state, action) => {
+        state.responseLoading = false;
+        state.responseSuccess = false;
+        state.responseError = action.payload as string;
       });
   },
 });

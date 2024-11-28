@@ -5,129 +5,19 @@ import { Card } from "@/app/components/Card";
 import { Badge } from "./badge";
 import Icon from "./utility-icon";
 import Spinner from "./Spinner";
-
-const customers = [
-  {
-    title: "Nicole Kidman",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-info/30",
-    barColor: "info",
-    number: 2,
-  },
-  {
-    title: "Monica Bellucci",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-warning/30",
-    barColor: "warning",
-    active: true,
-    number: 1,
-  },
-  {
-    title: "Pamela Anderson",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-success/30",
-    barColor: "success",
-    number: 3,
-  },
-  {
-    title: "Dianne Russell",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-info/30",
-    barColor: "info",
-    number: 4,
-  },
-  {
-    title: "Robert De Niro",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-warning/30",
-    barColor: "warning",
-    number: 5,
-  },
-  {
-    title: "De Niro",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-warning/30",
-    barColor: "warning",
-    number: 6,
-  },
-  {
-    title: "Nicole Kidman",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-info/30",
-    barColor: "info",
-    number: 2,
-  },
-  {
-    title: "Monica Bellucci",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-warning/30",
-    barColor: "warning",
-    active: true,
-    number: 1,
-  },
-  {
-    title: "Pamela Anderson",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-success/30",
-    barColor: "success",
-    number: 3,
-  },
-  {
-    title: "Dianne Russell",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-info/30",
-    barColor: "info",
-    number: 4,
-  },
-  {
-    title: "Robert De Niro",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-warning/30",
-    barColor: "warning",
-    number: 5,
-  },
-  {
-    title: "De Niro",
-    img: "/assets/UserProfile.png",
-    designation: "Finance",
-    value: 3.8,
-    bg: "before:bg-warning/30",
-    barColor: "warning",
-    number: 6,
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { fetchAllDepartment } from "@/redux/slices/organization.slice";
 
 const CustomerCard = ({ item }: any) => {
   return (
     <div
-      className={`relative z-[1] text-center my-1 rounded before:w-full before:h-[calc(100%-60px)] before:absolute before:left-0 before:top-[60px] before:rounded before:z-[-1] before:bg-opacity-[0.1] ${item.bg}`}
+      className={`relative z-[1] text-center my-1 rounded before:w-full before:h-[calc(100%-60px)] before:absolute before:left-0 before:top-[60px] before:rounded before:z-[-1] before:bg-opacity-[0.1]`}
     >
       <div className={"h-[70px] w-[70px] rounded-full mx-auto mb-4 relative"}>
         <Image
-          src={item.img}
-          alt={item.title}
+          src={item.profile_image || "/assets/DummyImg.png"}
+          alt={item.first_name}
           width={100}
           height={100}
           className="w-full h-full rounded-full"
@@ -135,46 +25,56 @@ const CustomerCard = ({ item }: any) => {
         />
       </div>
       <h4 className="text-sm text-default-600 font-semibold mb-4">
-        {item.title}
+        {item.first_name} {item.last_name}
       </h4>
       <h4 className="text-sm text-yellow-500 font-semibold mb-4">
-        {item.designation}
+        {item.designation || "No Designation"}
       </h4>
       <div className="flex items-center gap-1 px-16 mb-4">
-        <Icon icon="ph:star-fill" className="text-white" />
-        <Icon icon="ph:star-fill" className="text-white" />
-        <Icon icon="ph:star-fill" className="text-white" />
-        <Icon icon="ph:star-fill" className="text-white" />
-        <Icon icon="ph:star-fill" className="text-default-300/80" />
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Icon
+            key={index}
+            icon="ph:star-fill"
+            className={
+              index <
+              (item?.employee_review?.[0]?.no_of_stars
+                ? item?.employee_review?.[0]?.no_of_stars
+                : item?.employee_review?.no_of_stars || 0)
+                ? "text-[#dac73b]"
+                : "text-gray-400"
+            }
+          />
+        ))}
       </div>
       <div className="inline-block bg-default-900 text-default-100 px-2.5 py-1.5 text-xs font-medium rounded-full min-w-[60px]">
         <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
-          {item.value}
+          {item.gender}
         </Badge>
       </div>
     </div>
   );
 };
 
-interface PerformanceReviewsProps {
-  numReviews?: number; // Optional prop to control the number of reviews
-}
-
-const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
-  numReviews,
-}) => {
-  const displayedCustomers = numReviews
-    ? customers.slice(0, numReviews)
-    : customers;
+const PerformanceReviews = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [loading, setLoading] = useState(false); // To manage the loading state
+  const [loading, setLoading] = useState(false);
+  const { departments } = useSelector((state: RootState) => state.organization);
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllDepartment({ organizationId: userData?.organization_id }));
+  }, []);
+
+  // Combine all employees from departments
+  const employees = departments?.flatMap((dept: any) => dept.employees) || [];
 
   const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
-        left: -250, // Adjust scroll amount for the left scroll
+        left: -250,
         behavior: "smooth",
       });
     }
@@ -183,7 +83,7 @@ const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
   const handleScrollRight = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
-        left: 250, // Adjust scroll amount for the right scroll
+        left: 250,
         behavior: "smooth",
       });
     }
@@ -194,34 +94,31 @@ const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1500); // Adjust this time to simulate the loading duration
+    }, 1500);
   }, []);
 
   return (
     <Card className="w-full py-3">
       <div className="relative w-full">
-        {/* Loader if reviews are loading */}
         {loading ? (
           <div className="flex justify-center items-center py-6">
             <Spinner height="30px" width="30px" />
           </div>
-        ) : displayedCustomers.length === 0 ? (
+        ) : employees.length === 0 ? (
           <div className="text-center text-lg text-gray-500 py-6">
-            No reviews found
+            No employees found
           </div>
         ) : (
           <>
-            {/* Scrollable container */}
             <div
               ref={scrollContainerRef}
-              className="flex space-x-2 pb-3 w-full overflow-hidden scrollbar-hide "
+              className="flex space-x-2 pb-3 w-full overflow-hidden scrollbar-hide"
             >
-              {displayedCustomers.map((item, i) => (
-                <CustomerCard item={item} key={`customer-${i}`} />
+              {employees.map((item: any, i: number) => (
+                <CustomerCard item={item} key={`employee-${i}`} />
               ))}
             </div>
 
-            {/* Left Scroll Button */}
             <button
               onClick={handleScrollLeft}
               className="absolute left-2 z-50 top-1/2 transform -translate-y-1/2 p-2 rounded-full"
@@ -232,7 +129,6 @@ const PerformanceReviews: React.FC<PerformanceReviewsProps> = ({
               />
             </button>
 
-            {/* Right Scroll Button */}
             <button
               onClick={handleScrollRight}
               className="absolute right-2 z-50 top-1/2 transform -translate-y-1/2 p-2 rounded-full"

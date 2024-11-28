@@ -2,247 +2,145 @@
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { CardContent } from "@/app/components/Card";
 import { Button } from "@/app/components/button-sidebar";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import {
+  fetchAllDepartment,
+  fetchEmployeeByDepartment,
+} from "@/redux/slices/organization.slice";
 
 const PerformanceReview = ({
   onEmployeeSelect,
+  onDepartmentSelect,
 }: {
   onEmployeeSelect: (employeeId: number) => void;
+  onDepartmentSelect: (departmentId: number) => void;
 }) => {
   const router = useRouter();
-  const [selectedDept, setSelectedDept] = useState<string>("Operations");
-  const [loading, setLoading] = useState<boolean>(true); // State to handle loading
+  const [selectedDepartmentID, setSelectedDepartmentID] = useState<
+    string | null
+  >(null);
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const { departments } = useSelector((state: RootState) => state.organization);
+  const dispatch: any = useDispatch();
 
-  const departments = ["Operations", "Sales", "Finance", "IT"];
-
-  const employees = [
-    // Operations Department
-    {
-      id: 1,
-      name: "John Doe",
-      department: "Operations",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 2,
-      name: "Michael White",
-      department: "Operations",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 3,
-      name: "Sophia Taylor",
-      department: "Operations",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 4,
-      name: "Lucas Martinez",
-      department: "Operations",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 5,
-      name: "Emma Johnson",
-      department: "Operations",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 6,
-      name: "Liam Smith",
-      department: "Operations",
-      image: "/assets/UserProfile.png",
-    },
-
-    // Sales Department
-    {
-      id: 7,
-      name: "Jane Smith",
-      department: "Sales",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 8,
-      name: "Sarah Lee",
-      department: "Sales",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 9,
-      name: "Noah Brown",
-      department: "Sales",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 10,
-      name: "Ella Walker",
-      department: "Sales",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 11,
-      name: "Jack Wilson",
-      department: "Sales",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 12,
-      name: "Mia Davis",
-      department: "Sales",
-      image: "/assets/UserProfile.png",
-    },
-
-    // Finance Department
-    {
-      id: 13,
-      name: "James Brown",
-      department: "Finance",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 14,
-      name: "Ethan Clark",
-      department: "Finance",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 15,
-      name: "Olivia Harris",
-      department: "Finance",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 16,
-      name: "Benjamin Moore",
-      department: "Finance",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 17,
-      name: "Ava Martinez",
-      department: "Finance",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 18,
-      name: "Charlotte Young",
-      department: "Finance",
-      image: "/assets/UserProfile.png",
-    },
-
-    // IT Department
-    {
-      id: 19,
-      name: "Emily Clark",
-      department: "IT",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 20,
-      name: "Jacob Taylor",
-      department: "IT",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 21,
-      name: "William Evans",
-      department: "IT",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 22,
-      name: "Amelia Johnson",
-      department: "IT",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 23,
-      name: "Henry Thomas",
-      department: "IT",
-      image: "/assets/UserProfile.png",
-    },
-    {
-      id: 24,
-      name: "Isabella Lopez",
-      department: "IT",
-      image: "/assets/UserProfile.png",
-    },
-  ];
-
-  // Filter employees by selected department
-  const filteredEmployees = employees.filter(
-    (emp) => emp.department === selectedDept
-  );
-
-  // Simulate loading state for data fetching
+  // Fetch all departments once the component mounts
   useEffect(() => {
-    setLoading(true); // Set loading to true when data is being fetched
-    setTimeout(() => {
-      setLoading(false); // Set loading to false after 1.5 seconds (mocking data load)
-    }, 1500);
-  }, [selectedDept]);
+    if (userData?.organization_id) {
+      dispatch(
+        fetchAllDepartment({ organizationId: userData?.organization_id })
+      );
+    }
+  }, [dispatch, userData?.organization_id]);
+
+  // Auto-select the first department or handle department selection
+  useEffect(() => {
+    if (departments?.length > 0 && !selectedDepartmentID) {
+      // If no department is selected yet, set the first department by default
+      setSelectedDepartmentID(departments[0].id);
+    }
+  }, [departments, selectedDepartmentID]);
+
+  // Dispatch the fetchEmployees action whenever selectedDepartmentID changes
+  useEffect(() => {
+    if (selectedDepartmentID) {
+      dispatch(
+        fetchEmployeeByDepartment({
+          departmentId: selectedDepartmentID,
+        })
+      );
+    }
+  }, [selectedDepartmentID, dispatch]);
+
+  // Handle department selection
+  const handleDepartmentSelect = (deptId: string) => {
+    setSelectedDepartmentID(deptId);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[30%_70%] gap-4 p-2">
+      {/* Department Selection Buttons */}
       <div className="space-y-2">
-        {departments.map((dept, index) => (
+        {departments.map((dept) => (
           <button
-            key={index}
-            onClick={() => setSelectedDept(dept)}
+            key={dept.id}
+            onClick={() => handleDepartmentSelect(dept.id)}
             className={`w-full mx-auto py-8 rounded-lg ${
-              selectedDept === dept
+              selectedDepartmentID === dept.id
                 ? "bg-red-600 text-white"
                 : "bg-transparent text-white"
             }`}
           >
-            {dept}
+            {dept.name}
           </button>
         ))}
       </div>
 
+      {/* Employees List Section */}
       <div className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-3 rounded-xl shadow-xl">
-        {/* Loader */}
-        {loading ? (
-          <div className="flex justify-center items-center py-4">
-            <Spinner height="30px" width="30px" />
-          </div>
-        ) : filteredEmployees.length === 0 ? (
-          // Display message if no employees match the selected department
-          <div className="text-center text-gray-500 py-4">
-            No employees found in this department.
-          </div>
-        ) : (
-          // Display employee list if there are filtered employees
-          <ul className="divide-y divide-gray-500">
-            {filteredEmployees.map((employee) => (
-              <li key={employee.id} className="py-4 px-4">
-                <CardContent className="flex items-center justify-between px-8 py-8 space-x-2">
-                  <div className="flex items-center space-x-4">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage
-                        src={employee.image}
-                        alt={`${employee.name}-avatar`}
-                        className="w-10 h-10"
-                      />
-                    </Avatar>
-                    <span className="font-semibold text-sm">
-                      {employee.name}
+        <ul className="divide-y divide-gray-500">
+          {departments
+            .filter((department) => department.id === selectedDepartmentID)
+            .map((department) => (
+              <li key={department.id} className="py-4 px-4">
+                <CardContent className="flex flex-col space-y-4 px-8 py-8 border border-gray-200 rounded-lg">
+                  {/* Department Name and Size */}
+                  <div className="flex items-center justify-between">
+                    <h2 className="font-bold text-lg">{department.name}</h2>
+                    <span className="text-sm text-gray-500">
+                      {department.department_size} Employees
                     </span>
                   </div>
 
-                  <Button
-                    color="primary"
-                    onClick={() => onEmployeeSelect(employee.id)}
-                  >
-                    View
-                  </Button>
+                  {/* Employees List */}
+                  {department.employees?.length > 0 ? (
+                    <ul className="space-y-4">
+                      {department.employees.map((employee: any) => (
+                        <li
+                          key={employee.id}
+                          className="flex items-center justify-between"
+                        >
+                          {/* Employee Details */}
+                          <div className="flex items-center space-x-4">
+                            <Avatar className="w-10 h-10">
+                              <AvatarImage
+                                src={
+                                  employee.profile_image ||
+                                  "/assets/dummyImg.png"
+                                }
+                                alt={`${employee.first_name} ${employee.last_name}-avatar`}
+                                className="w-10 h-10"
+                              />
+                            </Avatar>
+                            <span className="font-semibold text-sm">
+                              {employee.first_name} {employee.last_name}
+                            </span>
+                          </div>
+
+                          {/* View Button */}
+                          <Button
+                            color="primary"
+                            onClick={() => {
+                              onEmployeeSelect(employee.id),
+                                onDepartmentSelect(department.id);
+                            }}
+                          >
+                            View
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-500 text-sm">
+                      No employees in this department
+                    </p>
+                  )}
                 </CardContent>
               </li>
             ))}
-          </ul>
-        )}
+        </ul>
       </div>
     </div>
   );

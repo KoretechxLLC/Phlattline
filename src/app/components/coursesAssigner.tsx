@@ -80,8 +80,8 @@ const CoursesAssigner = ({
             </option>
             {coursesData && coursesData.length > 0 ? (
               coursesData.map((value: any, index: number) => (
-                <option key={index} value={value.courses.id}>
-                  {value.courses.course_name}
+                <option key={index} value={value.courses?.id}>
+                  {value.courses?.course_name}
                 </option>
               ))
             ) : (

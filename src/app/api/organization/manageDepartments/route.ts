@@ -55,6 +55,11 @@ export async function GET(request: NextRequest) {
     if (organization_id) {
       departments = await prisma.department.findMany({
         where: { organization_id: parseInt(organization_id) },
+        include: {
+          employees: {
+            include: { employee_review: true },
+          },
+        },
       });
 
       if (departments.length === 0) {

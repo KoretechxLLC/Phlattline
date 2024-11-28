@@ -59,198 +59,64 @@ const formatTimeSpent = (seconds: any) => {
 
 interface PageProps {
   employeeId?: number;
+  departmentId?: number;
 }
 
-const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
+const EmployeeDetail: React.FC<PageProps> = ({
+  employeeId = undefined,
+  departmentId,
+}) => {
   const [timeLogSpent, setTimeLogSpent] = useState(0);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState<any>();
+  const [department, setDepartment] = useState<any>(null); // For department details
   const coursesPerPage = 3;
-  const { courses, videoProgress, usercourses } = useSelector(
-    (state: RootState) => state.courses
+  const { departments, responseSuccess } = useSelector(
+    (state: RootState) => state.organization
   );
+  const [employee, setEmployee] = useState<any>(null);
+  const [imgError, setImgError] = useState(false);
   const indexOfLastCourse = currentPage * coursesPerPage;
+  const { usercourses } = useSelector((state: RootState) => state.courses);
+  const { userData } = useSelector((state: RootState) => state.auth);
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = usercourses.slice(
     indexOfFirstCourse,
     indexOfLastCourse
   );
-
-  const employees: Employee[] = [
-    // Operations Department
-    {
-      id: 1,
-      name: "John Doe",
-      department: "Operations",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 2,
-      name: "Michael White",
-      department: "Operations",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 3,
-      name: "Sophia Taylor",
-      department: "Operations",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 4,
-      name: "Lucas Martinez",
-      department: "Operations",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 5,
-      name: "Emma Johnson",
-      department: "Operations",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 6,
-      name: "Liam Smith",
-      department: "Operations",
-      image: "/assets/UserProfileLg.png",
-    },
-
-    // Sales Department
-    {
-      id: 7,
-      name: "Jane Smith",
-      department: "Sales",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 8,
-      name: "Sarah Lee",
-      department: "Sales",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 9,
-      name: "Noah Brown",
-      department: "Sales",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 10,
-      name: "Ella Walker",
-      department: "Sales",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 11,
-      name: "Jack Wilson",
-      department: "Sales",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 12,
-      name: "Mia Davis",
-      department: "Sales",
-      image: "/assets/UserProfileLg.png",
-    },
-
-    // Finance Department
-    {
-      id: 13,
-      name: "James Brown",
-      department: "Finance",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 14,
-      name: "Ethan Clark",
-      department: "Finance",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 15,
-      name: "Olivia Harris",
-      department: "Finance",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 16,
-      name: "Benjamin Moore",
-      department: "Finance",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 17,
-      name: "Ava Martinez",
-      department: "Finance",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 18,
-      name: "Charlotte Young",
-      department: "Finance",
-      image: "/assets/UserProfileLg.png",
-    },
-
-    // IT Department
-    {
-      id: 19,
-      name: "Emily Clark",
-      department: "IT",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 20,
-      name: "Jacob Taylor",
-      department: "IT",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 21,
-      name: "William Evans",
-      department: "IT",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 22,
-      name: "Amelia Johnson",
-      department: "IT",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 23,
-      name: "Henry Thomas",
-      department: "IT",
-      image: "/assets/UserProfileLg.png",
-    },
-    {
-      id: 24,
-      name: "Isabella Lopez",
-      department: "IT",
-      image: "/assets/UserProfileLg.png",
-    },
-  ];
-
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
   useEffect(() => {
-    if (employeeId) {
-      setLoading(true);
-      const filteredEmployeeData = employees.find((e) => e.id === employeeId);
-      setTimeout(() => {
-        setData(filteredEmployeeData);
-        setLoading(false);
-      }, 500);
-    } else {
-      setData(null);
-      setLoading(false);
-    }
-  }, [employees, employeeId]);
+    setLoading(true);
 
-  if (!employeeId || !data) {
+    // Find the relevant department
+    const selectedDepartment = departments.find(
+      (dept) => dept.id === departmentId
+    );
+    setDepartment(selectedDepartment || null);
+
+    // Find the relevant employee
+    const selectedEmployee = selectedDepartment
+      ? selectedDepartment.employees.find((emp: any) => emp.id === employeeId)
+      : null;
+    setEmployee(selectedEmployee || null);
+
+    setLoading(false);
+  }, [employeeId, departmentId, departments, responseSuccess]);
+
+  const handleError = () => {
+    setImgError(true); // Set error flag when image fails to load
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!employeeId && employee.length < 0) {
     return (
       <div className="flex items-center justify-center h-full">
         <span className="text-gray-400">
@@ -258,49 +124,75 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
         </span>
       </div>
     );
-  } // Only include dynamic dependencies
+  }
+
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
       {/* First Row: Employee Info and Goals Achieved */}
       <div className="lg:col-span-1 flex items-center gap-6 border border-gray-500 rounded-xl p-4">
         <div className="w-40 h-40 ring-4 ring-[#B50D34] flex items-center justify-center rounded-full overflow-hidden">
-          <Image
-            alt="User profile image"
-            src={data?.image}
-            layout="responsive"
-            width={5000}
-            height={5000}
-            className="w-full h-full rounded-full"
-          />
+          {employee?.profile_image || imgError ? (
+            <Image
+              alt="User profile image"
+              src={
+                imgError
+                  ? "/assets/DummyImg.png" // Show dummy image if there's an error or no image
+                  : `/api/images?filename=${employee?.profile_image}&folder=profileImage`
+              }
+              layout="responsive"
+              width={5000}
+              height={5000}
+              className="w-full h-full rounded-full"
+              onError={handleError}
+            />
+          ) : (
+            <div className="w-60 h-60 ring-4 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
+              <span className="text-white text-2xl md:text-8xl font-bold pt-3">
+                {employee?.first_name?.charAt(0).toUpperCase() +
+                  employee?.last_name?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <div>
-            <span className="block text-lg font-semibold text-white">
-              {data?.name}
+            <span className="block text-lg font-semibold text-white uppercase">
+              {`${employee?.first_name}` + " " + `${employee?.last_name}`}
             </span>
             <span className="block text-sm text-gray-400">
-              {data?.designation}
+              {employee?.designation}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <Icon icon="ph:star-fill" className="text-white" />
-              <Icon icon="ph:star-fill" className="text-white" />
-              <Icon icon="ph:star-fill" className="text-white" />
-              <Icon icon="ph:star-fill" className="text-white" />
-              <Icon icon="ph:star-fill" className="text-gray-400" />
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Icon
+                  key={index}
+                  icon="ph:star-fill"
+                  className={
+                    index <
+                    (employee.employee_review[0]?.no_of_stars
+                      ? employee.employee_review[0]?.no_of_stars
+                      : employee.employee_review?.no_of_stars || 0)
+                      ? "text-white"
+                      : "text-gray-400"
+                  }
+                />
+              ))}
             </div>
-            <span className="text-lg text-white">4.8</span>
+            <span className="text-lg text-white">
+              {employee.employee_review[0]?.no_of_stars
+                ? employee.employee_review[0]?.no_of_stars
+                : employee.employee_review?.no_of_stars || 0}
+            </span>
           </div>
-          <Button
-            color="primary"
-            onClick={() => setReviewModalOpen(true)} // Open modal
-          >
+          <Button color="primary" onClick={() => setReviewModalOpen(true)}>
             Write Review
           </Button>
         </div>
       </div>
+
       <div className="lg:col-span-1">
         <Card className="border border-[#62626280] rounded-3xl shadow-md w-full h-full">
           <CardHeader className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] h-16 rounded-3xl">
@@ -311,6 +203,29 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Department Info */}
+      {department && (
+        <div className="lg:col-span-2 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <Card className="border border-gray-500 rounded-3xl p-5">
+              <CardHeader>
+                <CardTitle>Department: {department.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <h3 className="text-xl font-semibold">
+                  Employees in this department:
+                </h3>
+                <ul>
+                  <li key={employee.id} className="text-lg py-2 px-2">
+                    {employee.name}
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
 
       {/* Second Row: Other Components */}
       <div className="lg:col-span-2 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -365,20 +280,22 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2  text-white rounded-l-lg"
+                className="px-4 py-2 text-white rounded-l-lg"
               >
                 <FaChevronLeft />
               </button>
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage * coursesPerPage >= usercourses.length}
-                className="px-4 py-2  text-white rounded-r-lg"
+                className="px-4 py-2 text-white rounded-r-lg"
               >
                 <FaChevronRight />
               </button>
             </div>
           </Card>
         </div>
+
+        {/* Other Components (Activity, Performance, etc.) */}
         <div className="lg:col-span-1">
           <Card className="border border-gray-500 rounded-3xl p-5">
             <CardHeader className="flex-row gap-3">
@@ -409,7 +326,7 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
             <CardHeader>
               <CardTitle>Performance</CardTitle>
             </CardHeader>
-            <CardContent className="p-2">
+            <CardContent>
               <PerformanceChart />
             </CardContent>
           </Card>
@@ -418,7 +335,10 @@ const EmployeeDetail: React.FC<PageProps> = ({ employeeId }) => {
       <WriteReviewModal
         open={isReviewModalOpen}
         onClose={() => setReviewModalOpen(false)} // Close modal
-        employeeName={data.name} // Pass employee name to modal
+        employeeName={employee?.name}
+        employeeID={employeeId} // Pass employee name to modal
+        organizationID={userData.organization_id}
+        data={employee.employee_review[0]}
       />
     </div>
   );
