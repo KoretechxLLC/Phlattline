@@ -4,7 +4,7 @@ import TasksTracker from "@/app/components/TasksTracker";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import EmpRating from "@/app/components/emprating";
-import VacantJobs from "@/app/components/vacantjobs";
+import VacantJobs from "@/app/components/Vacantjobs";
 import PerformanceReviews from "@/app/components/performanceReviewsTab";
 import {
   Card,

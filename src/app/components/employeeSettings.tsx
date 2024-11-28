@@ -6,7 +6,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/app/components/Tooltip";
+} from "@/app/components/tooltip";
 import { Eye, SquarePen, Trash2 } from "lucide-react";
 import { Button } from "@/app/components/button-sidebar";
 import { useRouter } from "next/navigation";

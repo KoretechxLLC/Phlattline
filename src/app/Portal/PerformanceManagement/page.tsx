@@ -12,7 +12,7 @@ import {
 } from "@/redux/slices/performanceManagement.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
-import VacantJobs from "@/app/components/vacantjobs";
+import VacantJobs from "@/app/components/Vacantjobs";
 
 export type NotificationType = {
   id: number;

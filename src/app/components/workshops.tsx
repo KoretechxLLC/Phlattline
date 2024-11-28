@@ -8,8 +8,8 @@ import {
 } from "@/app/components/Card";
 import { Button } from "./button-sidebar";
 import Image from "next/image";
-import Spinner from "./Spinner"; // Assuming this is your spinner component
-import WorkshopModal from "./WorkshopModal"; // Import the modal component
+import Spinner from "./Spinner";
+import WorkshopModal from "./workshopModal";
 
 const Workshops = () => {
   // State to manage workshop data
