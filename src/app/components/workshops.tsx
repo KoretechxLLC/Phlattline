@@ -9,42 +9,61 @@ import {
 import { Button } from "./button-sidebar";
 import Image from "next/image";
 import Spinner from "./Spinner"; // Assuming this is your spinner component
+import WorkshopModal from "./WorkshopModal"; // Import the modal component
 
 const Workshops = () => {
   // State to manage workshop data
   const [workshops, setWorkshops] = useState<
-    { image: string; title: string }[]
+    { id: number; image: string; title: string; description: string }[]
   >([]);
   const [loading, setLoading] = useState<boolean>(true); // State for loader
+  const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null); // State for selected workshop
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Modal visibility
 
   useEffect(() => {
     // Simulating an API call to fetch workshops
     const fetchWorkshops = async () => {
       setLoading(true);
       setTimeout(() => {
-        // Simulate data (leave as an empty array to test "no workshops" state)
+        // Simulate data
         const data = [
           {
+            id: 1,
             image: "/assets/WorkshopImage.png",
             title: "AI and Virtual",
+            description: "Explore AI-driven innovation and virtual solutions.",
           },
           {
+            id: 2,
             image: "/assets/WorkshopImage.png",
             title: "Leadership Development",
+            description: "Develop key leadership skills for success.",
           },
           {
+            id: 3,
             image: "/assets/WorkshopImage.png",
             title: "Team Building",
+            description: "Learn strategies for fostering team collaboration.",
           },
         ];
 
-        setWorkshops(data); // Replace with `[]` to test the "no workshops" state.
+        setWorkshops(data);
         setLoading(false);
       }, 2000); // 2-second delay to simulate API call
     };
 
     fetchWorkshops();
   }, []);
+
+  const handleViewClick = (workshop: any) => {
+    setSelectedWorkshop(workshop);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedWorkshop(null);
+  };
 
   return (
     <div>
@@ -64,7 +83,7 @@ const Workshops = () => {
               {workshops.map((workshop, index) => (
                 <div
                   className="border border-gray-500 rounded-3xl p-5"
-                  key={index}
+                  key={workshop.id}
                 >
                   <Image
                     src={workshop.image}
@@ -76,7 +95,12 @@ const Workshops = () => {
                   <span className="block text-lg font-semibold mt-2">
                     {workshop.title}
                   </span>
-                  <Button color="primary">View</Button>
+                  <Button
+                    color="primary"
+                    onClick={() => handleViewClick(workshop)}
+                  >
+                    View
+                  </Button>
                 </div>
               ))}
             </div>
@@ -88,6 +112,11 @@ const Workshops = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Workshop Modal */}
+      {isModalOpen && (
+        <WorkshopModal open={isModalOpen} onClose={handleCloseModal} />
+      )}
     </div>
   );
 };
