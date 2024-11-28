@@ -13,6 +13,7 @@ const PerformanceManagement = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
     null
   );
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleTabChange = (tab: string) => {
@@ -30,16 +31,31 @@ const PerformanceManagement = () => {
     setActiveTab("Performance Review");
   };
 
+  const handleDepartmentSelect = (employeeId: number) => {
+    setSelectedDepartmentId(employeeId);
+    setActiveTab("Performance Review");
+  };
+
   const renderContent = () => {
     if (activeTab === "Performance Review" && selectedEmployeeId) {
-      return <EmployeeDetail employeeId={selectedEmployeeId} />;
+      return (
+        <EmployeeDetail
+          employeeId={selectedEmployeeId}
+          departmentId={selectedDepartmentId}
+        />
+      );
     }
 
     switch (activeTab) {
       case "Employee":
         return <Employee />;
       case "Performance Review":
-        return <PerformanceReview onEmployeeSelect={handleEmployeeSelect} />;
+        return (
+          <PerformanceReview
+            onEmployeeSelect={handleEmployeeSelect}
+            onDepartmentSelect={handleDepartmentSelect}
+          />
+        );
       case "Supervisor":
         return <Supervisor />;
       case "Report":

@@ -76,8 +76,8 @@ const ManagingChange = () => {
           <CoursesAssigner
             coursesData={userData?.user_courses}
             employeesData={employee}
-            organizationId={userData.organization_id}
-            userId={userData.id}
+            organizationId={userData?.organization_id}
+            userId={userData?.id}
             loading={assignCoursesLoading}
             success={assignCoursesSuccess}
           />

@@ -144,6 +144,15 @@ const IndividualSignUp = () => {
       formData.append("phone_number", phone);
       formData.append("categoryId", selectedIndustry);
       formData.append("SubCategoryId", selectedDesignation);
+      // {
+      //   "firstName": "John",
+      //   "lastName": "Doe",
+      //   "email": "john.doe@example.com",
+      //   "phone": "+1234567890",
+      //   "password": "Password123!",
+      //   "industry": "Technology",
+      //   "designation": "Software Engineer"
+      // }
       try {
         await dispatch(Register(formData));
       } catch (error) {

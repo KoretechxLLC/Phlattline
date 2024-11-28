@@ -152,15 +152,19 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+
     const organizationId = searchParams.get("organization_id");
     const employeeId = searchParams.get("employee_id");
-    const departmentId = searchParams.get("department_Id");
+    const departmentId = searchParams.get("departmentId");
 
     let employees;
 
     if (employeeId) {
       employees = await prisma.employees.findUnique({
         where: { id: parseInt(employeeId) },
+        include: {
+          employee_review: true,
+        },
       });
 
       if (!employees) {
@@ -172,6 +176,9 @@ export async function GET(request: NextRequest) {
     } else if (departmentId) {
       employees = await prisma.employees.findMany({
         where: { departmentId: Number(departmentId) },
+        include: {
+          employee_review: true,
+        },
       });
 
       if (!employees) {
@@ -183,6 +190,13 @@ export async function GET(request: NextRequest) {
     } else if (organizationId) {
       const organization = await prisma.organizations.findUnique({
         where: { id: parseInt(organizationId) },
+        include: {
+          employees: {
+            include: {
+              employee_review: true,
+            },
+          },
+        },
       });
 
       if (!organization) {
@@ -193,6 +207,9 @@ export async function GET(request: NextRequest) {
       }
       employees = await prisma.employees.findMany({
         where: { organization_id: parseInt(organizationId) },
+        include: {
+          employee_review: true,
+        },
       });
 
       if (employees.length === 0) {
@@ -214,6 +231,7 @@ export async function GET(request: NextRequest) {
         );
       }
     }
+
 
     return NextResponse.json(
       { success: true, data: employees },

@@ -25,7 +25,7 @@ const IndividualAssessmentForm = () => {
   const router = useRouter();
   const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
-  const usertype =userData?.user_type_id;
+  const usertype = userData?.user_type_id;
   const { assessments, loading, error, success } = useSelector(
     (state: RootState) => state.assessment
   );
@@ -110,7 +110,7 @@ const IndividualAssessmentForm = () => {
           questionId,
           answer,
         })),
-        user_type_id:usertype,
+        user_type_id: usertype,
       })
     );
   };

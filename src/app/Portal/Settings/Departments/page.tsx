@@ -1,92 +1,188 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import Icon from "@/app/components/utility-icon";
+import { useDispatch, useSelector } from "react-redux";
+import StackedNotifications from "@/app/components/Stackednotification";
+import { RootState } from "@/redux/store";
+import {
+  addDepartment,
+  fetchAllDepartment,
+  resetError,
+  resetSuccess,
+} from "@/redux/slices/organization.slice";
+import Spinner from "@/app/components/Spinner";
 import EmployeeAddModal from "@/app/components/employeeAddModal";
 
+export type NotificationType = {
+  id: number;
+  text: string;
+  type: "error" | "success";
+};
+
 const Departments = () => {
+  const dispatch: any = useDispatch();
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const [deptName, setDeptName] = useState("");
   const [deptSize, setDeptSize] = useState("");
   const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const {
+    addDepartmentError,
+    addDepartmentSuccess,
+    departments,
+    responseLoading,
+  } = useSelector((state: RootState) => state.organization);
+  const { userData } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    dispatch(fetchAllDepartment({ organizationId: userData?.organization_id }));
+  }, []);
 
-  // Static array for department names
-  const departmentNames = [
-    { id: 1, name: "HR Department" },
-    { id: 2, name: "Engineering Department" },
-    { id: 3, name: "Marketing Department" },
-    { id: 4, name: "Sales Department" },
-  ];
+  const handleSubmit = () => {
+    if (!deptName || !deptSize) {
+      setNotification({
+        id: Date.now(),
+        text: "Department name and size are required.",
+        type: "error",
+      });
+      return;
+    }
+
+    if (typeof Number(deptSize) !== "number" || Number(deptSize) <= 0) {
+      setNotification({
+        id: Date.now(),
+        text: "Department size must be a positive number.",
+        type: "error",
+      });
+      return;
+    }
+
+    // Add more validation rules as needed
+
+    let data = {
+      name: deptName,
+      department_size: deptSize,
+      organization_id: userData.organization_id,
+    };
+
+    // Dispatch Redux action after validation
+    dispatch(addDepartment({ data }));
+  };
+  useEffect(() => {
+    if (addDepartmentSuccess) {
+      setNotification({
+        id: Date.now(),
+        text: addDepartmentSuccess,
+        type: "success",
+      });
+      dispatch(resetSuccess());
+      setDeptSize("");
+      setDeptName("");
+    } else if (addDepartmentError) {
+      setNotification({
+        id: Date.now(),
+        text: addDepartmentError,
+        type: "error",
+      });
+      dispatch(resetError());
+    }
+  }, [addDepartmentSuccess, addDepartmentError]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Left Column: Department Name and Size */}
-      <div className="pr-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
-          <input
-            id="dept-name"
-            type="text"
-            placeholder="Enter Department Name"
-            value={deptName}
-            onChange={(e) => setDeptName(e.target.value)}
-            className="w-full bg-black text-white py-4 px-4 rounded-xl border-none focus:outline-none"
-            required
-          />
-        </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl mt-4">
-          <select
-            id="industry-select"
-            value={deptSize}
-            onChange={(e) => setDeptSize(e.target.value)}
-            className="w-full bg-black text-white py-4 px-4 rounded-xl border-none focus:outline-none"
-          >
-            <option value="" disabled>
-              Select Department Size
-            </option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-        </div>
-        <Button color="primary" className="mt-4">
-          Add Department
-        </Button>
-      </div>
+    <>
+      <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
 
-      {/* Right Column: Display Department Name and Size */}
-      <div>
-        <div className="relative py-1 rounded-2xl">
-          {departmentNames.map((department) => (
-            <div
-              key={department.id}
-              className="w-full bg-black text-white py-6 px-4 my-5 border border-gray-500 rounded-2xl flex justify-between items-center"
+      <div className="grid grid-cols-2 gap-4">
+        {/* Left Column: Department Name and Size */}
+        <div className="pr-4">
+          {/* Padding right for space between the separator */}
+          <div className="relative py-2 border border-gray-500 rounded-2xl">
+            <input
+              id="dept-name"
+              type="text"
+              placeholder="Enter Department Name"
+              value={deptName} // Use state variable for input
+              onChange={(e) => setDeptName(e.target.value)} // Update state on change
+              className="w-full bg-black text-white py-4 px-4 rounded-xl border-none focus:outline-none"
+              required
+            />
+          </div>
+          <div className="relative py-2 border border-gray-500 rounded-2xl mt-4">
+            <select
+              id="industry-select"
+              value={deptSize}
+              onChange={(e) => setDeptSize(e.target.value)}
+              className="w-full bg-black text-white py-4 px-4 rounded-xl border-none focus:outline-none"
             >
-              <p className="text-sm">{department.name}</p>
-              <div className="flex space-x-2">
-                {/* Call Modal on Click */}
-                <Icon
-                  icon="dashicons:welcome-write-blog"
-                  className="w-8 h-8 text-green-500 cursor-pointer"
-                  onClick={() => setShowModal(true)} // Show modal
-                />
-                <Icon
-                  icon="tabler:trash"
-                  className="w-8 h-8 text-red-500 cursor-pointer"
-                />
-              </div>
-            </div>
-          ))}
+              <option value="" disabled>
+                Select Department Size
+              </option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <Button
+            onClick={() => handleSubmit()}
+            color="primary"
+            className="mt-4"
+          >
+            {responseLoading ? (
+              <Spinner height="20px" width="20px" />
+            ) : (
+              "Add Department"
+            )}
+          </Button>
         </div>
-      </div>
 
-      {/* Employee Modal */}
-      <EmployeeAddModal open={showModal} onClose={() => setShowModal(false)} />
-    </div>
+        {/* Right Column: Display Department Name and Size */}
+        <div>
+          <div className="relative rounded-2xl">
+            {departments.length > 0 ? (
+              departments.map((department) => (
+                <div
+                  key={department.id}
+                  className="w-full bg-black text-white py-6 px-4 my-5 border border-gray-500 rounded-2xl flex justify-between items-center"
+                >
+                  <p className="text-sm">{department.name}</p>
+                  <div className="flex space-x-2">
+                    <Icon
+                      icon="dashicons:welcome-write-blog"
+                      className="w-8 h-8 text-green-500 cursor-pointer"
+                      onClick={() => setShowModal(true)} // Show modal
+                    />
+                    <Icon
+                      icon="tabler:trash"
+                      className="w-8 h-8 text-red-500"
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="w-full text-center py-6 px-4 my-5 border border-gray-500 rounded-2xl bg-gray-100 text-gray-700">
+                <p className="text-lg text-white">
+                  No departments found. Please create a department first!
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <EmployeeAddModal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+        />
+      </div>
+    </>
   );
 };
 

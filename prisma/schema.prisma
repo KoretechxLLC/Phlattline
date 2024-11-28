@@ -66,8 +66,8 @@ model organizations {
   department         department[]
   employee_review    employee_review[]
   employees          employees[]
-  users              users[]
   leaderFeedback     leaderFeedback[]
+  users              users[]
 }
 
 model employees {
@@ -90,9 +90,9 @@ model employees {
   employee_review    employee_review[]
   department         department?          @relation(fields: [departmentId], references: [id])
   organization       organizations        @relation(fields: [organization_id], references: [id])
+  leaderFeedback     leaderFeedback[]
   user_goal          user_goal[]
   users              users[]
-  leaderFeedback     leaderFeedback[]
 }
 
 model department {
@@ -113,11 +113,11 @@ model leaderFeedback {
   feedback        String
   organization_id Int
   department_id   Int
+  created_at      DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime      @updatedAt
   department      department    @relation(fields: [department_id], references: [id])
   employees       employees     @relation(fields: [employee_id], references: [id])
   organizations   organizations @relation(fields: [organization_id], references: [id])
-  created_at      DateTime      @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime      @updatedAt
 }
 
 model courses {
@@ -416,10 +416,10 @@ model employee_review {
   review          String
   no_of_stars     Int
   organization_id Int
-  employees       employees     @relation(fields: [employee_id], references: [id])
-  organizations   organizations @relation(fields: [organization_id], references: [id])
   created_at      DateTime      @default(now()) @db.Timestamp(6)
   updated_at      DateTime      @updatedAt
+  employees       employees     @relation(fields: [employee_id], references: [id])
+  organizations   organizations @relation(fields: [organization_id], references: [id])
 }
 
 enum assessment_for {
