@@ -127,7 +127,7 @@ export const fetchRecommendedAssessments = createAsyncThunk<any, any>(
 // Thunk for submitting assessment responses
 export const submitAssessmentResponses = createAsyncThunk<
   any,
-  { userId: string; assessmentId: string; responses: any[]; user_type_id:any}
+  { userId: string; assessmentId: any[]; responses: any[]; user_type_id:any}
 >(
   "assessment/submitAssessmentResponses",
   async ({ userId, assessmentId, responses, user_type_id }, { rejectWithValue }) => {

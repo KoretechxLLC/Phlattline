@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const { userId, assessmentId, responses, user_type_id } = body;
 
     // Validate inputs
-    if (!userId || !assessmentId || !Array.isArray(responses)) {
+    if (!userId || !Array.isArray(assessmentId) || !Array.isArray(responses)) {
       return NextResponse.json(
         { error: "User ID, assessment ID, and responses are required." },
         { status: 400 }
@@ -15,119 +15,59 @@ export async function POST(req: NextRequest) {
     }
 
     const parsedUserId = parseInt(userId, 10);
-    const parsedAssessmentId = parseInt(assessmentId, 10);
 
-    if (isNaN(parsedUserId) || isNaN(parsedAssessmentId)) {
+    if (isNaN(parsedUserId)) {
       return NextResponse.json(
-        { error: "User ID and Assessment ID must be valid integers." },
+        { error: "User ID must be a valid integer." },
         { status: 400 }
       );
     }
 
-    for (const response of responses) {
-      const existingResponse = await prisma.user_assessment_responses.findFirst(
-        {
-          where: {
-            user_id: parsedUserId, // Use the parsed integer userId
-            assessment_id: parsedAssessmentId, // Use the parsed integer assessmentId
-            question_id: Number(response.questionId),
-          },
-        }
-      );
+    // Validate assessmentId array
+    // const parsedAssessmentIds = assessmentId.map((id) => parseInt(id, 10));
+    // if (parsedAssessmentIds.some(isNaN)) {
+    //   return NextResponse.json(
+    //     { error: "All assessment IDs must be valid integers." },
+    //     { status: 400 }
+    //   );
+    // }
 
-      if (existingResponse) {
-        return NextResponse.json(
-          {
-            error: `Questions with ID ${response.questionId} has already been answered for this assessment.`,
+  
+
+    // Process each assessment ID
+    for (const id of assessmentId) {
+      // Filter responses for the current assessment ID
+      const filteredResponses = responses.filter((res) => res.assessmentsid == id);
+
+
+      // Create responses for the current assessment ID
+      for (const res of filteredResponses) {
+        const data = await prisma.user_assessment_responses.create({
+          data: {
+            user_id: parsedUserId,
+            assessment_id: id,
+            question_id: Number(res?.questionId),
+            selected_option: res?.selectedOption,
           },
-          { status: 400 }
-        );
+        });
+
       }
     }
 
-    const userResponses = responses.map((response: any) => {
-      return {
-        user_id: parsedUserId,
-        assessment_id: parsedAssessmentId,
-        question_id: Number(response.questionId),
-        selected_option: response.answer,
-      };
-    });
-
-    const savedResponses = await prisma.user_assessment_responses.createMany({
-      data: userResponses,
-    });
-
-
-
-if(user_type_id==3){
-  const purchasedRecord = await prisma.assignedAssessment.findFirst({
-    where: {
-      user_id: parsedUserId,
-      individual_assessment_id: parsedAssessmentId,
-    },
-  });
-
-  // If the assessment was purchased, mark it as completed
-  if (purchasedRecord) {
-    await prisma.assignedAssessment.update({
+    // Update user's overall assessment status
+    await prisma.users.update({
       where: {
-        id: purchasedRecord.id,
+        id: parsedUserId,
       },
       data: {
-        status: "completed",
+        assessment_status: true,
       },
     });
-  }
 
-  await prisma.users.update({
-    where: {
-      id: parsedUserId,
-    },
-    data: {
-      assessment_status: true,
-    },
-  });
-
-}
-else{
-  const purchasedRecord = await prisma.purchased_assessments.findFirst({
-    where: {
-      user_id: parsedUserId,
-      individual_assessments_id: parsedAssessmentId,
-    },
-  });
-
-  // If the assessment was purchased, mark it as completed
-  if (purchasedRecord) {
-    await prisma.purchased_assessments.update({
-      where: {
-        id: purchasedRecord.id,
-      },
-      data: {
-        completed: true,
-      },
-    });
-  }
-
-  await prisma.users.update({
-    where: {
-      id: parsedUserId,
-    },
-    data: {
-      assessment_status: true,
-    },
-  });
-
-}
-
-
-   
     return NextResponse.json(
       {
         success: true,
         message: "Responses submitted successfully.",
-        data: savedResponses,
       },
       { status: 200 }
     );
@@ -142,6 +82,8 @@ else{
     );
   }
 }
+
+
 
 export async function GET(req: NextRequest) {
   try {

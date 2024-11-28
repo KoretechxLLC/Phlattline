@@ -14,6 +14,8 @@ import {
   setAssessmentUpdate,
 } from "@/redux/slices/auth.slice";
 import Spinner from "./Spinner";
+import { log } from "console";
+import { itemFromArray } from "@tsparticles/engine";
 
 export type NotificationType = {
   id: number;
@@ -32,7 +34,7 @@ const IndividualAssessmentForm = () => {
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
-  const [responses, setResponses] = useState<{ [key: string]: string }>({});
+  const [responses, setResponses] = useState<any>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
 
@@ -49,19 +51,46 @@ const IndividualAssessmentForm = () => {
     );
   }, [dispatch]);
 
-  const handleOptionChange = (questionId: string, optionText: string) => {
-    setResponses((prevResponses) => ({
-      ...prevResponses,
-      [questionId]: optionText,
-    }));
+
+  const handleOptionChange = (individual_assessment_id: any, questionId: string, optionText: string) => {
+
+
+
+    let resp = {
+      assessmentsid: individual_assessment_id,
+      selectedOption: optionText,
+      questionId: questionId
+    };
+
+    if (responses && responses?.length > 0) {
+
+      if (responses.some((resp: any) => resp.questionId == questionId)) {
+        let response = responses.map((res: any) => {
+
+          if (res.questionId == resp.questionId) {
+            return resp
+          } else {
+            return res
+          }
+        })
+        setResponses(response)
+      } else {
+        setResponses([...responses, resp])
+      }
+    } else {
+      setResponses([...responses, resp])
+    }
+
 
     setErrors((prevErrors) => ({
       ...prevErrors,
       [questionId]: "",
     }));
   };
+
+
   useEffect(() => {
-    if (success !== null) {
+    if (success) {
       setNotification({
         id: Date.now(),
         text: success,
@@ -70,7 +99,7 @@ const IndividualAssessmentForm = () => {
       dispatch(setSuccess());
       dispatch(setAssessmentUpdate());
     }
-    if (error !== null) {
+    if (error) {
       setNotification({
         id: Date.now(),
         text: error,
@@ -87,7 +116,7 @@ const IndividualAssessmentForm = () => {
     // Validate that all questions are answered
     assessments.forEach((assessment: any) => {
       assessment.individual_assessment_questions.forEach((question: any) => {
-        if (!responses[question.id]) {
+        if (responses?.every((resp: any) => resp.questionId != question.id)) {
           newErrors[question.id] = "This question is required.";
         }
       });
@@ -99,18 +128,18 @@ const IndividualAssessmentForm = () => {
       return; // Don't submit if there are errors
     }
 
-    const assessmentId = assessments[0]?.id; // Replace with actual logic if needed
+    let assessmentId = assessments.map((item: any) => {
+      return item.id
+    })// Replace with actual logic if needed
 
-    // Dispatch the form submission with userId, assessmentId, and responses
+
+
     dispatch(
       submitAssessmentResponses({
         userId,
         assessmentId,
-        responses: Object.entries(responses).map(([questionId, answer]) => ({
-          questionId,
-          answer,
-        })),
-        user_type_id: usertype,
+        responses: responses,
+        user_type_id:usertype,
       })
     );
   };
@@ -145,9 +174,8 @@ const IndividualAssessmentForm = () => {
                   (question: any, index: number) => (
                     <div
                       key={question.id}
-                      className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${
-                        errors[question.id] ? "border border-red-500" : ""
-                      }`}
+                      className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${errors[question.id] ? "border border-red-500" : ""
+                        }`}
                     >
                       <label className="text-1xl text-gray-100 mb-2 block pt-0 pb-3 pl-3">
                         {`${index + 1}. ${question.question_text}`}
@@ -164,12 +192,14 @@ const IndividualAssessmentForm = () => {
                                 name={question.id.toString()}
                                 value={option.option_text}
                                 checked={
-                                  responses[question.id] === option.option_text
+                                  responses && responses?.length > 0 && responses?.find((res: any) => res.questionId == question?.id)?.selectedOption === option.option_text
                                 }
                                 onChange={() =>
                                   handleOptionChange(
+                                    assessment.id,
                                     question.id,
-                                    option.option_text
+                                    option.option_text,
+
                                   )
                                 }
                                 className="form-radio text-yellow-500 focus:ring-0"
