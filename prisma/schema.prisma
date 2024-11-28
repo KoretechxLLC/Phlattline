@@ -67,6 +67,7 @@ model organizations {
   employee_review    employee_review[]
   employees          employees[]
   users              users[]
+  leaderFeedback     leaderFeedback[]
 }
 
 model employees {
@@ -91,17 +92,32 @@ model employees {
   organization       organizations        @relation(fields: [organization_id], references: [id])
   user_goal          user_goal[]
   users              users[]
+  leaderFeedback     leaderFeedback[]
 }
 
 model department {
-  id              Int           @id @default(autoincrement())
-  name            String        @db.VarChar(225)
+  id              Int              @id @default(autoincrement())
+  name            String           @db.VarChar(225)
   department_size Int
   organization_id Int
+  created_at      DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime         @updatedAt
+  organization    organizations    @relation(fields: [organization_id], references: [id])
+  employees       employees[]
+  leaderFeedback  leaderFeedback[]
+}
+
+model leaderFeedback {
+  id              Int           @id @default(autoincrement())
+  employee_id     Int
+  feedback        String
+  organization_id Int
+  department_id   Int
+  department      department    @relation(fields: [department_id], references: [id])
+  employees       employees     @relation(fields: [employee_id], references: [id])
+  organizations   organizations @relation(fields: [organization_id], references: [id])
   created_at      DateTime      @default(now()) @db.Timestamptz(6)
   updated_at      DateTime      @updatedAt
-  organization    organizations @relation(fields: [organization_id], references: [id])
-  employees       employees[]
 }
 
 model courses {
@@ -402,6 +418,8 @@ model employee_review {
   organization_id Int
   employees       employees     @relation(fields: [employee_id], references: [id])
   organizations   organizations @relation(fields: [organization_id], references: [id])
+  created_at      DateTime      @default(now()) @db.Timestamp(6)
+  updated_at      DateTime      @updatedAt
 }
 
 enum assessment_for {
