@@ -23,9 +23,13 @@ export async function POST(request: NextRequest) {
   });
 
   if (existingFeeback) {
-    return NextResponse.json({
-      message: "Feedback already exists",
-    });
+    return NextResponse.json(
+      {
+        message: "Feedback already exists",
+        success: false,
+      },
+      { status: 400 }
+    );
   }
   const employee = await prisma.employees.findFirst({
     where: {
@@ -56,7 +60,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(
     {
       success: true,
-      message: "Feedback created successfully",
+      message: "Feedback Submitted Successfully",
       data: createFeedback,
     },
     {

@@ -1,6 +1,7 @@
 import axiosInstance from "@/app/utils/privateAxios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { string } from "zod";
 
 interface organizationResponseState {
   responseLoading: boolean;
@@ -14,6 +15,9 @@ interface organizationResponseState {
   assignCoursesLoading: boolean;
   assignCoursesError: string | null;
   assignCoursesSuccess: string | null;
+  leaderFeedback: any;
+  leaderFeedbackSuccess: string | null;
+  leaderFeedbackError: any | null;
 }
 
 const initialState: organizationResponseState = {
@@ -28,6 +32,9 @@ const initialState: organizationResponseState = {
   addDepartmentSuccess: null,
   addDepartmentError: null,
   departments: [],
+  leaderFeedback: null,
+  leaderFeedbackSuccess: null,
+  leaderFeedbackError: null,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -145,6 +152,23 @@ export const addReview = createAsyncThunk<any, any>(
   }
 );
 
+export const submitFeedback = createAsyncThunk<any, any>(
+  "organization/submitFeedback",
+  async ({ filter }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/organization/leaderFeedback`,
+        filter
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to Submit Feedback";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 const organizationSlice = createSlice({
   name: "organizationResponse",
   initialState,
@@ -153,11 +177,13 @@ const organizationSlice = createSlice({
       state.responseSuccess = false;
       state.assignCoursesSuccess = null;
       state.addDepartmentSuccess = null;
+      state.leaderFeedbackSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
       state.assignCoursesError = null;
       state.addDepartmentError = null;
+      state.leaderFeedbackError = null;
     },
   },
   extraReducers: (builder) => {
@@ -304,6 +330,19 @@ const organizationSlice = createSlice({
         state.responseLoading = false;
         state.responseSuccess = false;
         state.responseError = action.payload as string;
+      })
+      .addCase(submitFeedback.pending, (state) => {
+        state.leaderFeedbackError = null;
+        state.leaderFeedback = null;
+      })
+      .addCase(submitFeedback.fulfilled, (state, action) => {
+        state.leaderFeedback = action.payload;
+        state.leaderFeedbackSuccess = action.payload.message;
+      })
+      .addCase(submitFeedback.rejected, (state, action) => {
+        state.leaderFeedback = null;
+        state.leaderFeedbackSuccess = null;
+        state.leaderFeedbackError = action.payload;
       });
   },
 });
