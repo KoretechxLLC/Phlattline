@@ -41,19 +41,34 @@ const Assessments = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "catalogue":
-        return (
-          <AssessmentsCatalogue
-            onViewAll={(view: any) => {
-              if (view === "individual") setActiveTab("individualAssessments");
-              if (view === "recommended")
-                setActiveTab("recommendedAssessments");
-              if (view === "organization" && userType === 2)
-                setActiveTab("organizationAssessments");
-              if (view === "team" && userType === 2)
-                setActiveTab("teamAssessments");
-            }}
-          />
-        );
+        if (userType === 1 || userType === 2) {
+          return (
+            <AssessmentsCatalogue
+              onViewAll={(view: any) => {
+                switch (view) {
+                  case "individual":
+                    setActiveTab("individualAssessments");
+                    break;
+                  case "recommended":
+                    setActiveTab("recommendedAssessments");
+                    break;
+                  case "organization":
+                    if (userType === 2) {
+                      setActiveTab("organizationAssessments");
+                    }
+                    break;
+                  case "team":
+                    if (userType === 2) {
+                      setActiveTab("teamAssessments");
+                    }
+                    break;
+                  default:
+                    break;
+                }
+              }}
+            />
+          );
+        }
       case "individualAssessments":
         return <IndividualAssessments />;
       case "recommendedAssessments":

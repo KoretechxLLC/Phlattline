@@ -81,7 +81,7 @@ const MyCourses = () => {
         <div className="space-y-4 md:space-y-2 ml-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {loading ? (
-              <div className="col-span-3 flex justify-center items-center py-5">
+              <div className="col-span-3  flex justify-center items-center w-full h-full py-60">
                 <Spinner height="30px" width="30px" />
               </div>
             ) : displayedCourses && displayedCourses.length > 0 ? (
@@ -100,7 +100,7 @@ const MyCourses = () => {
               </>
             ) : (
               <div className="flex items-center justify-center col-span-3">
-                <div className="text-center text-gray-300 ">
+                <div className="text-center text-gray-300 h-full w-full flex justify-center items-center py-60">
                   No Courses Available!
                 </div>
               </div>

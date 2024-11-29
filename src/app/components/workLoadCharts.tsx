@@ -56,6 +56,9 @@ const WorkLoadBar = ({ height = 180 }) => {
         },
       },
     },
+    tooltip: {
+      enabled: false,
+    },
     dataLabels: {
       enabled: true,
       offsetX: 0,
@@ -74,9 +77,6 @@ const WorkLoadBar = ({ height = 180 }) => {
       ],
     },
     colors: [colors.completed, colors.overdue, colors.remaining],
-    tooltip: {
-      theme: mode === "dark" ? "dark" : "light",
-    },
     grid: getGridConfig(),
     yaxis: getYAxisConfig(
       mode === "light" ? colors["default-600"] : colors["default-300"]

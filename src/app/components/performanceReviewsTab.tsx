@@ -14,7 +14,7 @@ const CustomerCard = ({ item }: any) => {
     <div
       className={`relative z-[1] text-center my-1 rounded before:w-full before:h-[calc(100%-60px)] before:absolute before:left-0 before:top-[60px] before:rounded before:z-[-1] before:bg-opacity-[0.1]`}
     >
-      <div className={"h-[70px] w-[70px] rounded-full mx-auto mb-4 relative"}>
+      <div className={"h-[60px] w-[60px] rounded-full mx-auto mb-4 relative"}>
         <Image
           src={item.profile_image || "/assets/DummyImg.png"}
           alt={item.first_name}
@@ -98,7 +98,7 @@ const PerformanceReviews = () => {
   }, []);
 
   return (
-    <Card className="w-full py-3">
+    <Card className="w-full py-1">
       <div className="relative w-full">
         {loading ? (
           <div className="flex justify-center items-center py-6">
@@ -112,7 +112,7 @@ const PerformanceReviews = () => {
           <>
             <div
               ref={scrollContainerRef}
-              className="flex space-x-2 pb-3 w-full overflow-hidden scrollbar-hide"
+              className="flex space-x-2 py-2 w-full overflow-hidden scrollbar-hide "
             >
               {employees.map((item: any, i: number) => (
                 <CustomerCard item={item} key={`employee-${i}`} />
@@ -121,7 +121,7 @@ const PerformanceReviews = () => {
 
             <button
               onClick={handleScrollLeft}
-              className="absolute left-2 z-50 top-1/2 transform -translate-y-1/2 p-2 rounded-full"
+              className="absolute left-2 z-50 top-1/2 transform -translate-y-1/2 p-1 rounded-full"
             >
               <Icon
                 icon="tabler:chevron-left"
@@ -131,7 +131,7 @@ const PerformanceReviews = () => {
 
             <button
               onClick={handleScrollRight}
-              className="absolute right-2 z-50 top-1/2 transform -translate-y-1/2 p-2 rounded-full"
+              className="absolute right-2 z-50 top-1/2 transform -translate-y-1/2 p-1 rounded-full"
             >
               <Icon
                 icon="tabler:chevron-right"

@@ -44,7 +44,7 @@ const GapAnalysis = () => {
                 <CardTitle>Operational Gaps</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="4xl:p-1 p-4">
+            <CardContent className="4xl:p-1 p-5">
               <AsessmentTracker />
             </CardContent>
           </Card>
@@ -74,7 +74,7 @@ const GapAnalysis = () => {
           </CardHeader>
           <CardContent>
             {/* Container for the courses in a horizontal row */}
-            <div className="flex space-x-4 overflow-x-auto">
+            <div className="flex space-x-2 ">
               {courses.map((course) => (
                 <CoursesTab
                   key={course.id}

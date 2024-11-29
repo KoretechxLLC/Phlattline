@@ -58,9 +58,11 @@ const BasicDonut = ({ height = 200 }) => {
   const isDataEmpty = !series || series.length === 0;
 
   return (
-    <div className="relative w-full h-[280px] sm:h-[320px] md:h-[400px] 4xl:h-[190px] lg:h-[200px]">
+    <div className="relative w-full h-[280px] 5xl:h-[280px] sm:h-[320px] md:h-[400px] 4xl:h-[200px] lg:h-[200px]">
       {isLoading ? (
-        <Spinner height="30px" width="30px" />
+        <div className="text-center text-gray-300 py-24">
+          <Spinner height="30px" width="30px" />
+        </div>
       ) : isDataEmpty ? (
         <div className="text-gray-500">No data found</div> // Message when no data is found
       ) : (

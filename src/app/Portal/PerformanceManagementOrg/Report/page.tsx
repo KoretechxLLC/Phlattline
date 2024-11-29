@@ -1,9 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import TasksTracker from "@/app/components/TasksTracker";
-import SmartGoalForm from "@/app/components/SmartGoalForm";
-import TimeManagement from "@/app/components/TimeManangment";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
@@ -73,9 +70,7 @@ const Report = () => {
       {/* Dropdown */}
       <div className="mb-4">
         <select className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]">
-          <option value="" disabled>
-            Select Departments
-          </option>
+          <option value="">Select Departments</option>
           <option value="Personal">Personal</option>
           <option value="Professional">Professional</option>
           <option value="Fitness">Fitness</option>

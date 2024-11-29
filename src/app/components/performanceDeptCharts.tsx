@@ -167,8 +167,8 @@ const PerformanceDeptsChart = ({
   }, []);
 
   return (
-    <Card className="border border-gray-500 rounded-xl">
-      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
+    <Card className="border border-gray-500 rounded-3xl">
+      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
         <CardTitle>Performance by Departments</CardTitle>
       </CardHeader>
       <CardContent className="p-1">

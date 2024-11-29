@@ -286,7 +286,6 @@ const ProfileImage = ({ setProfileImage }: any) => {
     setImgError(true); // Set error flag when image fails to load
   };
 
-
   return (
     <div className="flex flex-col items-center justify-center">
       {data?.profile_image || image || imgError ? (
@@ -301,21 +300,17 @@ const ProfileImage = ({ setProfileImage }: any) => {
             layout="responsive" // Use responsive layout to control aspect ratio
             width={500} // Adjust width for better performance
             height={500} // Adjust height for better performance
-            className="rounded-full object-cover"
+            className="w-full h-full "
             onError={handleError} // Trigger error handler if the image fails to load
           />
         </div>
       ) : (
-
-        
-        
         <div className="w-60 h-60 ring-4 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
           <span className="text-white text-2xl md:text-8xl font-bold pt-3">
             {data?.first_name?.charAt(0).toUpperCase() +
               data?.last_name?.charAt(0).toUpperCase()}
           </span>
         </div>
-      
       )}
       <h2 className="text-white text-xl font-medium mt-4 uppercase">
         {data && data?.first_name + " " + data?.last_name}

@@ -54,7 +54,7 @@ const DesigningInterventions = () => {
     setIsModalOpen(false);
   };
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-2">
       {/* Assignment Tabs Section */}
       <div className="my-2 flex flex-col col-span-1">
         <CardTitle>
@@ -68,7 +68,7 @@ const DesigningInterventions = () => {
       {/* Second Row: Assessments and Courses Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {/* Courses Section */}
-        <div className="flex flex-col space-y-4 border-[1px] border-gray-500 rounded-lg p-8">
+        <div className="flex flex-col space-y-2  rounded-3xl p-3">
           <CardTitle className="text-xl">Courses</CardTitle>
           <div className="flex space-x-4 overflow-x-auto">
             {courses.map((course) => (
@@ -83,28 +83,33 @@ const DesigningInterventions = () => {
           </div>
         </div>
         {/* Individual Assessments Section */}
-        <Card className="border-[1px] border-gray-500 rounded-lg p-4">
-          <CardTitle className="text-xl">Individual Assessments</CardTitle>
+
+        <div className=" rounded-xl 4xl:p-3 p-5 w-full">
+          <CardTitle className="text-xl">Take Assessments</CardTitle>
           <HoverEffect
             items={assessmentCatalogueData}
-            className="grid grid-cols-1 md:grid-cols-2 mb-0 gap-1 p-5"
+            className="grid grid-cols-2 md:grid-cols-2 mb-0 gap-1 p-3 "
           />
-        </Card>
+        </div>
       </div>
 
       {/* Third Row: Full Width Coaching Tab and Tab Button */}
-      <div className="mt-4 flex space-x-4 w-full col-span-full">
-        <InpersonCoachingTab />
-        <TabButton
-          backgroundColor="#FF0000"
-          text="Group Session"
-          imageSrc="/assets/LiveIcon.png"
-          textColor="#FFFFFF"
-          arrowImageSrc="/assets/ArrowRightUp.png"
-          showModalOnClick={true}
-          isClickable={true}
-          modalType="employee"
-        />
+      <div className="mt-4 grid grid-cols-2 space-x-4 w-full ">
+        <div className="col-span-1">
+          <InpersonCoachingTab />
+        </div>
+        <div className="col-span-1">
+          <TabButton
+            backgroundColor="#FF0000"
+            text="Group Session"
+            imageSrc="/assets/LiveIcon.png"
+            textColor="#FFFFFF"
+            arrowImageSrc="/assets/ArrowRightUp.png"
+            showModalOnClick={true}
+            isClickable={true}
+            modalType="employee"
+          />
+        </div>
       </div>
       <EmployeeModal open={isModalOpen} onClose={handleCloseModal} />
     </div>

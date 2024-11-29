@@ -164,6 +164,53 @@ export const submitFeedback = createAsyncThunk<any, any>(
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || "Failed to Submit Feedback";
+      return rejectWithValue(errorMessage); // Ensure this line is included
+    }
+  }
+);
+
+export const addEmployeesInDepartment = createAsyncThunk<any, any>(
+  "organization/addEmployeesInDepartment",
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/organization/employee_department`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const removeEmployeesInDepartment = createAsyncThunk<any, any>(
+  "organization/removeEmployeesInDepartment",
+  async (employeeId: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/organization/removeEmployeeFromDepartment",
+        {
+          employeeId,
+        }
+      );
+
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
       return rejectWithValue(errorMessage);
     }
   }
@@ -252,7 +299,7 @@ const organizationSlice = createSlice({
         // Update state.departments by adding employees to the matching department
         state.departments = state.departments.map((department) => {
           // Filter employees whose departmentId matches the current department id
-          const departmentEmployees = employees.filter(
+          const departmentEmployees = employees?.filter(
             (employee: any) => employee.departmentId === department.id
           );
 
@@ -343,6 +390,103 @@ const organizationSlice = createSlice({
         state.leaderFeedback = null;
         state.leaderFeedbackSuccess = null;
         state.leaderFeedbackError = action.payload;
+      })
+      .addCase(removeEmployeesInDepartment.pending, (state) => {
+        state.responseLoading = true;
+      })
+      .addCase(removeEmployeesInDepartment.fulfilled, (state, action) => {
+        state.responseLoading = false;
+
+        // Ensure the payload contains the necessary data
+        if (action.payload && action.payload.successes.employeeId) {
+          const employeeId = action.payload.successes.employeeId;
+
+          // Find the department that the employee belongs to
+          let departmentId = null;
+          let departmentToUpdate = null;
+
+          // Loop through departments to find the employee's department
+          for (const department of state.departments) {
+            const employee = department.employees?.find(
+              (e: any) => e.id === employeeId
+            );
+            if (employee) {
+              departmentId = department.id;
+              departmentToUpdate = department;
+              break;
+            }
+          }
+
+          // Update the department by removing the employee
+          if (departmentId) {
+            state.departments = state.departments.map((department) => {
+              if (department.id === departmentId) {
+                const updatedEmployees = departmentToUpdate?.employees?.filter(
+                  (employee: any) => employee.id !== employeeId
+                );
+
+                return {
+                  ...department,
+                  employees: updatedEmployees,
+                };
+              }
+              return department;
+            });
+          }
+
+          // Update the global employee state to reflect the removal from the department
+
+          let allEmployees = [...state.employee];
+
+          allEmployees = allEmployees.map((employee) => {
+            if (employee.id === employeeId) {
+              return {
+                ...employee,
+                departmentId: null, // Or update with appropriate logic
+              };
+            }
+            return employee;
+          });
+
+          state.employee = allEmployees;
+
+          state.responseSuccess = true;
+        }
+      })
+      .addCase(removeEmployeesInDepartment.rejected, (state, action) => {
+        state.responseLoading = false;
+        state.responseSuccess = false;
+        state.responseError = action.payload as string;
+      })
+      .addCase(addEmployeesInDepartment.pending, (state) => {
+        state.responseLoading = true;
+      })
+      .addCase(addEmployeesInDepartment.fulfilled, (state, action) => {
+        state.responseLoading = false;
+        const newEmployee = action.payload.successes;
+
+        state.departments = state.departments.map((department) => {
+          if (department.id === newEmployee.departmentId) {
+            return {
+              ...department,
+              employees: [...(department.employees || []), newEmployee],
+            };
+          }
+          return department;
+        });
+
+        let allEmployees = [...state.employee];
+
+        allEmployees = [...allEmployees, newEmployee];
+
+        state.employee = allEmployees;
+
+        state.responseSuccess = true;
+      })
+      .addCase(addEmployeesInDepartment.rejected, (state, action) => {
+        state.responseLoading = false;
+        state.responseSuccess = false;
+        state.responseError = action.payload as string;
       });
   },
 });

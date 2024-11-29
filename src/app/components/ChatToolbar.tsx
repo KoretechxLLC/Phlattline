@@ -20,7 +20,7 @@ const ChatToolbar = () => {
           <PopoverTrigger asChild>
             <Button
               size="icon"
-              className="flex items-center justify-center rounded-full hover:ring-0 hover:ring-transparent bg-default-100 hover:bg-default-100 hover:text-default-900 text-default-900"
+              className="flex items-center justify-center rounded-3xl hover:ring-0 hover:ring-transparent bg-default-100 hover:bg-default-100 hover:text-default-900 text-default-900"
             >
               <Icon icon="iconoir:emoji" className="w-5 h-5 text-gray-400" />
             </Button>
@@ -37,7 +37,7 @@ const ChatToolbar = () => {
           <PopoverTrigger asChild>
             <Button
               size="icon"
-              className="flex items-center justify-center rounded-full hover:ring-0 hover:ring-transparent bg-default-100 hover:bg-default-100 hover:text-default-900 text-default-900"
+              className="flex items-center justify-center rounded-3xl hover:ring-0 hover:ring-transparent bg-default-100 hover:bg-default-100 hover:text-default-900 text-default-900"
             >
               <Icon
                 icon="teenyicons:attachment-solid"
