@@ -5,13 +5,8 @@ import TasksTracker from "@/app/components/TasksTracker";
 import SmartGoalForm from "@/app/components/SmartGoalForm";
 import TimeManagement from "@/app/components/TimeManangment";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/Card";
-import PersonalGoals from "@/app/components/PersonalGoalsTracker";
+import { CardTitle } from "@/app/components/Card";
+
 import SuggestionTabs from "@/app/components/SuggestionTabs";
 import {
   resetError,

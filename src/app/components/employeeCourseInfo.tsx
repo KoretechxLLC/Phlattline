@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Button } from "./button-sidebar";
 import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
+import { CardTitle } from "./card-hover-effect";
 
 // Define the type for an employee object
 type Employee = {
@@ -46,16 +47,16 @@ const EmployeeCourseInfo: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <Card className="border border-gray-500 rounded-xl w-full max-w-3xl">
+      <Card className="border border-gray-500 rounded-3xl w-full">
         <CardHeader>
-          <h2 className="text-2xl items-center font-semibold mb-3">
+          <CardTitle className="text-3xl text-center py-4">
             Employee Performance
-          </h2>
-          <div className="flex justify-between px-8 py-3 text-white bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
-            <span>Employees</span>
-            <span>Courses</span>
-            <span>Accuracy</span>
-            <span>Action</span>
+          </CardTitle>
+          <div className="grid grid-cols-4 px-8 py-2 text-white bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
+            <span className="text-left">Employees</span>
+            <span className="text-center">Courses</span>
+            <span className="text-center">Accuracy</span>
+            <span className="text-right">Action</span>
           </div>
         </CardHeader>
 
@@ -79,7 +80,8 @@ const EmployeeCourseInfo: React.FC = () => {
                       : ""
                   }`}
                 >
-                  <CardContent className="flex items-center justify-between px-8 py-8 space-x-2">
+                  <CardContent className="grid grid-cols-4 items-center px-2 py-4 space-x-2">
+                    {/* Employee Info */}
                     <div className="flex items-center space-x-4">
                       <Avatar className="w-10 h-10">
                         <AvatarImage
@@ -93,15 +95,18 @@ const EmployeeCourseInfo: React.FC = () => {
                       </span>
                     </div>
 
+                    {/* Course Name */}
                     <div className="text-center text-sm text-yellow-400">
                       {employee.course}
                     </div>
 
+                    {/* Accuracy */}
                     <div className="text-center text-sm text-green-500">
                       {employee.accuracy}
                     </div>
 
-                    <div>
+                    {/* Action */}
+                    <div className="text-right">
                       <Button
                         color="primary"
                         className="rounded-3xl"

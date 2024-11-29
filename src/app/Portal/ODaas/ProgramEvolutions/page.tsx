@@ -31,12 +31,12 @@ const ProgramEvolutions = () => {
       {/* Components below the dropdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-          <CardHeader className="h-16 rounded-3xl">
-            <div className="text-sm flex justify-between">
+          <CardHeader className=" rounded-3xl">
+            <div className="text-sm flex justify-center">
               <CardTitle>Courses Results</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-2">
+          <CardContent>
             <CoursesResults />
           </CardContent>
         </Card>
@@ -54,7 +54,7 @@ const ProgramEvolutions = () => {
           <LeadersFeedback />
         </div>
 
-        <div className="col-span-2 ">
+        <div className="col-span-2 p-2">
           <CardTitle>Need to more actions for fast growth</CardTitle>
           <SuggestionTabs />
         </div>

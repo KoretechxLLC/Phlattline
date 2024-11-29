@@ -281,7 +281,7 @@ const AsessmentTracker = ({
           />
         </div>
       ) : (
-        <div className="text-center text-gray-300 py-20">
+        <div className="text-center  text-gray-300 py-20">
           Please Submit Assessments First!
         </div>
       )}

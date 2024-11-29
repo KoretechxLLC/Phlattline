@@ -197,7 +197,7 @@ const PreviousResultsTracker = ({
   return (
     <>
       {resultLoading ? (
-        <div className="text-center text-gray-300">
+        <div className="flex justify-center items-center w-full h-full py-16">
           <Spinner height="30px" width="30px" />
         </div>
       ) : data && data.length > 0 ? (
@@ -211,7 +211,7 @@ const PreviousResultsTracker = ({
           />
         </div>
       ) : (
-        <div className="text-center text-gray-300 py-12">
+        <div className="text-center text-gray-500 h-full w-full flex justify-center items-center py-16">
           Please Submit Assessments First!
         </div>
       )}

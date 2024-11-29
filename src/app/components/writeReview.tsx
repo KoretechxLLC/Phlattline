@@ -49,6 +49,7 @@ const WriteReviewModal = ({
   ); // State to handle review text
   const [loading, setLoading] = useState<boolean>(false); // State to handle loading during submission
   const dispatch: any = useDispatch();
+
   if (!open) return null; // Conditional rendering for modal visibility
 
   const handleStarClick = (index: number) => {
@@ -56,6 +57,12 @@ const WriteReviewModal = ({
   };
 
   const handleSubmit = () => {
+    const reviewData = {
+      organization_id: organizationID,
+      employee_id: employeeID,
+      review: review,
+      no_of_stars: rating,
+    };
     // Perform validation
     if (!organizationID || !employeeID || !review || !rating) {
       setNotification({
@@ -75,15 +82,30 @@ const WriteReviewModal = ({
       return;
     }
 
-    // All validations passed, prepare data
-    let data = {
-      organization_id: organizationID,
-      employee_id: employeeID,
-      review: review,
-      no_of_stars: rating,
-    };
+    if (responseSuccess) {
+      setLoading(false);
+      setNotification({
+        id: Date.now(),
+        text: "Review submitted successfully!",
+        type: "success",
+      });
+      onClose(); // Close the modal after submission
+      dispatch(resetSuccess()); // Reset the success state in redux
+      setLoading(true); // Show loader while submitting
+      dispatch(addReview({ data: reviewData }));
+    }
 
-    dispatch(addReview({ data }));
+    if (responseError) {
+      setLoading(false);
+      setNotification({
+        id: Date.now(),
+        text: responseError,
+        type: "error",
+      });
+      dispatch(resetError()); // Reset the error state in redux
+    }
+
+    // All validations passed, prepare data
   };
 
   return (

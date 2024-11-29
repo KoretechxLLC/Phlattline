@@ -22,8 +22,8 @@ const AvailableJobsTab: React.FC = () => {
 
   return (
     <div>
-      <Card className="border w-full border-gray-500 rounded-xl ">
-        <CardHeader className="mb-1 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
+      <Card className="border w-full border-gray-500 rounded-3xl ">
+        <CardHeader className="mb-1 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
           <CardTitle>Available Jobs</CardTitle>
         </CardHeader>
         <ul>

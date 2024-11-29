@@ -141,7 +141,7 @@ const RecommendedCourses = () => {
         <div className="space-y-4 md:space-y-2 ml-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {loading ? (
-              <div className="col-span-3 flex justify-center items-center">
+              <div className="col-span-3 flex justify-center items-center w-full h-full py-60">
                 <Spinner height="30px" width="30px" />
               </div>
             ) : displayedCourses && displayedCourses.length > 0 ? (
@@ -165,37 +165,38 @@ const RecommendedCourses = () => {
               </>
             ) : (
               <div className="flex items-center justify-center col-span-3">
-                <div className="text-center text-gray-300 ">
+                <div className="text-center text-gray-300 h-full w-full flex justify-center items-center py-60">
                   No Courses Available!
                 </div>
               </div>
             )}
           </div>
           {/* Conditional Pagination Buttons */}
-
-          <div className="flex items-center justify-center gap-2 py-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-8 h-8 border-transparent hover:bg-transparent"
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="w-5 h-5 text-default-900" />
-            </Button>
-            <span className="text-sm font-medium text-default-900">
-              Page {currentPage} of {totalPage}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-8 h-8 border-transparent hover:bg-transparent"
-              onClick={handleNextPage}
-              disabled={currentPage >= totalPage}
-            >
-              <ChevronRight className="w-5 h-5 text-default-900" />
-            </Button>
-          </div>
+          {displayedCourses && displayedCourses.length > 0 && (
+            <div className="flex items-center justify-center gap-2 py-4">
+              <Button
+                variant="outline"
+                size="icon"
+                className="w-8 h-8 border-transparent hover:bg-transparent"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="w-5 h-5 text-default-900" />
+              </Button>
+              <span className="text-sm font-medium text-default-900">
+                Page {currentPage} of {totalPage}
+              </span>
+              <Button
+                variant="outline"
+                size="icon"
+                className="w-8 h-8 border-transparent hover:bg-transparent"
+                onClick={handleNextPage}
+                disabled={currentPage >= totalPage}
+              >
+                <ChevronRight className="w-5 h-5 text-default-900" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -20,6 +20,7 @@ import {
   resetSuccess,
 } from "@/redux/slices/organization.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
+import CoursesResults from "@/app/components/CoursesResults";
 
 export type NotificationType = {
   id: number;
@@ -92,14 +93,13 @@ const ManagingChange = () => {
       {/* Third Row: Issues Reported and Workshops */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-          <CardHeader className="h-16 rounded-3xl">
-            <div className="text-sm flex justify-between">
-              <CardTitle>Issues Reported</CardTitle>
-              <CardTitle>124 Open Issues</CardTitle>
+          <CardHeader className=" rounded-3xl">
+            <div className="text-sm flex justify-center">
+              <CardTitle>Courses Results</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-2">
-            <IssuesTracker />
+          <CardContent>
+            <CoursesResults />
           </CardContent>
         </Card>
         <div>

@@ -76,10 +76,11 @@ const EmployeeassessmentTaskTracker = ({
       <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-full">
         {showPending && (
           <button
-            className={`text-xs sm:text-[16px] h-12 w-full rounded-tl-3xl rounded-tr-3xl ${activeTab === "pending"
+            className={`text-xs sm:text-[16px] h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
+              activeTab === "pending"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
-              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handlePendingTasksClick}
           >
             Assigned {label}
@@ -87,10 +88,11 @@ const EmployeeassessmentTaskTracker = ({
         )}
         {showCompleted && (
           <button
-            className={`text-xs sm:text-[16px] w-full h-12 rounded-tl-3xl rounded-tr-3xl ${activeTab === "completed"
+            className={`text-xs sm:text-[16px] w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+              activeTab === "completed"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
-              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handleCompletedTasksClick}
           >
             Completed {label}
@@ -98,10 +100,11 @@ const EmployeeassessmentTaskTracker = ({
         )}
         {showSaved && (
           <button
-            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${activeTab === "saved"
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+              activeTab === "saved"
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
-              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handleSavedTasksClick}
           >
             Saved {label}
@@ -145,10 +148,10 @@ const EmployeeassessmentTaskTracker = ({
                         className="text-md md:text-2 w-full sm:w-auto rounded-2xl px-3 py-2 sm:px-6 cursor-pointer"
                         color="primary"
                         onClick={() => {
-                          handleButtonClick(individual_assessments?.individual_assessment_id);
+                          handleButtonClick(
+                            individual_assessments?.individual_assessment_id
+                          );
                         }}
-
-                      
                       >
                         Take Assessment
                       </Button>
@@ -163,11 +166,7 @@ const EmployeeassessmentTaskTracker = ({
             </li>
           )
         ) : activeTab === "completed" ? (
-          
           completedAssessments && completedAssessments.length > 0 ? (
-
-        
-
             completedAssessments.map((individual_assessments: any) => (
               <li
                 className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
@@ -183,7 +182,7 @@ const EmployeeassessmentTaskTracker = ({
                       />
                     </Avatar>
                     <span className="text-xs px-2 sm:text-sm">
-                    {individual_assessments?.individual_assessments?.title}
+                      {individual_assessments?.individual_assessments?.title}
                     </span>
                   </div>
                 </div>

@@ -186,7 +186,7 @@ const AssessmentTaskTracker = ({
             })
           ) : (
             <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-              No pending assessmnets found
+              No purchased assessments found
             </li>
           )
         ) : activeTab === "completed" ? (

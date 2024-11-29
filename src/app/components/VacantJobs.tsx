@@ -39,7 +39,7 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
       <CardContent className="bg-black border border-[#62626280]  rounded-b-lg p-8">
         {loading ? (
           // Show loader if data is loading
-          <div className="flex justify-center items-center py-5">
+          <div className="flex justify-center items-center py-14">
             <Spinner height="30px" width="30px" />
           </div>
         ) : jobs && jobs.length > 0 ? (

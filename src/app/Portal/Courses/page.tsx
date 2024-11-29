@@ -17,7 +17,7 @@ const Courses = () => {
   const router = useRouter();
   const dispatch: any = useDispatch();
   const { userData } = useSelector((state: RootState) => state.auth);
-  const [activeTab, setActiveTab] = useState<string>("RecommendedCourses"); 
+  const [activeTab, setActiveTab] = useState<string>("RecommendedCourses");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
@@ -32,12 +32,12 @@ const Courses = () => {
   } = useSelector((state: any) => state.courses);
 
   const handleTabChange = (tab: string) => {
-    setIsLoading(true); 
+    setIsLoading(true);
     setActiveTab(tab);
 
     setTimeout(() => {
-      setIsLoading(false); 
-    }, 500); 
+      setIsLoading(false);
+    }, 500);
   };
 
   const renderContent = () => {
@@ -53,11 +53,14 @@ const Courses = () => {
 
   return (
     <div>
-      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0"  >
+      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0">
         {/* Left side: Courses List */}
-        <div className="space-y-4 md:space-y-2 ml-4 w-full" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
+        <div
+          className="space-y-4 md:space-y-2 ml-4 w-full"
+          style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}
+        >
           {isLoading ? (
-            <div className="text-center text-gray-300 py-5">
+            <div className="col-span-2 flex justify-center items-center w-full h-full py-52">
               <Spinner height="30px" width="30px" />
             </div>
           ) : (
@@ -88,8 +91,11 @@ const Courses = () => {
             </>
           )}
         </div>
-        <div className="w-[100em]" style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}>
-        <EmployeeCourses />
+        <div
+          className="w-[100em]"
+          style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}
+        >
+          <EmployeeCourses />
         </div>
         {/* Right side: Additional Content */}
         <div className="4xl:my-0 space-y-8 md:space-y-3">
@@ -134,7 +140,9 @@ const Courses = () => {
             </div>
           </div>
 
-          <div style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
+          <div
+            style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}
+          >
             <TabButton
               backgroundColor="#FF0000"
               text="Training-On Demand"

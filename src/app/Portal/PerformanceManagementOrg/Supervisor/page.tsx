@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import TasksTracker from "@/app/components/TasksTracker";
-import SmartGoalForm from "@/app/components/SmartGoalForm";
-import TimeManagement from "@/app/components/TimeManangment";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
@@ -11,8 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
-import PersonalGoals from "@/app/components/PersonalGoalsTracker";
-import SuggestionTabs from "@/app/components/SuggestionTabs";
+
 import {
   resetError,
   resetSuccess,
@@ -20,11 +17,11 @@ import {
 } from "@/redux/slices/performanceManagement.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
-import EmployeesDesiredJobTab from "@/app/components/employeesDesiredJobTab";
 
 import PerformanceReviews from "@/app/components/performanceReviewsTab";
 import PerformanceDeptsChart from "@/app/components/performanceDeptCharts";
 import OrganizationGoalsTab from "@/app/components/orgGoalsTab";
+import SmartGoalForm from "@/app/components/SmartGoalForm";
 
 export type NotificationType = {
   id: number;
@@ -107,7 +104,7 @@ const Supervisor = () => {
             </div>
           </div>
           {/* Combined TasksTracker and PersonalGoals in one column */}
-          <div>
+          <div className="space-y-3">
             <OrganizationGoalsTab />
             <PerformanceDeptsChart />
           </div>

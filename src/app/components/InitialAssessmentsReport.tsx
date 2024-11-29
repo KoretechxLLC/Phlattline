@@ -267,8 +267,8 @@ const InitialAssessmentsReport = ({
 
   return (
     <>
-      {responseLoading ? (
-        <div className="text-center text-gray-300">
+      {!responseLoading ? (
+        <div className="text-center text-gray-300 py-20">
           <Spinner height="30px" width="30px" />
         </div>
       ) : data && data.length > 0 ? (
