@@ -57,7 +57,7 @@ const CoursesAssigner = ({
 
     dispatch(assignCourses({ data: payload }));
   };
-
+  console.log("courses hewllo", coursesData);
   return (
     <div>
       <StackedNotifications

@@ -42,7 +42,7 @@ export const fetchAllEmployee = createAsyncThunk<any, any>(
   async ({ organizationId }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `api/auth/employee_register/?organization_id=${organizationId}`
+        `/api/auth/employee_register/?organization_id=${organizationId}`
       );
 
       return response.data.data;

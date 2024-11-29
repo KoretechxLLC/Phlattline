@@ -19,7 +19,11 @@ export async function POST(request: NextRequest) {
       },
       include: {
         organizations: true,
-        user_courses: true,
+        user_courses: {
+          include: {
+            courses: true,
+          },
+        },
         purchased_assessments: {
           include: {
             individual_assessments: true,
