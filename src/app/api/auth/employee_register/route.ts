@@ -163,6 +163,7 @@ export async function GET(request: NextRequest) {
       employees = await prisma.employees.findUnique({
         where: { id: parseInt(employeeId) },
         include: {
+          users: true,
           employee_review: true,
         },
       });
@@ -177,6 +178,7 @@ export async function GET(request: NextRequest) {
       employees = await prisma.employees.findMany({
         where: { departmentId: Number(departmentId) },
         include: {
+          users: true,
           employee_review: true,
         },
       });
@@ -193,6 +195,7 @@ export async function GET(request: NextRequest) {
         include: {
           employees: {
             include: {
+              users: true,
               employee_review: true,
             },
           },
@@ -205,14 +208,8 @@ export async function GET(request: NextRequest) {
           { status: 404 }
         );
       }
-      employees = await prisma.employees.findMany({
-        where: { organization_id: parseInt(organizationId) },
-        include: {
-          employee_review: true,
-        },
-      });
 
-      if (employees.length === 0) {
+      if (organization?.employees.length === 0) {
         return NextResponse.json(
           {
             message: "No employees found for this organization.",
@@ -221,6 +218,7 @@ export async function GET(request: NextRequest) {
           { status: 404 }
         );
       }
+      employees = organization?.employees;
     } else {
       employees = await prisma.employees.findMany();
 
@@ -231,7 +229,6 @@ export async function GET(request: NextRequest) {
         );
       }
     }
-
 
     return NextResponse.json(
       { success: true, data: employees },

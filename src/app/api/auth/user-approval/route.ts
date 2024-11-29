@@ -1,14 +1,21 @@
-import { prisma } from "@/app/lib/prisma"; 
+import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/helper/send-email";
 
 export async function PUT(request: NextRequest) {
   try {
-    const { userId } = await request.json(); 
+    const { userId, status } = await request.json();
 
-    if (!userId) {
+    if (!userId || !status) {
       return NextResponse.json(
-        { message: "User ID is required.", success: false },
+        { message: "required fields are missing.", success: false },
+        { status: 400 }
+      );
+    }
+
+    if (status !== "approved" && status !== "rejected") {
+      return NextResponse.json(
+        { message: "invalid status provided.", success: false },
         { status: 400 }
       );
     }
@@ -17,7 +24,6 @@ export async function PUT(request: NextRequest) {
       where: { id: userId },
     });
 
-   
     if (!user) {
       return NextResponse.json(
         { message: "User not found.", success: false },
@@ -39,7 +45,7 @@ export async function PUT(request: NextRequest) {
 
     const updatedUser = await prisma.users.update({
       where: { id: userId },
-      data: { status: "approved" },
+      data: { status: status },
     });
 
     // Send approval email
