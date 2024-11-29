@@ -14,6 +14,25 @@ export async function POST(req: NextRequest) {
       | "Professional";
     const description = String(body.get("description")).trim();
     const user_id = Number(body.get("id"));
+    const goal_tasks: string[] = body.getAll("goal_tasks[]") as string[];
+
+    // Retrieve goal tasks from form data
+    // Assuming this comes as an array of strings
+
+    let goals: any = [];
+    if (goal_tasks.length > 0) {
+      // Populate goal_tasks array with valid task values
+
+      goal_tasks.forEach((task: any) => {
+        const taskStr = String(task).trim();
+        if (taskStr) {
+          goals.push({
+            value: taskStr,
+            isCompleted: false,
+          });
+        }
+      });
+    }
 
     if (!goal_name) {
       return NextResponse.json(
@@ -56,6 +75,7 @@ export async function POST(req: NextRequest) {
         completion_date,
         goal_type,
         description: description || null,
+        goal_tasks: goals,
         user_id,
       },
     });
