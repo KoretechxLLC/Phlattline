@@ -13,6 +13,7 @@ import trainingOnDemandReducer from "./slices/traningdemand.slice";
 import categoriesReducer from "./slices/categories.slice";
 import organizationReducer from "./slices/organization.slice";
 import employeeMyAssessmentReducer from "./slices/employeemyassessment.slice"
+import employeeReducer from "./slices/employeee.slice"
 
 const persistConfig = {
   key: "root",
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   assessmnentResult: assessmnentResultReducer,
   organization: organizationReducer,
   employeeMyAssessment: employeeMyAssessmentReducer,
+  employee:employeeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

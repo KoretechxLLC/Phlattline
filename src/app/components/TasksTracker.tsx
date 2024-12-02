@@ -124,9 +124,6 @@ const TasksTracker = ({
 
   
 
-
-
-
   // Update activeTab based on visible buttons
   useEffect(() => {
     if (showPending) setActiveTab("pending");
@@ -667,6 +664,8 @@ const TasksTracker = ({
         )}
       </ul>
       </div>
+
+
       {/* Employee Goals */}
     </div>
   );

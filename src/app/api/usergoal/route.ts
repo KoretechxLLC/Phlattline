@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+
     const newGoal = await prisma.user_goal.create({
       data: {
         goal_name,
