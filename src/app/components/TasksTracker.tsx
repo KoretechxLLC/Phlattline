@@ -73,9 +73,6 @@ const TasksTracker = ({
 
   const dispatch: any = useDispatch();
 
-
-
-
   const pendingTasks = [
     { id: 1, goal: "Goal 1", percentage: 30, userId: 1 },
     { id: 2, goal: "Goal 2", percentage: 60, userId: 2 },

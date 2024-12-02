@@ -122,7 +122,7 @@ const EmployeeSignup = () => {
       formData.append("email", empEmail);
       formData.append("designation", designation);
       formData.append("phoneNumber", empPhone);
-      formData.append("dob", dob ? new Date(dob).toLocaleDateString() : "");
+      formData.append("dateofBirth", dob ? new Date(dob).toLocaleDateString() : "");
       formData.append("gender", gender);
       formData.append("password", password);
       formData.append("organization_code", employeeCode);

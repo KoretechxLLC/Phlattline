@@ -172,12 +172,12 @@ export async function GET(req: NextRequest) {
     });
 
     // Check if no goals are found
-    if (!goals.length) {
-      return NextResponse.json(
-        { error: "No goals found for the given criteria." },
-        { status: 404 }
-      );
-    }
+    // if (!goals.length) {
+    //   return NextResponse.json(
+    //     { error: "No goals found for the given criteria." },
+    //     { status: 404 }
+    //   );
+    // }
 
     return NextResponse.json({ success: true, data: goals }, { status: 200 });
   } catch (error: any) {

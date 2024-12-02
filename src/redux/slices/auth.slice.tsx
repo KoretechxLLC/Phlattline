@@ -123,7 +123,7 @@ export const Employeeregister = createAsyncThunk<any, FormData>(
   async (formData: FormData, thunkAPI) => {
     try {
       const response = await axios.post(
-        `/api/auth/employee_register`,
+        `/api/auth/employeeregister`,
         formData,
         {
           headers: {
@@ -331,9 +331,9 @@ const authSlice = createSlice({
 
     setAssessmentUpdate: (state) => {
       state.userData.assessment_status = true;
-      if (typeof window !== "undefined") {
-        window.location.href = "/Portal/Dashboard";
-      }
+      // if (typeof window !== "undefined") {
+      //   window.location.href = "/Portal/Dashboard";
+      // }
     },
   },
   extraReducers: (builder) => {
