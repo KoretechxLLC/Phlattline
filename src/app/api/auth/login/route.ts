@@ -37,16 +37,30 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if the user status is approved
-    if (user.status !== "approved") {
-      throw new Error(
-        "Your account is not approved yet. Please contact support."
-      );
-    }
 
     const isMatched = await bcrypt.compare(password, user.password);
 
     if (!isMatched) {
       throw new Error("Invalid Email/Password");
+    }
+
+    if (user.employee_id) {
+      const isEmployee = await prisma.employees.findFirst({
+        where: {
+          id: user.employee_id,
+        },
+      });
+      if (isEmployee && isEmployee.status !== "approved") {
+        throw new Error(
+          "Your account is not approved by your Organization. Please contact support."
+        );
+      }
+    }
+
+    if (user.status !== "approved") {
+      throw new Error(
+        "Your account is not approved yet. Please contact support."
+      );
     }
 
     const accessToken = await signAccessToken(
