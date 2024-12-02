@@ -8,6 +8,7 @@ import { RootState } from "@/redux/store";
 import {
   addDepartment,
   fetchAllDepartment,
+  fetchAllEmployee,
   resetError,
   resetSuccess,
 } from "@/redux/slices/organization.slice";
@@ -27,16 +28,19 @@ const Departments = () => {
   );
   const [deptName, setDeptName] = useState("");
   const [deptSize, setDeptSize] = useState("");
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [showModal, setShowModal] = useState(false);
+  const [departmentID, setDepartmentID] = useState("");
   const {
     addDepartmentError,
     addDepartmentSuccess,
     departments,
     responseLoading,
+    employee,
   } = useSelector((state: RootState) => state.organization);
   const { userData } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     dispatch(fetchAllDepartment({ organizationId: userData?.organization_id }));
+    dispatch(fetchAllEmployee({ organizationId: userData?.organization_id }));
   }, []);
 
   const handleSubmit = () => {
@@ -149,7 +153,7 @@ const Departments = () => {
         <div>
           <div className="relative rounded-2xl">
             {departments.length > 0 ? (
-              departments.map((department) => (
+              departments.map((department: any) => (
                 <div
                   key={department.id}
                   className="w-full bg-black text-white py-6 px-4 my-5 border border-gray-500 rounded-2xl flex justify-between items-center"
@@ -159,7 +163,9 @@ const Departments = () => {
                     <Icon
                       icon="dashicons:welcome-write-blog"
                       className="w-8 h-8 text-green-500 cursor-pointer"
-                      onClick={() => setShowModal(true)} // Show modal
+                      onClick={() => {
+                        setShowModal(true), setDepartmentID(department.id);
+                      }} // Show modal
                     />
                     <Icon
                       icon="tabler:trash"
@@ -169,7 +175,7 @@ const Departments = () => {
                 </div>
               ))
             ) : (
-              <div className="w-full text-center py-6 px-4 my-5 border border-gray-500 rounded-2xl bg-gray-100 text-gray-700">
+              <div className="w-full text-center py-6 px-4 my-5 border border-gray-500 rounded-2xl  text-gray-700">
                 <p className="text-lg text-white">
                   No departments found. Please create a department first!
                 </p>
@@ -179,7 +185,12 @@ const Departments = () => {
         </div>
         <EmployeeAddModal
           open={showModal}
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false), dispatch(resetSuccess());
+            dispatch(resetError());
+          }}
+          data={employee}
+          departmentId={departmentID}
         />
       </div>
     </>
