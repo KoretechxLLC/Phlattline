@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import ButtonWrapper from "../components/Button";
 
-const AlexJohnson = () => {
+const HiroshiTanaka = () => {
   return (
     <div className="bg-neutral-800">
       <HorizontalScrollCarousel />
@@ -18,7 +18,7 @@ const HorizontalScrollCarousel = () => {
     target: targetRef,
   });
 
-  const [xTransform, setXTransform] = useState(["0%", "-74%"]); // default for larger screens
+  const [xTransform, setXTransform] = useState(["0%", "-80%"]); // default for larger screens
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -26,11 +26,11 @@ const HorizontalScrollCarousel = () => {
         const screenWidth = window.innerWidth;
 
         if (screenWidth <= 1280) {
-          setXTransform(["0%", "-68.5%"]); // For screens <= 1024px
+          setXTransform(["0%", "-69.5%"]); // For screens <= 1024px
         } else if (screenWidth <= 1550) {
-          setXTransform(["0%", "-75%"]);
+          setXTransform(["0%", "-80%"]);
         } else {
-          setXTransform(["0%", "-74%"]); // For screens > 1280px
+          setXTransform(["0%", "-80%"]); // For screens > 1280px
         }
       };
 
@@ -61,7 +61,7 @@ const HorizontalScrollCarousel = () => {
 const Card = ({ card }: { card: CardType }) => {
   return (
     <div
-      className={`group relative 3xl:w-[335rem] 4xl:w-[327rem] h-[100vh] w-[475rem] overflow-hidden ${
+      className={`group relative 3xl:w-[445rem] 4xl:w-[500rem] h-[100vh] w-[600rem] overflow-hidden ${
         card.id === 1 ? "flex items-center justify-center" : ""
       }`}
     >
@@ -73,7 +73,7 @@ const Card = ({ card }: { card: CardType }) => {
               <Image
                 src="/assets/AlexProfile.png"
                 alt="Alex Profile"
-                className="w-[55vw] 3xl:w-[85vw] 4xl:w-[65vw]"
+                className="w-[55vw] 3xl:w-[65vw] 4xl:w-[55vw]"
                 width={1000}
                 height={1000}
               />
@@ -92,7 +92,7 @@ const Card = ({ card }: { card: CardType }) => {
               </div>
               <div>
                 <button
-                  className="text-white py-[10px] font-bold text-[24px] 3xl:text-[16px] 4xl:text-[20px] flex w-[10rem] 3xl:w-[7rem] 4xl:w-[9rem] p-2 justify-center items-center rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#BAA716] to-[#B50D34]"
+                  className="text-white py-[10px] font-bold text-[24px] 3xl:text-[16px] 4xl:text-[20px] flex w-[10rem] 3xl:w-[12rem] 4xl:w-[16rem] p-2 justify-center items-center rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#BAA716] to-[#B50D34]"
                   style={{ fontFamily: "Sansation" }}
                 >
                   Farming
@@ -119,9 +119,9 @@ const Card = ({ card }: { card: CardType }) => {
             </div>
           </div>
 
-          <div className="absolute 3xl:left-[85rem] 4xl:left-[38rem]  flex justify-center items-center inset-0 z-20 left-[95rem] 3xl:gap-10 w-[130rem]  3xl:w-[21rem]">
-            <div className="w-[50rem] 3xl:w-[25rem] 4xl:w-[27rem] relative top-[0rem] 3xl:top-[-1rem] 4xl:top-[-1rem]">
-              <div className="flex flex-col items-center leading-none gap-12  w-[44rem]  3xl:w-[30rem] 4xl:w-[40rem]">
+          <div className="absolute 3xl:left-[138rem] 4xl:left-[130rem]  flex justify-center items-center inset-0 z-20 left-[153rem] 3xl:gap-10 w-[80rem]  3xl:w-[21rem]">
+            <div className="w-[35rem] 3xl:w-[25rem] 4xl:w-[27rem] relative  3xl:top-[-2rem]">
+              <div className="flex flex-col items-center leading-none gap-12  w-[48rem]  3xl:w-[30rem] 4xl:w-[40rem]">
                 <div>
                   <p
                     className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2"
@@ -158,14 +158,14 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-white text-[24px] leading-[1.1] 3xl:text-[14px] 4xl:text-[18px] font-regular mt-2  3xl:mt-1"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    Improve patient care and operational efficiency, foster a
-                    culture of continuous improvement and professional
-                    development among staff.
+                    Increase crop yield and profitability while maintaining
+                    sustainable farming practices. Adopt new technologies to
+                    improve efficiency and reduce environmental impact.
                   </p>
                 </div>
                 <div>
                   <p
-                    className="text-black text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2"
+                    className="text-white text-[64px] 3xl:w-[6%] 3xl:h-[6%] 3xl:text-[40px] 4xl:text-[48px] font-bold flex flex-row items-baseline gap-4 3xl:gap-2"
                     style={{ fontFamily: "Sansation" }}
                   >
                     <Image
@@ -185,14 +185,17 @@ const Card = ({ card }: { card: CardType }) => {
                     className="text-white text-[24px] leading-[1.1] 3xl:text-[14px] 4xl:text-[18px] font-regular mt-2  3xl:mt-1"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    Managing employee burnout and retention, navigating
-                    regulatory changes, and developing future leaders within the
-                    organization.
+                    Faces unpredictable weather patterns, fluctuating market
+                    prices, and the need to comply with environmental
+                    regulations. Struggles with labor shortages, the high cost
+                    of modern farming equipment, employee professional
+                    development, retention and morale, and leadership
+                    development.
                   </p>
                 </div>
               </div>
             </div>
-            <div className="absolute left-[95rem] top-[18rem] 3xl:top-[13rem] 4xl:top-[12rem] 3xl:left-[33rem]">
+            <div className="absolute left-[35rem] top-[19rem] 3xl:top-[12rem] 4xl:top-[12rem] 3xl:left-[-16rem] 4xl:left-[28rem]">
               <Image
                 src="/assets/ValuesBanner.png"
                 alt="Value Banner"
@@ -206,7 +209,98 @@ const Card = ({ card }: { card: CardType }) => {
                 values the importance of family and tradition in farming.
               </p>
             </div>
-            <div className="absolute left-[150rem] 3xl:left-[76rem] 4xl:left-[135rem] flex flex-col gap-28 3xl:gap-24 4xl:gap-[4.5rem]">
+            <div className="relative left-[84rem] 3xl:left-[49rem] 4xl:left-[73rem] 3xl:bottom-[1rem] flex flex-col gap-[1rem] 3xl:gap-[0.5rem] 4xl:gap-[0.5rem]">
+              <div className="flex items-center justify-between w-[90rem] 3xl:w-[55rem] 4xl:w-[75rem]">
+                <div className="flex leading-none">
+                  <p
+                    className="text-white text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
+                    style={{ fontFamily: "Sansation" }}
+                  >
+                    HOW{" "}
+                  </p>
+                  <span
+                    className="text-transparent mx-4 bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#ffff] text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
+                    style={{ fontFamily: "Sansation" }}
+                  >
+                    PHLATTLINE
+                  </span>
+
+                  <p
+                    className="text-white text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold"
+                    style={{ fontFamily: "Sansation" }}
+                  >
+                    WILL HELP
+                  </p>
+                </div>
+                <div className="flex  justify-center items-center">
+                  <ButtonWrapper
+                    text="Learn More"
+                    className="border-yellow-200 text-white"
+                  />
+                </div>
+              </div>
+              <div className="flex w-[95rem] h-[35vh] 3xl:left-[54rem] 4xl:left-[77rem] gap-48  3xl:gap-[4.5rem] 4xl:gap-[8rem]">
+                <div className="">
+                  <Image
+                    src="/assets/professionalDevelopment.png"
+                    alt="Professional Development"
+                    width={450}
+                    height={450}
+                    className="fixed 3xl:w-[310px] 4xl:w-[400px]"
+                  />
+                  <p className="text-white relative w-[20rem] 3xl:w-[14rem] 4xl:w-[18rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[6rem] left-[4rem] 3xl:top-[4.5rem] 3xl:left-[2.5rem] 4xl:top-[5.7rem] 4xl:left-[3.6rem] leading-[1.1]">
+                    PhlattLine offers training programs to enhance the skills of
+                    farm employees, ensuring they are well-equipped to handle
+                    modern farming techniques and technologies.
+                  </p>
+                </div>
+                <div className="">
+                  <Image
+                    src="/assets/employeeRetention.png"
+                    alt="Employee Retention"
+                    width={450}
+                    height={450}
+                    className="fixed 3xl:w-[310px] 4xl:w-[400px]"
+                  />
+                  <p className="text-white relative w-[20rem] 3xl:w-[14rem] 4xl:w-[18rem]  text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[6rem] left-[4rem] 3xl:top-[4.5rem] 3xl:left-[2.5rem] 4xl:top-[5.8rem] 4xl:left-[3.6rem] leading-[1.1]">
+                    Implements employee engagement initiatives and recognition
+                    programs to boost morale and retain top talent. Provides
+                    wellness programs to support the well-being of farm workers.
+                  </p>
+                </div>
+                <div className="">
+                  <Image
+                    src="/assets/leaderDevelopment.png"
+                    alt="Leadership Development"
+                    width={450}
+                    height={450}
+                    className="fixed 3xl:w-[310px] 4xl:w-[400px]"
+                  />
+                  <p className="text-white relative w-[20rem] 3xl:w-[14rem] 4xl:w-[18rem]  text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[7rem] left-[4rem] 3xl:top-[4.8rem] 3xl:left-[2.5rem] 4xl:top-[6rem] 4xl:left-[3.6rem] leading-[1.1]">
+                    Provides leadership coaching and mentoring programs to help
+                    Alex develop effective leadership skills and build a strong
+                    leadership pipeline within the farm.
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-center gap-8 w-[92%] 3xl:w-[55%] 4xl:w-[76%] 4xl:mt-[2.5rem] relative left-[3rem]">
+                <div className="flex flex-col">
+                  <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#ffff] text-[26px] 3xl:text-[18px] 4xl:text-[22px] uppercase font-bold">Operational</p>
+                  <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#ffff] text-[26px] 3xl:text-[18px] 4xl:text-[22px] uppercase font-bold">Efficiency</p>
+                </div>
+                <div>
+                  <p className="text-white text-[22px] 3xl:text-[16px] 4xl:text-[18px]">
+                    Offers advanced analytics and forecasting tools to help Alex
+                    predict weather patterns and market trends, allowing for
+                    better planning and decision-making. Provides solutions for
+                    automating farm operations, reducing labor dependency, and
+                    optimizing resource usage to lower costs and improve
+                    sustainability.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="absolute left-[208rem] 3xl:left-[100rem] 4xl:left-[198rem] flex flex-col gap-28 3xl:gap-24 4xl:gap-[4.5rem]">
               <div className="flex items-center justify-between">
                 <div className="flex leading-none">
                   <p
@@ -232,7 +326,7 @@ const Card = ({ card }: { card: CardType }) => {
                     STEP
                   </p>
                   <p
-                    className="text-transparent bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#FFFF] font-bold text-[48px]  3xl:text-[32px] 4xl:text-[40px] p-0 m-0 leading-none"
+                    className="text-transparent bg-clip-text bg-gradient-to-b from-[#BAA716] to-[#ffff] font-bold text-[48px]  3xl:text-[32px] 4xl:text-[40px] p-0 m-0 leading-none"
                     style={{
                       fontFamily: "Sansation",
                       WebkitTextStroke: "0.5px white",
@@ -246,7 +340,8 @@ const Card = ({ card }: { card: CardType }) => {
                     className="flex mx-8 items-center text-black text-[20px] 3xl:text-[14px] 4xl:text-[16px]"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    Go to the &quot;Contact Us&quot; page on the PhlattLine website.
+                    Go to the &quot;Contact Us&quot; page on the PhlattLine
+                    website.
                   </p>
                 </div>
                 <span>
@@ -291,7 +386,6 @@ const Card = ({ card }: { card: CardType }) => {
                     width={30}
                     height={30}
                     className="3xl:w-[1.4rem] 4xl:w-[1.4rem]"
-
                   />
                 </span>
                 <div className="flex flex-col bg-black px-[36px] py-[5px] 3xl:px-[20px] 4xl:px-[20px] 3xl:py-[3px] 4xl:py-[3px]  rounded-[38px]  absolute bottom-[14.5rem]  3xl:bottom-[11rem] 4xl:bottom-[10.7rem] left-[53rem] 3xl:left-[31.5rem] 4xl:left-[37.5rem]">
@@ -327,7 +421,6 @@ const Card = ({ card }: { card: CardType }) => {
                     width={30}
                     height={30}
                     className="3xl:w-[1.4rem] 4xl:w-[1.4rem]"
-
                   />
                 </span>
                 <div className="flex flex-col bg-black px-[36px] py-[5px] 3xl:px-[20px] 4xl:px-[20px] 3xl:py-[3px] 4xl:py-[3px]  rounded-[38px]  absolute bottom-[14.5rem]  3xl:bottom-[11rem] 4xl:bottom-[10.7rem] left-[79rem] 3xl:left-[46.5rem] 4xl:left-[56rem]">
@@ -364,7 +457,7 @@ const Card = ({ card }: { card: CardType }) => {
                 </div>
               </div>
             </div>
-            <div className="w-[100rem] left-[265rem] 3xl:left-[126rem] bottom-[6.4rem] 4xl:left-[196rem] 4xl:bottom-[5rem] 3xl:bottom-[4.6rem] flex flex-col gap-16 3xl:gap-12 4xl:gap-8 justify-center items-center absolute">
+            <div className="w-[100rem] left-[336rem] 3xl:left-[155rem] bottom-[9rem] 4xl:left-[267rem] 4xl:bottom-[6.5rem] 3xl:bottom-[5.8rem] flex flex-col gap-16 3xl:gap-12 4xl:gap-8 justify-center items-center absolute">
               <div className="flex  leading-none gap-2 ">
                 <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                   Our
@@ -489,7 +582,7 @@ const Card = ({ card }: { card: CardType }) => {
   );
 };
 
-export default AlexJohnson;
+export default HiroshiTanaka;
 
 type CardType = {
   url: string;
@@ -499,8 +592,8 @@ type CardType = {
 
 const cards: CardType[] = [
   {
-    url: "./assets/Richard.png",
-    ProUrl: "./assets/Richard.png",
+    url: "./assets/HiroshiBg.png",
+    ProUrl: "./assets/AminaProfile.png",
     id: 1,
   },
 ];

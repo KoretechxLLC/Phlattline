@@ -192,7 +192,7 @@ const Card = ({ card }: { card: CardType }) => {
                 </div>
               </div>
             </div>
-            <div className="absolute left-[35rem] top-[16rem] 3xl:top-[12rem] 4xl:top-[10rem] 3xl:left-[-16rem] 4xl:left-[28rem]">
+            <div className="absolute left-[35rem] top-[16rem] 3xl:top-[12rem] 4xl:top-[12rem] 3xl:left-[-16rem] 4xl:left-[28rem]">
               <Image
                 src="/assets/ValuesBanner.png"
                 alt="Value Banner"
@@ -206,7 +206,7 @@ const Card = ({ card }: { card: CardType }) => {
                 empowered to contribute to the company&apos; success.
               </p>
             </div>
-            <div className="relative left-[84rem]  3xl:left-[49rem] 4xl:left-[73rem] bottom-[5rem] 3xl:bottom-[3rem] flex flex-col gap-[4rem] 3xl:gap-[3rem] 4xl:gap-[3rem]">
+            <div className="relative left-[84rem]  3xl:left-[49rem] 4xl:left-[73rem] bottom-[8rem] 3xl:bottom-[5rem] flex flex-col gap-[4rem] 3xl:gap-[3rem] 4xl:gap-[3rem]">
               <div className="flex items-center justify-between w-[90rem] 3xl:w-[57rem] 4xl:w-[75rem]">
                 <div className="flex leading-none">
                   <p
@@ -245,10 +245,9 @@ const Card = ({ card }: { card: CardType }) => {
                     height={450}
                     className="fixed 3xl:w-[310px] 4xl:w-[400px]"
                   />
-                  <p className="text-white relative w-[20rem] 3xl:w-[15rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[5.2rem] left-[4rem] 3xl:top-[4.5rem] 3xl:left-[2.5rem] 4xl:top-[5.7rem] 4xl:left-[2.6rem] leading-[1.2]">
-                    Produce a culture of continual improvement, respect, and
-                    accountability in which all employees feel appreciated and
-                    empowered to contribute to the company&apos; success.
+                  <p className="text-white relative w-[20rem] 3xl:w-[15rem] 4xl:w-[18rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[9rem] left-[4rem] 3xl:top-[6.5rem] 3xl:left-[2.5rem] 4xl:top-[8.2rem] 4xl:left-[3.6rem] leading-[1.2]">
+                    Implements programs to improve employee morale and
+                    retention.
                   </p>
                 </div>
                 <div className="">
@@ -259,7 +258,7 @@ const Card = ({ card }: { card: CardType }) => {
                     height={450}
                     className="fixed 3xl:w-[310px] 4xl:w-[400px]"
                   />
-                  <p className="text-white relative w-[20rem] 3xl:w-[15rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[7rem] left-[4rem] 3xl:top-[5.5rem] 3xl:left-[2.5rem] 4xl:top-[7.2rem] 4xl:left-[2.6rem] leading-[1.2]">
+                  <p className="text-white relative w-[20rem] 3xl:w-[15rem] 4xl:w-[18rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[9rem] left-[4rem] 3xl:top-[6.5rem] 3xl:left-[2.5rem] 4xl:top-[8.2rem] 4xl:left-[3.6rem] leading-[1.2]">
                     Offers training on managing cross-cultural teams
                     effectively.
                   </p>
@@ -272,8 +271,8 @@ const Card = ({ card }: { card: CardType }) => {
                     height={450}
                     className="fixed 3xl:w-[310px] 4xl:w-[400px]"
                   />
-                  <p className="text-white relative w-[20rem] 3xl:w-[15rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[7rem] left-[4rem] 3xl:top-[5.5rem] 3xl:left-[2.5rem] 4xl:top-[7.2rem] 4xl:left-[2.6rem] leading-[1.2]">
-                    Provides programs to develop a pipeline of future leaders.
+                  <p className="text-white relative w-[20rem] 3xl:w-[15rem] 4xl:w-[18rem] text-[24px] 3xl:text-[16px] 4xl:text-[20px] text-center top-[9rem] left-[4rem] 3xl:top-[6.5rem] 3xl:left-[2.5rem] 4xl:top-[8.2rem] 4xl:left-[3.6rem] leading-[1.2]">
+                    Provides programs to develop a pipeline of future leader.
                   </p>
                 </div>
               </div>
@@ -318,7 +317,8 @@ const Card = ({ card }: { card: CardType }) => {
                     className="flex mx-8 items-center text-black text-[20px] 3xl:text-[14px] 4xl:text-[16px]"
                     style={{ fontFamily: "Sansation" }}
                   >
-                    Go to the &quot;Contact Us&quot; page on the PhlattLine website.
+                    Go to the &quot;Contact Us&quot; page on the PhlattLine
+                    website.
                   </p>
                 </div>
                 <span>
@@ -434,7 +434,7 @@ const Card = ({ card }: { card: CardType }) => {
                 </div>
               </div>
             </div>
-            <div className="w-[100rem] left-[336rem] 3xl:left-[155rem] bottom-[9rem] 4xl:left-[267rem] 4xl:bottom-[3.8rem] 3xl:bottom-[5.8rem] flex flex-col gap-16 3xl:gap-12 4xl:gap-8 justify-center items-center absolute">
+            <div className="w-[100rem] left-[336rem] 3xl:left-[155rem] bottom-[9rem] 4xl:left-[267rem] 4xl:bottom-[6.5rem] 3xl:bottom-[5.8rem] flex flex-col gap-16 3xl:gap-12 4xl:gap-8 justify-center items-center absolute">
               <div className="flex  leading-none gap-2 ">
                 <p className="text-white uppercase text-[64px] 3xl:text-[40px] 4xl:text-[48px] font-bold">
                   Our
