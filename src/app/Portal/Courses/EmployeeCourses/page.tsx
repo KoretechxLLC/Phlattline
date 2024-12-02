@@ -4,7 +4,12 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import CoursesTab from "@/app/components/CoursesTab";
 import { Button } from "@/app/components/button-sidebar";
-import { fetchcourses, fetchCoursesAssign, fetchcoursesCount, fetchusercourses } from "@/redux/slices/courses.slice";
+import {
+  fetchcourses,
+  fetchCoursesAssign,
+  fetchcoursesCount,
+  fetchusercourses,
+} from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
 
@@ -15,8 +20,8 @@ const EmployeeCourses = () => {
   const [coursesData, setCoursesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [showAll, setShowAll] = useState(false);  // State to toggle between showing all courses or just 6
-  const coursesPerPage = showAll ? 9 : 6;  // When showAll is true, show all courses, otherwise 6 per page
+  const [showAll, setShowAll] = useState(false); // State to toggle between showing all courses or just 6
+  const coursesPerPage = showAll ? 9 : 6; // When showAll is true, show all courses, otherwise 6 per page
 
   const {
     courses,
@@ -34,8 +39,6 @@ const EmployeeCourses = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
   const employee_id = userData?.employee_id;
-
-
 
   // Fetch the total count of courses once
   useEffect(() => {
@@ -56,12 +59,11 @@ const EmployeeCourses = () => {
     }
   }, [dispatch, userId]);
 
-
   useEffect(() => {
     if (employee_id) {
       dispatch(fetchCoursesAssign(employee_id));
     }
-  }, [employee_id,dispatch, ]);
+  }, [employee_id, dispatch]);
 
   // Update `coursesData` when `coursesSuccess` changes
   useEffect(() => {
@@ -101,9 +103,9 @@ const EmployeeCourses = () => {
         <div className="space-y-4 md:space-y-2 ml-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {loading ? (
-             <div className="text-center text-gray-300 py-20">
-             <Spinner height="30px" width="30px" />
-           </div>
+              <div className="text-center text-gray-300 py-20">
+                <Spinner height="30px" width="30px" />
+              </div>
             ) : displayedCourses && displayedCourses.length > 0 ? (
               <>
                 {displayedCourses.map((coursesAssign: any) => (
@@ -120,9 +122,9 @@ const EmployeeCourses = () => {
               </>
             ) : (
               <div className="flex items-center justify-center col-span-3">
-                <p className="text-red-700 p-4 rounded-lg border border-red-300 text-center">
-                  No courses available.
-                </p>
+                <div className="text-center text-gray-300 h-full w-full flex justify-center items-center py-60">
+                  No Courses Available!
+                </div>
               </div>
             )}
           </div>

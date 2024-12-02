@@ -124,7 +124,7 @@ const EmployeeassessmentTaskTracker = ({
             pendingAssessments.map((individual_assessments: any) => {
               return (
                 <li
-                  className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                  className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-[#62626280] pb-2 last:pb-0 last:border-b-0"
                   key={individual_assessments.id}
                 >
                   <div className="flex items-center md:mx-5 justify-between w-full">
@@ -162,14 +162,14 @@ const EmployeeassessmentTaskTracker = ({
             })
           ) : (
             <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-              No Assigned assessmnets found
+              No assigned assessments found!
             </li>
           )
         ) : activeTab === "completed" ? (
           completedAssessments && completedAssessments.length > 0 ? (
             completedAssessments.map((individual_assessments: any) => (
               <li
-                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-[#62626280] pb-2 last:pb-0 last:border-b-0"
                 key={individual_assessments.id}
               >
                 <div className="flex items-center md:mx-5 justify-between w-full">
@@ -190,7 +190,7 @@ const EmployeeassessmentTaskTracker = ({
             ))
           ) : (
             <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-              No completed Assessments are Found
+              No completed assessments are found!
             </li>
           )
         ) : (

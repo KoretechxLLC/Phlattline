@@ -39,7 +39,7 @@ const CoursesTab: React.FC<CourseTabProps> = ({
 
   return (
     <Card
-      className="p-3 w-full border-[1px] border-slate-600 rounded-3xl hover:bg-red-700 transition-colors duration-500 cursor-pointer group"
+      className="p-3 w-full border-[1px] border-[#62626280] rounded-3xl hover:bg-red-700 transition-colors duration-500 cursor-pointer group"
       style={{ fontFamily: "Sansation" }}
       onClick={() => router.push(`/Portal/Courses/CourseDetail?courseId=${id}`)}
     >

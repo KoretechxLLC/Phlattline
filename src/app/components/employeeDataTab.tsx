@@ -11,14 +11,14 @@ import { Progress } from "./progress";
 const EmployeeDataTab = () => {
   return (
     <div>
-      <Card className="border border-gray-500 rounded-xl">
-        <CardHeader className="mb-2 rounded-xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+      <Card className="border border-[#62626280] rounded-b-3xl">
+        <CardHeader className="mb-2 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <CardTitle>Employee Data</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {/* First Row */}
-            <Card className="border border-gray-500 w-52 rounded-xl">
+            <Card className="border border-[#62626280] w-52 rounded-xl">
               <CardHeader className="rounded-xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-white">
                 <CardTitle className="justify-center mx-4 items-center">
                   Employees
@@ -29,7 +29,7 @@ const EmployeeDataTab = () => {
               </CardContent>
             </Card>
 
-            <div className="border border-gray-500 rounded-lg p-8">
+            <div className="border border-[#62626280] rounded-lg p-8">
               <h2 className="font-semibold mb-2">Gender Ratio</h2>
               <ul className="w-full">
                 <li className="flex-1 items-center justify-between">
@@ -47,7 +47,7 @@ const EmployeeDataTab = () => {
             </div>
 
             {/* Second Row */}
-            <div className="md:col-span-2 border border-gray-500 rounded-lg p-2 mb-2 ">
+            <div className="md:col-span-2 border border-[#62626280] rounded-lg p-2 mb-2 ">
               <h2 className="font-semibold mb-1">Age Groups</h2>
               <ul>
                 <li className="flex-1 items-center justify-between">

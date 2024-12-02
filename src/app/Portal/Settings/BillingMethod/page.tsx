@@ -1,25 +1,47 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import TransactionDetails from "@/app/components/TransactionDetails";
 import { Button } from "@/app/components/button-sidebar";
-import { useRouter } from "next/navigation";
 import CreditCard from "@/app/components/CreditCard";
+import PurchaseHistory from "@/app/Portal/Settings/PurchaseHistory/page"; // Import PurchaseHistory
+import Icon from "@/app/components/utility-icon";
 
 const BillingMethod = () => {
-  const router = useRouter();
+  const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
+
   return (
     <section className="flex flex-col 4xl:gap-3 gap-4">
-      <CreditCard />
-      <div className="flex justify-end">
-        <Button
-          className="rounded-lg"
-          color="primary"
-          onClick={() => router.push("/Portal/Settings/PurchaseHistory")}
-        >
-          Purchase History
-        </Button>
-      </div>
-      <TransactionDetails />
+      {!showPurchaseHistory ? (
+        <>
+          <CreditCard />
+          <div className="flex justify-end">
+            <Button
+              className="rounded-lg"
+              color="primary"
+              onClick={() => setShowPurchaseHistory(true)} // Show Purchase History
+            >
+              Purchase History
+            </Button>
+          </div>
+          <TransactionDetails />
+        </>
+      ) : (
+        <>
+          <div className="flex justify-start mb-4">
+            <Button
+              className="rounded-lg"
+              color="default"
+              onClick={() => setShowPurchaseHistory(false)} // Back to Billing Method
+            >
+              <Icon
+                icon="weui:back-outlined"
+                className="w-10 h-10 text-white mr-2"
+              />
+            </Button>
+          </div>
+          <PurchaseHistory />
+        </>
+      )}
     </section>
   );
 };

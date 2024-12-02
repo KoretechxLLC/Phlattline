@@ -49,7 +49,7 @@ function Calendar({
         cell: "flex-1 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
         day: "w-56 h-9 rounded px-4 rounded-lg font-normal text-current hover:text-default",
         day_selected:
-          "bg-black text-black border-gray-500 hover:bg-default hover:text-default-foreground focus:bg-default focus:text-default-foreground",
+          "bg-black text-black border-[#62626280] hover:bg-default hover:text-default-foreground focus:bg-default focus:text-default-foreground",
         day_today: "bg-white text-accent-foreground",
         day_outside: "text-muted-foreground opacity-50",
         day_disabled: "text-muted-foreground opacity-50",

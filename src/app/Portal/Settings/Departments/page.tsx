@@ -43,6 +43,9 @@ const Departments = () => {
     dispatch(fetchAllEmployee({ organizationId: userData?.organization_id }));
   }, []);
 
+  // Combine all employees from departments
+  const employees = departments?.flatMap((dept: any) => dept.employees) || [];
+
   const handleSubmit = () => {
     if (!deptName || !deptSize) {
       setNotification({
@@ -104,7 +107,7 @@ const Departments = () => {
         {/* Left Column: Department Name and Size */}
         <div className="pr-4">
           {/* Padding right for space between the separator */}
-          <div className="relative py-2 border border-gray-500 rounded-2xl">
+          <div className="relative py-2 border border-[#62626280] rounded-2xl">
             <input
               id="dept-name"
               type="text"
@@ -115,7 +118,7 @@ const Departments = () => {
               required
             />
           </div>
-          <div className="relative py-2 border border-gray-500 rounded-2xl mt-4">
+          <div className="relative py-2 border border-[#62626280] rounded-2xl mt-4">
             <select
               id="industry-select"
               value={deptSize}
@@ -152,11 +155,15 @@ const Departments = () => {
         {/* Right Column: Display Department Name and Size */}
         <div>
           <div className="relative rounded-2xl">
-            {departments.length > 0 ? (
+            {responseLoading ? ( // Show loader while departments are being fetched
+              <div className="flex justify-center items-center py-10">
+                <Spinner height="30px" width="30px" />
+              </div>
+            ) : departments.length > 0 ? (
               departments.map((department: any) => (
                 <div
                   key={department.id}
-                  className="w-full bg-black text-white py-6 px-4 my-5 border border-gray-500 rounded-2xl flex justify-between items-center"
+                  className="w-full bg-black text-white py-6 px-4 my-5 border border-[#62626280] rounded-2xl flex justify-between items-center"
                 >
                   <p className="text-sm">{department.name}</p>
                   <div className="flex space-x-2">
@@ -164,8 +171,9 @@ const Departments = () => {
                       icon="dashicons:welcome-write-blog"
                       className="w-8 h-8 text-green-500 cursor-pointer"
                       onClick={() => {
-                        setShowModal(true), setDepartmentID(department.id);
-                      }} // Show modal
+                        setShowModal(true);
+                        setDepartmentID(department.id);
+                      }}
                     />
                     <Icon
                       icon="tabler:trash"
@@ -175,7 +183,7 @@ const Departments = () => {
                 </div>
               ))
             ) : (
-              <div className="w-full text-center py-6 px-4 my-5 border border-gray-500 rounded-2xl  text-gray-700">
+              <div className="w-full text-center py-6 px-4 my-5 border border-[#62626280] rounded-2xl  text-gray-700">
                 <p className="text-lg text-white">
                   No departments found. Please create a department first!
                 </p>

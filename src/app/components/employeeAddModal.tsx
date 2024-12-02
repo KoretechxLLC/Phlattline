@@ -144,8 +144,8 @@ const EmployeeAddModal = ({
       setDisplayedEmployees(
         data.filter(
           (employee: any) =>
-            !addedEmployees.includes(employee.id) &&
-            (!employee.departmentId || employee.departmentId !== departmentId)
+            addedEmployees.includes(employee.id) &&
+            (employee.departmentId || employee.departmentId === departmentId)
         )
       );
     } else {

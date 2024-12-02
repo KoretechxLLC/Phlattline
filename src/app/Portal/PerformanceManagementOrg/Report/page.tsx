@@ -92,7 +92,7 @@ const Report = () => {
           <EmployeeCourseInfo />
         </div>
         <div className="space-y-5">
-          <Card className="border-[1px] border-gray-500 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
+          <Card className="border-[1px] border-[#62626280] bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
             <CardHeader className="h-16 rounded-3xl">
               <div className="text-sm flex justify-between">
                 <CardTitle>Issues Reported</CardTitle>
@@ -107,7 +107,7 @@ const Report = () => {
 
         {/* Row 2: Assessment Results & Key Performance Indicators */}
         <div className="space-y-5">
-          <Card className="border-[1px] border-gray-500 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
+          <Card className="border-[1px] border-[#62626280] bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
             <CardHeader className="h-16 rounded-3xl">
               <CardTitle>Assessment Results</CardTitle>
             </CardHeader>
@@ -117,7 +117,7 @@ const Report = () => {
           </Card>
         </div>
         <div className="space-y-5">
-          <Card className="border-[1px] border-gray-500  rounded-3xl h-full">
+          <Card className="border-[1px] border-[#62626280]  rounded-3xl h-full">
             <CardHeader className="h-16 rounded-3xl">
               <CardTitle>Key Performance Indicators</CardTitle>
             </CardHeader>

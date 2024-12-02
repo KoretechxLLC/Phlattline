@@ -37,7 +37,7 @@ const DataCollection = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <div>
-        <Card className="border-[1px] border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
+        <Card className="border-[1px] border-[#62626280] bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full">
           <CardHeader className="h-16 rounded-3xl">
             <CardTitle>Assessment Results</CardTitle>
             <CardTitle>115 Total</CardTitle>
@@ -52,7 +52,7 @@ const DataCollection = () => {
         <InterviewTab />
       </div>
 
-      <Card className="col-span-1 md:col-span-2 border-[1px] border-gray-500 rounded-3xl  h-full">
+      <Card className="col-span-1 md:col-span-2 border-[1px] border-[#62626280] rounded-3xl  h-full">
         <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] ">
           <CardTitle>Performance Reviews</CardTitle>
         </CardHeader>

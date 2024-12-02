@@ -91,7 +91,7 @@ const Assessments = () => {
     const timer = setTimeout(() => {
       setLoading(false); // Stop loading after a delay
     }, 500); // Simulate loading time (adjust as needed)
-    
+
     return () => clearTimeout(timer);
   }, [activeTab]);
 
@@ -134,7 +134,7 @@ const Assessments = () => {
         </Button>
       </div>
       {/* Render Content Based on Active Tab */}
-      <div className="content border border-gray-500 rounded-xl h-full w-full p-3 md:p-6 relative">
+      <div className="content border border-[#62626280] rounded-xl h-full w-full p-3 md:p-6 relative">
         {renderContent()}
       </div>
     </div>

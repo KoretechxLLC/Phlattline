@@ -65,7 +65,7 @@ const TalentManagement = () => {
         </div>
 
         {/* Render Content Based on Active Tab */}
-        <div className="content border border-gray-500 rounded-xl h-full w-full 4xl:p-3 p-2 md:p-2">
+        <div className="content border border-[#62626280] rounded-xl h-full w-full 4xl:p-3 p-2 md:p-2">
           {renderContent()}
         </div>
       </>

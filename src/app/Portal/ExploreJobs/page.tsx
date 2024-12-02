@@ -58,7 +58,7 @@ const ExploreJobs = () => {
         </div>
       ) : (
         // Show the table when data is loaded
-        <table className="table-auto w-full text-center text-lg border border-gray-500">
+        <table className="table-auto w-full text-center text-lg border border-[#62626280]">
           <thead>
             <tr className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white">
               <th className="px-4 py-2">S.NO</th>
@@ -71,19 +71,19 @@ const ExploreJobs = () => {
           <tbody>
             {organizations.map((organization, index) => (
               <tr key={organization.id}>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   {index + 1}
                 </td>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   {organization.name}
                 </td>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   {organization.type}
                 </td>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   {organization.rating.toFixed(1)}
                 </td>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   <Button
                     color="primary"
                     className="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition"

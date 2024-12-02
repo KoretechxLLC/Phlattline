@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/app/components/Card";
 import { Button } from "@/app/components/button-sidebar";
 import Spinner from "@/app/components/Spinner";
-import Image from "next/image";
 import Icon from "./utility-icon";
+import { useRouter } from "next/navigation";
 
-// Static array of items with title and description
 const assignmentItems = [
   {
     title: "Goal Setting",
@@ -24,6 +23,7 @@ const assignmentItems = [
 
 const AssignmentTabs: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -33,6 +33,10 @@ const AssignmentTabs: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleRetakeAssessmentsClick = () => {
+    router.push("/Portal/ODaas?tab=Diagnostics");
+  };
+
   return (
     <div className="flex overflow-x-auto space-x-4">
       {loading ? (
@@ -41,7 +45,6 @@ const AssignmentTabs: React.FC = () => {
         </Card>
       ) : (
         <>
-          {/* Render each assignment item as a card */}
           {assignmentItems.map((item, index) => (
             <Card
               key={index}
@@ -65,8 +68,10 @@ const AssignmentTabs: React.FC = () => {
             </Card>
           ))}
 
-          {/* Extra tab at the end */}
-          <Card className="min-w-[200px] w-full 4xl:py-3 4xl:px-6 py-6 px-12 bg-gradient-to-b from-[#B50D34] to-[#BAA716]">
+          <Card
+            onClick={handleRetakeAssessmentsClick}
+            className="min-w-[200px] w-full 4xl:py-3 4xl:px-6 py-6 px-12 bg-gradient-to-b from-[#B50D34] to-[#BAA716] cursor-pointer"
+          >
             <CardContent className="flex flex-col justify-center items-center h-full">
               <Icon
                 icon={"mingcute:arrow-right-up-circle-fill"}

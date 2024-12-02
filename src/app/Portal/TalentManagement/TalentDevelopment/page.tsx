@@ -1,15 +1,37 @@
 "use client";
 import React from "react";
-import HighPotentialTab from "@/app/components/highPotentialTab";
+import HighPotentialTab from "@/app/components/employeesTab";
 import LDStrategyTab from "@/app/components/ldStrategyTab";
 import SuccessionPlanningTab from "@/app/components/successionPlanning";
+import EmployeesTab from "@/app/components/employeesTab";
+
+const highPotentialEmployees = [
+  {
+    image: "/assets/UserProfile.png",
+    name: "John Doe",
+    designation: "Software Engineer",
+  },
+  {
+    image: "/assets/UserProfile.png",
+    name: "Jane Smith",
+    designation: "Product Manager",
+  },
+  {
+    image: "/assets/UserProfile.png",
+    name: "Alice Johnson",
+    designation: "Team Lead",
+  },
+];
 
 const TalentDevelopment = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* First Row */}
       <div>
-        <HighPotentialTab />
+        <EmployeesTab
+          title="High Potential Employees"
+          employees={highPotentialEmployees}
+        />
       </div>
       <div>
         <LDStrategyTab />

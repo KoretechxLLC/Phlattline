@@ -87,7 +87,7 @@ export const HoverEffect = ({
                 />
               )}
             </AnimatePresence>
-            <Card className="flex items-center justify-center border border-[#626262]">
+            <Card className="flex items-center justify-center border p-12 rounded-3xl border-[#62626280]">
               <div className="flex items-center justify-center">
                 <Image
                   src={
@@ -103,7 +103,7 @@ export const HoverEffect = ({
                 />
               </div>
               <CardTitle>{item.title}</CardTitle>
-              <div className="flex items-center justify-between w-full my-2">
+              <div className="flex items-center justify-between w-full my-4">
                 <span className="text-default-900 group-hover:text-white font-bold 4xl:text-xl text-2xl">
                   ${item.price}
                 </span>

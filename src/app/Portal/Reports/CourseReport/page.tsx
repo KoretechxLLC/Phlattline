@@ -98,7 +98,7 @@ const CourseReport = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      <Card className="border border-gray-500 rounded-3xl p-1">
+      <Card className="border border-[#62626280] rounded-3xl p-1">
         <CardHeader className="flex-row gap-3">
           <CardTitle className="flex-1">Activity Hours</CardTitle>
         </CardHeader>
@@ -125,7 +125,7 @@ const CourseReport = () => {
         </div>
       </Card>
 
-      <Card className="border border-gray-500 rounded-3xl shadow-md w-full">
+      <Card className="border border-[#62626280] rounded-3xl shadow-md w-full">
         <CardContent>
           <h1 className="text-center text-3xl font-bold my-1">
             Course Results
@@ -146,8 +146,7 @@ const CourseReport = () => {
         />
       </div>
 
-
-      <Card className="border h-full border-gray-500 rounded-3xl">
+      <Card className="border h-full border-[#62626280] rounded-3xl">
         <CardHeader className="flex-row gap-3">
           <CardTitle className="flex-1 ml-6">Courses Completion</CardTitle>
         </CardHeader>
@@ -164,23 +163,25 @@ const CourseReport = () => {
                   >
                     <div className="flex items-center">
                       <div
-                        className={`h-12 w-1 mr-4 ${course.status === "completed"
+                        className={`h-12 w-1 mr-4 ${
+                          course.status === "completed"
                             ? "bg-green-500"
                             : course.status === "inprogress"
-                              ? "bg-yellow-500"
-                              : "bg-red-500"
-                          }`}
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
+                        }`}
                       ></div>
                       <div className="flex-1">
                         <div className="flex justify-between">
                           <span>{course.courses.course_name}</span>
                           <span
-                            className={`${course.status === "completed"
+                            className={`${
+                              course.status === "completed"
                                 ? "text-green-500 capitalize"
                                 : course.status === "inprogress"
-                                  ? "text-yellow-500 capitalize"
-                                  : "text-red-500 capitalize"
-                              }`}
+                                ? "text-yellow-500 capitalize"
+                                : "text-red-500 capitalize"
+                            }`}
                           >
                             {course.status}
                           </span>

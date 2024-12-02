@@ -87,7 +87,7 @@ const EmployeeSetting = ({
       ) : data.length === 0 ? (
         <div className="text-center py-10 text-lg">No employees found</div>
       ) : (
-        <table className="table-auto w-full text-center text-sm border border-gray-500">
+        <table className="table-auto w-full text-center text-sm border border-[#62626280]">
           <thead>
             <tr className="text-lg bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-white">
               <th className="px-6 py-3 ">Departments</th>
@@ -117,7 +117,7 @@ const EmployeeSetting = ({
                 {index === 0 && (
                   <>
                     <td
-                      className="px-4 py-2 border items-center border-gray-500"
+                      className="px-4 py-2 border items-center border-[#62626280]"
                       rowSpan={4}
                     >
                       {data.map((row) => (
@@ -139,7 +139,7 @@ const EmployeeSetting = ({
                       ))}
                     </td>
                     <td
-                      className="px-4 py-2 justify-center items-center border border-gray-500"
+                      className="px-4 py-2 justify-center items-center border border-[#62626280]"
                       rowSpan={4}
                     >
                       {data.map((row) => (
@@ -152,7 +152,7 @@ const EmployeeSetting = ({
                       ))}
                     </td>
                     <td
-                      className="justify-center items-center px-2 py-2 border border-gray-500"
+                      className="justify-center items-center px-2 py-2 border border-[#62626280]"
                       rowSpan={4}
                     >
                       {data.map((row, index) => (
@@ -192,7 +192,7 @@ const EmployeeSetting = ({
                       ))}
                     </td>
                     <td
-                      className="justify-center items-center px-4 py-2 border border-gray-500"
+                      className="justify-center items-center px-4 py-2 border border-[#62626280]"
                       rowSpan={4}
                     >
                       {data.map((row) => (

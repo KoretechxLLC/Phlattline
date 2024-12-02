@@ -63,7 +63,6 @@ const EventModal = ({
 
   let firstImage = videos?.[0]?.thumbnail_url;
 
-
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div
@@ -198,14 +197,12 @@ const EventModal = ({
           <div className="flex-shrink-0 mt-2">
             <Button
               color="primary"
-              
               className="w-full text-white px-4 py-2 rounded-3xl"
               onClick={() =>
                 router.push(`/Portal/Courses/CourseDetail?courseId=${event.id}`)
               }
             >
               Get Started
-              
             </Button>
           </div>
         </div>
@@ -213,52 +210,51 @@ const EventModal = ({
         {/* Right Side: Module List Only */}
         <div className="flex-shrink-0 md:w-1/3 my-4 md:ml-5">
           <div className="my-5">
-            <Card className="border border-gray-500 rounded-xl p-5">
+            <Card className="border border-[#62626280] rounded-xl p-5">
               {/* <CardHeader className="rounded-3xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] p-2"> */}
               {/* <div className="text-sm flex justify-center items-center text-white">
                   <CardTitle>Course Modules</CardTitle>
                 </div> */}
               {/* </CardHeader> */}
               {/* <CardContent> */}
-                {/* <ModuleList /> */}
+              {/* <ModuleList /> */}
 
-                <div className="overflow-x-scroll">
-                  <div className="grid my-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
-                    {event?.videos &&
-                      event?.videos?.length > 0 &&
-                      event?.videos.map((video: any) => (
-                        <div
-                          key={video.id}
-                          className="relative border border-gray-500 rounded-lg"
-                        >
-                          
-                          <Image
-                            src={`/api/images?filename=${videos[0].thumbnail_url}&folder=coursesthumbnails`}
-                            alt={`Video Thumbnail ${video.id}`}
-                            className="w-full h-full rounded-lg container border-2 border-red-600"
-                            width={1000}
-                            height={1000}
-                          />
-                          <div className="absolute inset-0 flex justify-center items-center">
-                            <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
-                              <Icon
-                                icon="ph:play"
-                                className="text-white text-3xl"
-                              />
-                            </div>
-                          </div>
-                          <div className="absolute bottom-0 left-0 p-2 text-white bg-opacity-60 rounded-br-lg rounded-tl-lg">
-                            <span
-                              className="text-lg font-bold"
-                              style={{ textShadow: "2px 2px 4px black" }}
-                            >
-                              {video.title}
-                            </span>
+              <div className="overflow-x-scroll">
+                <div className="grid my-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+                  {event?.videos &&
+                    event?.videos?.length > 0 &&
+                    event?.videos.map((video: any) => (
+                      <div
+                        key={video.id}
+                        className="relative border border-[#62626280] rounded-lg"
+                      >
+                        <Image
+                          src={`/api/images?filename=${videos[0].thumbnail_url}&folder=coursesthumbnails`}
+                          alt={`Video Thumbnail ${video.id}`}
+                          className="w-full h-full rounded-lg container border-2 border-red-600"
+                          width={1000}
+                          height={1000}
+                        />
+                        <div className="absolute inset-0 flex justify-center items-center">
+                          <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
+                            <Icon
+                              icon="ph:play"
+                              className="text-white text-3xl"
+                            />
                           </div>
                         </div>
-                      ))}
-                  </div>
+                        <div className="absolute bottom-0 left-0 p-2 text-white bg-opacity-60 rounded-br-lg rounded-tl-lg">
+                          <span
+                            className="text-lg font-bold"
+                            style={{ textShadow: "2px 2px 4px black" }}
+                          >
+                            {video.title}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                 </div>
+              </div>
               {/* </CardContent> */}
             </Card>
           </div>

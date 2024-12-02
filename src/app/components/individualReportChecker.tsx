@@ -11,7 +11,7 @@ import { Button } from "./button-sidebar";
 const IndividualReportChecker = () => {
   return (
     <div>
-      <Card className="border border-gray-500 p-8 rounded-3xl">
+      <Card className="border border-[#62626280] p-8 rounded-3xl">
         <CardHeader>
           <CardTitle>Check Individual Report</CardTitle>
         </CardHeader>

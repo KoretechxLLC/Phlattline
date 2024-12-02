@@ -96,7 +96,7 @@ const Supervisor = () => {
               label={"Goals"}
               isClickable={false}
             />
-            <div className=" border border-gray-500 rounded-3xl ">
+            <div className=" border border-[#62626280] rounded-3xl ">
               <CardHeader className="h-16 rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80]">
                 <CardTitle>Performance Reviews</CardTitle>
               </CardHeader>

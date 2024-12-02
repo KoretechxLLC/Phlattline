@@ -50,9 +50,14 @@ export function MenuClassic() {
   if (userData?.user_type_id === 2) {
     menus.push(
       {
-        href: "PerformanceManagementOrg",
+        href: "/PerformanceManagementOrg",
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
+      },
+      {
+        href: "/TalentManagement",
+        label: "Talent Management",
+        icon: "/assets/TalentLogo.png",
       },
       { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
     );
@@ -61,25 +66,26 @@ export function MenuClassic() {
   if (userData?.user_type_id === 1) {
     menus.push(
       {
-        href: "PerformanceManagement",
+        href: "/PerformanceManagement",
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
       },
-      // {
-      //   href: "ExploreJobs",
-      //   label: "Explore Jobs",
-      //   icon: "/assets/ExploreJobsLogo.png",
-      // },
+      {
+        href: "/ExploreJobs",
+        label: "Explore Jobs",
+        icon: "/assets/ExploreJobsLogo.png",
+      },
       { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
     );
   }
   if (userData?.user_type_id === 3) {
     menus.push(
       {
-        href: "PerformanceManagement",
+        href: "/PerformanceManagement",
         label: "Performance Management",
         icon: "/assets/PerformanceLogo.png",
       },
+
       { href: "/Reports", label: "Reports", icon: "/assets/ReportsLogo.png" }
     );
   }

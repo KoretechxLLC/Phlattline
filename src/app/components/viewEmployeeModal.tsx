@@ -110,31 +110,31 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
               {/* Left Side - Form Fields */}
               <div className="flex-1 p-5 rounded-xl">
                 {/* First Name Input */}
-                <div className="relative py-4 my-2 border border-gray-500 rounded-2xl">
+                <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
                   <span className="text-black  mx-3">John</span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Last Name Input */}
-                <div className="relative py-4 my-2 border border-gray-500 rounded-2xl">
+                <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
                   <span className="text-black  mx-3">Doe</span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Email Input (Disabled) */}
-                <div className="relative py-4 my-2 border border-gray-500 rounded-2xl">
+                <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
                   <span className="text-black  mx-3">JohnDoe@gmail.com</span>
                   <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Designation Input */}
-                <div className="relative py-4 my-2 border border-gray-500 rounded-2xl">
+                <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
                   <span className="text-black  mx-3">Software Engineer</span>
                   <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Date Picker */}
-                <div className="relative py-4 my-2 border border-gray-500 rounded-2xl">
+                <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
                   <span className="text-black  mx-3">11/2/2008</span>
                   <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>

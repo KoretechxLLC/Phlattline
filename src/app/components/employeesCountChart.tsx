@@ -2,34 +2,27 @@
 import { useConfig } from "@/app/hooks/use-config";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
-import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner component
-
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
 interface PrevResultsTrackerProps {
   height?: number;
   chartType?: "bar" | "area";
   categories?: string[];
 }
-
-const PerformanceDeptsChart = ({
+const EmployeesCountChart = ({
   height = 160,
   chartType = "bar",
-  categories = ["Sales", "Manufacture", "Financial", "Operational"],
+  categories = ["Sales", "Manufacture", "Financial"],
 }: PrevResultsTrackerProps) => {
   const [config] = useConfig();
   const { isRtl } = config;
   const { theme: mode } = useTheme();
-  const [loading, setLoading] = useState(true);
-
-  const data = [44, 55, 57, 58];
+  const data = [44, 55, 57];
   const series = [
     {
       name: "Open Position Dept",
@@ -40,7 +33,6 @@ const PerformanceDeptsChart = ({
       })),
     },
   ];
-
   const options: any = {
     chart: {
       toolbar: {
@@ -157,38 +149,21 @@ const PerformanceDeptsChart = ({
       },
     ],
   };
-
-  // Simulating loading delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500); // Adjust loading time as necessary
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <Card className="border border-[#62626280] rounded-3xl">
-      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
-        <CardTitle>Performance by Departments</CardTitle>
+    <Card className="border border-[#62626280] rounded-xl h-full">
+      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
+        <CardTitle>Employees In Department</CardTitle>
       </CardHeader>
       <CardContent className="p-1">
-        {/* Loader displayed when loading state is true */}
-        {loading ? (
-          <div className="flex justify-center items-center py-6">
-            <Spinner height="30px" width="30px" />
-          </div>
-        ) : (
-          <Chart
-            options={options}
-            series={series}
-            type={chartType}
-            height={height}
-            width={"100%"}
-          />
-        )}
+        <Chart
+          options={options}
+          series={series}
+          type={chartType}
+          height={height}
+          width={"100%"}
+        />
       </CardContent>
     </Card>
   );
 };
-
-export default PerformanceDeptsChart;
+export default EmployeesCountChart;

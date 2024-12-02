@@ -84,7 +84,7 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
   }
 
   return (
-    <Card className="border border-gray-500 py-8">
+    <Card className="border border-[#62626280] py-8">
       <CardHeader className="rounded-xl shadow-lg p-8 mx-auto w-full bg-black">
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">

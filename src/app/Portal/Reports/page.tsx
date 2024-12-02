@@ -8,6 +8,7 @@ import Spinner from "@/app/components/Spinner";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import ODaasReport from "./ODaasReport/page";
+import TalentManagementReport from "./TalentManagementReport/page";
 
 const Reports = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
@@ -33,6 +34,8 @@ const Reports = () => {
         return <AssessmentsReport />;
       case "PerformanceManagement":
         return <PerformanceManagementReport />;
+      case "TalentManagement":
+        return userType === 2 ? <TalentManagementReport /> : null;
       case "ODaas":
         return userType === 2 ? <ODaasReport /> : null;
       default:
@@ -48,6 +51,7 @@ const Reports = () => {
     ];
 
     if (userType === 2) {
+      buttons.push({ label: "Talent Management", value: "TalentManagement" });
       buttons.push({ label: "ODaas", value: "ODaas" });
     }
 
@@ -75,7 +79,7 @@ const Reports = () => {
             {renderButtons()}
           </div>
 
-          <div className="content border border-gray-500 rounded-xl h-full w-full 4xl:p-3 p-3 md:p-3">
+          <div className="content border border-[#62626280] rounded-xl h-full w-full 4xl:p-3 p-3 md:p-3">
             {renderContent()}
           </div>
         </>

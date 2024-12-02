@@ -9,7 +9,7 @@ import ManagingChange from "./ManagingChange/page";
 import ProgramEvolutions from "./ProgramEvolutions/page";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/app/components/Spinner";
 
 const OdaasStrategic = () => {
@@ -18,16 +18,20 @@ const OdaasStrategic = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
+    const initialTab = searchParams.get("tab") || "Diagnostics";
+    setActiveTab(initialTab);
+
     if (userData) {
       if (userData?.user_type_id !== 2) {
         router.back();
       } else {
-        setLoading(false); // Stop loading if user is authorized
+        setLoading(false);
       }
     }
-  }, [userData, router]);
+  }, [searchParams, userData, router]);
 
   const handleTabChange = (tab: string) => {
     setLoading(true); // Set loading to true when changing tabs
@@ -125,7 +129,7 @@ const OdaasStrategic = () => {
         </div>
 
         {/* Render Content Based on Active Tab */}
-        <div className="content border border-gray-500 rounded-3xl h-full w-full 4xl:p-3 p-3 5xl:p-2 md:p-3">
+        <div className="content border border-[#62626280] rounded-3xl h-full w-full 4xl:p-3 p-3 5xl:p-2 md:p-3">
           {renderContent()}
         </div>
       </>
