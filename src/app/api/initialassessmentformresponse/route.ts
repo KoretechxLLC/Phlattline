@@ -1,4 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
+import { error } from "console";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -13,6 +14,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
 
     const parsedUserId = parseInt(userId, 10);
 
@@ -32,16 +34,38 @@ export async function POST(req: NextRequest) {
     //   );
     // }
 
-  
+
 
     // Process each assessment ID
     for (const id of assessmentId) {
       // Filter responses for the current assessment ID
+
+
+      let existingResponse = await prisma.user_assessment_responses.findFirst({
+        where: {
+          assessment_id: Number(id),
+          user_id: Number(parsedUserId)
+        },
+      })
+
+
+      if (existingResponse) {
+
+        return NextResponse.json({
+          error: "Assesement Already Submitted",
+          success: false,
+        }, {
+          status: 409
+        })
+      }
+
       const filteredResponses = responses.filter((res) => res.assessmentsid == id);
 
 
       // Create responses for the current assessment ID
       for (const res of filteredResponses) {
+
+
         const data = await prisma.user_assessment_responses.create({
           data: {
             user_id: parsedUserId,
@@ -64,6 +88,32 @@ export async function POST(req: NextRequest) {
       },
     });
 
+
+
+
+
+
+    let isPurchased = await prisma.purchased_assessments?.findFirst({
+      where: {
+        user_id: parsedUserId,
+        individual_assessments_id: assessmentId?.[0]
+      }
+    })
+
+    if (isPurchased) {
+
+     let updatedData =  await prisma.purchased_assessments.updateMany({
+        where: {
+          user_id: Number(parsedUserId),
+          individual_assessments_id: Number(assessmentId?.[0])
+        },
+        data: {
+          completed: true,
+        },
+      });
+
+    }
+
     return NextResponse.json(
       {
         success: true,
@@ -82,8 +132,6 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-
 
 export async function GET(req: NextRequest) {
   try {

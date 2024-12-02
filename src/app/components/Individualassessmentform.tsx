@@ -30,7 +30,7 @@ const IndividualAssessmentForm = () => {
   const usertype = userData?.user_type_id;
   const { assessments, loading, error, success } = useSelector(
     (state: RootState) => state.assessment
-  );
+  ); 
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );

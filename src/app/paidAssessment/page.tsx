@@ -45,14 +45,12 @@ const PaidAssessment = () => {
     null
   );
   const { userData } = useSelector((state: RootState) => state.auth);
-  const [responses, setResponses] = useState<{ [key: string]: string }>({});
+  const [responses, setResponses] = useState<any>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
   const usertype =userData?.user_type_id;
   const searchParams = useSearchParams();
   const assessmentId: any = searchParams.get("assessmentId");
-
-
 
   useEffect(() => {
     if(usertype==3){
@@ -79,11 +77,33 @@ const PaidAssessment = () => {
   }
   }, [dispatch]);
 
-  const handleOptionChange = (questionId: string, optionText: string) => {
-    setResponses((prevResponses) => ({
-      ...prevResponses,
-      [questionId]: optionText,
-    }));
+  const handleOptionChange = (individual_assessment_id: any, questionId: string, optionText: string) => {
+
+    let resp = {
+      assessmentsid: individual_assessment_id,
+      selectedOption: optionText,
+      questionId: questionId
+    };
+
+    if (responses && responses?.length > 0) {
+
+      if (responses.some((resp: any) => resp.questionId == questionId)) {
+        let response = responses.map((res: any) => {
+
+          if (res.questionId == resp.questionId) {
+            return resp
+          } else {
+            return res
+          }
+        })
+        setResponses(response)
+      } else {
+        setResponses([...responses, resp])
+      }
+    } else {
+      setResponses([...responses, resp])
+    }
+
 
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -142,11 +162,9 @@ const PaidAssessment = () => {
     event.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
-    // Validate that all questions are answered
-
     singleAssessment.individual_assessment_questions.forEach(
       (question: any) => {
-        if (!responses[question.id]) {
+        if (responses?.every((resp: any) => resp.questionId != question.id)) {
           newErrors[question.id] = "This question is required.";
         }
       }
@@ -159,15 +177,16 @@ const PaidAssessment = () => {
     }
 
 
+    let assessmentId = singleAssessment?.id
+
+
     if(usertype==3){
       dispatch(
         submitAssessmentResponses({
           userId,
-          assessmentId,
-          responses: Object.entries(responses).map(([questionId, answer]) => ({
-            questionId,
-            answer,
-          })),
+          assessmentId:
+          [assessmentId],
+          responses: responses,
           user_type_id:usertype,
         })
       );
@@ -177,12 +196,9 @@ const PaidAssessment = () => {
     dispatch(
       submitAssessmentResponses({
         userId,
-        assessmentId,
-        responses: Object.entries(responses).map(([questionId, answer]) => ({
-          questionId,
-          answer,
-          
-        })),
+        assessmentId:
+        [assessmentId],
+        responses: responses,
         user_type_id:usertype,
       })
     )
@@ -252,13 +268,14 @@ const PaidAssessment = () => {
                                     name={question.id.toString()}
                                     value={option.option_text}
                                     checked={
-                                      responses[question.id] ===
-                                      option.option_text
+                                      responses && responses?.length > 0 && responses?.find((res: any) => res.questionId == question?.id)?.selectedOption === option.option_text
                                     }
                                     onChange={() =>
                                       handleOptionChange(
+                                        question.individual_assessment_id,
                                         question.id,
-                                        option.option_text
+                                        option.option_text,
+    
                                       )
                                     }
                                     className="form-radio text-yellow-500 focus:ring-0"

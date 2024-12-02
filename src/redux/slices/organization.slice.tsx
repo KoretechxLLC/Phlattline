@@ -50,7 +50,7 @@ export const fetchAllEmployee = createAsyncThunk<any, any>(
   async ({ organizationId }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/auth/employee_register/?organization_id=${organizationId}`
+        `/api/auth/employeeregister/?organization_id=${organizationId}`
       );
 
       return response.data.data;
@@ -127,7 +127,7 @@ export const fetchEmployeeByDepartment = createAsyncThunk<any, any>(
   async ({ departmentId }: any, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/api/auth/employee_register/?departmentId=${departmentId}`
+        `/api/auth/employeeregister/?departmentId=${departmentId}`
       );
       return response.data.data;
     } catch (error: any) {

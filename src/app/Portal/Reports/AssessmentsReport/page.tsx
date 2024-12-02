@@ -87,8 +87,7 @@ const AssessmentReport = () => {
      
     
     <div style={{ display: userData?.user_type_id === 1 ? "block" : "none" }}>
-     <div className="flex w-full gap-3 max-h-[120vh] min-h-[38vh]">
-     
+     <div className="flex w-full gap-3 max-h-[120vh] min-h-[38vh]">  
       {/* First component taking full width on small screens and half on medium screens */}
       <Card className="border-[1px] border-gray-500 rounded-3xl w-[65%]">
         <CardHeader className="h-30 rounded-3xl">
