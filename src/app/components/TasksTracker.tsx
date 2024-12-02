@@ -15,8 +15,11 @@ import {
   deleteGoal,
   EmployeefetchGoals,
   fetchGoals,
+  setUpdateGoals,
+  updateTask,
 } from "@/redux/slices/performanceManagement.slice";
 import { RootState } from "@/redux/store";
+import { div } from "three/webgpu";
 
 interface TasksTrackerProps {
   showPending?: boolean;
@@ -57,8 +60,17 @@ const TasksTracker = ({
   ];
 
   const [loading, setLoading] = useState<boolean>(false);
-  const { goals,EmployeeGoals } = useSelector((state: RootState) => state.performance);
+  const [goalData, setGoalData] = useState<any>({});
+  const {
+    goals,
+    taskUpdateSuccess,
+    taskUpdateError,
+    taskUpdateLoader,
+    taskUpdate,
+    EmployeeGoals,
+  } = useSelector((state: RootState) => state.performance);
   const { userData } = useSelector((state: RootState) => state.auth);
+
   const dispatch: any = useDispatch();
 
 
@@ -133,6 +145,47 @@ const TasksTracker = ({
   const handlePendingTasksClick = () => setActiveTab("pending");
   const handleCompletedTasksClick = () => setActiveTab("completed");
   const handleSavedTasksClick = () => setActiveTab("saved");
+  const handleGoalClick = (item: any) => {
+    setActiveTab("completed");
+    setGoalData(item);
+  };
+
+  const handleTaskChange = (selectedTask: string) => {
+    let goalId = goalData?.id;
+
+    let goal_tasks = goalData?.goal_tasks;
+
+    let updatedTasks = goal_tasks?.map((task: any) => {
+      if (task.value == selectedTask) {
+        return {
+          ...task,
+          isCompleted: !task?.isCompleted,
+        };
+      } else {
+        return task;
+      }
+    });
+
+    dispatch(updateTask({ goalId, updatedTasks }));
+  };
+
+  useEffect(() => {
+    if (taskUpdateSuccess) {
+      let allGoals = [...goals];
+
+      allGoals = allGoals.map((e, i) => {
+        if (e.id == taskUpdate.id) {
+          return taskUpdate;
+        } else {
+          return e;
+        }
+      });
+
+      dispatch(setUpdateGoals(allGoals));
+
+      setGoalData(taskUpdate);
+    }
+  }, [taskUpdateSuccess]);
 
   return (
     <div>
@@ -156,7 +209,7 @@ const TasksTracker = ({
                 ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
                 : "text-default-600"
             } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
-            onClick={handleCompletedTasksClick}
+            // onClick={handleCompletedTasksClick}
           >
             Tasks
           </button>
@@ -183,45 +236,53 @@ const TasksTracker = ({
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
             <Spinner height="30px" width="30px" />
           </div>
-        ) : activeTab === "pending" ? (
+        ) : 
+        activeTab === "pending" ?
+         
           goals && goals.length > 0 ? (
-            goals.filter((item: any) => item.status === false).length > 0 ? (
-              goals
-                .filter((item: any) => item.status === false)
-                .map((item: any) => (
-                  <li
-                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
-                    key={item.id}
-                  >
-                    <div className="flex items-center 4xl:mx-5 md:mx-5 justify-between  w-full">
-                      <div className="flex items-center">
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage
-                            src="/assets/ongoing.png"
-                            alt="pending-avatar"
-                            className="w-5 h-5"
-                          />
-                        </Avatar>
-                        <span className="text-xs sm:text-sm px-1">
-                          <button
-                            className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
-                            title={`Description: ${
-                              item.description
-                            }\nStart Date: ${new Date(
-                              item.start_date
-                            ).toLocaleDateString("en-GB")}`}
-                          >
-                            {item.goal_name}
-                          </button>
-                        </span>
-                      </div>
+            goals.map((item: any) => (
+              <li
+                className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
+                key={item.id}
+              >
+                <div className="flex items-center 4xl:mx-5 md:mx-5 justify-between  w-full">
+                  <div className="flex items-center">
+                    {item?.status ? (
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage
+                          src="/assets/greentick.png"
+                          alt="completed-avatar"
+                          className="w-5 h-5"
+                        />
+                      </Avatar>
+                    ) : (
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage
+                          src="/assets/ongoing.png"
+                          alt="pending-avatar"
+                          className="w-5 h-5"
+                        />
+                      </Avatar>
+                    )}
+                    <span className="text-xs sm:text-sm px-1">
+                      <button
+                        onClick={() => handleGoalClick(item)}
+                        className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-pointer relative group`}
+                        title={`Description: ${
+                          item.description
+                        }\nStart Date: ${new Date(
+                          item.start_date
+                        ).toLocaleDateString("en-GB")}`}
+                      >
+                        {item.goal_name}
+                      </button>
+                    </span>
+                  </div>
 
-                      <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
-                        {showTooltip && (
-                          <AnimatedTooltip items={tooltipItems} />
-                        )}
-                        <button
-                          className={`inline-block  w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
+                  <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
+                    {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                    {/* <button
+                          className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
                             new Date(item?.completion_date).toDateString() ===
                             new Date().toDateString()
                               ? "bg-green-800 text-green-400" // Green for today's completion date
@@ -245,9 +306,9 @@ const TasksTracker = ({
                                 .toUpperCase()}
                             </span>
                           </div>
-                        </button>
+                        </button> */}
 
-                        <SaveModal
+                    {/* <SaveModal
                           trigger={(onClick: any) => (
                             <button
                               onClick={onClick}
@@ -257,7 +318,7 @@ const TasksTracker = ({
                             </button>
                           )}
                           confirmAction={() => handleCompleteGoal(item?.id)}
-                        />
+                        /> */}
 
                         <Deletemodel
                           trigger={(onClick: any) => (
@@ -274,81 +335,107 @@ const TasksTracker = ({
                     </div>
                   </li>
                 ))
-            ) : (
+            ) 
+            :
+            (
               <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
                 No goals found
-              </li> // Fallback for no pending goals
+              </li> // Fallback if no goals exist at all
             )
-          ) : (
-            <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-              No goals found
-            </li> // Fallback if no goals exist at all
-          )
-        ) : activeTab === "completed" ? (
-          goals && goals.length > 0 ? (
-            goals.filter((item: any) => item.status === true).length > 0 ? (
-              goals
-                .filter((item: any) => item.status === true)
-                .map((item: any) => (
+           : 
+         activeTab === "completed" ? (
+          <div>
+            <div className="flex gap-4 py-4 px-6">
+              <button
+                className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
+                  goalData?.status
+                    ? "bg-green-800 text-green-400" // Green for today's completion date
+                    : new Date(goalData?.completion_date) < new Date() &&
+                      goalData?.goal_tasks?.some(
+                        (task: any) => !task?.isCompleted
+                      )
+                    ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
+                    : "bg-zinc-800 text-zinc-400" // Default for future dates
+                }`}
+                title="Start Date"
+              >
+                <div className="flex justify-center items-center">
+                  <div className="w-4">
+                    <SlCalender />
+                  </div>
+                  <span>
+                    {new Date(goalData?.start_date)
+                      .toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                      })
+                      .replace(" ", "-")
+                      .toUpperCase()}
+                  </span>
+                </div>
+              </button>
+              <button
+                className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
+                  goalData?.status
+                    ? "bg-green-800 text-green-400" // Green for today's completion date
+                    : new Date(goalData?.completion_date) < new Date() &&
+                      goalData?.goal_tasks?.some(
+                        (task: any) => !task?.isCompleted
+                      )
+                    ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
+                    : "bg-zinc-800 text-zinc-400" // Default for future dates
+                }`}
+                title="Completion Date"
+              >
+                <div className="flex justify-center items-center">
+                  <div className="w-4">
+                    <SlCalender />
+                  </div>
+                  <span>
+                    {new Date(goalData?.completion_date)
+                      .toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                      })
+                      .replace(" ", "-")
+                      .toUpperCase()}
+                  </span>
+                </div>
+              </button>
+            </div>
+            <ul className="text-center text-gray-500 h-full w-full flex flex-col justify-center items-center space-y-4">
+              {goalData?.goal_tasks?.length > 0 ? (
+                goalData.goal_tasks.map((task: any, index: any) => (
                   <li
-                    className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
-                    key={item.id}
+                    key={index}
+                    className="flex items-center w-full justify-start space-x-4 px-6"
                   >
-                    <div className="flex items-center md:mx-5 justify-between w-full">
-                      <div className="flex items-center">
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage
-                            src="/assets/greentick.png"
-                            alt="completed-avatar"
-                            className="w-5 h-5"
-                          />
-                        </Avatar>
-                        <span className="text-xs sm:text-sm px-2">
-                          <button
-                            className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
-                            title={`Description: ${
-                              item.description
-                            }\nStart Date: ${new Date(
-                              item.start_date
-                            ).toLocaleDateString("en-GB")}`}
-                          >
-                            {item.goal_name}
-                          </button>
-                        </span>
-                      </div>
-
-                      <div className="flex items-center ml-5">
-                        {showTooltip && (
-                          <AnimatedTooltip items={tooltipItems} />
-                        )}
-                        <Deletemodel
-                          trigger={(onClick: any) => (
-                            <button
-                              onClick={onClick}
-                              className="rounded bg-red-300/20 px-1.5 py-1 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
-                            >
-                              <FiTrash2 />
-                            </button>
-                          )}
-                          confirmAction={() => handleDeleteGoal(item?.id)}
-                        />
-                      </div>
-                    </div>
+                    <input
+                      type="checkbox"
+                      checked={task.isCompleted}
+                      value={task.value}
+                      id={`task-${index}`}
+                      onChange={(e) => handleTaskChange(e.target.value)}
+                      className="mr-2"
+                      // Add additional logic here, e.g., onChange handler
+                    />
+                    <label
+                      htmlFor={`task-${index}`}
+                      className="text-white text-md"
+                    >
+                      {task?.value}
+                    </label>
                   </li>
                 ))
-            ) : (
-              <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-                No tasks found
-              </li> // Fallback for no completed goals
-            )
-          ) : (
-            <li className="text-center text-gray-500 h-full w-full flex justify-center items-center">
-              {" "}
-              No tasks found
-            </li> // Fallback if no goals exist at all
-          )
+              ) : (
+                <li className="text-gray-500 h-full w-full flex justify-center items-center">
+                  No tasks available.
+                </li>
+              )}
+            </ul>
+          </div>
         ) : (
-          savedTasks.map((item) => (
+          savedTasks.map((item:any) => (
             <li
               className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-gray-500 pb-2 last:pb-0 last:border-b-0"
               key={item.id}

@@ -142,6 +142,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   @apply 4xl:h-8 4xl:text-3xl;
 }
 
+ .dashcode-app-calendar .fc-daygrid-day-top{
+  @apply 4xl:h-8 4xl:text-3xl
+
+} 
 
 
 /* Shimmer Css */
@@ -223,4 +227,11 @@ li.country.highlight {
 
 .react-datepicker-wrapper {
   width: 100% !important;
+}
+.fc-event-main {
+  background-color: unset !important; /* Remove existing background */
+}
+
+.fc-daygrid-day-bottom{
+  text-align: center !important;
 }
