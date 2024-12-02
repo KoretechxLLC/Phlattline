@@ -18,7 +18,7 @@ const EmployeeModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  courseId: number;
+  courseId?: number;
   coursesAssign?: any; // Replace `any` with a specific type if possible
   showSelectionControls?: boolean;
 }) => {

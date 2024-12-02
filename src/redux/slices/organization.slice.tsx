@@ -303,6 +303,8 @@ const organizationSlice = createSlice({
       })
       .addCase(fetchEmployeeByDepartment.pending, (state) => {
         state.responseLoading = true;
+
+        state.responseSuccess = null;
       })
       .addCase(fetchEmployeeByDepartment.fulfilled, (state, action) => {
         state.responseLoading = false;

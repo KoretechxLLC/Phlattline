@@ -43,6 +43,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   } = useSelector((state: RootState) => state.courses);
   const dispatch: any = useDispatch();
   useEffect(() => {
+    
     if (!usercourses || usercourses.length == 0) {
       dispatch(fetchusercourses({ userId }));
     }
@@ -64,7 +65,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
         const filteredCourseData = usercourses.find(
           (e: any) => Number(e.course_id) === Number(courseId)
         );
-
         if (filteredCourseData) {
           setIsBought(true);
         }
@@ -74,7 +74,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   }, [courseId, usercourses]);
 
   const handleError = () => {
-    setImgError(true); // Set error flag when image fails to load
+    setImgError(true); 
   };
 
   const handleBuyClick = () => {
