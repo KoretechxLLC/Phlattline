@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import GraphLoader from "./graphLoader";
 import Spinner from "./Spinner";
+import { ImprovementAssessmentResult } from "@/redux/slices/assessmentResults.slice";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -91,6 +92,7 @@ const InitialAssessmentsReport = ({
   const { assessments, loading, error, success } = useSelector(
     (state: RootState) => state.assessment
   );
+  const [improveResult, setImproveResult] = useState<any>([]);
 
   const {
     responseLoading,
@@ -98,6 +100,13 @@ const InitialAssessmentsReport = ({
     assessmentsResponse,
     responseSuccess,
   } = useSelector((state: RootState) => state.assessmentResponse);
+
+  const {
+    improvementResult,
+    improvementResultError,
+    improvementResultSuccess,
+    improvementResultLoading,
+  } = useSelector((state: RootState) => state.assessmnentResult);
 
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
@@ -133,6 +142,18 @@ const InitialAssessmentsReport = ({
     }
   }, [assessments]);
 
+  useEffect(() => {
+    if (userId) {
+      dispatch(ImprovementAssessmentResult({ userId }));
+    }
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    if (improvementResultSuccess) {
+      setImproveResult(improvementResult?.[0]);
+    }
+  }, [improvementResultSuccess]);
+
   const data = calculatePercentages(assessmentsResponse, assessments);
 
   const chartColors = generateColors(allCategories.length);
@@ -148,6 +169,19 @@ const InitialAssessmentsReport = ({
           fillColor: chartColors[index],
         })),
     },
+    {
+      name: "AfterCourseAssessment",
+      data:
+        improveResult &&
+        improveResult.length > 0 &&
+        improveResult.map((value: any, index: any) => {
+          return {
+            x: value?.title,
+            y: value?.totalPercentages.toFixed(0), // Replace this with actual logic for "Responses" percentage
+            fillColor: "#00FF7F", // Add a unique color for the second series
+          };
+        }),
+    },
   ];
 
   const options: any = {
@@ -159,8 +193,8 @@ const InitialAssessmentsReport = ({
     plotOptions: {
       bar: {
         horizontal: false,
-        endingShape: "rounded",
-        columnWidth: "5%",
+        endingShape:"rounded-full",
+        columnWidth: "20%",
       },
     },
     legend: {
@@ -264,14 +298,16 @@ const InitialAssessmentsReport = ({
       },
     ],
   };
-
   return (
     <>
-      {!responseLoading ? (
-        <div className="text-center text-gray-300 py-20">
+      {responseLoading || improvementResultLoading ? (
+        <div className="text-center text-gray-300">
           <Spinner height="30px" width="30px" />
         </div>
-      ) : data && data.length > 0 ? (
+      ) : data &&
+        data.length > 0 ||
+        improveResult ||
+        improveResult?.length > 0 ? (
         <div className="w-full max-h-[350px] sm:h-[150px] md:h-[180px] lg:h-[250px] ">
           <Chart
             options={options}

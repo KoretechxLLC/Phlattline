@@ -144,9 +144,12 @@ export async function GET(req: NextRequest) {
         .filter(Boolean)
     );
 
-    let data = results.filter(Boolean);
+    let improveData = await results.filter(Boolean);
 
-    return NextResponse.json({ success: true, data: data }, { status: 200 });
+    return NextResponse.json(
+      { success: true, data: improveData },
+      { status: 200 }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, data: "Internal Server Error" },

@@ -16,9 +16,6 @@ export async function POST(req: NextRequest) {
     const user_id = Number(body.get("id"));
     const goal_tasks: string[] = body.getAll("goal_tasks[]") as string[];
 
-    // Retrieve goal tasks from form data
-    // Assuming this comes as an array of strings
-
     let goals: any = [];
     if (goal_tasks.length > 0) {
       // Populate goal_tasks array with valid task values

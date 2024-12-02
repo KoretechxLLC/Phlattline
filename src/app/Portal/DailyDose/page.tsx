@@ -148,13 +148,25 @@ const DailyDose = () => {
   }, [success]);
 
   const handleEventClick = (arg: any) => {
-    setSelectedEventDate(null);
-    const eventFound =
-      allCourses.find((course: any) => course.id === Number(arg.event.id)) ||
-      null;
+    let course = allCourses.find(
+      (course: any) => course.id === Number(arg.event.id)
+    );
 
-    setSelectedEvent(eventFound);
-    setSheetOpen(true);
+    if (course) {
+      const eventDate = new Date(course?.updated_at);
+      const currentDate = new Date();
+
+      if (eventDate < currentDate) {
+        setSelectedEventDate(null);
+        const eventFound =
+          allCourses.find(
+            (course: any) => course.id === Number(arg.event.id)
+          ) || null;
+
+        setSelectedEvent(eventFound);
+        setSheetOpen(true);
+      }
+    }
   };
 
   const handleDateClick = (arg: any) => {
@@ -168,18 +180,21 @@ const DailyDose = () => {
 
   const renderEventContent = ({ event }: any) => {
     const { calendar, course_name, date } = event.extendedProps;
+    const eventDate = new Date(date);
+    const currentDate = new Date();
+
+    const futureEvents = eventDate > currentDate ? "disabled" : "";
 
     const borderColor =
-      new Date(date) >= new Date() ? "border-yellow-500" : "border-red-600";
-    const backgroundColor =
-      new Date(date) >= new Date() ? "#282410" : "#240008"; // Use darker background color
+      eventDate >= currentDate ? "border-yellow-500" : "border-red-600";
+    const backgroundColor = eventDate >= currentDate ? "#282410" : "#240008";
     const textColor =
-      new Date(date) >= new Date() ? "text-yellow-500" : "text-red-600"; // Conditional text color
+      eventDate >= currentDate ? "text-yellow-500" : "text-red-600";
 
     return (
       <div
-        className={`w-full flex flex-col justify-between cursor-pointer gap-y-7  h-full px-2 py-7 4xl:py-4 lg:mx-6 4xl:mx-1 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor}`}
-        style={{ backgroundColor }}
+        className={`w-full flex flex-col justify-between gap-y-7 h-full px-2 py-7 4xl:py-4 lg:mx-6 4xl:mx-1 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor} ${futureEvents}`}
+        style={{ backgroundColor }} // Apply directly
       >
         <div className="flex-grow">
           {/* Placeholder for additional content if needed */}

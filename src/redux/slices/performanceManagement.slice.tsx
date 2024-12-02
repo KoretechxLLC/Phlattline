@@ -10,6 +10,10 @@ interface GoalState {
   timeLogs?: any[];
   EmployeeGoals: any[];
   logSuccess: any;
+  taskUpdate: any;
+  taskUpdateSuccess: any;
+  taskUpdateError: any;
+  taskUpdateLoader: boolean;
 }
 
 const initialState: GoalState = {
@@ -20,6 +24,10 @@ const initialState: GoalState = {
   EmployeeGoals: [],
   goals: [],
   timeLogs: [],
+  taskUpdate: null,
+  taskUpdateSuccess: null,
+  taskUpdateError: null,
+  taskUpdateLoader: false,
 };
 
 export const fetchGoals = createAsyncThunk<any, any>(
@@ -140,6 +148,29 @@ export const deleteGoal = createAsyncThunk<any, any>(
   }
 );
 
+export const updateTask = createAsyncThunk<any, any>(
+  "performanceManagement/updateTask",
+  async ({ goalId, updatedTasks }, { rejectWithValue }) => {
+    let dataToSend = {
+      goalId: goalId,
+      goal_tasks: updatedTasks,
+    };
+
+
+    try {
+      const response = await axiosInstance.put(
+        `/api/complete_goal_task`,
+        dataToSend
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error || error.message || "Failed to submit goal";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 const performanceManagement = createSlice({
   name: "performanceManagement",
   initialState,
@@ -150,6 +181,9 @@ const performanceManagement = createSlice({
     resetError(state) {
       state.error = null;
     },
+    setUpdateGoals(state,action) {
+      state.goals = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -266,10 +300,27 @@ const performanceManagement = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.success = null;
+      })
+
+      .addCase(updateTask.pending, (state) => {
+        state.taskUpdateLoader = true;
+        state.taskUpdateError = null;
+        state.taskUpdateSuccess = null;
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        state.taskUpdateLoader = false;
+        state.taskUpdateSuccess = "Task Updated Successfully!";
+        state.taskUpdate = action.payload.data;
+        state.taskUpdateError = null;
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.taskUpdateLoader = false;
+        state.taskUpdateError = action.payload as string;
+        state.taskUpdateSuccess = null;
       });
   },
 });
 
-export const { resetSuccess, resetError } = performanceManagement.actions;
+export const { resetSuccess, resetError,setUpdateGoals } = performanceManagement.actions;
 
 export default performanceManagement.reducer;

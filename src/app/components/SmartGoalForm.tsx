@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { FaTrash } from "react-icons/fa";
 
 const SmartGoalForm = ({ handleAddGoal, success }: any) => {
   const [goalName, setGoalName] = useState("");
@@ -8,6 +9,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
   const [completionDate, setCompletionDate] = useState<Date | null>(null);
   const [goalType, setGoalType] = useState("");
   const [description, setDescription] = useState("");
+  const [tasks, setTasks] = useState<string[]>([""]); // Initial task field
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -18,9 +20,25 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
       completion_date: completionDate?.toISOString(),
       goal_type: goalType,
       description: description,
+      goal_tasks: tasks.filter((task) => task.trim() !== ""), // Filter empty tasks
     };
 
     handleAddGoal(goalData);
+  };
+
+  const handleAddTask = () => {
+    setTasks([...tasks, ""]); // Add a new empty task field
+  };
+
+  const handleTaskChange = (index: number, value: string) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index] = value;
+    setTasks(updatedTasks);
+  };
+
+  const handleRemoveTask = (index: number) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
   };
 
   useEffect(() => {
@@ -30,6 +48,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
       setCompletionDate(null);
       setGoalType("");
       setDescription("");
+      setTasks([""]); // Reset tasks
     }
   }, [success]);
 
@@ -50,24 +69,24 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
           />
         </div>
 
-        {/* Start Date with focus outline */}
+        {/* Start Date */}
         <div className="w-full rounded-xl h-14 bg-[#2d2c2c] focus-within:ring-2 focus-within:ring-[#626262] text-white focus:outline-none">
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             placeholderText="Start Date"
-            minDate={new Date()} // Prevent past dates
+            minDate={new Date()}
             className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none"
           />
         </div>
 
-        {/* Completion Date with focus outline */}
+        {/* Completion Date */}
         <div className="w-full rounded-xl h-14 bg-[#2d2c2c] focus-within:ring-2 focus-within:ring-[#626262] text-white focus:outline-none">
           <DatePicker
             selected={completionDate}
             onChange={(date) => setCompletionDate(date)}
             placeholderText="Completion Date"
-            minDate={startDate || new Date()} // Ensure completion date is after start date
+            minDate={startDate || new Date()}
             className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none"
           />
         </div>
@@ -84,9 +103,45 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
             </option>
             <option value="Personal">Personal</option>
             <option value="Professional">Professional</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Financial">Financial</option>
+            {/* <option value="Fitness">Fitness</option>
+            <option value="Financial">Financial</option> */}
           </select>
+        </div>
+
+        <div>
+          {tasks.map((task, index) => (
+            <div key={index} className="relative flex items-center mb-2 gap-2">
+              {/* Task Input Field */}
+              <input
+                type="text"
+                value={task}
+                onChange={(e) => handleTaskChange(index, e.target.value)}
+                placeholder="Add Task"
+                className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262] pr-10" // Adjusted padding for button space
+              />
+
+              {/* Delete Button (only show when the task is not empty) */}
+              {task && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveTask(index)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                 <FaTrash/>
+                </button>
+              )}
+            </div>
+          ))}
+
+          {/* Add Task Button */}
+          <button
+            type="button"
+            onClick={handleAddTask}
+            className="text-white text-[12px]"
+          >
+            <span className="text-white text-[20px]"> + </span>
+            Add Task
+          </button>
         </div>
 
         {/* Description */}
@@ -110,6 +165,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
               setCompletionDate(null);
               setGoalType("");
               setDescription("");
+              setTasks([""]);
             }}
           >
             Clear

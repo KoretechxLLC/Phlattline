@@ -41,8 +41,16 @@ const PerformanceManagement = () => {
     const id = userData?.id;
     const formData = new FormData();
     Object.keys(goalData).forEach((key) => {
-      formData.append(key, goalData[key]);
+      if (key != "goal_tasks") {
+        formData.append(key, goalData[key]);
+      }
+      if (key == "goal_tasks") {
+        goalData.goal_tasks.forEach((task: any) => {
+          formData.append("goal_tasks[]", task);
+        });
+      }
     });
+
     formData.append("id", id);
     dispatch(submitGoal(formData));
   };
@@ -104,7 +112,6 @@ const PerformanceManagement = () => {
             <VacantJobs jobs={jobs} />
           </div>
 
-          {/* Combined TasksTracker and PersonalGoals in one column */}
           <div className="col-span-1">
             <TimeManagement />
           </div>
