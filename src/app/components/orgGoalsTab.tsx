@@ -55,7 +55,7 @@ const OrganizationGoalsTab: React.FC = () => {
 
   return (
     <div>
-      <Card className="border w-full border-gray-500 rounded-3xl">
+      <Card className="border w-full border-[#62626280] rounded-3xl">
         <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
           <CardTitle>Organization Goals</CardTitle>
         </CardHeader>
@@ -73,7 +73,7 @@ const OrganizationGoalsTab: React.FC = () => {
             {goalsData.map((goal, index) => (
               <li
                 key={index}
-                className="py-4 border-b border-gray-500 last:border-none"
+                className="py-4 border-b border-[#62626280] last:border-none"
               >
                 <CardContent className="flex justify-between items-center">
                   <div className="text-sm font-semibold">{goal.goal}</div>

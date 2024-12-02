@@ -253,7 +253,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
 
       {/* Right Column: Course Modules and Information */}
       <div className="md:col-span-1 my-12">
-        <Card className="border border-gray-500 rounded-xl p-5">
+        <Card className="border border-[#62626280] rounded-xl p-5">
           <CardHeader
             className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]"
             style={{ fontFamily: "Sansation" }}

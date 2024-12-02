@@ -267,7 +267,7 @@ const AsessmentTracker = ({
   return (
     <>
       {responseLoading ? (
-        <div className="text-center text-gray-300 py-5">
+        <div className="text-center text-gray-300 py-20">
           <Spinner height="30px" width="30px" />
         </div>
       ) : data && data.length > 0 ? (
@@ -281,7 +281,7 @@ const AsessmentTracker = ({
           />
         </div>
       ) : (
-        <div className="text-center  text-gray-300 py-20">
+        <div className="text-center   text-gray-300 py-20">
           Please Submit Assessments First!
         </div>
       )}

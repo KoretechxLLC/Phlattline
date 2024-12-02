@@ -2,9 +2,33 @@
 import React from "react";
 import AddPositionForm from "@/app/components/addPositionForm";
 import InterviewSchedulerTab from "@/app/components/interviewScheduler";
-import NewHiringTab from "@/app/components/newHiringTab";
-import AvailableJobsTab from "@/app/components/availableJobsTab";
 import OpenPositionChart from "@/app/components/openPositionChart";
+import EmployeesTab from "@/app/components/employeesTab";
+import VacantJobs from "@/app/components/VacantJobs";
+const jobs = [
+  { id: 1, title: "Finance Officer" },
+  { id: 2, title: "Taxation" },
+];
+const newHirings = [
+  {
+    image: "/assets/UserProfile.png",
+    name: "John Doe",
+    designation: "Software Engineer",
+    status: "Onboard",
+  },
+  {
+    image: "/assets/UserProfile.png",
+    name: "Jane Smith",
+    designation: "Product Manager",
+    status: "Onboard",
+  },
+  {
+    image: "/assets/UserProfile.png",
+    name: "Dane Jones",
+    designation: "Finance Officer",
+    status: "Onboard",
+  },
+];
 
 const TalentAcquisitions = () => {
   return (
@@ -19,10 +43,15 @@ const TalentAcquisitions = () => {
 
       {/* Second Row */}
       <div className="">
-        <NewHiringTab />
+        <EmployeesTab
+          title="New Hiring"
+          employees={newHirings}
+          showBadge={true} // To display the "Onboard" badge
+          hideViewAll={true} // Hides the "View All" button and modal
+        />
       </div>
       <div className="">
-        <AvailableJobsTab />
+        <VacantJobs jobs={jobs} />
       </div>
       <div className="md:col-span-1">
         <OpenPositionChart />

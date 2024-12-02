@@ -64,7 +64,7 @@ const Workshops = () => {
 
   return (
     <div className="px-1 ">
-      <Card className="border border-gray-500 rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] shadow-lg">
+      <Card className="border border-[#62626280] rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-white">
             Workshops

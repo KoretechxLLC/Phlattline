@@ -128,7 +128,7 @@ const KeyPerformanceBar = ({ height = 280 }) => {
 
   return (
     <div>
-      {!loading ? (
+      {loading ? (
         <div className="flex justify-center items-center py-24">
           <Spinner height="30px" width="30px" />
         </div>

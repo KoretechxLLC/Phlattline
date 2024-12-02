@@ -40,7 +40,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
       const totalPercentages = result
         .map((item) =>
           Array.isArray(item.percentages)
-            ? item.percentages.reduce((sum:any, val:any) => sum + val, 0) /
+            ? item.percentages.reduce((sum: any, val: any) => sum + val, 0) /
               item.percentages.length
             : 0
         )
@@ -79,20 +79,23 @@ const AssessmentResultPie = ({ height = 280 }) => {
         let totalPercentage = 0;
         responseData.forEach((item: any) => {
           const currentSum = Array.isArray(item?.percentage)
-            ? item?.percentage.reduce((sum: number, val: number) => sum + val, 0)
+            ? item?.percentage.reduce(
+                (sum: number, val: number) => sum + val,
+                0
+              )
             : 0;
           totalPercentage += currentSum;
         });
 
         if (responseData && responseData.length > 0) {
-          return totalPercentage / (index.individual_assessment_questions?.length || 1);
+          return (
+            totalPercentage /
+            (index.individual_assessment_questions?.length || 1)
+          );
         }
       });
 
-      const total = percentages.reduce(
-        (acc: any, curr: any) => acc + curr,
-        0
-      );
+      const total = percentages.reduce((acc: any, curr: any) => acc + curr, 0);
 
       setAveragePercentage(Math.round(total / (percentages.length || 1)));
     }
@@ -127,7 +130,9 @@ const AssessmentResultPie = ({ height = 280 }) => {
   return (
     <div className="relative h-[280px]">
       {isLoading ? (
-        <Spinner height="30px" width="30px" />
+        <div className="text-center text-gray-300 py-20">
+          <Spinner height="30px" width="30px" />
+        </div>
       ) : isClient && averagePercentage > 0 ? (
         <Chart
           options={options}
@@ -137,7 +142,9 @@ const AssessmentResultPie = ({ height = 280 }) => {
           width="100%"
         />
       ) : (
-        <div>No data found</div>
+        <div className="text-center text-gray-300  w-full flex justify-center items-center py-24">
+          No Data Found!
+        </div>
       )}
     </div>
   );

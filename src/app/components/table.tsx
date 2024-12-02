@@ -9,7 +9,7 @@ const Table = React.forwardRef<
     <table
       ref={ref}
       className={cn(
-        "w-full caption-bottom text-sm border border-gray-500  ",
+        "w-full caption-bottom text-sm border border-[#62626280]  ",
         className
       )} // Added border
       {...props}
@@ -24,7 +24,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn("[&_tr]:border border-gray-500", className)} // Added border
+    className={cn("[&_tr]:border border-[#62626280]", className)} // Added border
     {...props}
   />
 ));
@@ -36,7 +36,7 @@ const TableBody = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("border border-gray-500", className)} // Added border
+    className={cn("border border-[#62626280]", className)} // Added border
     {...props}
   />
 ));
@@ -64,7 +64,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b border-gray-500 transition-colors  data-[state=selected]:bg-muted",
+      "border-b border-[#62626280] transition-colors  data-[state=selected]:bg-muted",
       className // Added border
     )}
     {...props}

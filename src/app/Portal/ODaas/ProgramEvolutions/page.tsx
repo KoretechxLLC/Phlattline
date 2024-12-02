@@ -30,7 +30,7 @@ const ProgramEvolutions = () => {
 
       {/* Components below the dropdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+        <Card className="border-[1px] border-[#62626280] rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <CardHeader className=" rounded-3xl">
             <div className="text-sm flex justify-center">
               <CardTitle>Courses Results</CardTitle>

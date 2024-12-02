@@ -47,7 +47,7 @@ const InterviewSchedulerTab: React.FC = () => {
   return (
     <div className="flex flex-col items-center">
       {/* Centered Heading */}
-      <Card className="border border-gray-500 rounded-xl w-full max-w-3xl">
+      <Card className="border border-[#62626280] rounded-xl w-full max-w-3xl">
         <CardHeader>
           <h2 className="text-2xl items-center font-semibold mb-3">
             Latest Updates

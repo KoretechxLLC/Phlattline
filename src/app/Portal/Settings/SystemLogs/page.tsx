@@ -53,7 +53,7 @@ const SystemLogs = () => {
   }, []);
 
   return (
-    <div className="overflow-auto w-full space-y-3 border border-gray-500 p-3 ">
+    <div className="overflow-auto w-full space-y-3 border border-[#62626280] p-3 ">
       <DateRangeToolbar />
       {loading ? (
         // Show Spinner while loading
@@ -79,7 +79,7 @@ const SystemLogs = () => {
           <tbody>
             {logsData.map((log) => (
               <tr key={log.id}>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   <div className="flex items-center space-x-2">
                     <Image
                       src={log.employee.image}
@@ -91,13 +91,15 @@ const SystemLogs = () => {
                     <span>{log.employee.name}</span>
                   </div>
                 </td>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   {log.logTitle}
                 </td>
-                <td className="px-4 py-2 border border-gray-500">
+                <td className="px-4 py-2 border border-[#62626280]">
                   {log.logTime}
                 </td>
-                <td className="px-4 py-2 border border-gray-500">{log.date}</td>
+                <td className="px-4 py-2 border border-[#62626280]">
+                  {log.date}
+                </td>
               </tr>
             ))}
           </tbody>

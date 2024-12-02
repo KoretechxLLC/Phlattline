@@ -38,7 +38,7 @@ const GapAnalysis = () => {
       {/* First row with Assessment Tracker and Work Load Bar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <Card className="border-[1px] border-gray-500 rounded-3xl h-auto">
+          <Card className="border-[1px] border-[#62626280] rounded-3xl h-auto">
             <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <div className="text-sm 4xl:mb-12 mb-16 flex justify-between">
                 <CardTitle>Operational Gaps</CardTitle>
@@ -51,7 +51,7 @@ const GapAnalysis = () => {
         </div>
 
         <div>
-          <Card className="border-[1px] border-gray-500 rounded-3xl h-auto">
+          <Card className="border-[1px] border-[#62626280] rounded-3xl h-auto">
             <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <div className="text-sm 4xl:mb-12 mb-16 flex justify-between">
                 <CardTitle>Work Load</CardTitle>

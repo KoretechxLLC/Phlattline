@@ -106,7 +106,7 @@ const PerformanceManagement = () => {
             </Button>
           </div>
 
-          <div className="content border border-gray-500 rounded-xl h-full w-full 4xl:p-3 p-3 md:p-3">
+          <div className="content border border-[#62626280] rounded-xl h-full w-full 4xl:p-3 p-3 md:p-3">
             {renderContent()}
           </div>
         </>

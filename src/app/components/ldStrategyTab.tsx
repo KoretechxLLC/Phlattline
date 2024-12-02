@@ -21,22 +21,18 @@ const LDStrategyTab = ({ handleAddGoal, success }: any) => {
     {
       name: "Alice Smith",
       avatar: "/assets/UserProfile.png",
-      completion: "70%",
     },
     {
       name: "Bob Johnson",
       avatar: "/assets/UserProfile.png",
-      completion: "85%",
     },
     {
       name: "Charlie Lee",
       avatar: "/assets/UserProfile.png",
-      completion: "60%",
     },
     {
       name: "Diana Prince",
       avatar: "/assets/UserProfile.png",
-      completion: "90%",
     },
   ];
   const [filteredAssignees, setFilteredAssignees] = useState(goalsAssignees);
@@ -172,25 +168,27 @@ const LDStrategyTab = ({ handleAddGoal, success }: any) => {
           />
 
           {/* Assignees List */}
+          {/* Assignees List */}
           <ul className="space-y-3">
             {filteredAssignees.map((assignee, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between border-b border-gray-300 pb-2 last:border-0"
+                className="flex items-center justify-between border-b border-[#62626280] pb-2 last:border-0"
               >
-                <Icon
-                  icon="f7:person-badge-minus"
-                  className="w-5 h-5 text-red-600"
-                />
-                <Avatar className="w-6 h-6">
-                  <AvatarImage
-                    src={assignee.avatar}
-                    alt={`${assignee.name}-avatar`}
-                    className="w-7 h-7"
+                <div className="flex items-center space-x-2">
+                  <Icon
+                    icon="f7:person-badge-minus"
+                    className="w-6 h-6 text-red-600"
                   />
-                </Avatar>
-                <span>{assignee.name}</span>
-                <span>{assignee.completion}</span>
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage
+                      src={assignee.avatar}
+                      alt={`${assignee.name}-avatar`}
+                      className="w-8 h-8"
+                    />
+                  </Avatar>
+                </div>
+                <span className="ml-auto text-right">{assignee.name}</span>
               </li>
             ))}
           </ul>

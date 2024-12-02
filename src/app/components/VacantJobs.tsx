@@ -9,11 +9,15 @@ import {
   CardTitle,
 } from "@/app/components/Card";
 import Spinner from "./Spinner"; // Assuming this is the loader component you have
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedJob, setSelectedJob] = useState<string>("");
   const [loading, setLoading] = useState(true); // Added loading state
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const usertype = userData?.user_type_id;
 
   useEffect(() => {
     setTimeout(() => {
@@ -30,13 +34,20 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
     <Card>
       {/* Title with Background */}
       <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-gray-900">
-        <CardTitle className="text-center  text-white text-xs sm:text-md mb-0">
-          Your Desired Job
-        </CardTitle>
+        {(usertype === 1 || usertype === 3) && (
+          <CardTitle className="text-center  text-white text-xs sm:text-md mb-0">
+            Your Desired Job
+          </CardTitle>
+        )}
+        {usertype === 2 && (
+          <CardTitle className="text-center  text-white text-xs sm:text-md mb-0">
+            Available Jobs
+          </CardTitle>
+        )}
       </CardHeader>
 
       {/* Jobs List */}
-      <CardContent className="bg-black border border-[#62626280]  rounded-b-lg p-8">
+      <CardContent className="bg-black border border-[#62626280]  rounded-b-3xl p-8">
         {loading ? (
           // Show loader if data is loading
           <div className="flex justify-center items-center py-14">
@@ -51,13 +62,15 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
                 className="flex justify-between items-center text-white pb-5"
               >
                 <span className="text-md">{job.title}</span>
-                <Button
-                  onClick={() => handleApplyClick(job.title)}
-                  color="primary"
-                  className="rounded-3xl"
-                >
-                  Apply
-                </Button>
+                {(usertype === 1 || usertype === 3) && (
+                  <Button
+                    onClick={() => handleApplyClick(job.title)}
+                    color="primary"
+                    className="rounded-3xl"
+                  >
+                    Apply
+                  </Button>
+                )}
               </li>
             ))}
           </ul>

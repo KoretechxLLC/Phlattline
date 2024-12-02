@@ -15,7 +15,7 @@ interface PrevResultsTrackerProps {
   categories?: string[];
 }
 const OpenPositionChart = ({
-  height = 160,
+  height = 145,
   chartType = "bar",
   categories = ["Sales", "Manufacture", "Financial"],
 }: PrevResultsTrackerProps) => {
@@ -150,7 +150,7 @@ const OpenPositionChart = ({
     ],
   };
   return (
-    <Card className="border border-gray-500 rounded-xl h-full">
+    <Card className="border border-[#62626280] rounded-3xl h-full">
       <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
         <CardTitle>Open Positions By Department</CardTitle>
       </CardHeader>

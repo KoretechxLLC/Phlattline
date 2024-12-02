@@ -132,7 +132,7 @@ const Courses = () => {
           </div>
 
           <div>
-            <div className="border border-gray-500 rounded-3xl shadow-md w-full h-full">
+            <div className="border border-[#62626280] rounded-3xl shadow-md w-full h-full">
               <h1 className="text-center text-3xl font-bold my-2">
                 Course Results
               </h1>

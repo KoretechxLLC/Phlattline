@@ -136,7 +136,7 @@ const Profile = ({ profileImage }: any) => {
       />
       {/* First Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="first-name"
             type="text"
@@ -148,7 +148,7 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="last-name"
             type="text"
@@ -164,7 +164,7 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Second Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="phone"
             type="tel"
@@ -176,7 +176,7 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPhone className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="email"
             type="email"
@@ -192,7 +192,7 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Third Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="designation"
             type="text"
@@ -203,7 +203,7 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <DatePicker
             selected={date}
             onChange={(date) => setDate(date)} // Update state on date change

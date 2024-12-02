@@ -11,46 +11,47 @@ const coachingData = [
   {
     name: "John Doe",
     designation: "Software Engineer",
-    email: "john.doe@example.com", // Added email field
+    email: "john.doe@example.com",
     image: "/assets/UserProfile.png",
   },
   {
     name: "Jane Smith",
     designation: "Project Manager",
-    email: "jane.smith@example.com", // Added email field
+    email: "jane.smith@example.com",
     image: "/assets/UserProfile.png",
   },
   {
     name: "Alice Johnson",
     designation: "UX Designer",
-    email: "alice.johnson@example.com", // Added email field
+    email: "alice.johnson@example.com",
     image: "/assets/UserProfile.png",
   },
-  // Add more employees here...
 ];
 
 const EmployeeModal = ({
   open,
   onClose,
+  showSelectionControls = true, // New prop to show/hide checkboxes and Done button
 }: {
   open: boolean;
   onClose: () => void;
+  showSelectionControls?: boolean;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true); // Loading state for simulating data fetch
-  const [displayedEmployees, setDisplayedEmployees] = useState(coachingData); // State to track displayed employees
+  const [displayedEmployees, setDisplayedEmployees] = useState(coachingData);
 
   useEffect(() => {
     if (open) {
-      setLoading(true); // Start loading when modal opens
+      setLoading(true);
       setTimeout(() => {
-        setDisplayedEmployees(coachingData); // Simulate loading data
-        setLoading(false); // Stop loading after 1 second
-      }, 1000); // Simulate a 1-second delay for loading
+        setDisplayedEmployees(coachingData);
+        setLoading(false);
+      }, 1000);
     }
   }, [open]);
 
-  if (!open) return null; // Conditional rendering to handle modal visibility
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -74,21 +75,19 @@ const EmployeeModal = ({
 
         {/* Employee List Section */}
         <div className="overflow-y-auto flex-grow">
-          {/* Show loading spinner if loading */}
           {loading ? (
             <div className="flex justify-center items-center">
               <Spinner height="30px" width="30px" />
             </div>
           ) : (
             <>
-              {/* If there are no employees, show a message */}
               {displayedEmployees.length === 0 ? (
                 <div className="text-center text-gray-600">
                   <p>No employees found.</p>
                 </div>
               ) : (
                 <ul>
-                  {displayedEmployees.map((coach, index) => (
+                  {displayedEmployees.map((employee, index) => (
                     <li
                       key={index}
                       className={`${
@@ -101,25 +100,27 @@ const EmployeeModal = ({
                         <div className="flex items-center space-x-4">
                           <Avatar className="w-16 h-16">
                             <AvatarImage
-                              src={coach.image}
-                              alt={`${coach.name}-avatar`}
+                              src={employee.image}
+                              alt={`${employee.name}-avatar`}
                               className="w-16 h-16 rounded-full"
                             />
                           </Avatar>
                           <div className="flex flex-col">
                             <span className="font-semibold text-black">
-                              {coach.name}
+                              {employee.name}
                             </span>
                             <span className="text-red-600 text-sm">
-                              {coach.email}
-                            </span>{" "}
-                            {/* Email below name */}
+                              {employee.email}
+                            </span>
                           </div>
                         </div>
-                        <input
-                          type="checkbox"
-                          className="w-5 h-5 border-2 border-gray-400 rounded appearance-none checked:border-black checked:bg-transparent checked:relative checked:before:content-['✔'] checked:before:text-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 checked:before:transform checked:before:-translate-x-1/2 checked:before:-translate-y-1/2"
-                        />
+                        {/* Conditionally show the checkbox */}
+                        {showSelectionControls && (
+                          <input
+                            type="checkbox"
+                            className="w-5 h-5 border-2 border-gray-400 rounded appearance-none checked:border-black checked:bg-transparent checked:relative checked:before:content-['✔'] checked:before:text-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 checked:before:transform checked:before:-translate-x-1/2 checked:before:-translate-y-1/2"
+                          />
+                        )}
                       </CardContent>
                     </li>
                   ))}
@@ -130,15 +131,17 @@ const EmployeeModal = ({
         </div>
 
         {/* Done Button */}
-        <div className="flex justify-center py-4">
-          <Button
-            onClick={onClose}
-            color="primary"
-            className="rounded-3xl px-5 py-2"
-          >
-            Done
-          </Button>
-        </div>
+        {showSelectionControls && (
+          <div className="flex justify-center py-4">
+            <Button
+              onClick={onClose}
+              color="primary"
+              className="rounded-3xl px-5 py-2"
+            >
+              Done
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

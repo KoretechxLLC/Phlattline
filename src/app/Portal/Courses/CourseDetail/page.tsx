@@ -206,7 +206,12 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   )}
                 </div>
 
-                <div className="my-0" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
+                <div
+                  className="my-0"
+                  style={{
+                    display: userData?.user_type_id === 3 ? "none" : "block",
+                  }}
+                >
                   <TabButton
                     backgroundColor="#FF0000"
                     text="Training-On Demand"
@@ -227,7 +232,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
               {data?.videos.map((video: any) => (
                 <div
                   key={video.id}
-                  className="relative border border-gray-500 rounded-lg"
+                  className="relative border border-[#62626280] rounded-lg"
                 >
                   <Image
                     src={

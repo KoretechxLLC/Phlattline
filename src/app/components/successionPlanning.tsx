@@ -7,9 +7,14 @@ import {
   CardTitle,
 } from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
-import { Badge } from "./badge";
 
-const SuccessionPlanningTab: React.FC = () => {
+type SuccessionPlanningTabProps = {
+  maxEmployeesToShow?: number; // New prop to control the number of employees to show
+};
+
+const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
+  maxEmployeesToShow = 5, // Default to showing all employees if not specified
+}) => {
   // Static array of employees with their succession planning percentage
   const employeesData = [
     {
@@ -59,15 +64,21 @@ const SuccessionPlanningTab: React.FC = () => {
     return "";
   };
 
+  // Limit the number of employees displayed based on the prop
+  const displayedEmployees = employeesData.slice(0, maxEmployeesToShow);
+
   return (
     <div>
-      <Card className="border w-full border-gray-500 rounded-xl">
+      <Card className="border w-full border-[#62626280] rounded-xl">
         <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
           <CardTitle>Succession Planning</CardTitle>
         </CardHeader>
         <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 p-2">
-          {employeesData.map((employee, index) => (
-            <li key={index} className="border border-gray-500 rounded-lg p-4">
+          {displayedEmployees.map((employee, index) => (
+            <li
+              key={index}
+              className="border border-[#62626280] rounded-lg p-4"
+            >
               <CardContent className="flex justify-between items-center space-x-4">
                 <Avatar className="w-10 h-10">
                   <AvatarImage

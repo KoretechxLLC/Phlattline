@@ -27,7 +27,7 @@ const InpersonCoachingTab: React.FC = () => {
 
   return (
     <div>
-      <Card className="border w-full border-gray-400 ">
+      <Card className="border w-full rounded-3xl border-[#62626280] ">
         <CardHeader>
           <CardTitle>In-Person Coaching</CardTitle>
         </CardHeader>
@@ -37,7 +37,7 @@ const InpersonCoachingTab: React.FC = () => {
               key={index}
               className={`${
                 index < coachingData.length - 1
-                  ? "border-b border-gray-300"
+                  ? "border-b border-[#62626280]"
                   : ""
               }`}
             >

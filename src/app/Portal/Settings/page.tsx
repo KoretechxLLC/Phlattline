@@ -24,36 +24,45 @@ const Settings = () => {
 
   const userType = userData?.user_type_id;
 
-  
-  const id = userData?.user_type_id;
-  useEffect(()=>{
-    if(id==2){
-      setActiveTab("organizationsetting")
-    }
-    else{
-      setActiveTab("profilesettings")
-      
-    }
-      },[id])
+  useEffect(() => {
+    // Function to get the active tab from the URL
+    const getTabFromUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const view = urlParams.get("view");
+      return (
+        view || (userType === 2 ? "organizationsetting" : "profilesettings")
+      );
+    };
+
+    // Set the active tab based on the URL query param or fallback to default
+    setActiveTab(getTabFromUrl());
+
+    // Listen for changes in the URL query param
+    const handleUrlChange = () => {
+      setActiveTab(getTabFromUrl());
+    };
+
+    // Listen for popstate event to detect back/forward navigation
+    window.addEventListener("popstate", handleUrlChange);
+
+    // Cleanup the event listener
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+    };
+  }, [userType]);
+
   const handleTabChange = (tab: string) => {
     setLoading(true);
     setActiveTab(tab);
 
-    // Simulate a loading delay (e.g., fetching data)
+    // Simulate loading delay
     setTimeout(() => {
       setLoading(false);
-    }, 500); // Adjust the delay as needed
+    }, 500);
+
+    // Update the URL with the new active tab (using pushState)
+    window.history.pushState(null, "", `?view=${tab}`);
   };
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const view = urlParams.get("view");
-
-    // Set the active tab based on query parameter
-    if (view) {
-      setActiveTab(view);
-    }
-  }, []);
 
   const handleEmployeeSelect = (employeeId: number) => {
     setSelectedEmployeeId(employeeId);
@@ -121,7 +130,12 @@ const Settings = () => {
                 </div>
 
                 {/* Billing Method */}
-                <div className="relative" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }} >
+                <div
+                  className="relative"
+                  style={{
+                    display: userData?.user_type_id === 3 ? "none" : "block",
+                  }}
+                >
                   <Button
                     className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "billingmethod"
@@ -231,7 +245,7 @@ const Settings = () => {
           </div>
 
           {/* Render Content Based on Active Tab */}
-          <div className="content border-t border-gray-500 rounded-xl h-full w-full p-3 md:p-6">
+          <div className="content border-t border-[#62626280] rounded-xl h-full w-full p-3 md:p-6">
             {renderContent()}
           </div>
         </div>

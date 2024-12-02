@@ -90,7 +90,7 @@ const CreditCard = () => {
 
       {/* Add New Card Button */}
       <div
-        className="relative p-4 border border-gray-500 rounded-xl text-white w-full max-w-[400px] min-h-[200px] 4xl:min-h-[170px] md:w-[350px] md:min-h-[250px] lg:w-[400px] xl:w-[450px] flex flex-col items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+        className="relative p-4 border border-[#62626280] rounded-xl text-white w-full max-w-[400px] min-h-[200px] 4xl:min-h-[170px] md:w-[350px] md:min-h-[250px] lg:w-[400px] xl:w-[450px] flex flex-col items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
         onClick={togglePopup} // Open the popup when clicked
       >
         <div className="text-4xl mb-2 text-red-500">+</div>

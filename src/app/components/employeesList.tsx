@@ -112,7 +112,7 @@ const EmployeesListTab: React.FC = () => {
       </div>
 
       {/* Card Displaying Employee Data */}
-      <Card className="border border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl w-full">
+      <Card className="border border-[#62626280] bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-b-3xl w-full">
         <CardHeader className="mb-2">
           <CardTitle>
             {activeTab === "current" ? "Current Employees" : "Left Employees"}
@@ -124,7 +124,7 @@ const EmployeesListTab: React.FC = () => {
               key={index}
               className={`${
                 index < displayedEmployees.length - 1
-                  ? "border-b border-gray-300"
+                  ? "border-b border-gray-500"
                   : ""
               }`}
             >

@@ -47,7 +47,7 @@ const EmployeeCourseInfo: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <Card className="border border-gray-500 rounded-3xl w-full">
+      <Card className="border border-[#62626280] rounded-3xl w-full">
         <CardHeader>
           <CardTitle className="text-3xl text-center py-4">
             Employee Performance

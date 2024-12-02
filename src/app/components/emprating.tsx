@@ -23,7 +23,12 @@ const EmpRating = () => {
 
   useEffect(() => {
     if (employeeId && organizationId) {
-      dispatch(fetchEmployeeReviewById({ employee_id: employeeId, organization_id: organizationId }));
+      dispatch(
+        fetchEmployeeReviewById({
+          employee_id: employeeId,
+          organization_id: organizationId,
+        })
+      );
     }
   }, [dispatch, employeeId, organizationId]);
 
@@ -42,7 +47,7 @@ const EmpRating = () => {
   if (loading) {
     return (
       <Card>
-        <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-gray-900">
+        <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-[#62626280]">
           <CardTitle className="text-center text-white text-xs sm:text-md mb-0">
             Rating
           </CardTitle>
@@ -57,7 +62,7 @@ const EmpRating = () => {
   if (!Rate) {
     return (
       <Card>
-        <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-gray-900">
+        <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-[#62626280]">
           <CardTitle className="text-center text-white text-xs sm:text-md mb-0">
             Rating
           </CardTitle>
@@ -73,7 +78,7 @@ const EmpRating = () => {
 
   return (
     <Card>
-      <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-gray-900">
+      <CardHeader className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-t-3xl py-2 border border-[#62626280]">
         <CardTitle className="text-center text-white text-xs sm:text-md mb-0 capitalize">
           {employees.first_name}&apos;s Rating
         </CardTitle>
@@ -85,7 +90,9 @@ const EmpRating = () => {
           {[...Array(5)].map((_, index) => (
             <span
               key={index}
-              className={`text-3xl ${index < no_of_stars ? "text-yellow-400" : "text-gray-600"}`}
+              className={`text-3xl ${
+                index < no_of_stars ? "text-yellow-400" : "text-gray-600"
+              }`}
             >
               ★
             </span>
@@ -96,7 +103,6 @@ const EmpRating = () => {
         <div className="text-white text-center mb-4">{reviewText}</div>
 
         {/* Employee Details */}
-
 
         {/* Rating Badge */}
         <div className="inline-block bg-default-900 text-default-100 px-2.5 py-1 text-xl font-medium rounded-full min-w-[60px]">

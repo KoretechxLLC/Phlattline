@@ -102,27 +102,20 @@ const DailyDose = () => {
     (state: any) => state.courses
   );
 
-  
   useEffect(() => {
-    const updatedCoursesAssign = coursesAssign.map((item:any) => {
+    const updatedCoursesAssign = coursesAssign.map((item: any) => {
       const { assigned_at, ...rest } = item;
-      
 
-      
-      let data =  {
-          ...item.courses,
-          assigned_at: assigned_at,
-        
+      let data = {
+        ...item.courses,
+        assigned_at: assigned_at,
       };
 
-      return data
-
+      return data;
     });
 
-
-    setUpdatedCourses(updatedCoursesAssign); 
-  }, [coursesAssign]); 
-
+    setUpdatedCourses(updatedCoursesAssign);
+  }, [coursesAssign]);
 
   const { userData } = useSelector((state: RootState) => state.auth);
   const [selectedEventDate, setSelectedEventDate] = useState<Date | null>(null);
@@ -237,9 +230,12 @@ const DailyDose = () => {
   ) : (
     <>
       <div className="flex flex-col w-full h-full overflow-hidden">
-        <Card className="flex-grow py-2 border rounded-3xl border-gray-500 lg:my-20 4xl:my-0 5xl:my-0  w-full">
-         {/* For Employee Portal */}
-          <div className="p-2 dashcode-app-calendar w-full h-full" style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}>
+        <Card className="flex-grow py-2 border rounded-3xl border-[#62626280] lg:my-20 4xl:my-0 5xl:my-0  w-full">
+          {/* For Employee Portal */}
+          <div
+            className="p-2 dashcode-app-calendar w-full h-full"
+            style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}
+          >
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
               headerToolbar={{
@@ -293,9 +289,12 @@ const DailyDose = () => {
               }}
             />
           </div>
-         {/* For Employee Portal */}
-           {/* For Indvidiual  Portal */}
-           <div className="p-2 dashcode-app-calendar w-full h-full" style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}>
+          {/* For Employee Portal */}
+          {/* For Indvidiual  Portal */}
+          <div
+            className="p-2 dashcode-app-calendar w-full h-full"
+            style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}
+          >
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
               headerToolbar={{
@@ -349,9 +348,7 @@ const DailyDose = () => {
               }}
             />
           </div>
-         {/* For Indvidiual Portal */}
-
-
+          {/* For Indvidiual Portal */}
         </Card>
       </div>
       <EventModal

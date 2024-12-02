@@ -63,7 +63,7 @@ const CoursesAssigner = ({
         notification={notification}
         setNotification={setNotification}
       />
-      <Card className="border border-gray-500 rounded-3xl">
+      <Card className="border border-[#62626280] rounded-3xl">
         <CardHeader>
           <CardTitle>Assign Courses</CardTitle>
         </CardHeader>

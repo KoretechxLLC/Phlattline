@@ -53,7 +53,7 @@ const PerformanceManagementReport = () => {
 
           {userType === 3 && (
             <div className="flex-1">
-              <EmpRating  />
+              <EmpRating />
             </div>
           )}
 
@@ -65,12 +65,15 @@ const PerformanceManagementReport = () => {
 
       {userType === 2 && (
         <>
-          <div className="col-span-1 md:col-span-2 border border-gray-500 rounded-3xl">
+          <div className="col-span-1 md:col-span-2 border border-[#62626280] rounded-3xl">
+            <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] ">
+              <CardTitle>Performance Reviews</CardTitle>
+            </CardHeader>
             <PerformanceReviews />
           </div>
 
           <div>
-            <Card className="border-[1px] border-gray-500 rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+            <Card className="border-[1px] border-[#62626280] rounded-3xl h-full bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <CardHeader className="h-16 rounded-3xl">
                 <div className="text-sm flex justify-between">
                   <CardTitle>Issues Reported</CardTitle>

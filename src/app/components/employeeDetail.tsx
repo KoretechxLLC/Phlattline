@@ -129,7 +129,7 @@ const EmployeeDetail: React.FC<PageProps> = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4">
       {/* First Row: Employee Info and Goals Achieved */}
-      <div className="lg:col-span-1 flex items-center gap-6 border border-gray-500 rounded-xl px-16 py-2">
+      <div className="lg:col-span-1 flex items-center gap-6 border border-[#62626280] rounded-xl px-16 py-2">
         <div className="w-40 h-40 ring-4 ring-[#B50D34] flex items-center justify-center rounded-full overflow-hidden">
           {employee?.profile_image || imgError ? (
             <Image
@@ -223,7 +223,7 @@ const EmployeeDetail: React.FC<PageProps> = ({
       {/* Second Row: Other Components */}
       <div className="lg:col-span-full grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
-          <Card className="border h-full border-gray-500 rounded-3xl">
+          <Card className="border h-full border-[#62626280] rounded-3xl">
             <CardHeader className="flex-row gap-3">
               <CardTitle className="flex-1 ml-6">Courses Completion</CardTitle>
             </CardHeader>
@@ -288,7 +288,7 @@ const EmployeeDetail: React.FC<PageProps> = ({
           </Card>
         </div>
         <div className="lg:col-span-2">
-          <Card className="border border-gray-500 rounded-3xl p-0">
+          <Card className="border border-[#62626280] rounded-3xl p-0">
             <CardHeader className="flex-row gap-3">
               <CardTitle className="flex-1">Activity Hours</CardTitle>
             </CardHeader>

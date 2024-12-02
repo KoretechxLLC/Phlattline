@@ -101,7 +101,6 @@ const Profile = ({ profileImage }: any) => {
 
     formData.append("profile_image", profileImage || userData?.image);
 
-  
     if (userData?.id) formData.append("user_id", userData.id);
 
     // Ensure userId is present before dispatching
@@ -116,7 +115,6 @@ const Profile = ({ profileImage }: any) => {
       let user = { ...userData };
       user.organizations = updatedOrganization.organization;
       user.profile_image = updatedOrganization.user.profile_image;
-   
 
       dispatch(setUpdateUserData(user));
 
@@ -185,7 +183,7 @@ const Profile = ({ profileImage }: any) => {
       />
       {/* First Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="first-name"
             type="text"
@@ -197,7 +195,7 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="email"
             type="email"
@@ -213,7 +211,7 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Second Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="phone"
             type="tel"
@@ -225,7 +223,7 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPhone className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <DatePicker
             value={new Date(
               data?.organizations?.created_at
@@ -245,14 +243,15 @@ const Profile = ({ profileImage }: any) => {
             id="organization type"
             value={obj.orgType}
             onChange={(e) => setObj({ ...obj, orgType: e.target.value })}
-            className="bg-black text-white w-full p-2 py-4 border border-gray-500 rounded-2xl"
+            className="bg-black text-white w-full p-2 py-4 border border-[#62626280] rounded-2xl"
             options={userCategories}
             placeholder={"Select Organization Type"}
             required
           />
+
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="num-emp"
             type="number"
@@ -268,7 +267,7 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Fourth Row */}
       <div className="grid grid-cols-1  gap-4">
-        <div className="relative py-2 border border-gray-500 rounded-2xl">
+        <div className="relative py-2 border border-[#62626280] rounded-2xl">
           <input
             id="Code"
             ref={inputRef}
@@ -334,7 +333,6 @@ const ProfileImage = ({ setProfileImage, profileImage }: any) => {
     setData(userData);
   }, [userData, profileImage]);
 
- 
   const handleImageChange = (event: any) => {
     const file = event.target.files?.[0];
     if (
