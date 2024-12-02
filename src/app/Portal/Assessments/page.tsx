@@ -91,7 +91,7 @@ const Assessments = () => {
     const timer = setTimeout(() => {
       setLoading(false); // Stop loading after a delay
     }, 500); // Simulate loading time (adjust as needed)
-
+    
     return () => clearTimeout(timer);
   }, [activeTab]);
 

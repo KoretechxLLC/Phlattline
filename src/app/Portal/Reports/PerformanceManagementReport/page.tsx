@@ -53,7 +53,7 @@ const PerformanceManagementReport = () => {
 
           {userType === 3 && (
             <div className="flex-1">
-              <EmpRating rating={4.8} />
+              <EmpRating  />
             </div>
           )}
 
