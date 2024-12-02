@@ -3,53 +3,84 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { organization_id, department_id, employee_id } =
-      await request.json();
+    // Parse the request body
+    const body = await request.json();
 
-    if (!organization_id || !department_id || !employee_id) {
+    // Check if the payload exists and is an array
+    const payload = body;
+    if (!Array.isArray(payload) || payload.length === 0) {
       return NextResponse.json(
-        { message: "Missing required fields.", success: false },
+        { message: "Payload must be a non-empty array.", success: false },
         { status: 400 }
       );
     }
 
-    const department = await prisma.department.findUnique({
-      where: { id: department_id },
-    });
+    const errors: Array<{ employee_id: number; error: string }> = [];
+    const Data: Array<any> = [];
 
-    if (!department || department.organization_id !== Number(organization_id)) {
-      return NextResponse.json(
-        { message: "Unauthorized or department not found.", success: false },
-        { status: 403 }
-      );
+    // Process each item in the payload
+    for (const item of payload) {
+      const { organization_id, department_id, employee_id } = item;
+
+      // Ensure required fields are present
+      if (!organization_id || !department_id || !employee_id) {
+        errors.push({ employee_id, error: "Missing required fields." });
+        continue;
+      }
+
+      // Check if the department exists and matches the organization
+      const department = await prisma.department.findUnique({
+        where: { id: department_id },
+      });
+
+      if (
+        !department ||
+        department.organization_id !== Number(organization_id)
+      ) {
+        errors.push({
+          employee_id,
+          error: "Unauthorized or department not found.",
+        });
+        continue;
+      }
+
+      // Check if the employee exists and belongs to the same organization
+      const employee = await prisma.employees.findUnique({
+        where: { id: employee_id },
+      });
+
+      if (!employee || employee.organization_id !== Number(organization_id)) {
+        errors.push({
+          employee_id,
+          error: "Employee does not belong to this organization.",
+        });
+        continue;
+      }
+
+      try {
+        // Update the employee with the new department
+        const updatedEmployee = await prisma.employees.update({
+          where: { id: employee_id },
+          data: { departmentId: department_id },
+        });
+
+        Data.push(updatedEmployee);
+      } catch (updateError: any) {
+        errors.push({
+          employee_id,
+          error: updateError.message || "Failed to update employee.",
+        });
+      }
     }
 
-    const employee = await prisma.employees.findUnique({
-      where: { id: employee_id },
-    });
-
-    if (!employee || employee.organization_id !== Number(organization_id)) {
-      return NextResponse.json(
-        {
-          message: "Employee does not belong to this organization.",
-          success: false,
-        },
-        { status: 403 }
-      );
-    }
-
-    const updatedEmployee = await prisma.employees.update({
-      where: { id: employee_id },
-      data: { departmentId: department_id },
-    });
-
+    // Return response with success or failure based on errors
     return NextResponse.json({
-      message: "Employee added to department successfully",
-      success: true,
-      data: updatedEmployee,
+      message: "Batch process completed.",
+      success: errors.length === 0,
+      data: { Data, errors },
     });
   } catch (error: any) {
-    console.error("Error adding employee to department:", error.message);
+    console.error("Error processing batch request:", error.message);
     return NextResponse.json(
       { message: error.message || "Internal Server Error", success: false },
       { status: 500 }

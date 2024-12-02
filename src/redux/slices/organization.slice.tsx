@@ -18,6 +18,10 @@ interface organizationResponseState {
   leaderFeedback: any;
   leaderFeedbackSuccess: string | null;
   leaderFeedbackError: any | null;
+  removeEmployeeSuccess: any | null;
+  addEmployeeSuccess: any | null;
+  addEmployeeError: any | null;
+  removeEmployeeError: any | null;
 }
 
 const initialState: organizationResponseState = {
@@ -35,6 +39,10 @@ const initialState: organizationResponseState = {
   leaderFeedback: null,
   leaderFeedbackSuccess: null,
   leaderFeedbackError: null,
+  removeEmployeeSuccess: null,
+  removeEmployeeError: null,
+  addEmployeeSuccess: null,
+  addEmployeeError: null,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -61,7 +69,7 @@ export const assignCourses = createAsyncThunk<any, any>(
   async ({ data }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        `api/organization/AssignCourse`,
+        `/api/organization/AssignCourse`,
         data
       );
 
@@ -81,9 +89,8 @@ export const fetchAllDepartment = createAsyncThunk<any, any>(
   async ({ organizationId }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `api/organization/manageDepartments/?organization_id=${organizationId}`
+        `/api/organization/manageDepartments/?organization_id=${organizationId}`
       );
-
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -100,7 +107,7 @@ export const addDepartment = createAsyncThunk<any, any>(
   async ({ data }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        `api/organization/manageDepartments`,
+        `/api/organization/manageDepartments`,
         data
       );
 
@@ -138,7 +145,7 @@ export const addReview = createAsyncThunk<any, any>(
   async ({ data }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        `api/organization/employee_review`,
+        `/api/organization/employee_review`,
         data
       );
       return response.data.data;
@@ -205,7 +212,7 @@ export const removeEmployeesInDepartment = createAsyncThunk<any, any>(
         }
       );
 
-      return response.data.data;
+      return response.data;
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||
@@ -225,12 +232,16 @@ const organizationSlice = createSlice({
       state.assignCoursesSuccess = null;
       state.addDepartmentSuccess = null;
       state.leaderFeedbackSuccess = null;
+      state.removeEmployeeSuccess = null;
+      state.addEmployeeSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
       state.assignCoursesError = null;
       state.addDepartmentError = null;
       state.leaderFeedbackError = null;
+      state.removeEmployeeError = null;
+      state.addEmployeeError = null;
     },
   },
   extraReducers: (builder) => {
@@ -295,7 +306,6 @@ const organizationSlice = createSlice({
 
         // Extract employees from the action payload
         const employees = action.payload;
-
         // Update state.departments by adding employees to the matching department
         state.departments = state.departments.map((department) => {
           // Filter employees whose departmentId matches the current department id
@@ -397,96 +407,56 @@ const organizationSlice = createSlice({
       .addCase(removeEmployeesInDepartment.fulfilled, (state, action) => {
         state.responseLoading = false;
 
-        // Ensure the payload contains the necessary data
-        if (action.payload && action.payload.successes.employeeId) {
-          const employeeId = action.payload.successes.employeeId;
-
-          // Find the department that the employee belongs to
-          let departmentId = null;
-          let departmentToUpdate = null;
-
-          // Loop through departments to find the employee's department
-          for (const department of state.departments) {
-            const employee = department.employees?.find(
-              (e: any) => e.id === employeeId
-            );
-            if (employee) {
-              departmentId = department.id;
-              departmentToUpdate = department;
-              break;
-            }
-          }
-
-          // Update the department by removing the employee
-          if (departmentId) {
-            state.departments = state.departments.map((department) => {
-              if (department.id === departmentId) {
-                const updatedEmployees = departmentToUpdate?.employees?.filter(
-                  (employee: any) => employee.id !== employeeId
-                );
-
-                return {
-                  ...department,
-                  employees: updatedEmployees,
-                };
-              }
-              return department;
-            });
-          }
-
-          // Update the global employee state to reflect the removal from the department
-
-          let allEmployees = [...state.employee];
-
-          allEmployees = allEmployees.map((employee) => {
-            if (employee.id === employeeId) {
-              return {
-                ...employee,
-                departmentId: null, // Or update with appropriate logic
-              };
-            }
+        const updatedEmployee = action.payload; // The updated employee object
+        let AllEmployees = [...state.employee];
+        AllEmployees = AllEmployees.map((employee, index) => {
+          if (employee.id == updatedEmployee.id) {
+            return {
+              ...updatedEmployee,
+              departmentId: null,
+            };
+          } else {
             return employee;
-          });
-
-          state.employee = allEmployees;
-
-          state.responseSuccess = true;
-        }
+          }
+        });
+        state.removeEmployeeSuccess = "Successfully employees removed";
+        state.employee = AllEmployees;
       })
       .addCase(removeEmployeesInDepartment.rejected, (state, action) => {
         state.responseLoading = false;
-        state.responseSuccess = false;
-        state.responseError = action.payload as string;
+        state.removeEmployeeSuccess = false;
+        state.removeEmployeeError = action.payload as string;
       })
       .addCase(addEmployeesInDepartment.pending, (state) => {
         state.responseLoading = true;
       })
       .addCase(addEmployeesInDepartment.fulfilled, (state, action) => {
         state.responseLoading = false;
-        const newEmployee = action.payload.successes;
 
-        state.departments = state.departments.map((department) => {
-          if (department.id === newEmployee.departmentId) {
-            return {
-              ...department,
-              employees: [...(department.employees || []), newEmployee],
-            };
+        // Convert the indexed object to an array
+        const newEmployees = Object.values(action.payload.Data);
+
+        let AllEmployee = [...state.employee];
+
+        AllEmployee = AllEmployee.map((employee: any) => {
+          let updatedEmployee = newEmployees.find((emp: any, ind: number) => {
+            if (employee.id === emp.id) {
+              return emp;
+            }
+          });
+          if (updatedEmployee) {
+            return updatedEmployee;
+          } else {
+            return employee;
           }
-          return department;
         });
-
-        let allEmployees = [...state.employee];
-
-        allEmployees = [...allEmployees, newEmployee];
-
-        state.employee = allEmployees;
-
-        state.responseSuccess = true;
+        state.employee = AllEmployee;
+        state.addEmployeeSuccess = "Successfully employees added";
       })
       .addCase(addEmployeesInDepartment.rejected, (state, action) => {
         state.responseLoading = false;
         state.responseSuccess = false;
-        state.responseError = action.payload as string;
+        state.addEmployeeError = action.payload as string;
       });
   },
 });
