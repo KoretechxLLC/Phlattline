@@ -60,7 +60,7 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
                   : ""
               }`}
             >
-              <CardContent className="flex items-center space-x-4 p-4">
+              <CardContent className="flex items-center space-x-4 4xl:p-3 p-4">
                 <Avatar className="w-10 h-10">
                   <AvatarImage
                     src={employee.image}

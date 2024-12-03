@@ -91,7 +91,7 @@ const ProfileInfo = () => {
           exit="closed"
           variants={wrapperVariants}
           style={{ originY: "top", translateX: "-50%" }}
-          className="flex flex-col gap-1 p-3 z-50 rounded-lg bg-white shadow-xl absolute overflow-hidden"
+          className="flex flex-col gap-1 4xl:p-2 p-3 z-50 rounded-lg bg-white shadow-xl absolute overflow-hidden"
         >
           <Option
             setOpen={setOpen}

@@ -68,7 +68,7 @@ const CoursesAssigner = ({
         <CardHeader>
           <CardTitle>Assign Courses</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="4xl:p-2">
           {/* Course Selector */}
           <select
             className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"

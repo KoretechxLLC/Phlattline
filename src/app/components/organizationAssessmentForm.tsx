@@ -31,7 +31,7 @@ const OrganizationAssessmentForm = () => {
     null
   );
   const { userData } = useSelector((state: RootState) => state.auth);
-  const usertype =userData?.user_type_id;
+  const usertype = userData?.user_type_id;
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
@@ -104,7 +104,7 @@ const OrganizationAssessmentForm = () => {
           questionId,
           answer,
         })),
-        user_type_id:usertype,
+        user_type_id: usertype,
       })
     );
   };
@@ -118,14 +118,14 @@ const OrganizationAssessmentForm = () => {
   }
 
   return (
-    <div className="text-white ml-[18em] mr-[2em] p-6 bg-black border-[2px] border-neutral-800 rounded-lg">
+    <div className="text-white ml-[18em] mr-[2em] 4xl:p-2 p-6 bg-black border-[2px] border-neutral-800 rounded-lg">
       <StackedNotifications
         notification={notification}
         setNotification={setNotification}
       />
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 overflow-x-auto h-[48em] pr-8"
+        className="space-y-8 overflow-x-auto h-[48em] 4xl:pr-2 pr-8"
       >
         {assessments?.length > 0 &&
           assessments?.map((assessment: any) => (
@@ -138,11 +138,11 @@ const OrganizationAssessmentForm = () => {
                   (question: any, index: number) => (
                     <div
                       key={question.id}
-                      className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${
+                      className={`4xl:p-4 p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${
                         errors[question.id] ? "border border-red-500" : ""
                       }`}
                     >
-                      <label className="text-1xl text-gray-100 mb-2 block pt-0 pb-3 pl-3">
+                      <label className="text-1xl text-gray-100 mb-2 block pt-0 pb-3  pl-3">
                         {`${index + 1}. ${question.question_text}`}
                       </label>
                       <div className="grid grid-cols-2 gap-0 md:grid-cols-3 lg:grid-cols-6 mt-4 pl-3">
@@ -167,7 +167,7 @@ const OrganizationAssessmentForm = () => {
                                 }
                                 className="form-radio text-yellow-500 focus:ring-0"
                               />
-                              <span className="text-sm">
+                              <span className=" text-sm">
                                 {option.option_text}
                               </span>
                             </label>

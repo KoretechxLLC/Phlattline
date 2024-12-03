@@ -71,42 +71,46 @@ const LinksContainer = ({
   if (userData?.user_type_id === 2) {
     LINKS.push(
       {
-        href: "/PerformanceManagementOrg",
+        href: "/Portal/PerformanceManagementOrg",
         title: "Performance Management",
       },
       {
-        href: "/ODaas",
+        href: "/Portal/ODaas",
         title: "ODaas",
       },
       {
-        href: "/TalentManagement",
+        href: "/Portal/TalentManagement",
         title: "Talent Management",
       },
-      { href: "/Reports", title: "Reports" }
+      { href: "/Portal/Reports", title: "Reports" },
+      {
+        title: "Settings",
+        href: "/Portal/Settings",
+      }
     );
   }
 
   if (userData?.user_type_id === 1) {
     LINKS.push(
       {
-        href: "/PerformanceManagement",
+        href: "/Portal/PerformanceManagement",
         title: "Performance Management",
       },
       {
-        href: "/ExploreJobs",
+        href: "/Portal/ExploreJobs",
         title: "Explore Jobs",
       },
-      { href: "/Reports", title: "Reports" }
+      { href: "/Portal/Reports", title: "Reports" }
     );
   }
   if (userData?.user_type_id === 3) {
     LINKS.push(
       {
-        href: "/PerformanceManagement",
+        href: "/Portal/PerformanceManagement",
         title: "Performance Management",
       },
 
-      { href: "/Reports", title: "Reports" }
+      { href: "/Portal/Reports", title: "Reports" }
     );
   }
 

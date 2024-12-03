@@ -96,7 +96,7 @@ const EmployeeModal = ({
                           : ""
                       }`}
                     >
-                      <CardContent className="flex items-center space-x-2 px-1 py-5 justify-between">
+                      <CardContent className="flex items-center 4xl:p-3 space-x-2 px-1 py-5 justify-between">
                         <div className="flex items-center space-x-4">
                           <Avatar className="w-16 h-16">
                             <AvatarImage

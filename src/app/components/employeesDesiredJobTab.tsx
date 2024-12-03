@@ -42,7 +42,7 @@ const EmployeesDesiredJobTab: React.FC = () => {
             Employees Desired Jobs
           </h2>
           {/* Label Bar for Columns */}
-          <div className="flex justify-between px-8 py-5 text-white bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
+          <div className="flex justify-between 4xl:p-2 px-8 py-5 text-white bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
             <span className="w-1/2 text-left">Job Title</span>
             <span className="w-1/2 text-right">No. of Employees</span>
           </div>
@@ -69,7 +69,7 @@ const EmployeesDesiredJobTab: React.FC = () => {
                       : ""
                   }`}
                 >
-                  <CardContent className="flex items-center justify-between px-8 py-5">
+                  <CardContent className="flex items-center justify-between 4xl:p-2 px-8 py-5">
                     {/* Job Title */}
                     <div className="w-1/2 text-left text-sm font-semibold">
                       {job.jobTitle}

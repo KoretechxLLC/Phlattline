@@ -128,13 +128,13 @@ const EmployeesListTab: React.FC = () => {
                   : ""
               }`}
             >
-              <CardContent className="flex items-center justify-between space-x-4 p-4 my-0.5">
+              <CardContent className="flex items-center 4xl:text-xs justify-between space-x-4 4xl:p-2 p-4 my-0.5">
                 <div className="flex items-center space-x-4">
-                  <Avatar className="w-10 h-10">
+                  <Avatar className="4xl:w-8 4xl:h-8 w-10 h-10">
                     <AvatarImage
                       src={employee.image}
                       alt={`${employee.name}-avatar`}
-                      className="w-10 h-10"
+                      className="4xl:w-8 4xl:h-8 w-10 h-10"
                     />
                   </Avatar>
                   <span className="font-semibold">{employee.name}</span>
@@ -142,7 +142,7 @@ const EmployeesListTab: React.FC = () => {
 
                 <span className="text-yellow-400">{employee.designation}</span>
 
-                <span className="text-gray-500 text-sm">
+                <span className="text-gray-500 4xl:text-xs">
                   {activeTab === "current" ? (
                     `Joined: ${employee.hireDate}`
                   ) : (

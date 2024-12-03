@@ -111,7 +111,7 @@ const LeadersFeedback = () => {
         <CardHeader>
           <CardTitle>Leaders Feedback</CardTitle>
         </CardHeader>
-        <CardContent className="relative p-16">
+        <CardContent className="relative 4xl:p-16 p-16">
           {/* Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Column: Dropdowns */}
@@ -199,7 +199,7 @@ const LeadersFeedback = () => {
           <Button
             onClick={handleSubmitFeedback}
             color="primary"
-            className="absolute bottom-2 right-4"
+            className="absolute bottom-2 right-4 rounded-3xl"
           >
             Submit
           </Button>

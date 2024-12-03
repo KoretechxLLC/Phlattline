@@ -68,11 +68,11 @@ const InterviewTab: React.FC = () => {
                 key={index}
                 className={`${
                   index < interviewData.length - 1
-                    ? "border-b border-gray-300"
+                    ? "border-b border-gray-600"
                     : ""
                 }`}
               >
-                <CardContent className="flex items-center justify-between p-8 space-x-2">
+                <CardContent className="flex items-center justify-between 4xl:p-4 p-8 space-x-2">
                   {/* Image and Name */}
                   <div className="flex items-center space-x-4">
                     <Avatar className="w-10 h-10">

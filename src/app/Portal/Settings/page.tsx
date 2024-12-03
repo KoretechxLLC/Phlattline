@@ -115,7 +115,7 @@ const Settings = () => {
               <>
                 <div className="relative">
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "profilesettings"
                         ? "text-red-500"
                         : "text-default"
@@ -137,7 +137,7 @@ const Settings = () => {
                   }}
                 >
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "billingmethod"
                         ? "text-red-500"
                         : "text-default"
@@ -159,7 +159,7 @@ const Settings = () => {
                 {/* Organization Setting */}
                 <div className="relative">
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "organizationsetting"
                         ? "text-red-500"
                         : "text-default"
@@ -176,7 +176,7 @@ const Settings = () => {
                 {/* Employee Setting */}
                 <div className="relative">
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "employeesetting"
                         ? "text-red-500"
                         : "text-default"
@@ -193,7 +193,7 @@ const Settings = () => {
                 {/* Access Control */}
                 <div className="relative">
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "accesscontrol"
                         ? "text-red-500"
                         : "text-default"
@@ -210,7 +210,7 @@ const Settings = () => {
                 {/* System Logs */}
                 <div className="relative">
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "systemlogs"
                         ? "text-red-500"
                         : "text-default"
@@ -227,7 +227,7 @@ const Settings = () => {
                 {/* Departments */}
                 <div className="relative">
                   <Button
-                    className={`text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
+                    className={`text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6 ${
                       activeTab === "departments"
                         ? "text-red-500"
                         : "text-default"

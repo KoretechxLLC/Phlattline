@@ -41,7 +41,7 @@ const InpersonCoachingTab: React.FC = () => {
                   : ""
               }`}
             >
-              <CardContent className="flex items-center space-x-4 p-4">
+              <CardContent className="flex items-center space-x-4 4xl:p-2 p-4">
                 <Avatar className="w-10 h-10">
                   <AvatarImage
                     src={coach.image}
