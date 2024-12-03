@@ -49,7 +49,7 @@ export const ImprovementAssessmentResult = createAsyncThunk<any, any>(
   async ({ userId }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `api/getImprovementResult?userId=${userId}`
+        `/api/getImprovementResult?userId=${userId}`
       );
       return response?.data?.data;
     } catch (error: any) {

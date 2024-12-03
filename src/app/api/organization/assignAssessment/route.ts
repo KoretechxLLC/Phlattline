@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     });
 
     const existingEmployeeIds = new Set(
-      existingAssignments.map((assignment) => assignment.employee_id)
+      existingAssignments.map((assignment : any) => assignment.employee_id)
     );
 
     const employeesToUnassign = employee_ids

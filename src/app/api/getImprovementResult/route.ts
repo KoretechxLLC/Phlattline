@@ -45,19 +45,19 @@ export async function GET(req: NextRequest) {
     // Process the data to extract percentages
     const results = await Promise.all(
       assessments
-        .map(async (assessment) => {
+        .map(async (assessment : any) => {
           const percentages: number[] = [];
 
           // Process user responses
           for (const response of assessment.user_assessment_responses) {
             const question = assessment.individual_assessment_questions.find(
-              (q) => q.id === response.question_id
+              (q : any) => q.id === response.question_id
             );
 
             if (question) {
               const matchingOption =
                 question.individual_assessment_options.find(
-                  (option) => option.option_text === response.selected_option
+                  (option : any) => option.option_text === response.selected_option
                 );
 
               if (matchingOption) {
@@ -98,7 +98,7 @@ export async function GET(req: NextRequest) {
 
             // Process course data
             coursesData = await Promise.all(
-              courses.map(async (course) => {
+              courses.map(async (course : any) => {
                 const courseResponses =
                   await prisma.coursesAssessmentResponse.findMany({
                     where: {
@@ -111,9 +111,9 @@ export async function GET(req: NextRequest) {
                   course.courses.assessments?.[0]?.questions || [];
 
                 const finalData = questions
-                  .map((question) => {
+                  .map((question : any) => {
                     const response = courseResponses.find(
-                      (resp) => resp.questionId === question.id
+                      (resp : any) => resp.questionId === question.id
                     );
 
                     return response?.answer === question.correct_answer

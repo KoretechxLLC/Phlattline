@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     });
 
     const existingEmployeeIds = new Set(
-      existingAssignments.map((assignment) => assignment.employee_id)
+      existingAssignments.map((assignment : any) => assignment.employee_id)
     );
 
     if (
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
       if (employees.length !== employeesToAssign.length) {
         const unmatchedEmployees = employeesToAssign.filter(
-          (id) => !employees.some((emp) => emp.id === id)
+          (id) => !employees.some((emp : any) => emp.id === id)
         );
         return NextResponse.json(
           {
