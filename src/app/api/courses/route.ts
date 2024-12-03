@@ -484,7 +484,7 @@ export async function GET(req: NextRequest) {
               questions: true,
             },
           },
-          course_assignments: true,
+         
           user_courses: true,
           user_video_progress: true,
         },
@@ -508,7 +508,7 @@ export async function GET(req: NextRequest) {
       include: {
         videos: true,
         assessments: true,
-        course_assignments: true,
+      
         user_courses: true,
         user_video_progress: true,
       },

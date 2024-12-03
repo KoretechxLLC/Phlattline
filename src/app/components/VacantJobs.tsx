@@ -47,7 +47,7 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
       </CardHeader>
 
       {/* Jobs List */}
-      <CardContent className="bg-black border border-[#62626280]  rounded-b-3xl p-8">
+      <CardContent className="bg-black border border-[#62626280]  rounded-b-lg p-8 h-[26vh]">
         {loading ? (
           // Show loader if data is loading
           <div className="flex justify-center items-center py-14">

@@ -10,7 +10,7 @@ import PaymentPopup from "@/app/components/PaymentPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { fetchcourses } from "@/redux/slices/courses.slice";
+import {  fetchusercourses } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import EmployeeModal from "@/app/components/employeeModal";
 
@@ -31,7 +31,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId");
-  const { courses, loading } = useSelector((state: RootState) => state.courses);
+  const { usercourses, loading } = useSelector((state: RootState) => state.courses);
   const dispatch: any = useDispatch();
 
   const { userData } = useSelector((state: RootState) => state.auth);
@@ -43,19 +43,19 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   };
 
   useEffect(() => {
-    if (!courses || courses.length == 0) {
-      dispatch(fetchcourses({}));
+    if (!usercourses || usercourses.length == 0) {
+      dispatch(fetchusercourses(userId));
     }
-  }, [courses, dispatch]);
+  }, [usercourses, dispatch]);
 
   useEffect(() => {
     if (courseId) {
-      const filteredCourseData = courses.find(
-        (e: any) => Number(e.id) === Number(courseId)
+      const filteredCourseData = usercourses.find(
+        (e: any) => Number(e.course_id) === Number(courseId)
       );
-      setData(filteredCourseData);
+      setData(filteredCourseData?.courses);
     }
-  }, [courses, courseId, courses?.length]);
+  }, [usercourses, courseId, usercourses?.length]);
 
   const handleBuyClick = () => {
     setIsOpen(true);

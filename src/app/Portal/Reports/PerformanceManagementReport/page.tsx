@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import TasksTracker from "@/app/components/TasksTracker";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import EmpRating from "@/app/components/emprating";
@@ -14,6 +13,7 @@ import {
 } from "@/app/components/Card";
 import IssuesTracker from "@/app/components/IssuesTracker";
 import PerformanceDeptsChart from "@/app/components/performanceDeptCharts";
+import TasksTracker from "@/app/components/TasksTracker";
 
 const PerformanceManagementReport = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
@@ -28,28 +28,14 @@ const PerformanceManagementReport = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {(userType === 1 || userType === 3) && (
         <>
-          <div className="flex-1">
-            <TasksTracker
-              showPending={true}
-              showCompleted={false}
-              showSaved={false}
-              showTooltip={false}
-              label={"Goals"}
-              isClickable={false}
-            />
-          </div>
-
-          {/* Completed Goals */}
-          <div className="flex-1">
-            <TasksTracker
-              showPending={false}
-              showCompleted={true}
-              showSaved={false}
-              showTooltip={false}
-              label={"Goals"}
-              isClickable={false}
-            />
-          </div>
+          <TasksTracker
+            showPending={true}
+            showCompleted={true}
+            showSaved={false}
+            showTooltip={false}
+            label={"Goals"}
+            isClickable={false}
+          />
 
           {userType === 3 && (
             <div className="flex-1">

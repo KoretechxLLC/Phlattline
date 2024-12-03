@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import ReactPlayer from "react-player";
 import {
+  fetchusercourses,
   resetVideoProgressStatus,
   updateVideoProgress,
 } from "@/redux/slices/courses.slice";
@@ -30,13 +31,14 @@ interface CourseModuleProps {
 const CourseModule: React.FC<CourseModuleProps> = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { courses, videoProgressSuccess } = useSelector(
+  const { usercourses, videoProgressSuccess } = useSelector(
     (state: RootState) => state.courses
   );
   const { userData } = useSelector((state: RootState) => state.auth);
   const [filteredData, setFilteredData] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRun, setVideoRun] = useState(false);
+  const [statusLoader, setStatusLoader] = useState(false);
   const [videoDuration, setVideoDuration] = useState<number>(0);
   const [totalDuration, setTotalDuration] = useState<number>(0);
   const [imgError, setImgError] = useState(false);
@@ -44,20 +46,27 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
     setImgError(true); // Set error flag when image fails to load
   };
 
+
   const courseId = searchParams.get("courseId");
   const videoId = searchParams.get("videoId");
-
+  const userId: any = userData?.id;
+  const dispatch: any = useDispatch();
   useEffect(() => {
-    if (courseId && courses?.length > 0) {
+    if (!usercourses || usercourses.length == 0) {
+      dispatch(fetchusercourses(userId));
+    }
+  }, [usercourses, dispatch]);
+  useEffect(() => {
+    if (courseId && usercourses?.length > 0) {
       const getCourse = async () => {
-        const filteredCourseData = courses.find(
-          (e: any) => Number(e.id) === Number(courseId)
+        const filteredCourseData = usercourses.find(
+          (e: any) => Number(e.course_id) === Number(courseId)
         );
-        setFilteredData(filteredCourseData);
+        setFilteredData(filteredCourseData?.courses);
       };
       getCourse();
     }
-  }, [courseId, courses]);
+  }, [courseId, usercourses]);
 
   const [videoData, setVideoData] = useState<any>({});
 
@@ -68,6 +77,15 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
       );
     }
   }, [filteredData, courseId]);
+  useEffect(() => {
+    if (!videoData || videoData.length==0) {
+      setVideoData(
+        filteredData?.videos.find((video: any) => video?.sequence == 1)
+      );
+    }
+  }, []);
+
+
 
   useEffect(() => {
     if (filteredData && filteredData?.videos?.length > 0 && videoId) {
@@ -77,17 +95,23 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
     }
   }, [videoId, filteredData]);
 
-  const dispatch: any = useDispatch();
+
 
   const handleProgress = (state: any) => {
     setVideoDuration(state.playedSeconds);
     let data = {
       user_id: userData.id,
       video_id: videoData?.id,
+    
       progressDuration: state.playedSeconds,
       course_id: Number(courseId),
       totalDuration,
     };
+  
+    if(data?.totalDuration == state.playedSeconds){
+   
+      setStatusLoader(true)
+    }
     dispatch(updateVideoProgress(data));
   };
 
@@ -100,6 +124,8 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
   const handleDuration = (duration: number) => {
     setTotalDuration(duration);
   };
+
+
 
   const handlePlayVideo = () => {
     setVideoRun(true);
@@ -116,7 +142,11 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
     designation: "Senior Designer",
   };
 
+
+
+ 
   return (
+    filteredData &&
     <div
       className="p- grid grid-cols-1 md:grid-cols-3 gap-6 bg-default-50 w-full h-full rounded-lg"
       style={{ fontFamily: "Sansation" }}
@@ -169,7 +199,9 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
                   controls={true}
                   onProgress={handleProgress}
                   onDuration={handleDuration}
-                  progressInterval={10000}
+                  progressInterval={5000}
+                  loop={false}
+                  onEnded={()=>setVideoData({...videoData,isEnded:true})}
                   width={"100%"}
                   height={"100%"} // Adjust this value to set the height
                   style={{ border: "1px solid #2F2F2F" }}
@@ -263,7 +295,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <ModuleList />
+            <ModuleList   totalDuration={totalDuration} videoDuration={videoDuration} videoData={videoData} />
           </CardContent>
         </Card>
       </div>
