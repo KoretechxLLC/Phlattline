@@ -186,7 +186,7 @@ export async function GET(req: NextRequest) {
 
     }
 
-    const totalTimeSpent = timelogs.reduce((total, log) => total + log.timeSpent, 0);
+    const totalTimeSpent = timelogs.reduce((total: any, log: any) => total + log.timeSpent, 0);
 
     return NextResponse.json(
       {

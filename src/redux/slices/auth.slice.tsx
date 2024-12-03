@@ -206,7 +206,7 @@ export const fetchPurchaseCourses = createAsyncThunk<any, any>(
   async (userId: any, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `api/purchaseCourse/?userId=${userId}`,
+        `/api/purchaseCourse/?userId=${userId}`,
 
         {
           headers: {
@@ -228,7 +228,7 @@ export const fetchPurchaseAssessment = createAsyncThunk<any, any>(
   async (userId: any, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `api/purchaseAssessments/?userId=${userId}`,
+        `/api/purchaseAssessments/?userId=${userId}`,
 
         {
           headers: {

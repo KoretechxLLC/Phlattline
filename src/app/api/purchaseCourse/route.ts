@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const coursePurchaseHistory = await prisma.$transaction(async (prisma) => {
+    const coursePurchaseHistory = await prisma.$transaction(async (prisma : any) => {
       const alreadyPurchasedCourse = await prisma.user_courses.findFirst({
         where: {
           user_id: Number(user_Id),

@@ -178,7 +178,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Transform the responses to match the desired structure
-    const transformedResponses = responses.map((response) => ({
+    const transformedResponses = responses.map((response : any) => ({
       question: {
         id: response.question.id,
         question_text: response.question.question_text,

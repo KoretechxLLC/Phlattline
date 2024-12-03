@@ -33,20 +33,20 @@ export async function GET(req: NextRequest) {
     });
 
     // Process the data to extract percentages
-    const result = assessments.map((assessment) => {
+    const result = assessments.map((assessment : any) => {
       const individualAssessment = assessment.individual_assessments;
       const percentages: any = [];
 
       // Iterate through each response
-      individualAssessment.user_assessment_responses.forEach((response) => {
+      individualAssessment.user_assessment_responses.forEach((response : any) => {
         const question =
           individualAssessment.individual_assessment_questions.find(
-            (q) => q.id === response.question_id
+            (q : any) => q.id === response.question_id
           );
 
         if (question) {
           const matchingOption = question.individual_assessment_options.find(
-            (option) => option.option_text === response.selected_option
+            (option : any) => option.option_text === response.selected_option
           );
 
           if (matchingOption) {

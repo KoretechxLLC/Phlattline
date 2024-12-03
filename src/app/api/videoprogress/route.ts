@@ -42,7 +42,7 @@ export async function PUT(req: NextRequest) {
 
     if (existingProgress) {
       const currentProgress = existingProgress.videoProgress.find(
-        (vp) => vp.video_id === videoIdString
+        (vp: any) => vp.video_id === videoIdString
       );
 
       if (currentProgress && progressDuration <= currentProgress.progressDuration) {

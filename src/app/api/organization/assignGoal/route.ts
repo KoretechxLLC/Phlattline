@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     });
 
     const alreadyAssignedIds = new Set(
-      existingAssignments.map((assignment) => assignment.assignee_id)
+      existingAssignments.map((assignment : any) => assignment.assignee_id)
     );
 
     const employeesToUnassign = assignee_ids.filter((id: any) =>
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       (id: any) => !alreadyAssignedIds.has(id)
     );
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx : any) => {
       if (employeesToUnassign.length > 0) {
         await tx.user_goal.deleteMany({
           where: { user_id, assignee_id: { in: employeesToUnassign } },
