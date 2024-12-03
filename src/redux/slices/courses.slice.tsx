@@ -28,6 +28,7 @@ interface CoursesState {
   purchaseCourseError: any | null;
   purchaseCourseSuccess: any | null;
   recomendedSuccess: any;
+  courseAssessmentSuccess:any
 }
 
 interface VideoProgressParams {
@@ -59,6 +60,7 @@ const initialState: CoursesState = {
   purchaseCourseLoader: false,
   purchaseCourseError: null,
   purchaseCourseSuccess: null,
+  courseAssessmentSuccess:null
 };
 
 // Thunk to fetch the course count
@@ -88,6 +90,8 @@ export const fetchcourses = createAsyncThunk<any, any>(
       const response = await axiosInstance.get(
         `/api/courses?page=${filter.page}&size=${filter.size}`
       );
+     
+    
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -251,6 +255,7 @@ const coursesSlice = createSlice({
   reducers: {
     resetSuccess(state) {
       state.success = null;
+      state.courseAssessmentSuccess = null
     },
     resetError(state) {
       state.error = null;
@@ -315,13 +320,13 @@ const coursesSlice = createSlice({
       .addCase(coursesAssessmentResponses.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = null;
+        state.courseAssessmentSuccess = null;
       })
       .addCase(coursesAssessmentResponses.fulfilled, (state, action) => {
         state.loading = false;
         state.responses = action.payload.data;
-        state.success = action.payload.message; // Set success message
-        window.location.href = "/Portal/Courses";
+        state.courseAssessmentSuccess = action.payload.message; // Set success message
+        // window.location.href = "/Portal/Courses";
       })
       .addCase(coursesAssessmentResponses.rejected, (state, action) => {
         state.loading = false;

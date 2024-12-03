@@ -48,62 +48,60 @@ const PaidAssessment = () => {
   const [responses, setResponses] = useState<any>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
-  const usertype =userData?.user_type_id;
+  const usertype = userData?.user_type_id;
   const searchParams = useSearchParams();
   const assessmentId: any = searchParams.get("assessmentId");
 
   useEffect(() => {
-    if(usertype==3){
-    dispatch(
-      fetchSingleAssessments({
-        filter: {
-          userId: userId,
-          assessmentId: assessmentId,
-          user_type_id: usertype,
-        },
-      })
-    );
-
-  }else{
-    dispatch(
-      fetchSingleAssessments({
-        filter: {
-          userId: userId,
-          assessmentId: assessmentId,
-         
-        },
-      })
-    );
-  }
+    if (usertype == 3) {
+      dispatch(
+        fetchSingleAssessments({
+          filter: {
+            userId: userId,
+            assessmentId: assessmentId,
+            user_type_id: usertype,
+          },
+        })
+      );
+    } else {
+      dispatch(
+        fetchSingleAssessments({
+          filter: {
+            userId: userId,
+            assessmentId: assessmentId,
+          },
+        })
+      );
+    }
   }, [dispatch]);
 
-  const handleOptionChange = (individual_assessment_id: any, questionId: string, optionText: string) => {
-
+  const handleOptionChange = (
+    individual_assessment_id: any,
+    questionId: string,
+    optionText: string
+  ) => {
     let resp = {
       assessmentsid: individual_assessment_id,
       selectedOption: optionText,
-      questionId: questionId
+      questionId: questionId,
     };
 
     if (responses && responses?.length > 0) {
-
       if (responses.some((resp: any) => resp.questionId == questionId)) {
         let response = responses.map((res: any) => {
-
           if (res.questionId == resp.questionId) {
-            return resp
+            return resp;
           } else {
-            return res
+            return res;
           }
-        })
-        setResponses(response)
+        });
+        setResponses(response);
       } else {
-        setResponses([...responses, resp])
+        setResponses([...responses, resp]);
       }
     } else {
-      setResponses([...responses, resp])
+      setResponses([...responses, resp]);
     }
-
 
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -127,6 +125,7 @@ const PaidAssessment = () => {
         text: success,
         type: "success",
       });
+      router.push("/Portal/Assessments");
       dispatch(setSuccess());
       dispatch(resetSuccess());
 
@@ -176,33 +175,27 @@ const PaidAssessment = () => {
       return; // Don't submit if there are errors
     }
 
+    let assessmentId = singleAssessment?.id;
 
-    let assessmentId = singleAssessment?.id
-
-
-    if(usertype==3){
+    if (usertype == 3) {
       dispatch(
         submitAssessmentResponses({
           userId,
-          assessmentId:
-          [assessmentId],
+          assessmentId: [assessmentId],
           responses: responses,
-          user_type_id:usertype,
+          user_type_id: usertype,
         })
       );
-
+    } else {
+      dispatch(
+        submitAssessmentResponses({
+          userId,
+          assessmentId: [assessmentId],
+          responses: responses,
+          user_type_id: usertype,
+        })
+      );
     }
-    else{
-    dispatch(
-      submitAssessmentResponses({
-        userId,
-        assessmentId:
-        [assessmentId],
-        responses: responses,
-        user_type_id:usertype,
-      })
-    )
-  }
   };
 
   return (
@@ -268,14 +261,18 @@ const PaidAssessment = () => {
                                     name={question.id.toString()}
                                     value={option.option_text}
                                     checked={
-                                      responses && responses?.length > 0 && responses?.find((res: any) => res.questionId == question?.id)?.selectedOption === option.option_text
+                                      responses &&
+                                      responses?.length > 0 &&
+                                      responses?.find(
+                                        (res: any) =>
+                                          res.questionId == question?.id
+                                      )?.selectedOption === option.option_text
                                     }
                                     onChange={() =>
                                       handleOptionChange(
                                         question.individual_assessment_id,
                                         question.id,
-                                        option.option_text,
-    
+                                        option.option_text
                                       )
                                     }
                                     className="form-radio text-yellow-500 focus:ring-0"

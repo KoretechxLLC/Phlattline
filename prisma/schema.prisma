@@ -38,7 +38,7 @@ model users {
   timeLogs                  TimeLog[]
   assignedAssessment        assignedAssessment[]
   assignedCourses           assignedCourses[]
-  course_assignments        course_assignments[]
+ 
   purchased_assessments     purchased_assessments[]
   trainingOnDemand          trainingOnDemand[]
   user_assessment_responses user_assessment_responses[]
@@ -62,7 +62,7 @@ model organizations {
   no_of_employees    Int
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
-  course_assignments course_assignments[]
+
   department         department[]
   employee_review    employee_review[]
   employees          employees[]
@@ -85,6 +85,7 @@ model employees {
   date_of_birth      DateTime?            @db.Date
   designation        String?              @db.VarChar(100)
   profile_image      String?              @db.VarChar(255)
+  status             String               @default("pending") @db.VarChar(20)
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
   employee_review    employee_review[]
@@ -135,7 +136,7 @@ model courses {
   VideoProgress             VideoProgress[]
   assessments               assessments[]
   assignedCourses           assignedCourses[]
-  course_assignments        course_assignments[]
+ 
   user_courses              user_courses[]
   user_video_progress       user_video_progress[]
   videos                    videos[]
@@ -211,16 +212,7 @@ model purchased_assessments {
   users                     users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model course_assignments {
-  id              Int            @id @default(autoincrement())
-  user_id         Int
-  course_id       Int
-  assigned_by     Int?
-  organization_id Int?
-  courses         courses        @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  organization    organizations? @relation(fields: [organization_id], references: [id])
-  users           users          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
+
 
 model assessmentform_responses {
   id                     Int                     @id @default(autoincrement())

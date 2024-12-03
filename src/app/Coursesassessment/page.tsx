@@ -7,6 +7,7 @@ import { RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   coursesAssessmentResponses,
+  fetchusercourses,
   resetError,
   resetSuccess,
 } from "@/redux/slices/courses.slice";
@@ -26,17 +27,24 @@ const Courseassessment = () => {
     null
   );
   const courseId = searchParams.get("courseId");
-  const { courses, loading, error, success } = useSelector(
+  const { courses, loading, error, success, usercourses,courseAssessmentSuccess } = useSelector(
     (state: RootState) => state.courses
   );
   const { userData } = useSelector((state: RootState) => state.auth);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
-  const currentCourse = courses.find(
-    (course: any) => course.id === Number(courseId)
+  const currentCourse = usercourses.find(
+    (course: any) => course.course_id === Number(courseId)
   );
-  const assessments = currentCourse?.assessments || [];
+
+  const assessments = currentCourse?.courses?.assessments || [];
   const userId = userData?.id;
+
+  useEffect(() => {
+    if (!usercourses || usercourses.length == 0) {
+      dispatch(fetchusercourses(userId));
+    }
+  }, [usercourses, dispatch]);
 
   const handleOptionChange = (questionId: string, selectedOption: string) => {
     setResponses((prevResponses) => ({
@@ -82,17 +90,18 @@ const Courseassessment = () => {
     }
   };
 
+
   useEffect(() => {
-    if (success !== null) {
+    if (courseAssessmentSuccess) {
       setNotification({
         id: Date.now(),
-        text: success,
+        text: courseAssessmentSuccess,
         type: "success",
       });
+      router.push(`/Portal/Courses/CourseModule?courseId=${courseId}`);
       dispatch(resetSuccess());
-    
     }
-    if (error !== null) {
+    if (error) {
       setNotification({
         id: Date.now(),
         text: error,
@@ -100,7 +109,7 @@ const Courseassessment = () => {
       });
       dispatch(resetError());
     }
-  }, [success, error, dispatch, router]);
+  }, [courseAssessmentSuccess, error, dispatch, router]);
 
   return (
     <div>
