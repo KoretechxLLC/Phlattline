@@ -48,7 +48,7 @@ const AssignmentTabs: React.FC = () => {
           {assignmentItems.map((item, index) => (
             <Card
               key={index}
-              className="min-w-[300px] w-full 4xl:py-3 4xl:px-6 py-3 px-10 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80]"
+              className="4xl:min-w-[250px] min-w-[300px] w-full 4xl:py-3 4xl:px-6 py-3 px-10 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80]"
             >
               <CardContent className="flex flex-col justify-between h-full">
                 <ul className="space-y-2">

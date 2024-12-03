@@ -73,33 +73,33 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
         <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
           <CardTitle>Succession Planning</CardTitle>
         </CardHeader>
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 p-2">
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 4xl:px-3 p-2">
           {displayedEmployees.map((employee, index) => (
             <li
               key={index}
-              className="border border-[#62626280] rounded-lg p-4"
+              className="border border-[#62626280] rounded-lg 4xl:px-2 p-4"
             >
-              <CardContent className="flex justify-between items-center space-x-4">
-                <Avatar className="w-10 h-10">
+              <CardContent className="flex justify-between items-center 4xl:space-x-2 space-x-4">
+                <Avatar className="4xl:w-8 4xl:h-8 w-10 h-10">
                   <AvatarImage
                     src={employee.image}
                     alt={`${employee.name}-avatar`}
-                    className="w-10 h-10"
+                    className="4xl:w-8 4xl:h-8 w-10 h-10"
                   />
                 </Avatar>
                 <div>
-                  <span className="font-semibold">{employee.name}</span>
-                  <span className="text-gray-400 block">
+                  <span className=" font-semibold">{employee.name}</span>
+                  <span className="text-gray-400  block">
                     {employee.designation}
                   </span>
                 </div>
                 {/* Circular percentage display with color-coordinated border */}
                 <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border font-semibold ${getCompletionColor(
+                  className={`flex items-center justify-center  4xl:w-8 4xl:h-8 w-10 h-10 4xl:rounded-3xl rounded-full border font-semibold ${getCompletionColor(
                     employee.completion
                   )}`}
                 >
-                  {employee.completion}%
+                  <span className="4xl:text-sm">{employee.completion}%</span>
                 </div>
               </CardContent>
             </li>

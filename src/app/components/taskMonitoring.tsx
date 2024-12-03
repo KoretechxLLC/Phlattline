@@ -10,7 +10,7 @@ import Image from "next/image";
 import { Button } from "./button-sidebar";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import Icon from "./utility-icon";
-import Spinner from "./Spinner"; // Assuming Spinner is your loader component
+import Spinner from "./Spinner";
 
 interface Assignee {
   name: string;
@@ -25,15 +25,13 @@ interface Task {
 }
 
 const TaskMonitoring: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]); // Tasks state with type
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Simulate API call to fetch tasks
     const fetchTasks = async () => {
       setLoading(true);
       setTimeout(() => {
-        // Mock data after delay
         const data: Task[] = [
           {
             image: "/assets/TaskImg.png",
@@ -77,12 +75,32 @@ const TaskMonitoring: React.FC = () => {
               },
             ],
           },
+          {
+            image: "/assets/TaskImg.png",
+            date: "20 August",
+            assignees: [
+              {
+                name: "Jacob Jones",
+                completion: "50%",
+                avatar: "/assets/DummyImg.png",
+              },
+              {
+                name: "Sarah Johnson",
+                completion: "30%",
+                avatar: "/assets/DummyImg.png",
+              },
+              {
+                name: "Michael Brown",
+                completion: "70%",
+                avatar: "/assets/DummyImg.png",
+              },
+            ],
+          },
         ];
 
-        // Set fetched data here
-        setTasks(data); // Replace `data` with `[]` to test "No Tasks Found" state
-        setLoading(false); // Set loading to false when tasks are fetched
-      }, 2000); // Simulate 2 seconds delay
+        setTasks(data);
+        setLoading(false);
+      }, 2000);
     };
 
     fetchTasks();
@@ -90,79 +108,71 @@ const TaskMonitoring: React.FC = () => {
 
   return (
     <div>
-      {/* Single title for Task Monitoring */}
       <CardHeader>
         <CardTitle>Task Monitoring</CardTitle>
       </CardHeader>
 
       {loading ? (
-        // Centered spinner while loading
         <div className="flex justify-center items-center w-full h-[200px]">
           <Spinner height="30px" width="30px" />
         </div>
       ) : tasks.length > 0 ? (
-        // Render tasks once loading is complete and tasks are available
-        <div className="flex space-x-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
           {tasks.map((task, index) => (
-            <Card key={index} className="w-full flex-shrink-0">
-              <CardContent className="p-3 space-y-3">
-                <div className="flex space-x-4">
-                  {/* Left Column: Image, Edit Button, Date */}
+            <Card key={index} className="w-full">
+              <CardContent className="4xl:p-0 p-1 space-y-3">
+                <div className="grid grid-cols-2 gap-0">
+                  {/* Left Column */}
                   <div className="flex flex-col items-center space-y-2">
                     <Image
                       src={task.image}
                       alt="Task Image"
                       width={100}
                       height={100}
-                      className="w-28 h-28"
+                      className="4xl:w-20 4xl:h-20 w-28 h-28"
                     />
                     <div className="flex items-center space-x-2">
                       <Icon icon="solar:calendar-bold" className="w-6 h-6" />
                       <p>{task.date}</p>
                     </div>
-                    <Button color="primary" size="md">
+                    <Button color="primary" size="md" className="rounded-3xl">
                       Edit
                     </Button>
                   </div>
 
-                  {/* Right Column: Assignees and Completion */}
-                  <div className="flex flex-col flex-grow p-1">
-                    <Card className="border border-gray-300">
-                      <CardHeader className="flex justify-center">
-                        <h2 className="text-xl font-bold ">
-                          Assignees Completion
-                        </h2>
-                      </CardHeader>
-                      <CardContent>
-                        <ul className="mt-4 space-y-3">
-                          {task.assignees.map((assignee, assigneeIndex) => (
-                            <li
-                              key={assigneeIndex}
-                              className="flex justify-between border-b border-gray-300 pb-2 last:border-0"
-                            >
-                              {/* Icon and Avatar */}
-                              <div className="flex gap-3">
-                                <Icon
-                                  icon="f7:person-badge-minus"
-                                  className="w-5 h-5 text-red-600"
+                  {/* Right Column */}
+                  <div className="border border-gray-600 rounded-md 4xl:p-3 p-2">
+                    <CardHeader className="text-center">
+                      <h2 className="4xl:text-sm text-xl font-bold">
+                        Assignees Completion
+                      </h2>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3">
+                        {task.assignees.map((assignee, assigneeIndex) => (
+                          <li
+                            key={assigneeIndex}
+                            className="flex items-center border-b border-gray-600 pb-2 last:border-0"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Icon
+                                icon="f7:person-badge-minus"
+                                className=" w-5 h-5 text-red-600"
+                              />
+                              <Avatar className="4xl:w-7 4xl:h-7 w-8 h-8">
+                                <AvatarImage
+                                  src={assignee.avatar}
+                                  alt={`${assignee.name}-avatar`}
                                 />
-                                <Avatar className="w-8 h-8">
-                                  <AvatarImage
-                                    src={assignee.avatar}
-                                    alt={`${assignee.name}-avatar`}
-                                    className="w-8 h-8"
-                                  />
-                                </Avatar>
-                                {/* Name */}
-                                <span className="text-md text-white">
-                                  {assignee.name}
-                                </span>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                    </Card>
+                              </Avatar>
+                            </div>
+                            <span className="ml-3 text-md text-white">
+                              {assignee.name}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
                   </div>
                 </div>
               </CardContent>
@@ -170,7 +180,6 @@ const TaskMonitoring: React.FC = () => {
           ))}
         </div>
       ) : (
-        // Centered "No Tasks Found" message if no tasks are available
         <div className="flex justify-center items-center w-full h-[200px] text-gray-500">
           No Tasks Found
         </div>

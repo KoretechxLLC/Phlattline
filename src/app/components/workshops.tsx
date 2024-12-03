@@ -72,22 +72,22 @@ const Workshops = () => {
         </CardHeader>
         <CardContent className="p-6">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center items-center py-20">
               <Spinner height="40px" width="40px" />
             </div>
           ) : workshops.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 4xl:gap-3 gap-6">
               {workshops.map((workshop) => (
                 <div
                   key={workshop.id}
-                  className="border border-gray-400 rounded-2xl p-5  shadow-md hover:shadow-lg transition-shadow"
+                  className="border border-gray-400 rounded-2xl 4xl:p-2 p-5  shadow-md hover:shadow-lg transition-shadow"
                 >
                   <Image
                     src={workshop.image}
                     width={1000}
                     height={1000}
                     alt={workshop.title}
-                    className="w-full h-36 object-cover rounded-lg"
+                    className="w-full 4xl:h-20 h-36 object-cover rounded-lg"
                   />
                   <div className="flex justify-between items-center mt-4">
                     <h3 className="text-md font-semibold text-white">

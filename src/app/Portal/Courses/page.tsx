@@ -53,10 +53,10 @@ const Courses = () => {
 
   return (
     <div>
-      <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0">
+      <div className="px-1 grid grid-cols-1 md:grid-cols-[70%_30%] gap-2 w-full h-full space-y-3 md:space-y-0">
         {/* Left side: Courses List */}
         <div
-          className="space-y-4 md:space-y-2 ml-4 w-full"
+          className="space-y-2 md:space-y-1 ml-4 w-full"
           style={{ display: userData?.user_type_id === 3 ? "none" : "block" }}
         >
           {isLoading ? (
@@ -66,9 +66,9 @@ const Courses = () => {
           ) : (
             <>
               {/* Tab Buttons */}
-              <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 justify-start items-start my-2 ">
+              <div className="flex flex-col gap-2 sm:flex-row sm:gap-1 justify-start items-start my-0 ">
                 <Button
-                  className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+                  className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4  sm:px-6"
                   color={
                     activeTab === "RecommendedCourses" ? "primary" : "default"
                   }
@@ -78,7 +78,7 @@ const Courses = () => {
                 </Button>
 
                 <Button
-                  className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+                  className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4  sm:px-6"
                   color={activeTab === "MyCourses" ? "primary" : "default"}
                   onClick={() => handleTabChange("MyCourses")}
                 >
@@ -87,7 +87,9 @@ const Courses = () => {
               </div>
 
               {/* Render Tab Content */}
-              <div className="mt-4 w-[100em] -ml-6">{renderContent()}</div>
+              <div className="content 4xl:-ml-12 -ml-6  4xl:w-[70em] w-[100em]  ">
+                {renderContent()}
+              </div>
             </>
           )}
         </div>

@@ -80,7 +80,7 @@ const EmployeeCourseInfo: React.FC = () => {
                       : ""
                   }`}
                 >
-                  <CardContent className="grid grid-cols-4 items-center px-2 py-4 space-x-2">
+                  <CardContent className="grid grid-cols-4 items-center 4xl:p-4 px-2 py-4 space-x-2">
                     {/* Employee Info */}
                     <div className="flex items-center space-x-4">
                       <Avatar className="w-10 h-10">

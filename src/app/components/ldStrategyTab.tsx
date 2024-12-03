@@ -173,7 +173,7 @@ const LDStrategyTab = ({ handleAddGoal, success }: any) => {
             {filteredAssignees.map((assignee, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between border-b border-[#62626280] pb-2 last:border-0"
+                className="flex items-center justify-between border-b border-[#62626280] 4xl:p-2 pb-2 last:border-0"
               >
                 <div className="flex items-center space-x-2">
                   <Icon

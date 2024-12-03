@@ -93,7 +93,7 @@ const PerformanceReview = ({
               .filter((department) => department.id === selectedDepartmentID)
               .map((department) => (
                 <li key={department.id} className="py-4 px-4">
-                  <CardContent className="flex flex-col space-y-4 px-8 py-8 border border-gray-200 rounded-lg">
+                  <CardContent className="flex flex-col space-y-4 4xl:p-5 px-8 py-8 border border-gray-200 rounded-lg">
                     {/* Department Name and Size */}
                     <div className="flex items-center justify-between">
                       <h2 className="font-bold text-lg">{department.name}</h2>

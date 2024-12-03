@@ -97,19 +97,19 @@ export function MenuClassic() {
 
   return (
     <nav className="theme-gradient rounded-3xl h-full w-full transition-all duration-300 z-40 flex flex-col">
-      <div className="flex justify-center items-center my-12">
+      <div className="flex justify-center items-center 4xl:my-5 my-12">
         <div className="flex justify-center">
           <Image
             src="/assets/WhiteLogo.png"
             alt="Website Logo"
             width={150}
             height={150}
-            className="w-24 sm:w-36"
+            className="w-24 4xl:w-32 sm:w-36"
           />
         </div>
       </div>
 
-      <ul className="flex flex-col space-y-4 pl-8 py-8 w-[17em] flex-grow">
+      <ul className="flex flex-col space-y-4 pl-8 4xl:py-1 py-8 w-[17em] flex-grow">
         {menus.map((menu, index) => (
           <li className="w-full" key={index}>
             <div className="w-[90%]">
@@ -121,7 +121,7 @@ export function MenuClassic() {
 
       {/* Menu Widget without list dot */}
       {userData && userData?.user_type_id === 2 && (
-        <li className="w-full list-none pl-3 pb-8">
+        <li className="w-full list-none pl-3 4xl:pb-3 pb-8">
           <MenuWidget
             isActive={activeMenu === "/Portal/ODaas"}
             onClick={() => handleMenuClick("/Portal/ODaas")}

@@ -111,31 +111,31 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
               <div className="flex-1 p-5 rounded-xl">
                 {/* First Name Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-black  mx-3">John</span>
+                  <span className="text-white  mx-3">John</span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Last Name Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-black  mx-3">Doe</span>
+                  <span className="text-white  mx-3">Doe</span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Email Input (Disabled) */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-black  mx-3">JohnDoe@gmail.com</span>
+                  <span className="text-white  mx-3">JohnDoe@gmail.com</span>
                   <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Designation Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-black  mx-3">Software Engineer</span>
+                  <span className="text-white  mx-3">Software Engineer</span>
                   <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Date Picker */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-black  mx-3">11/2/2008</span>
+                  <span className="text-white  mx-3">11/2/2008</span>
                   <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
               </div>
@@ -144,7 +144,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
               <div className="w-52 h-52 ring-4 ring-[#000] my-10 mx-3 flex items-center justify-center rounded-full overflow-hidden">
                 <Image
                   alt="User profile image"
-                  src={"/assets/DummyImg.pngLg.png"}
+                  src={"/assets/DummyImg.png"}
                   width={240} // Set width to fit the container
                   height={240} // Set height to fit the container
                   className="rounded-full object-cover" // Use object-cover for proper scaling

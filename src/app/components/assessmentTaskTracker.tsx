@@ -122,7 +122,7 @@ const AssessmentTaskTracker = ({
             purchasedAssessments.map((item: any) => {
               return (
                 <li
-                  className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-[#62626280] pb-2 last:pb-0 last:border-b-0"
+                  className="flex flex-col sm:flex-row justify-center md:justify-start items-center sm:items-center w-full 4xl:h-16 h-20 gap-2 border-b border-[#62626280] p-3  last:pb-0 last:border-b-0"
                   key={item.id}
                 >
                   <div className="flex items-center md:mx-5 justify-between w-full">
@@ -193,7 +193,7 @@ const AssessmentTaskTracker = ({
           completedAssessments && completedAssessments.length > 0 ? (
             completedAssessments.map((item: any) => (
               <li
-                className="flex flex-row justify-between items-center w-full 4xl:h-16 h-20 gap-4 border-b border-[#62626280] py-4 last:pb-0 last:border-b-0"
+                className="flex flex-row justify-between items-center w-full 4xl:h-16 h-20 gap-4 border-b border-[#62626280] p-3  last:pb-0 last:border-b-0"
                 key={item.id}
               >
                 {/* Avatar and Title Section */}

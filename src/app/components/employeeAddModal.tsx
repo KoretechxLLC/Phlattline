@@ -256,7 +256,7 @@ const EmployeeAddModal = ({
                           : ""
                       }`}
                     >
-                      <CardContent className="flex items-center space-x-2 px-1 py-5 justify-between">
+                      <CardContent className="flex items-center space-x-2 4xl:p-5 px-1 py-5 justify-between">
                         <div className="flex items-center space-x-4">
                           {employees?.profile_image && !imgError ? (
                             <Image

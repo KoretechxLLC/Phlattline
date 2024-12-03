@@ -65,13 +65,13 @@ const GoalsAchievedTracker: React.FC<GoalsAchievedTrackerProps> = ({
 
           {/* Conditionally render Target Image */}
           {showTargetImage && (
-            <div className="p-10">
+            <div className="4xl:p-8 p-10">
               <Image
                 src={"/assets/TargetImage.png"}
                 alt="Goals Tracker"
                 width={5000}
                 height={5000}
-                className="w-40 h-40 "
+                className="4xl:w-52 4xl:h-32  w-40 h-40 "
               />
             </div>
           )}

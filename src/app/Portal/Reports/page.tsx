@@ -58,7 +58,7 @@ const Reports = () => {
     return buttons.map((button) => (
       <Button
         key={button.value}
-        className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+        className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl  px-4 py-2 sm:px-6"
         color={activeTab === button.value ? "primary" : "default"}
         onClick={() => handleTabChange(button.value)}
       >

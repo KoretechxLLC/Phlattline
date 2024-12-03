@@ -77,7 +77,7 @@ const OdaasStrategic = () => {
         <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 justify-start items-start my-2">
           {/* Courses Button */}
           <Button
-            className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+            className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl 4xl:px-4 px-4 py-2 sm:px-6"
             color={activeTab === "Diagnostics" ? "primary" : "default"}
             onClick={() => handleTabChange("Diagnostics")}
           >
@@ -86,7 +86,7 @@ const OdaasStrategic = () => {
 
           {/* Assessments Button */}
           <Button
-            className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+            className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl 4xl:px-4 px-4 py-2 sm:px-6"
             color={activeTab === "Data Collection" ? "primary" : "default"}
             onClick={() => handleTabChange("Data Collection")}
           >
@@ -95,7 +95,7 @@ const OdaasStrategic = () => {
 
           {/* Performance Management Button */}
           <Button
-            className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+            className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl 4xl:px-4 px-4 py-2 sm:px-6"
             color={
               activeTab === "Gap Analysis and Feedback" ? "primary" : "default"
             }
@@ -104,7 +104,7 @@ const OdaasStrategic = () => {
             Gap Analysis and Feedback
           </Button>
           <Button
-            className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+            className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl 4xl:px-4 px-4 py-2 sm:px-6"
             color={
               activeTab === "Designing Interventions" ? "primary" : "default"
             }
@@ -113,14 +113,14 @@ const OdaasStrategic = () => {
             Designing Interventions
           </Button>
           <Button
-            className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+            className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl 4xl:px-4 px-4 py-2 sm:px-6"
             color={activeTab === "Managing Change" ? "primary" : "default"}
             onClick={() => handleTabChange("Managing Change")}
           >
             Managing Change
           </Button>
           <Button
-            className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+            className="text-md 4xl:text-sm md:text-2xl w-full sm:w-auto rounded-2xl 4xl:px-4 px-4 py-2 sm:px-6"
             color={activeTab === "Program Evolutions" ? "primary" : "default"}
             onClick={() => handleTabChange("Program Evolutions")}
           >

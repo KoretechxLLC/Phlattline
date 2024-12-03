@@ -18,14 +18,14 @@ const EmployeeDataTab = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {/* First Row */}
-            <Card className="border border-[#62626280] w-52 rounded-xl">
+            <Card className="border border-[#62626280] 4xl:w-44 w-52 rounded-xl">
               <CardHeader className="rounded-xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-white">
                 <CardTitle className="justify-center mx-4 items-center">
                   Employees
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <h1 className="text-3xl font-bold mx-14 my-5">115</h1>
+                <h1 className="text-3xl font-bold mx-14 4xl:mx-16 my-5">115</h1>
               </CardContent>
             </Card>
 
