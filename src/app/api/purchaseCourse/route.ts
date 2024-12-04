@@ -44,25 +44,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const coursePurchaseHistory = await prisma.$transaction(async (prisma : any) => {
-      const alreadyPurchasedCourse = await prisma.user_courses.findFirst({
-        where: {
-          user_id: Number(user_Id),
-          course_id: Number(course_id),
-        },
-      });
+    const coursePurchaseHistory = await prisma.$transaction(
+      async (prisma: any) => {
+        const alreadyPurchasedCourse = await prisma.user_courses.findFirst({
+          where: {
+            user_id: Number(user_Id),
+            course_id: Number(course_id),
+          },
+        });
 
-      if (alreadyPurchasedCourse) {
-        throw new Error("You already have purchased this course.");
+        if (alreadyPurchasedCourse) {
+          throw new Error("You already have purchased this course.");
+        }
+
+        return await prisma.user_courses.create({
+          data: {
+            user_id: Number(user_Id),
+            course_id: Number(course_id),
+          },
+          include: {
+            courses: true, // This includes the course details in the result
+          },
+        });
       }
-
-      return await prisma.user_courses.create({
-        data: {
-          user_id: Number(user_Id),
-          course_id: Number(course_id),
-        },
-      });
-    });
+    );
 
     return NextResponse.json({
       message: "User successfully purchased this course",
@@ -81,7 +86,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

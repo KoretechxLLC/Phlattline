@@ -48,6 +48,68 @@ const LinksContainer = ({
 }: {
   setActive: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const LINKS = [
+    {
+      title: "Dashboard",
+      href: "/Portal/Dashboard",
+    },
+    {
+      title: "Courses",
+      href: "/Portal/Courses",
+    },
+    {
+      title: "Daily Dose",
+      href: "/Portal/DailyDose",
+    },
+    {
+      title: "Assessments",
+      href: "/Portal/Assessments",
+    },
+  ];
+
+  if (userData?.user_type_id === 2) {
+    LINKS.push(
+      {
+        href: "/PerformanceManagementOrg",
+        title: "Performance Management",
+      },
+      {
+        href: "/ODaas",
+        title: "ODaas",
+      },
+      {
+        href: "/TalentManagement",
+        title: "Talent Management",
+      },
+      { href: "/Reports", title: "Reports" }
+    );
+  }
+
+  if (userData?.user_type_id === 1) {
+    LINKS.push(
+      {
+        href: "/PerformanceManagement",
+        title: "Performance Management",
+      },
+      {
+        href: "/ExploreJobs",
+        title: "Explore Jobs",
+      },
+      { href: "/Reports", title: "Reports" }
+    );
+  }
+  if (userData?.user_type_id === 3) {
+    LINKS.push(
+      {
+        href: "/PerformanceManagement",
+        title: "Performance Management",
+      },
+
+      { href: "/Reports", title: "Reports" }
+    );
+  }
+
   return (
     <motion.div className="space-y-4 p-12 z-50 pl-4 md:pl-20">
       {LINKS.map((l, idx) => {
@@ -218,33 +280,6 @@ const FooterCTAs = ({
     </motion.button>
   );
 };
-
-const LINKS = [
-  {
-    title: "Dashboard",
-    href: "/Portal/Dashboard",
-  },
-  {
-    title: "Courses",
-    href: "/Portal/Courses",
-  },
-  {
-    title: "Daily Dose",
-    href: "/Portal/DailyDose",
-  },
-  {
-    title: "Assessments",
-    href: "/Portal/Assessments",
-  },
-  {
-    title: "Performance Management",
-    href: "/Portal/PerformanceManagement",
-  },
-  {
-    title: "Settings",
-    href: "/Portal/Settings",
-  },
-];
 
 const UNDERLAY_VARIANTS = {
   open: {

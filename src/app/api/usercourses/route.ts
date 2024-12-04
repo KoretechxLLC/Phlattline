@@ -5,6 +5,10 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
+    const page = Number(searchParams.get("page")) || 1;
+    const size = Number(searchParams.get("size")) || 10;
+    // If only options are requested
+    const skip = (Number(page) - 1) * Number(size);
 
     if (!userId) {
       return NextResponse.json(
@@ -22,18 +26,19 @@ export async function GET(request: NextRequest) {
       },
       include: {
         courses: {
-          include:{
-            videos : true,
+          include: {
+            videos: true,
             assessments: {
               include: {
                 questions: true,
               },
             },
-
-          }
-        },  // Include course details
-        users: true,    // Include user details
+          },
+        }, // Include course details
+        users: true, // Include user details
       },
+      take: Number(size),
+      skip: Number(skip),
     });
 
     return NextResponse.json({
