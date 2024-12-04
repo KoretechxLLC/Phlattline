@@ -84,6 +84,7 @@ const LeadersFeedback = () => {
   useEffect(() => {
     if (leaderFeedbackSuccess) {
       setFeedback("");
+      setDeptId(undefined);
       setNotification({
         id: Date.now(),
         text: leaderFeedbackSuccess,
@@ -116,6 +117,7 @@ const LeadersFeedback = () => {
             {/* Left Column: Dropdowns */}
             <div className="flex flex-col space-y-4">
               <select
+                value={deptId || ""}
                 onChange={(dep: any) => {
                   handleDepChange(dep.target.value);
                 }}

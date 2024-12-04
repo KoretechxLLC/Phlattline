@@ -7,7 +7,7 @@ import ChatToolbar from "@/app/components/ChatToolbar";
 const CommentSection = () => {
   const author = {
     name: "John Doe",
-    image: "/assets/userProfile.png", // Example author image
+    image: "/assets/DummyImg.png", // Example author image
     rating: 4.9,
     designation: "Senior Designer",
   };
@@ -15,7 +15,7 @@ const CommentSection = () => {
   // Dummy comment data
   const dummyComment = {
     userName: "Jane Smith",
-    profileImage: "/assets/userProfile.png", // Replace with actual image path
+    profileImage: "/assets/DummyImg.png", // Replace with actual image path
     time: "2 hours ago",
     text: "This course is amazing! I learned a lot.",
   };

@@ -23,7 +23,7 @@ const coursesData = [
     subscribers: 1014,
     rating: 3.4,
     instructorname: "Jack Edwards",
-    instructorimage: "/assets/userProfile.png",
+    instructorimage: "/assets/DummyImg.png",
     Lessons: 14,
     Hours: 12,
     Price: 40,
@@ -41,7 +41,7 @@ const staticEvent = {
   type: "Basic",
   instructorname: "John Doe",
   designation: "Content Writer",
-  instructorimage: "/assets/userProfile.png",
+  instructorimage: "/assets/DummyImg.png",
   rating: 4.8,
   subscribers: 120,
 };
@@ -67,7 +67,7 @@ const EventModal = ({
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div
         style={{ maxHeight: "90%", overflow: "auto" }}
-        className="relative p-5 bg-white rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row"
+        className="relative p-5 bg-[#000000b9] rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row"
       >
         <button
           onClick={onClose}

@@ -137,7 +137,7 @@ const CourseModule: React.FC<CourseModuleProps> = () => {
 
   const author = {
     name: "John Doe",
-    image: "/assets/userProfile.png",
+    image: "/assets/DummyImg.png",
     rating: 4.9,
     designation: "Senior Designer",
   };

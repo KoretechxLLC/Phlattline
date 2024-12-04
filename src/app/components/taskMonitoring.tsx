@@ -42,17 +42,17 @@ const TaskMonitoring: React.FC = () => {
               {
                 name: "Theresa Webb",
                 completion: "10%",
-                avatar: "/assets/UserProfile.png",
+                avatar: "/assets/DummyImg.png",
               },
               {
                 name: "James Green",
                 completion: "20%",
-                avatar: "/assets/UserProfile.png",
+                avatar: "/assets/DummyImg.png",
               },
               {
                 name: "Emma Watson",
                 completion: "40%",
-                avatar: "/assets/UserProfile.png",
+                avatar: "/assets/DummyImg.png",
               },
             ],
           },
@@ -63,17 +63,17 @@ const TaskMonitoring: React.FC = () => {
               {
                 name: "Jacob Jones",
                 completion: "50%",
-                avatar: "/assets/UserProfile.png",
+                avatar: "/assets/DummyImg.png",
               },
               {
                 name: "Sarah Johnson",
                 completion: "30%",
-                avatar: "/assets/UserProfile.png",
+                avatar: "/assets/DummyImg.png",
               },
               {
                 name: "Michael Brown",
                 completion: "70%",
-                avatar: "/assets/UserProfile.png",
+                avatar: "/assets/DummyImg.png",
               },
             ],
           },

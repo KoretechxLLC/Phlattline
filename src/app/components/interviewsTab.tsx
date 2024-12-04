@@ -27,19 +27,19 @@ const InterviewTab: React.FC = () => {
     const timeout = setTimeout(() => {
       setInterviewData([
         {
-          image: "/assets/UserProfile.png",
+          image: "/assets/DummyImg.png",
           name: "John Doe",
           designation: "Software Engineer",
           interviewStatus: "Pending",
         },
         {
-          image: "/assets/UserProfile.png",
+          image: "/assets/DummyImg.png",
           name: "Jane Smith",
           designation: "Product Manager",
           interviewStatus: "Completed",
         },
         {
-          image: "/assets/UserProfile.png",
+          image: "/assets/DummyImg.png",
           name: "Alice Johnson",
           designation: "UI/UX Designer",
           interviewStatus: "Scheduled",

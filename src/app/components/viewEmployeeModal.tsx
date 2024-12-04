@@ -16,7 +16,7 @@ const data = [
     id: 1,
     employees: {
       name: "John Doe",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "Software Engineer",
     },
     status: "pending",
@@ -26,7 +26,7 @@ const data = [
     id: 2,
     employees: {
       name: "Jane Smith",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "Project Manager",
     },
     status: "Approved",
@@ -36,7 +36,7 @@ const data = [
     id: 3,
     employees: {
       name: "Andy Harold",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "UI/UX",
     },
     status: "Rejected",
@@ -103,7 +103,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white  rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-[#000000b9]  rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             {/* Flex container to align fields and image */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -144,7 +144,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
               <div className="w-52 h-52 ring-4 ring-[#000] my-10 mx-3 flex items-center justify-center rounded-full overflow-hidden">
                 <Image
                   alt="User profile image"
-                  src={"/assets/UserProfileLg.png"}
+                  src={"/assets/DummyImg.pngLg.png"}
                   width={240} // Set width to fit the container
                   height={240} // Set height to fit the container
                   className="rounded-full object-cover" // Use object-cover for proper scaling

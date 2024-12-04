@@ -23,11 +23,10 @@ interface CourseDetailsProps {
 const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   const router = useRouter();
   const [isBought, setIsBought] = useState<boolean>(false);
-  const [showComments, setShowComments] = useState<Boolean>(false);
+
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>();
-  const [isPurchasedCourse, setIsPurchasedCourse] = useState<any>();
-  const [isPlaying, setIsPlaying] = useState(false);
+
   const [imgError, setImgError] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
@@ -43,21 +42,20 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   } = useSelector((state: RootState) => state.courses);
   const dispatch: any = useDispatch();
   useEffect(() => {
-    console.log("What the u", usercourses);
     if (!usercourses || usercourses.length == 0) {
       dispatch(fetchusercourses({ userId }));
     }
   }, [userId, dispatch]);
 
   const userType = userData?.user_type_id;
-  console.log("filtered course data ddd", usercourses);
+
   useEffect(() => {
     if (courseId && usercourses?.length > 0) {
       const getCourse = async () => {
         const filteredCourseData = usercourses.find(
           (e: any) => Number(e.course_id) === Number(courseId)
         );
-        console.log("filtered course data", filteredCourseData);
+
         if (filteredCourseData) {
           setIsBought(true);
         }
@@ -72,10 +70,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const handleBuyClick = () => {
     setIsOpen(true);
-  };
-
-  const handleGetStartedClick = () => {
-    setShowComments(true);
   };
 
   const videoWithSequenceOne = data?.videos.find(
@@ -139,14 +133,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
                   height={1000}
                   onError={handleError} // If image fails to load, trigger the error handler
                 />
-                <div className="absolute left-0 bottom-0 m-4">
-                  <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
-                    <Icon
-                      icon="tdesign:play-circle"
-                      className="text-white w-32 h-32 text-3xl"
-                    />
-                  </div>
-                </div>
               </>
             </div>
 

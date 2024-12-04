@@ -20,19 +20,19 @@ const LDStrategyTab = ({ handleAddGoal, success }: any) => {
   const goalsAssignees = [
     {
       name: "Alice Smith",
-      avatar: "/assets/UserProfile.png",
+      avatar: "/assets/DummyImg.png",
     },
     {
       name: "Bob Johnson",
-      avatar: "/assets/UserProfile.png",
+      avatar: "/assets/DummyImg.png",
     },
     {
       name: "Charlie Lee",
-      avatar: "/assets/UserProfile.png",
+      avatar: "/assets/DummyImg.png",
     },
     {
       name: "Diana Prince",
-      avatar: "/assets/UserProfile.png",
+      avatar: "/assets/DummyImg.png",
     },
   ];
   const [filteredAssignees, setFilteredAssignees] = useState(goalsAssignees);

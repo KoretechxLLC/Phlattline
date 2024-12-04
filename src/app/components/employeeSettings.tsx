@@ -20,7 +20,7 @@ const data = [
     id: 1,
     employees: {
       name: "John Doe",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "Software Engineer",
     },
     status: "pending",
@@ -30,7 +30,7 @@ const data = [
     id: 2,
     employees: {
       name: "Jane Smith",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "Project Manager",
     },
     status: "Approved",
@@ -40,7 +40,7 @@ const data = [
     id: 3,
     employees: {
       name: "Andy Harold",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "UI/UX",
     },
     status: "Rejected",

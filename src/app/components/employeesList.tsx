@@ -25,25 +25,25 @@ const EmployeesListTab: React.FC = () => {
   // Static arrays for current and left employees
   const currentEmployees: Employee[] = [
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "John Doe",
       designation: "Software Engineer",
       hireDate: "2021-03-15",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Jane Smith",
       designation: "Product Manager",
       hireDate: "2022-01-20",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "John Doe",
       designation: "Software Engineer",
       hireDate: "2021-03-15",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Jane Smith",
       designation: "Product Manager",
       hireDate: "2022-01-20",
@@ -52,28 +52,28 @@ const EmployeesListTab: React.FC = () => {
 
   const leftEmployees: Employee[] = [
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Alice Johnson",
       designation: "UI/UX Designer",
       hireDate: "2019-06-10",
       leaveDate: "2023-07-15",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Bob Brown",
       designation: "Data Analyst",
       hireDate: "2020-05-25",
       leaveDate: "2022-11-30",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Bob Brown",
       designation: "Data Analyst",
       hireDate: "2020-05-25",
       leaveDate: "2022-11-30",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Bob Brown",
       designation: "Data Analyst",
       hireDate: "2020-05-25",
