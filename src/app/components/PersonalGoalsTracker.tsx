@@ -41,7 +41,7 @@ const PersonalGoals: React.FC<PersonalGoalsProps> = ({ showAvatar }) => {
               .filter((item: any) => item.status === true)
               .map((item: any) => (
                 <li
-                  className="flex w-full items-center gap-2 border-default-100 dark:border-default-300 last:border-b-0 4xl:p-2 py-2"
+                  className="flex w-full items-center gap-2 border-default-100 dark:border-default-300 last:border-b-0 4xl:p-2 "
                   key={item.id}
                 >
                   {showAvatar && (

@@ -5,22 +5,22 @@ import { useDispatch, useSelector } from "react-redux";
 import CoursesTab from "@/app/components/CoursesTab";
 import { Button } from "@/app/components/button-sidebar";
 import {
-  fetchcourses,
   fetchcoursesCount,
   fetchusercourses,
 } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const MyCourses = () => {
   const router = useRouter();
   const dispatch: any = useDispatch();
 
-  const [coursesData, setCoursesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [showAll, setShowAll] = useState(false); // State to toggle between showing all courses or just 6
-  const coursesPerPage = showAll ? 9 : 6; // When showAll is true, show all courses, otherwise 6 per page
+  const [displayedCourses, setDisplayedCourses] = useState<any>([]);
+  const [paginationEnabled, setPaginationEnabled] = useState(false); // Tracks whether pagination is active
+  const coursesPerPage = 6; // Courses fetched per page
   const { userData } = useSelector((state: RootState) => state.auth);
   const {
     courses,
@@ -42,38 +42,42 @@ const MyCourses = () => {
   }, [dispatch]);
 
   // Calculate total pages based on the courses count
-  useEffect(() => {
-    if (coursesCountSuccess) {
-      const pages = Math.ceil(count / coursesPerPage);
-      setTotalPage(pages);
-    }
-  }, [coursesCountSuccess, count, coursesPerPage]);
 
+  // Fetch courses for the current page
   useEffect(() => {
     if (userId) {
       const filter = { page: currentPage, size: coursesPerPage };
       dispatch(fetchusercourses({ userId, filter }));
     }
-  }, [dispatch, userId]);
+  }, [dispatch, userId, currentPage]);
 
-  // Update `coursesData` when `coursesSuccess` changes
   useEffect(() => {
-    if (coursesSuccess) {
-      const categoryCourses =
-        courses &&
-        courses.length > 0 &&
-        courses.filter(
-          (course: any) => course.categoryId === userData?.categoryId
-        );
-      setCoursesData(categoryCourses);
+    if (coursesCountSuccess) {
+      const pages = Math.floor(count / coursesPerPage);
+      setTotalPage(pages);
     }
-  }, [coursesSuccess, courses, userData]);
+  }, [coursesCountSuccess, count, coursesPerPage]);
 
-  // Display only a subset of the courses based on the current state
-  let displayedCourses: any = [];
-  if (usercourses && usercourses.length > 0) {
-    displayedCourses = showAll ? [...usercourses] : usercourses.slice(0, 6); // Show first 6 if not "showAll", otherwise show all
-  }
+  // Set displayed courses when usercourses changes
+  useEffect(() => {
+    setDisplayedCourses(usercourses);
+  }, [usercourses]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleViewAll = () => {
+    setPaginationEnabled(true);
+  };
 
   return (
     <div>
@@ -82,7 +86,7 @@ const MyCourses = () => {
         <div className="space-y-4 md:space-y-2 ml-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {loading ? (
-              <div className="col-span-3  flex justify-center items-center w-full h-full py-60">
+              <div className="col-span-3 flex justify-center items-center w-full h-full py-60">
                 <Spinner height="30px" width="30px" />
               </div>
             ) : displayedCourses && displayedCourses.length > 0 ? (
@@ -109,17 +113,42 @@ const MyCourses = () => {
           </div>
 
           <div>
-            {!showAll && !loading && courses.length === 0 && (
+            {!paginationEnabled && !loading && displayedCourses.length > 6 && (
               <Button
                 className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-10 justify-center items-center rounded-3xl my-2"
                 size="default"
                 variant="default"
                 color="primary"
                 style={{ fontFamily: "Sansation" }}
-                onClick={() => setShowAll(true)} // Toggles the showAll state
+                onClick={handleViewAll}
               >
                 View All Courses
               </Button>
+            )}
+            {paginationEnabled && (
+              <div className="flex items-center justify-center gap-2 py-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-8 h-8 border-transparent hover:bg-transparent"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="w-5 h-5 text-default-900" />
+                </Button>
+                <span className="text-sm font-medium text-default-900">
+                  Page {currentPage} of {totalPage}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-8 h-8 border-transparent hover:bg-transparent"
+                  onClick={handleNextPage}
+                  disabled={currentPage >= totalPage}
+                >
+                  <ChevronRight className="w-5 h-5 text-default-900" />
+                </Button>
+              </div>
             )}
           </div>
         </div>

@@ -14,12 +14,12 @@ const InpersonCoachingTab: React.FC = () => {
   // Static array of coaching session data
   const coachingData = [
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "John Doe",
       designation: "Software Engineer",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Jane Smith",
       designation: "Product Manager",
     },

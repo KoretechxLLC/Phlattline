@@ -11,19 +11,19 @@ const jobs = [
 ];
 const newHirings = [
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "John Doe",
     designation: "Software Engineer",
     status: "Onboard",
   },
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "Jane Smith",
     designation: "Product Manager",
     status: "Onboard",
   },
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "Dane Jones",
     designation: "Finance Officer",
     status: "Onboard",

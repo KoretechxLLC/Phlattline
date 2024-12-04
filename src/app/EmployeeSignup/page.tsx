@@ -6,9 +6,21 @@ import { useRouter } from "next/navigation";
 import { Input } from "../components/Input";
 import { RiTeamFill } from "react-icons/ri";
 import { SparklesCore } from "../components/sparkles";
-import { MdDomain, MdEmail, MdLock, MdOutlineDateRange, MdPhone, MdWork } from "react-icons/md";
+import {
+  MdDomain,
+  MdEmail,
+  MdLock,
+  MdOutlineDateRange,
+  MdPhone,
+  MdWork,
+} from "react-icons/md";
 import { CustomPhoneInput } from "../components/phoneInput";
-import { Employeeregister, Register, setError, setSuccess } from "@/redux/slices/auth.slice";
+import {
+  Employeeregister,
+  Register,
+  setError,
+  setSuccess,
+} from "@/redux/slices/auth.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications from "../components/Stackednotification";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,6 +59,8 @@ const EmployeeSignup = () => {
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
+  const sixteenYearsAgo = new Date();
+  sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
   const dispatch: any = useDispatch();
   const { success, error } = useSelector((state: RootState) => state.auth);
   const [errors, setErrors] = useState({
@@ -95,9 +109,8 @@ const EmployeeSignup = () => {
       isValid = false;
     }
 
-
     if (!employeeCode) {
-      newErrors.employeeCode = "Employee Code is required"
+      newErrors.employeeCode = "Employee Code is required";
       isValid = false;
     }
 
@@ -106,14 +119,12 @@ const EmployeeSignup = () => {
       isValid = false;
     }
 
-
     setErrors(newErrors);
     return isValid;
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
 
     if (validate()) {
       const formData = new FormData();
@@ -122,7 +133,10 @@ const EmployeeSignup = () => {
       formData.append("email", empEmail);
       formData.append("designation", designation);
       formData.append("phoneNumber", empPhone);
-      formData.append("dateofBirth", dob ? new Date(dob).toLocaleDateString() : "");
+      formData.append(
+        "dateofBirth",
+        dob ? new Date(dob).toLocaleDateString() : ""
+      );
       formData.append("gender", gender);
       formData.append("password", password);
       formData.append("organization_code", employeeCode);
@@ -313,10 +327,13 @@ const EmployeeSignup = () => {
             variants={primaryVariants}
             className="mb-4 w-full relative"
           >
-            <div className="w-full"> {/* Wrap DatePicker in a full-width div */}
+            <div className="w-full">
+              {" "}
+              {/* Wrap DatePicker in a full-width div */}
               <DatePicker
                 selected={dob}
                 onChange={(date: any) => setDob(date)}
+                maxDate={sixteenYearsAgo} // Restrict to dates 16+ years ago
                 placeholderText="Select Your Date of Birth"
                 className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full pt-3 pb-3"
                 showMonthDropdown // Enable month dropdown

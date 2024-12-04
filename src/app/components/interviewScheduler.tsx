@@ -17,19 +17,19 @@ const InterviewSchedulerTab: React.FC = () => {
   // Static array of interview data
   const interviewData = [
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "John Doe",
       designation: "Software Engineer",
       interviewStatus: "Scheduled",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Jane Smith",
       designation: "Product Manager",
       interviewStatus: "Scheduled",
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Alice Johnson",
       designation: "UI/UX Designer",
       interviewStatus: "Schedule",

@@ -16,7 +16,7 @@ const data = [
     id: 1,
     employees: {
       name: "John Doe",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "Software Engineer",
     },
     designation: "Software Engineer",
@@ -27,7 +27,7 @@ const data = [
     id: 2,
     employees: {
       name: "Jane Smith",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       designation: "Project Manager",
     },
     designation: "Project Manager",
@@ -144,13 +144,21 @@ const AccessControl = () => {
                           } rounded-lg p-2`}
                           onClick={() => handleEmployeeClick(row.id)}
                         >
-                          <Image
-                            src={row.employees.image}
-                            alt={row.employees.name}
-                            width={1000}
-                            height={1000}
-                            className="w-10 h-10 rounded-full"
-                          />
+                          {row.employees.image ? (
+                            <Image
+                              height={40}
+                              width={40}
+                              src={row.employees.image}
+                              alt={row.employees.name}
+                              className=" object-cover"
+                            />
+                          ) : (
+                            <div className="object-cover !m-0 !p-0 object-top rounded-2xl h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34]  relative transition duration-500">
+                              <span className="text-white text-sm md:text-sm font-bold py-3">
+                                {row.employees.name?.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
                           <div>
                             <p>{row.employees.name}</p>
                             <p>{row.designation}</p>

@@ -18,31 +18,31 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
   // Static array of employees with their succession planning percentage
   const employeesData = [
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "John Doe",
       designation: "Software Engineer",
       completion: 15,
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Jane Smith",
       designation: "Product Manager",
       completion: 35,
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Alice Johnson",
       designation: "Team Lead",
       completion: 55,
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Bob Brown",
       designation: "Senior Developer",
       completion: 75,
     },
     {
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
       name: "Carol White",
       designation: "Head of Product",
       completion: 90,

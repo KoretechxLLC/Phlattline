@@ -123,6 +123,7 @@ const RecommendedCourses = () => {
       });
 
       // Update displayed courses
+
       setDisplayedCourses(finalCourses);
     }
   }, [coursesData, recommendedCourses, currentPage, userData]);

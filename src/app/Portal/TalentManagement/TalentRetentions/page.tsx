@@ -7,17 +7,17 @@ import EmployeeDataTab from "@/app/components/employeeDataTab";
 
 const highPotentialEmployees = [
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "John Doe",
     designation: "Software Engineer",
   },
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "Jane Smith",
     designation: "Product Manager",
   },
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "Alice Johnson",
     designation: "Team Lead",
   },
@@ -25,13 +25,13 @@ const highPotentialEmployees = [
 
 const exitInterviewEmployees = [
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "John Doe",
     designation: "Software Engineer",
     status: "Completed",
   },
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "Jane Smith",
     designation: "Product Manager",
     status: "Completed",
@@ -40,12 +40,12 @@ const exitInterviewEmployees = [
 
 const triageEmployees = [
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "John Doe",
     reason: "Want to leave organisation",
   },
   {
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
     name: "Jane Smith",
     reason: "Not Satisfied",
   },

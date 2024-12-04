@@ -138,14 +138,17 @@ const EmployeeAddModal = ({
   };
 
   const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    if (term.trim() === "") {
+    setSearchTerm(term); // Only update the state
+  };
+
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
       // Show all employees including added ones when search term is cleared
       setDisplayedEmployees(
         data.filter(
           (employee: any) =>
-            addedEmployees.includes(employee.id) &&
-            (employee.departmentId || employee.departmentId === departmentId)
+            !addedEmployees.includes(employee.id) &&
+            (!employee.departmentId || employee.departmentId === departmentId)
         )
       );
     } else {
@@ -156,13 +159,12 @@ const EmployeeAddModal = ({
             !addedEmployees.includes(employee.id) &&
             `${employee.first_name} ${employee.last_name}`
               .toLowerCase()
-              .includes(term.toLowerCase()) &&
-            // Include employees who don't have a department or belong to the selected department
+              .includes(searchTerm.toLowerCase()) &&
             (!employee.departmentId || employee.departmentId !== departmentId)
         )
       );
     }
-  };
+  }, [searchTerm, data, addedEmployees, departmentId]);
 
   const handleError = () => {
     setImgError(true);
@@ -211,7 +213,7 @@ const EmployeeAddModal = ({
         notification={notification}
         setNotification={setNotification}
       />
-      <div className="relative p-5 bg-white rounded-3xl w-3/4 md:w-1/3 flex flex-col">
+      <div className="relative p-5 bg-[#000000b9] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Header Section with Close Button and Employee Count */}
         <div className="flex justify-between items-center pb-4">
           <button

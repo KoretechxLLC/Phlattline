@@ -9,7 +9,7 @@ const logsData = [
     id: 1,
     employee: {
       name: "John Doe",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
     },
     logTitle: "Logged into the system",
     logTime: "10:15 AM",
@@ -19,7 +19,7 @@ const logsData = [
     id: 2,
     employee: {
       name: "Jane Smith",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
     },
     logTitle: "Updated project details",
     logTime: "2:45 PM",
@@ -29,7 +29,7 @@ const logsData = [
     id: 3,
     employee: {
       name: "Alice Johnson",
-      image: "/assets/UserProfile.png",
+      image: "/assets/DummyImg.png",
     },
     logTitle: "Created a new report",
     logTime: "11:30 AM",

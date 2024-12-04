@@ -57,6 +57,7 @@ const CoursesAssigner = ({
 
     dispatch(assignCourses({ data: payload }));
   };
+
   return (
     <div>
       <StackedNotifications
@@ -74,9 +75,7 @@ const CoursesAssigner = ({
             value={selectedCourse || ""}
             onChange={(e) => setSelectedCourse(e.target.value)}
           >
-            <option value="" disabled>
-              Select Course
-            </option>
+            <option value="">Select Course</option>
             {coursesData && coursesData.length > 0 ? (
               coursesData.map((value: any, index: number) => (
                 <option key={index} value={value.courses?.id}>

@@ -12,19 +12,19 @@ const coachingData = [
     name: "John Doe",
     designation: "Software Engineer",
     email: "john.doe@example.com",
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
   },
   {
     name: "Jane Smith",
     designation: "Project Manager",
     email: "jane.smith@example.com",
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
   },
   {
     name: "Alice Johnson",
     designation: "UX Designer",
     email: "alice.johnson@example.com",
-    image: "/assets/UserProfile.png",
+    image: "/assets/DummyImg.png",
   },
 ];
 
@@ -55,7 +55,7 @@ const EmployeeModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="relative p-5 bg-white rounded-3xl w-3/4 md:w-1/3 flex flex-col">
+      <div className="relative p-5 bg-[#000000b9] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}

@@ -23,19 +23,19 @@ const EmployeeCourseInfo: React.FC = () => {
     setTimeout(() => {
       setEmployeeData([
         {
-          image: "/assets/UserProfile.png",
+          image: "/assets/DummyImg.png",
           name: "John Doe",
           course: "React Basics",
           accuracy: "85%",
         },
         {
-          image: "/assets/UserProfile.png",
+          image: "/assets/DummyImg.png",
           name: "Jane Smith",
           course: "Advanced CSS",
           accuracy: "92%",
         },
         {
-          image: "/assets/UserProfile.png",
+          image: "/assets/DummyImg.png",
           name: "Alice Johnson",
           course: "UI/UX Design",
           accuracy: "78%",
@@ -107,11 +107,7 @@ const EmployeeCourseInfo: React.FC = () => {
 
                     {/* Action */}
                     <div className="text-right">
-                      <Button
-                        color="primary"
-                        className="rounded-3xl"
-                        onClick={() => alert(`Details for ${employee.name}`)}
-                      >
+                      <Button color="primary" className="rounded-3xl">
                         View
                       </Button>
                     </div>
