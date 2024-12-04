@@ -12,8 +12,6 @@ import {
 } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
-import { FaExclamationCircle } from "react-icons/fa";
-import { log } from "console";
 
 const RecommendedCourses = () => {
   const router = useRouter();
@@ -22,11 +20,10 @@ const RecommendedCourses = () => {
   const [coursesData, setCoursesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [showAll, setShowAll] = useState(false);
 
   const [displayedCourses, setDisplayedCourses] = useState<any>([]);
 
-  const coursesPerPage = showAll ? 9 : 6;
+  const coursesPerPage = 6;
 
   const {
     courses,
@@ -95,8 +92,6 @@ const RecommendedCourses = () => {
   };
 
   // Calculate the courses to display based on pagination
-  const startIndex = (currentPage - 1) * coursesPerPage;
-  const endIndex = startIndex + coursesPerPage;
 
   useEffect(() => {
     if (
@@ -114,6 +109,8 @@ const RecommendedCourses = () => {
         ...(coursesData || []),
       ];
 
+      const startIndex = (currentPage - 1) * coursesPerPage;
+      const endIndex = startIndex + coursesPerPage;
       // Filter out duplicates and purchased courses
       const uniqueCourses = combinedCourses.filter(
         (course, index, self) =>
@@ -125,12 +122,8 @@ const RecommendedCourses = () => {
         return !purchasedCourseIds.has(Number(course.id)); // Check if course.id is NOT in the Set
       });
 
-      const paginatedCourses = finalCourses.slice(startIndex, endIndex);
-
       // Update displayed courses
-      setDisplayedCourses(paginatedCourses);
-    } else {
-      setDisplayedCourses([]); // Clear displayed courses if no data is available
+      setDisplayedCourses(finalCourses);
     }
   }, [coursesData, recommendedCourses, currentPage, userData]);
 

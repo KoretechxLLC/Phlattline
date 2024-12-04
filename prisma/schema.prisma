@@ -38,7 +38,6 @@ model users {
   timeLogs                  TimeLog[]
   assignedAssessment        assignedAssessment[]
   assignedCourses           assignedCourses[]
- 
   purchased_assessments     purchased_assessments[]
   trainingOnDemand          trainingOnDemand[]
   user_assessment_responses user_assessment_responses[]
@@ -62,7 +61,6 @@ model organizations {
   no_of_employees    Int
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
-
   department         department[]
   employee_review    employee_review[]
   employees          employees[]
@@ -136,7 +134,6 @@ model courses {
   VideoProgress             VideoProgress[]
   assessments               assessments[]
   assignedCourses           assignedCourses[]
- 
   user_courses              user_courses[]
   user_video_progress       user_video_progress[]
   videos                    videos[]
@@ -211,8 +208,6 @@ model purchased_assessments {
   individual_assessments    individual_assessments @relation(fields: [individual_assessments_id], references: [id])
   users                     users                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
-
-
 
 model assessmentform_responses {
   id                     Int                     @id @default(autoincrement())
@@ -356,7 +351,7 @@ model individual_assessments {
   image                           String
   categoryId                      Int
   subCategoryId                   Int
-  assessment_for                  assessment_for                    @default(individual)
+  assessment_for                  assessment_for?                   @default(individual)
   assignedAssessment              assignedAssessment[]
   individual_assessment_questions individual_assessment_questions[]
   assessment_category             assessment_category               @relation(fields: [categoryId], references: [id])

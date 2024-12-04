@@ -10,7 +10,7 @@ import PaymentPopup from "@/app/components/PaymentPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import {  fetchusercourses } from "@/redux/slices/courses.slice";
+import { fetchusercourses, getCourseById } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import EmployeeModal from "@/app/components/employeeModal";
 
@@ -26,36 +26,49 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   const [showComments, setShowComments] = useState<Boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>();
+  const [isPurchasedCourse, setIsPurchasedCourse] = useState<any>();
   const [isPlaying, setIsPlaying] = useState(false);
   const [imgError, setImgError] = useState(false);
-
-  const searchParams = useSearchParams();
-  const courseId = searchParams.get("courseId");
-  const { usercourses, loading } = useSelector((state: RootState) => state.courses);
-  const dispatch: any = useDispatch();
-
   const { userData } = useSelector((state: RootState) => state.auth);
   const userId: any = userData?.id;
+  const searchParams = useSearchParams();
+  const courseId: any = searchParams.get("courseId");
+  const {
+    loading,
+    fetchSingleCourse,
+    fetchSingleCourseError,
+    fetchSingleCourseLoading,
+    fetchSingleCourseSuccess,
+    usercourses,
+  } = useSelector((state: RootState) => state.courses);
+  const dispatch: any = useDispatch();
+  useEffect(() => {
+    console.log("What the u", usercourses);
+    if (!usercourses || usercourses.length == 0) {
+      dispatch(fetchusercourses({ userId }));
+    }
+  }, [userId, dispatch]);
+
   const userType = userData?.user_type_id;
+  console.log("filtered course data ddd", usercourses);
+  useEffect(() => {
+    if (courseId && usercourses?.length > 0) {
+      const getCourse = async () => {
+        const filteredCourseData = usercourses.find(
+          (e: any) => Number(e.course_id) === Number(courseId)
+        );
+        console.log("filtered course data", filteredCourseData);
+        if (filteredCourseData) {
+          setIsBought(true);
+        }
+      };
+      getCourse();
+    }
+  }, [courseId, usercourses]);
 
   const handleError = () => {
     setImgError(true); // Set error flag when image fails to load
   };
-
-  useEffect(() => {
-    if (!usercourses || usercourses.length == 0) {
-      dispatch(fetchusercourses(userId));
-    }
-  }, [usercourses, dispatch]);
-
-  useEffect(() => {
-    if (courseId) {
-      const filteredCourseData = usercourses.find(
-        (e: any) => Number(e.course_id) === Number(courseId)
-      );
-      setData(filteredCourseData?.courses);
-    }
-  }, [usercourses, courseId, usercourses?.length]);
 
   const handleBuyClick = () => {
     setIsOpen(true);
@@ -82,19 +95,18 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   };
 
   useEffect(() => {
-    if (userData.user_courses && userData.user_courses.length > 0) {
-      let courseData = userData.user_courses.find((e: any) => {
-        return e.course_id == courseId;
-      });
-      if (courseData) {
-        setIsBought(true);
-      }
+    dispatch(getCourseById({ courseId }));
+  }, [courseId]);
+
+  useEffect(() => {
+    if (fetchSingleCourse) {
+      setData(fetchSingleCourse);
     }
-  }, [courseId, userData]);
+  }, [fetchSingleCourse, fetchSingleCourse?.id]);
 
   return (
     <>
-      {loading ? (
+      {fetchSingleCourseLoading ? (
         <Spinner height="30px" width="30px" />
       ) : (
         <div

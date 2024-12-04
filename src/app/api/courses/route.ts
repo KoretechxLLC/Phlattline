@@ -453,8 +453,11 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("id"); // Get specific course ID
     const includeOptions = searchParams.get("options"); // Check if options are requested
-
+    const page = searchParams.get("page") || 1;
+    const size = searchParams.get("size") || 10;
     // If only options are requested
+    const skip = (Number(page) - 1) * Number(size);
+
     if (includeOptions) {
       const allOptions = await prisma.courses.findMany({
         select: {
@@ -484,7 +487,7 @@ export async function GET(req: NextRequest) {
               questions: true,
             },
           },
-         
+
           user_courses: true,
           user_video_progress: true,
         },
@@ -508,10 +511,12 @@ export async function GET(req: NextRequest) {
       include: {
         videos: true,
         assessments: true,
-      
+
         user_courses: true,
         user_video_progress: true,
       },
+      take: Number(size),
+      skip: Number(skip),
     });
 
     if (courses.length === 0) {

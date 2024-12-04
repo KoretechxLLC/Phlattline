@@ -51,7 +51,8 @@ const MyCourses = () => {
 
   useEffect(() => {
     if (userId) {
-      dispatch(fetchusercourses(userId));
+      const filter = { page: currentPage, size: coursesPerPage };
+      dispatch(fetchusercourses({ userId, filter }));
     }
   }, [dispatch, userId]);
 
