@@ -105,7 +105,9 @@ const Assessments = () => {
             color={
               activeTab === "catalogue" ||
               activeTab === "individualAssessments" ||
-              activeTab === "recommendedAssessments"
+              activeTab === "recommendedAssessments" ||
+               activeTab === "TeamAssessments" ||
+                activeTab === "OrganizationAssesments"
                 ? "primary"
                 : "default"
             }

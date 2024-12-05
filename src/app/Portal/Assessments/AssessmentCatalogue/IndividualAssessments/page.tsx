@@ -30,9 +30,15 @@ const IndividualAssessments = () => {
   }: any = useSelector((state: RootState) => state.assessment);
   const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
-
+  const user_Id = userData?.id;
   useEffect(() => {
-    dispatch(fetchassessmentsCount({}));
+    if(user_Id){
+    dispatch(
+      fetchassessmentsCount({
+        filter: { userId: user_Id, assessmentFor: "individual" },
+      })
+    );
+  }
   }, [dispatch, userData]);
 
   useEffect(() => {
@@ -45,7 +51,12 @@ const IndividualAssessments = () => {
   useEffect(() => {
     dispatch(
       fetchAssessments({
-        filter: { page: currentPage, size: assessmentsPerPage },
+        filter: {
+          page: currentPage,
+          size: assessmentsPerPage,
+          userId: user_Id,
+          assessmentFor: "individual",
+        },
       })
     );
   }, [dispatch, currentPage, userData]);

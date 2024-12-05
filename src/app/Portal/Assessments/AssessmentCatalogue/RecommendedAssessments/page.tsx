@@ -5,7 +5,7 @@ import { CardTitle } from "@/app/components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
-  fetchAssessments,
+  fetchRecommendedAssessments,
   fetchassessmentsCount,
 } from "@/redux/slices/individualassessment.slice";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -21,20 +21,25 @@ const RecommendedAssessments = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
 
   const {
-    assessments,
-    loading,
-    error,
-    assessmentsSuccess,
+    recommendedAssessment,
+    recommendedAssessmentLoading,
+    recommendedAssessmentError,
+    recommendedAssessmentSuccess,
     assessmentsCount,
     assessmentsCountLoading,
     assessmentsCountSuccess,
   }: any = useSelector((state: RootState) => state.assessment);
   const dispatch: any = useDispatch();
 
+  const userId = userData?.id;
   const categoryId = userData?.categoryId;
 
   useEffect(() => {
-    dispatch(fetchassessmentsCount({ filter: { categoryId: categoryId } }));
+    dispatch(
+      fetchassessmentsCount({
+        filter: { categoryId: categoryId, userId: userId },
+      })
+    );
   }, [assessmentsCount, dispatch, categoryId, userData]);
 
   useEffect(() => {
@@ -45,11 +50,12 @@ const RecommendedAssessments = () => {
   }, [assessmentsCountSuccess, assessmentsCount]);
   useEffect(() => {
     dispatch(
-      fetchAssessments({
+      fetchRecommendedAssessments({
         filter: {
           page: currentPage,
           size: assessmentsPerPage,
           categoryId: categoryId,
+          userId,
         },
       })
     );
@@ -68,14 +74,14 @@ const RecommendedAssessments = () => {
   };
 
   useEffect(() => {
-    if (assessmentsSuccess) {
-      setAssessmentData(assessments);
+    if (recommendedAssessmentSuccess) {
+      setAssessmentData(recommendedAssessment);
     }
-  }, [assessments, assessmentsSuccess]);
+  }, [recommendedAssessment, recommendedAssessmentSuccess]);
 
   return (
     <div className="w-full mx-auto px-8">
-      {loading ? (
+      {recommendedAssessmentLoading ? (
         <div className="text-center text-gray-300 py-12">
           <Spinner height="30px" width="30px" />
         </div>

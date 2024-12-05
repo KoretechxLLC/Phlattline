@@ -1,4 +1,5 @@
 import axiosInstance from "@/app/utils/privateAxios";
+import { assessment_for } from "@prisma/client";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AssessmentState {
@@ -17,6 +18,16 @@ interface AssessmentState {
   recommendedAssessmentLoading: boolean | any;
   recommendedAssessmentSuccess: string | any;
   recommendedAssessmentError: string | any;
+
+  teamAssessments: string | any;
+  teamLoading: boolean | any;
+  teamAssessmentsSuccess: string | any;
+  teamError: string | any;
+
+  organizationAssessments: string | any;
+  organizationLoading: boolean | any;
+  organizationAssessmentsSuccess: string | any;
+  organizationError: string | any;
 
   singleAssessment: string | any;
   singleAssessmentLoading: boolean | any;
@@ -38,6 +49,14 @@ const initialState: AssessmentState = {
   recommendedAssessmentLoading: false,
   recommendedAssessmentSuccess: null,
   recommendedAssessmentError: null,
+  teamAssessments: null,
+  teamLoading: false,
+  teamAssessmentsSuccess: null,
+  teamError: null,
+  organizationAssessments: null,
+  organizationLoading: false,
+  organizationAssessmentsSuccess: null,
+  organizationError: null,
   submitAssessment: null,
   singleAssessment: null,
   singleAssessmentLoading: false,
@@ -50,8 +69,12 @@ export const fetchassessmentsCount = createAsyncThunk<any, any>(
   async ({ filter = {} }, thunkAPI) => {
     try {
       const queryParams = filter.categoryId
-        ? `?categoryId=${filter.categoryId}`
-        : "";
+        ? `?categoryId=${filter.categoryId}&user_Id=${filter.userId}${
+          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
+        }`
+        : `?user_Id=${filter.userId}${
+          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
+        }`;
       const response = await axiosInstance.get(
         `/api/assessmentsCount${queryParams}`
       );
@@ -65,14 +88,60 @@ export const fetchassessmentsCount = createAsyncThunk<any, any>(
 );
 export const fetchAssessments = createAsyncThunk<any, any>(
   "assessment/fetchAssessments",
-  async ({ filter, type }, thunkAPI) => {
+  async ({ filter }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `/api/initialassessmentform?page=${filter.page}&size=${filter.size}${
-          filter.categoryId ? `&categoryId=${filter.categoryId}` : ""
-        }${type ? `&type=${type}` : ""}` // Added type query parameter
+        `/api/initialassessmentform?user_Id=${filter.userId}&page=${
+          filter.page
+        }&size=${filter.size}${
+          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
+        }`
       );
 
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchTeamAssessments = createAsyncThunk<any, any>(
+  "assessment/fetchTeamAssessments",
+  async ({ filter }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/initialassessmentform?user_Id=${filter.userId}&page=${
+          filter.page
+        }&size=${filter.size}${
+          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
+        }`
+      );
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchOrganizationAssessments = createAsyncThunk<any, any>(
+  "assessment/fetchOrganizationAssessments",
+  async ({ filter }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/initialassessmentform?user_Id=${filter.userId}&page=${
+          filter.page
+        }&size=${filter.size}${
+          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
+        }`
+      );
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -91,7 +160,6 @@ export const fetchSingleAssessments = createAsyncThunk<any, any>(
       const response = await axiosInstance.get(
         `/api/paidAssessment?userId=${filter.userId}&assessmentId=${filter.assessmentId}&user_type_id=${filter.user_type_id}` // Added type query parameter
       );
-
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -108,7 +176,9 @@ export const fetchRecommendedAssessments = createAsyncThunk<any, any>(
   async ({ filter }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
-        `/api/initialassessmentform?page=${filter.page}&size=${filter.size}${
+        `/api/initialassessmentform?user_Id=${filter.userId}&page=${
+          filter.page
+        }&size=${filter.size}${
           filter.categoryId ? `&categoryId=${filter.categoryId}` : ""
         }`
       );
@@ -127,13 +197,17 @@ export const fetchRecommendedAssessments = createAsyncThunk<any, any>(
 // Thunk for submitting assessment responses
 export const submitAssessmentResponses = createAsyncThunk<
   any,
-  { userId: string; assessmentId: any[]; responses: any[]; user_type_id:any}
+  { userId: string; assessmentId: any[]; responses: any[]; user_type_id: any }
 >(
   "assessment/submitAssessmentResponses",
-  async ({ userId, assessmentId, responses, user_type_id }, { rejectWithValue }) => {
+  async (
+    { userId, assessmentId, responses, user_type_id },
+    { rejectWithValue }
+  ) => {
     try {
-    const  data = user_type_id ? {  userId, assessmentId, responses, user_type_id} :
-    {  userId, assessmentId, responses}
+      const data = user_type_id
+        ? { userId, assessmentId, responses, user_type_id }
+        : { userId, assessmentId, responses };
       const response = await axiosInstance.post(
         "/api/initialassessmentformresponse",
         data
@@ -198,6 +272,36 @@ const assessmentSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.assessmentsSuccess = false;
+      })
+      .addCase(fetchTeamAssessments.pending, (state) => {
+        state.teamLoading = true;
+        state.teamError = null;
+        state.teamAssessmentsSuccess = false;
+      })
+      .addCase(fetchTeamAssessments.fulfilled, (state, action) => {
+        state.teamLoading = false;
+        state.teamAssessments = action.payload;
+        state.teamAssessmentsSuccess = true;
+      })
+      .addCase(fetchTeamAssessments.rejected, (state, action) => {
+        state.teamLoading = false;
+        state.teamError = action.payload as string;
+        state.teamAssessmentsSuccess = false;
+      })
+      .addCase(fetchOrganizationAssessments.pending, (state) => {
+        state.organizationLoading = true;
+        state.organizationError = null;
+        state.organizationAssessmentsSuccess = false;
+      })
+      .addCase(fetchOrganizationAssessments.fulfilled, (state, action) => {
+        state.organizationLoading = false;
+        state.organizationAssessments = action.payload;
+        state.organizationAssessmentsSuccess = true;
+      })
+      .addCase(fetchOrganizationAssessments.rejected, (state, action) => {
+        state.organizationLoading = false;
+        state.organizationError = action.payload as string;
+        state.organizationAssessmentsSuccess = false;
       })
       // Submit Assessment Responses
       .addCase(submitAssessmentResponses.pending, (state) => {

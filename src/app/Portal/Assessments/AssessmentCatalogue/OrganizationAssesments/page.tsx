@@ -5,7 +5,7 @@ import { CardTitle } from "@/app/components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
-  fetchAssessments,
+  fetchOrganizationAssessments,
   fetchassessmentsCount,
 } from "@/redux/slices/individualassessment.slice";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -20,19 +20,25 @@ const OrganizationAssessments = () => {
   const assessmentsPerPage = 12;
 
   const {
-    assessments,
-    loading,
-    error,
-    assessmentsSuccess,
+    organizationAssessments,
+    organizationLoading,
+    organizationError,
+    organizationAssessmentsSuccess,
     assessmentsCount,
     assessmentsCountLoading,
     assessmentsCountSuccess,
   }: any = useSelector((state: RootState) => state.assessment);
   const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
-
+  const user_Id = userData?.id;
   useEffect(() => {
-    dispatch(fetchassessmentsCount({}));
+    if (user_Id) {
+      dispatch(
+        fetchassessmentsCount({
+          filter: { userId: user_Id, assessmentFor: "organization" },
+        })
+      );
+    }
   }, [dispatch, userData]);
 
   useEffect(() => {
@@ -44,17 +50,22 @@ const OrganizationAssessments = () => {
 
   useEffect(() => {
     dispatch(
-      fetchAssessments({
-        filter: { page: currentPage, size: assessmentsPerPage },
+      fetchOrganizationAssessments({
+        filter: {
+          page: currentPage,
+          size: assessmentsPerPage,
+          userId: user_Id,
+          assessmentFor: "organization",
+        },
       })
     );
   }, [dispatch, currentPage, userData]);
 
   useEffect(() => {
-    if (assessmentsSuccess) {
-      setAssessmentData(assessments);
+    if (organizationAssessmentsSuccess) {
+      setAssessmentData(organizationAssessments);
     }
-  }, [assessmentsSuccess, assessments]);
+  }, [organizationAssessmentsSuccess, organizationAssessments]);
 
   const handleNextPage = () => {
     if (currentPage < totalPage) {
@@ -70,13 +81,13 @@ const OrganizationAssessments = () => {
 
   return (
     <div className="w-full mx-auto px-8">
-      {loading ? (
+      {organizationLoading ? (
         <div className="text-center text-gray-300 py-12">
           <Spinner height="30px" width="30px" />
         </div>
       ) : assessmentData && assessmentData.length > 0 ? (
         <>
-          <CardTitle>Individual Assessments</CardTitle>
+          <CardTitle>Organization Assessments</CardTitle>
           <HoverEffect
             className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2"
             items={assessmentData}
@@ -109,7 +120,7 @@ const OrganizationAssessments = () => {
         </>
       ) : (
         <div className="text-center text-gray-300 py-24">
-          No Assessment Found!
+          No Organization Assessment Found!
         </div>
       )}
     </div>
