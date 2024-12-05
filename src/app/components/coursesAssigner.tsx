@@ -54,7 +54,6 @@ const CoursesAssigner = ({
       user_id: userId,
       type: "Managing Change",
     };
-
     dispatch(assignCourses({ data: payload }));
   };
 

@@ -15,26 +15,26 @@ model user_types {
 
 model users {
   id                        Int                         @id @default(autoincrement())
-  user_type_id              Int
   email                     String                      @unique @db.VarChar(255)
-  phone_number              String?                     @db.VarChar(20)
-  password                  String?                     @db.VarChar(255)
-  first_name                String?                     @db.VarChar(100)
-  last_name                 String?                     @db.VarChar(100)
-  designation               String?                     @db.VarChar(100)
-  date_of_birth             DateTime?                   @db.Date
-  provider                  String?                     @default("app") @db.VarChar(50)
-  status                    String?                     @default("pending") @db.VarChar(20)
-  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
-  isLoggedIn                Boolean                     @default(false)
-  logout_at                 DateTime?                   @default(now()) @db.Timestamptz(6)
-  organization_id           Int?
   app_provider              String                      @default("App")
-  profile_image             String?                     @db.VarChar(255)
   assessment_status         Boolean                     @default(false)
   categoryId                Int?
-  subCategoryId             Int?
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  date_of_birth             DateTime?                   @db.Date
+  designation               String?                     @db.VarChar(100)
   employee_id               Int?
+  first_name                String?                     @db.VarChar(100)
+  isLoggedIn                Boolean                     @default(false)
+  last_name                 String?                     @db.VarChar(100)
+  logout_at                 DateTime?                   @default(now()) @db.Timestamptz(6)
+  organization_id           Int?
+  password                  String?                     @db.VarChar(255)
+  phone_number              String?                     @db.VarChar(20)
+  profile_image             String?                     @db.VarChar(255)
+  provider                  String?                     @default("app") @db.VarChar(50)
+  status                    String?                     @default("pending") @db.VarChar(20)
+  subCategoryId             Int?
+  user_type_id              Int
   timeLogs                  TimeLog[]
   assignedAssessment        assignedAssessment[]
   assignedCourses           assignedCourses[]
@@ -74,11 +74,11 @@ model employees {
   last_name          String               @db.VarChar(225)
   email              String               @unique @db.VarChar(225)
   phone_number       String               @db.VarChar(50)
+  gender             EmployeeGender
   organization_code  String               @db.VarChar(255)
   organization_id    Int
   created_at         DateTime             @default(now()) @db.Timestamptz(6)
   updated_at         DateTime             @updatedAt
-  gender             EmployeeGender
   departmentId       Int?
   date_of_birth      DateTime?            @db.Date
   designation        String?              @db.VarChar(100)
@@ -128,8 +128,8 @@ model courses {
   updated_at                DateTime                    @default(now()) @updatedAt
   categoryId                Int
   subCategoryId             Int
-  options                   String?
   course_for                Int?
+  options                   String?
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   assessments               assessments[]
