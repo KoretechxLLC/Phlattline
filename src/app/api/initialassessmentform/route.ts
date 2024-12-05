@@ -238,7 +238,16 @@ export async function GET(req: NextRequest) {
     const categoryId = searchParams.get("categoryId");
     const type = searchParams.get("type");
     const assessment_for = searchParams.get("assessment_for");
+    const user_Id = Number(searchParams.get("user_Id"))
 
+
+
+    if (!user_Id){
+      return NextResponse.json(
+        { success:false, message: "User Id is required" },
+        { status: 400 }
+      );
+    }
     const skip = (page - 1) * size;
     let whereClause: any = {};
 
@@ -255,7 +264,10 @@ export async function GET(req: NextRequest) {
 
       // Fetch all purchased assessment IDs
       const purchasedAssessments = await prisma.purchased_assessments.findMany({
-        select: { individual_assessments_id: true },
+        where: { user_id: Number(user_Id) },
+        select: {  individual_assessments_id: true ,
+         },
+        
       });
 
       // Extract the IDs into an array
@@ -263,8 +275,8 @@ export async function GET(req: NextRequest) {
         (assessment : any) => assessment.individual_assessments_id
       );
 
-      // Exclude purchased assessments from the results
-      whereClause.id = { notIn: purchasedIds };
+      // // Exclude purchased assessments from the results
+       whereClause.id = { notIn: purchasedIds };
     }
 
     if (assessment_for) {
@@ -285,7 +297,6 @@ export async function GET(req: NextRequest) {
       take: size,
       skip: skip,
     });
-
     return NextResponse.json(
       { success: true, data: assessments },
       { status: 200 }
