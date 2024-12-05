@@ -166,23 +166,32 @@ export const fetchvideoprogress = createAsyncThunk<any, VideoProgressParams>(
 );
 
 // Thunk for fetching user-specific assigned courses
-export const fetchCoursesAssign = createAsyncThunk<any, number>(
+export const fetchCoursesAssign = createAsyncThunk<
+  any,
+  { employee_id?: number; organization_id?: number },
+  { rejectValue: string }
+>(
   "courses/fetchCoursesAssign",
-  async (employee_id, { rejectWithValue }) => {
+  async ({ employee_id, organization_id }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(
-        `/api/organization/AssignCourse?employee_id=${employee_id}`
-      );
+      // Construct query parameters based on provided IDs
+      const params = new URLSearchParams();
+      if (employee_id) params.append("employee_id", employee_id.toString());
+      if (organization_id) params.append("organization_id", organization_id.toString());
+
+      const response = await axiosInstance.get(`/api/organization/AssignCourse?${params.toString()}`);
       return response.data.data; // Adjust according to the API response structure
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.error ||
+        error.response?.data?.message ||
         error.message ||
         "Failed to fetch assigned courses";
       return rejectWithValue(errorMessage);
     }
   }
 );
+
+
 
 // Thunk for fetching user-specific courses
 export const fetchusercourses = createAsyncThunk<any, any>(

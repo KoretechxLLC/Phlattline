@@ -10,7 +10,7 @@ import PaymentPopup from "@/app/components/PaymentPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { fetchusercourses, getCourseById } from "@/redux/slices/courses.slice";
+import { fetchCoursesAssign, fetchusercourses, getCourseById } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import EmployeeModal from "@/app/components/employeeModal";
 
@@ -29,6 +29,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
 
   const [imgError, setImgError] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
+  const {coursesAssign} = useSelector((state: RootState)=>state.courses)
   const userId: any = userData?.id;
   const searchParams = useSearchParams();
   const courseId: any = searchParams.get("courseId");
@@ -48,6 +49,14 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   }, [userId, dispatch]);
 
   const userType = userData?.user_type_id;
+  const organization_id = userData?.organization_id;
+
+  useEffect(() => {
+    if (organization_id) {
+      dispatch(fetchCoursesAssign(organization_id));
+    }
+  }, [organization_id, dispatch]);
+
 
   useEffect(() => {
     if (courseId && usercourses?.length > 0) {
@@ -267,7 +276,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             setIsBought={setIsBought}
             courseId={courseId}
           />
-          <EmployeeModal open={isModalOpen} onClose={handleCloseModal} />
+          <EmployeeModal open={isModalOpen} coursesAssign={coursesAssign} courseId={Number(courseId)} onClose={handleCloseModal} />
         </div>
       )}
     </>

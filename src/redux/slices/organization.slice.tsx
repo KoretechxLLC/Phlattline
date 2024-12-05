@@ -64,6 +64,7 @@ export const fetchAllEmployee = createAsyncThunk<any, any>(
   }
 );
 
+
 export const assignCourses = createAsyncThunk<any, any>(
   "organization/assignCourses",
   async ({ data }: any, { rejectWithValue }) => {
@@ -72,7 +73,6 @@ export const assignCourses = createAsyncThunk<any, any>(
         `/api/organization/AssignCourse`,
         data
       );
-
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -83,6 +83,7 @@ export const assignCourses = createAsyncThunk<any, any>(
     }
   }
 );
+
 
 export const fetchAllDepartment = createAsyncThunk<any, any>(
   "organization/fetchAllDepartment",
@@ -260,18 +261,20 @@ const organizationSlice = createSlice({
         state.responseSuccess = false;
         state.responseError = action.payload as string;
       })
+      // This is Assign Courses POST
       .addCase(assignCourses.pending, (state) => {
         state.assignCoursesLoading = true;
       })
       .addCase(assignCourses.fulfilled, (state, action) => {
         state.assignCoursesLoading = false;
-        state.assignCoursesSuccess = "Assign Course Successfully";
+        state.assignCoursesSuccess = "Successfully Proceed";
       })
       .addCase(assignCourses.rejected, (state, action) => {
         state.assignCoursesLoading = false;
         state.assignCoursesError =
           "Courses are already assigned to these employees.";
       })
+      // This is Assign Courses POST
       .addCase(fetchAllDepartment.pending, (state) => {
         state.responseLoading = true;
       })
