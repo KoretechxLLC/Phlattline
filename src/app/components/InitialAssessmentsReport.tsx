@@ -119,6 +119,7 @@ const InitialAssessmentsReport = ({
           page: 1,
           size: 5,
           categoryId: 1,
+          userId
         },
         type: "general",
       })

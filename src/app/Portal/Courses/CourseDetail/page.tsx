@@ -55,7 +55,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
         const filteredCourseData = usercourses.find(
           (e: any) => Number(e.course_id) === Number(courseId)
         );
-
         if (filteredCourseData) {
           setIsBought(true);
         }

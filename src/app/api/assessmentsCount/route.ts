@@ -5,6 +5,15 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams }: any = new URL(req.url);
     const categoryId = searchParams.get("categoryId");
+    const assessment_for = searchParams.get("assessment_for");
+    const user_Id = Number(searchParams.get("user_Id"))
+
+    if (!user_Id){
+      return NextResponse.json(
+        { success:false, message: "User Id is required" },
+        { status: 400 }
+      );
+    }
 
     // Construct the whereClause to exclude categoryId 1 and purchased assessments
     let whereClause: any = {
@@ -13,7 +22,10 @@ export async function GET(req: NextRequest) {
 
     // Fetch all purchased assessment IDs
     const purchasedAssessments = await prisma.purchased_assessments.findMany({
-      select: { individual_assessments_id: true },
+      where: { user_id: Number(user_Id) },
+      select: {  individual_assessments_id: true ,
+       },
+    
     });
 
     // Extract the IDs into an array
@@ -23,6 +35,10 @@ export async function GET(req: NextRequest) {
 
     // Exclude purchased assessments from the count
     whereClause.id = { notIn: purchasedIds };
+
+    if (assessment_for) {
+      whereClause.assessment_for = assessment_for;
+    }
 
     // Fetch the total count of assessments based on the whereClause
     const totalCount = await prisma.individual_assessments.count({
