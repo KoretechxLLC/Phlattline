@@ -49,10 +49,10 @@ const JobPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
+      <div className="bg-[#000000b9] rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
         {/* Popup Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-black">{jobTitle}</h2>
+          <h2 className="text-3xl font-bold text-white">{jobTitle}</h2>
           <button
             onClick={onClose}
             className="text-red-600 text-3xl font-extrabold hover:text-red-800"
@@ -75,7 +75,7 @@ const JobPopup = ({
                 <h3 className="text-xl font-bold text-red-600 mb-3">
                   Job Summary:
                 </h3>
-                <p className="text-gray-800 leading-7">{jobData[0].summary}</p>
+                <p className="text-white leading-7">{jobData[0].summary}</p>
               </div>
 
               {/* Qualifications */}
@@ -83,7 +83,7 @@ const JobPopup = ({
                 <h3 className="text-xl font-bold text-red-600 mb-3">
                   Qualifications:
                 </h3>
-                <ul className="list-disc pl-6 text-gray-800 leading-7">
+                <ul className="list-disc pl-6 text-white leading-7">
                   {jobData[0].qualifications.map((item, index) => (
                     <li key={index}>{item}</li>
                   ))}
@@ -97,7 +97,7 @@ const JobPopup = ({
               <h3 className="text-xl font-bold text-red-600 mb-3">
                 Key Responsibilities:
               </h3>
-              <ul className="list-disc pl-6 text-gray-800 leading-7">
+              <ul className="list-disc pl-6 text-white leading-7">
                 {jobData[0].responsibilities.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}

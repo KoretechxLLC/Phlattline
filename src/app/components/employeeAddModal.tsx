@@ -291,7 +291,7 @@ const EmployeeAddModal = ({
                             </div>
                           )}
                           <div className="flex flex-col">
-                            <span className="font-semibold text-black uppercase">
+                            <span className="font-semibold text-white uppercase">
                               {employees.first_name} {employees.last_name}
                             </span>
                             <span className="text-gray-600 text-sm">

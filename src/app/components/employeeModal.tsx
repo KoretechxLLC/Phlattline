@@ -59,13 +59,13 @@ const EmployeeModal = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-3 text-gray-700 hover:text-red-500"
+          className="absolute top-4 right-3 text-white hover:text-red-500"
         >
           <Icon icon="ic:outline-close" className="text-3xl" />
         </button>
         {/* Title Section */}
         <div className="px-5 py-4 text-center">
-          <select className="w-full p-2 rounded-xl h-14 bg-[#fff] border border-[#626262] text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#626262]">
+          <select className="w-full p-2 rounded-xl h-14 bg-white border border-[#000000b9] text-black focus:outline-none focus:ring-1 focus:ring-[#626262]">
             <option value="">Department</option>
             <option value="IT">IT</option>
             <option value="Sales">Sales</option>
@@ -106,7 +106,7 @@ const EmployeeModal = ({
                             />
                           </Avatar>
                           <div className="flex flex-col">
-                            <span className="font-semibold text-black">
+                            <span className="font-semibold text-white">
                               {employee.name}
                             </span>
                             <span className="text-red-600 text-sm">
@@ -118,7 +118,7 @@ const EmployeeModal = ({
                         {showSelectionControls && (
                           <input
                             type="checkbox"
-                            className="w-5 h-5 border-2 border-gray-400 rounded appearance-none checked:border-black checked:bg-transparent checked:relative checked:before:content-['✔'] checked:before:text-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 checked:before:transform checked:before:-translate-x-1/2 checked:before:-translate-y-1/2"
+                            className="w-5 h-5 border-2 border-gray-400 rounded appearance-none checked:border-white checked:bg-transparent checked:relative checked:before:content-['✔'] checked:before:text-white checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 checked:before:transform checked:before:-translate-x-1/2 checked:before:-translate-y-1/2"
                           />
                         )}
                       </CardContent>

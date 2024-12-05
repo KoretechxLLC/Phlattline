@@ -71,7 +71,7 @@ const EventModal = ({
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-700 hover:text-red-500"
+          className="absolute top-4 right-4 text-white hover:text-red-500"
         >
           <Icon icon="ic:outline-close" className="text-3xl" />
         </button>
@@ -79,7 +79,7 @@ const EventModal = ({
         {/* Left Side: Event Details */}
         <div className="flex-grow flex flex-col">
           <div className="flex items-center justify-between px-5 py-2">
-            <h1 className="text-3xl font-bold text-black">
+            <h1 className="text-3xl font-bold text-white">
               {event.course_name}
             </h1>
             <Badge className="font-normal rounded-3xl text-lg bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-white">
@@ -107,12 +107,12 @@ const EventModal = ({
 
           {/* Course Details Section */}
           <div className="space-y-3 w-full my-2 mx-2 flex-grow">
-            <Card className="bg-white p-4 rounded-2xl">
+            <Card className="bg-gray-800 p-4 rounded-2xl">
               <CardContent>
-                <h1 className="text-3xl font-bold mb-2 text-black">
+                <h1 className="text-3xl font-bold mb-2 text-white">
                   About this course
                 </h1>
-                <div className="flex items-center justify-between text-black text-sm lg:text-base font-normal">
+                <div className="flex items-center justify-between text-white text-sm lg:text-base font-normal">
                   {/* <div className="flex items-center gap-1.5">
                     <Icon icon="ph:star-fill" className="text-red-600" />
                     <Icon icon="ph:star-fill" className="text-red-600" />
@@ -130,7 +130,7 @@ const EventModal = ({
                   </div>
                 </div>
 
-                <div className="text-black text-sm lg:text-base font-normal ">
+                <div className="text-white text-sm lg:text-base font-normal ">
                   <p>{event?.description}</p>
                 </div>
               </CardContent>
