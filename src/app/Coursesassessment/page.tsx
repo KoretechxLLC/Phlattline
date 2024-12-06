@@ -27,9 +27,14 @@ const Courseassessment = () => {
     null
   );
   const courseId = searchParams.get("courseId");
-  const { courses, loading, error, success, usercourses,courseAssessmentSuccess } = useSelector(
-    (state: RootState) => state.courses
-  );
+  const {
+    courses,
+    loading,
+    error,
+    success,
+    usercourses,
+    courseAssessmentSuccess,
+  } = useSelector((state: RootState) => state.courses);
   const { userData } = useSelector((state: RootState) => state.auth);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [responses, setResponses] = useState<{ [key: string]: string }>({});
@@ -42,7 +47,7 @@ const Courseassessment = () => {
 
   useEffect(() => {
     if (!usercourses || usercourses.length == 0) {
-      dispatch(fetchusercourses(userId));
+      dispatch(fetchusercourses({ userId }));
     }
   }, [usercourses, dispatch]);
 
@@ -89,7 +94,6 @@ const Courseassessment = () => {
       }
     }
   };
-
 
   useEffect(() => {
     if (courseAssessmentSuccess) {
