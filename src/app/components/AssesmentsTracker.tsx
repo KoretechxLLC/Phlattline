@@ -109,7 +109,7 @@ const AsessmentTracker = ({
           page: 1,
           size: 5,
           categoryId: 1,
-          userId
+          userId,
         },
         type: "general",
       })
@@ -132,6 +132,8 @@ const AsessmentTracker = ({
       setAllCategories(categories);
     }
   }, [assessments]);
+
+ 
 
   const data = calculatePercentages(assessmentsResponse, assessments);
 
