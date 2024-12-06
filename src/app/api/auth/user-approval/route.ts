@@ -22,6 +22,7 @@ export async function PUT(request: NextRequest) {
 
     let updatedUser;
     let user;
+    let updatedEmployee;
 
     if (userId) {
       user = await prisma.users.findUnique({
@@ -63,7 +64,7 @@ export async function PUT(request: NextRequest) {
 
       if (user.status !== "pending") {
         return NextResponse.json(
-          { message: "User status is not pending.", success: false },
+          { message: "User Status already Updated", success: false },
           { status: 400 }
         );
       }
@@ -75,7 +76,7 @@ export async function PUT(request: NextRequest) {
       });
 
       // Update employees model
-      await prisma.employees.update({
+      updatedEmployee = await prisma.employees.update({
         where: { id: employee_id },
         data: { status: status },
       });
@@ -90,9 +91,12 @@ export async function PUT(request: NextRequest) {
     await sendEmail({ email: user?.email, subject, message });
 
     return NextResponse.json({
-      message: "User approved successfully and notification email sent.",
+      message:
+        status === "approved"
+          ? "User approved successfully and notification email sent."
+          : "User Rejected successfully and notification email sent.",
       success: true,
-      data: updatedUser,
+      data: employee_id ? updatedEmployee : updatedUser,
     });
   } catch (error: any) {
     console.error("Error approving user:", error.message);

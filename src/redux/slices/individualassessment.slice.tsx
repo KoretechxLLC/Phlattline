@@ -70,11 +70,15 @@ export const fetchassessmentsCount = createAsyncThunk<any, any>(
     try {
       const queryParams = filter.categoryId
         ? `?categoryId=${filter.categoryId}&user_Id=${filter.userId}${
-          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
-        }`
+            filter.assessmentFor
+              ? `&assessment_for=${filter.assessmentFor}`
+              : " "
+          }`
         : `?user_Id=${filter.userId}${
-          filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
-        }`;
+            filter.assessmentFor
+              ? `&assessment_for=${filter.assessmentFor}`
+              : " "
+          }`;
       const response = await axiosInstance.get(
         `/api/assessmentsCount${queryParams}`
       );
@@ -88,12 +92,14 @@ export const fetchassessmentsCount = createAsyncThunk<any, any>(
 );
 export const fetchAssessments = createAsyncThunk<any, any>(
   "assessment/fetchAssessments",
-  async ({ filter }, thunkAPI) => {
+  async ({ filter, type }, thunkAPI) => {
     try {
       const response = await axiosInstance.get(
         `/api/initialassessmentform?user_Id=${filter.userId}&page=${
           filter.page
-        }&size=${filter.size}${
+        }&size=${
+          filter.size
+        }${filter.categoryId ? `&categoryId=${filter.categoryId}` : ""}${type ? `&type=${type} `: ""}${
           filter.assessmentFor ? `&assessment_for=${filter.assessmentFor}` : " "
         }`
       );

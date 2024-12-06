@@ -9,7 +9,6 @@ import {
 } from "@/app/components/tooltip";
 import { Eye, SquarePen, Trash2 } from "lucide-react";
 import { Button } from "@/app/components/button-sidebar";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ViewEmployeeModal } from "@/app/components/viewEmployeeModal";
@@ -17,43 +16,13 @@ import Spinner from "@/app/components/Spinner"; // Assuming you have a Spinner c
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
+  employeesApproval,
   fetchAllDepartment,
   fetchEmployeeByDepartment,
+  resetError,
   resetSuccess,
 } from "@/redux/slices/organization.slice";
-
-const data = [
-  {
-    id: 1,
-    employees: {
-      name: "John Doe",
-      image: "/assets/DummyImg.png",
-      designation: "Software Engineer",
-    },
-    status: "pending",
-    action: null,
-  },
-  {
-    id: 2,
-    employees: {
-      name: "Jane Smith",
-      image: "/assets/DummyImg.png",
-      designation: "Project Manager",
-    },
-    status: "Approved",
-    action: null,
-  },
-  {
-    id: 3,
-    employees: {
-      name: "Andy Harold",
-      image: "/assets/DummyImg.png",
-      designation: "UI/UX",
-    },
-    status: "Rejected",
-    action: null,
-  },
-];
+import StackedNotifications, { NotificationType } from "./Stackednotification";
 
 const EmployeeSetting = ({
   onEmployeeSelect,
@@ -61,15 +30,22 @@ const EmployeeSetting = ({
   onEmployeeSelect: (employeeId: number) => void;
 }) => {
   const [selectedDept, setSelectedDept] = useState();
-  const [statuses, setStatuses] = useState(data.map((row) => row.status));
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [employeeData, setEmployeeData] = useState<any>();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false); // Loading state for spinner
   const { userData } = useSelector((state: RootState) => state.auth);
-  const { departments, responseLoading, responseSuccess } = useSelector(
-    (state: RootState) => state.organization
-  );
+  const {
+    departments,
+    responseLoading,
+    responseSuccess,
+    employeeApprovalError,
+    employeeApprovalSuccess,
+    employeeApprovalLoading,
+  } = useSelector((state: RootState) => state.organization);
   const dispatch: any = useDispatch();
 
   const organization_id = userData?.organization_id;
@@ -107,11 +83,49 @@ const EmployeeSetting = ({
     }, 2000);
   }, []);
 
-  const setStatus = (id: number, newStatus: string) => {
-    const updatedStatuses = [...statuses];
-    updatedStatuses[id - 1] = newStatus;
-    setStatuses(updatedStatuses);
+  const handleApproveClick = (id: number, newStatus: string) => {
+    if (id && newStatus) {
+      dispatch(
+        employeesApproval({
+          data: {
+            employee_id: id,
+            status: newStatus,
+          },
+        })
+      );
+    }
   };
+  const handleRejectClick = (id: number, newStatus: string) => {
+    if (id && newStatus) {
+      dispatch(
+        employeesApproval({
+          data: {
+            employee_id: id,
+            status: newStatus,
+          },
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (employeeApprovalSuccess) {
+      setNotification({
+        id: Date.now(),
+        text: employeeApprovalSuccess,
+        type: "success",
+      });
+      dispatch(resetSuccess());
+    }
+    if (employeeApprovalError) {
+      setNotification({
+        id: Date.now(),
+        text: employeeApprovalError,
+        type: "error",
+      });
+      dispatch(resetError());
+    }
+  }, [employeeApprovalError, employeeApprovalSuccess]);
 
   const handleViewClick = (id: number) => {
     setSelectedId(id);
@@ -132,13 +146,31 @@ const EmployeeSetting = ({
     setEmployeeData(employeeInfo?.employees);
   };
 
+  useEffect(() => {
+    if (departments && departments.length > 0) {
+      let employeeInfo =
+        departments &&
+        departments.length > 0 &&
+        departments.find((dept: any) => {
+          if (dept.id == selectedDept) {
+            return dept;
+          }
+        });
+      setEmployeeData(employeeInfo?.employees);
+    }
+  }, [departments]);
+
   return (
     <div className="overflow-auto w-full">
-      {loading || responseLoading ? (
+      <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
+      {loading || responseLoading || employeeApprovalLoading ? (
         <div className="flex justify-center items-center py-10">
           <Spinner height="30px" width="30px" />
         </div>
-      ) : data.length === 0 ? (
+      ) : employeeData?.length === 0 ? (
         <div className="text-center py-10 text-lg">No employees found</div>
       ) : (
         <>
@@ -222,7 +254,9 @@ const EmployeeSetting = ({
                               variant="outline"
                               size="md"
                               className="bg-green-500 text-white border-none"
-                              onClick={() => setStatus(employee.id, "approved")}
+                              onClick={() =>
+                                handleApproveClick(employee.id, "approved")
+                              }
                             >
                               Approve
                             </Button>
@@ -230,7 +264,9 @@ const EmployeeSetting = ({
                               variant="outline"
                               size="md"
                               className="bg-red-500 text-white border-none"
-                              onClick={() => setStatus(employee.id, "rejected")}
+                              onClick={() =>
+                                handleRejectClick(employee.id, "rejected")
+                              }
                             >
                               Reject
                             </Button>

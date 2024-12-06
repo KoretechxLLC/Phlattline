@@ -1,3 +1,4 @@
+import Employee from "@/app/Portal/PerformanceManagementOrg/Employee/page";
 import axiosInstance from "@/app/utils/privateAxios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -22,6 +23,10 @@ interface organizationResponseState {
   addEmployeeSuccess: any | null;
   addEmployeeError: any | null;
   removeEmployeeError: any | null;
+  employeeApprovalData: any | null;
+  employeeApprovalLoading: boolean;
+  employeeApprovalSuccess: any | null;
+  employeeApprovalError: any | null;
 }
 
 const initialState: organizationResponseState = {
@@ -43,6 +48,10 @@ const initialState: organizationResponseState = {
   removeEmployeeError: null,
   addEmployeeSuccess: null,
   addEmployeeError: null,
+  employeeApprovalData: null,
+  employeeApprovalLoading: false,
+  employeeApprovalSuccess: null,
+  employeeApprovalError: null,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -64,7 +73,6 @@ export const fetchAllEmployee = createAsyncThunk<any, any>(
   }
 );
 
-
 export const assignCourses = createAsyncThunk<any, any>(
   "organization/assignCourses",
   async ({ data }: any, { rejectWithValue }) => {
@@ -83,7 +91,6 @@ export const assignCourses = createAsyncThunk<any, any>(
     }
   }
 );
-
 
 export const fetchAllDepartment = createAsyncThunk<any, any>(
   "organization/fetchAllDepartment",
@@ -224,6 +231,24 @@ export const removeEmployeesInDepartment = createAsyncThunk<any, any>(
   }
 );
 
+export const employeesApproval = createAsyncThunk<any, any>(
+  "organization/employeesApproval",
+  async ({ data }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put("/api/auth/user-approval", data);
+    
+      return response.data;
+    } catch (error: any) {
+     
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to Change User Status";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 const organizationSlice = createSlice({
   name: "organizationResponse",
   initialState,
@@ -235,6 +260,7 @@ const organizationSlice = createSlice({
       state.leaderFeedbackSuccess = null;
       state.removeEmployeeSuccess = null;
       state.addEmployeeSuccess = null;
+      state.employeeApprovalSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
@@ -243,6 +269,7 @@ const organizationSlice = createSlice({
       state.leaderFeedbackError = null;
       state.removeEmployeeError = null;
       state.addEmployeeError = null;
+      state.employeeApprovalError = null;
     },
   },
   extraReducers: (builder) => {
@@ -462,6 +489,41 @@ const organizationSlice = createSlice({
         state.responseLoading = false;
         state.responseSuccess = false;
         state.addEmployeeError = action.payload as string;
+      })
+      .addCase(employeesApproval.pending, (state) => {
+        state.employeeApprovalLoading = true;
+        state.employeeApprovalData = null;
+      })
+      .addCase(employeesApproval.fulfilled, (state, action) => {
+        state.employeeApprovalData = action.payload;
+
+        const updatedEmployee = action.payload.data;
+
+        state.departments = state.departments.map((department) => {
+          return {
+            ...department,
+            employees: department.employees.map((employee: any) => {
+              if (employee.id == updatedEmployee.id) {
+                return {
+                  ...employee,
+                  status: updatedEmployee?.status,
+                };
+              } else {
+                return employee;
+              }
+            }),
+          };
+        });
+
+      
+        state.employeeApprovalSuccess = action.payload.message;
+        state.employeeApprovalLoading = false;
+      })
+      .addCase(employeesApproval.rejected, (state, action) => {
+        state.employeeApprovalLoading = false;
+        state.employeeApprovalData = null;
+        state.employeeApprovalSuccess = null;
+        state.employeeApprovalError = action.payload;
       });
   },
 });
