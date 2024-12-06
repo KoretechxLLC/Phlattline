@@ -4,7 +4,7 @@ import SideBar from "@/app/components/SideBar";
 import Header from "@/app/components/Header";
 
 import {
-  fetchAssessments,
+ 
   fetchSingleAssessments,
   resetSuccess,
   submitAssessmentResponses,
