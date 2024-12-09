@@ -5,9 +5,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import { Card } from "@/app/components/Card";
-import Image from "next/image";
 import EventModal from "@/app/components/event-modal";
-import { useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchcourses } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
@@ -121,6 +119,7 @@ const DailyDose = () => {
   const [selectedEventDate, setSelectedEventDate] = useState<Date | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+
   const [data, setData] = useState<any>();
 
   const [allCourses, setAllCourses] = useState<any>([]);
@@ -186,7 +185,7 @@ const DailyDose = () => {
 
     return (
       <div
-        className={`w-full flex flex-col justify-between gap-y-7 h-full px-9 py-7 4xl:py-4 lg:mx-6 4xl:mx-1 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor} ${futureEvents}`}
+        className={`w-full flex flex-col justify-between gap-y-7 h-full px-14 py-5 4xl:py-4 lg:mx-6 4xl:mx-1 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor} ${futureEvents}`}
         style={{ backgroundColor }} // Apply directly
       >
         <div className="flex-grow">
@@ -277,6 +276,33 @@ const DailyDose = () => {
               eventContent={renderEventContent}
               dateClick={handleDateClick}
               eventClick={handleEventClick}
+              moreLinkClick="popover" // Ensure the "more" popup is used
+              eventDidMount={(info) => {
+                if (info.el.closest(".fc-popover-body")) {
+                  const popupContent = document.createElement("div");
+                  popupContent.textContent = info.event.title; // Use the event's title
+                  popupContent.classList.add("event-popup-item");
+
+                  popupContent.onclick = () => {
+                    // Debug logs
+                    console.log("Event clicked:", info.event);
+
+                    const selectedEvent = updatedCourses.find(
+                      (course: any) => course.id.toString() === info.event.id
+                    );
+
+                    if (selectedEvent) {
+                      console.log("Selected Event:", selectedEvent);
+                      setSelectedEvent(selectedEvent); // Set the selected event
+                      setSheetOpen(true); // Open the modal
+                    } else {
+                      console.error("Event not found:", info.event.id);
+                    }
+                  };
+
+                  info.el.replaceWith(popupContent); // Replace the default tab rendering
+                }
+              }}
               initialView="dayGridMonth"
               dayHeaderClassNames="bg-gradient-to-b w-full cursor-pointer from-[#2D2C2C80] to-[#000] text-white text-3xl font-bold py-8"
               dayCellClassNames={({ date }) => {
@@ -336,6 +362,33 @@ const DailyDose = () => {
               eventContent={renderEventContent}
               dateClick={handleDateClick}
               eventClick={handleEventClick}
+              moreLinkClick="popover" // Ensure the "more" popup is used
+              eventDidMount={(info) => {
+                if (info.el.closest(".fc-popover-body")) {
+                  const popupContent = document.createElement("div");
+                  popupContent.textContent = info.event.title; // Use the event's title
+                  popupContent.classList.add("event-popup-item");
+
+                  popupContent.onclick = () => {
+                    // Debug logs
+                    console.log("Event clicked:", info.event);
+
+                    const selectedEvent = updatedCourses.find(
+                      (course: any) => course.id.toString() === info.event.id
+                    );
+
+                    if (selectedEvent) {
+                      console.log("Selected Event:", selectedEvent);
+                      setSelectedEvent(selectedEvent); // Set the selected event
+                      setSheetOpen(true); // Open the modal
+                    } else {
+                      console.error("Event not found:", info.event.id);
+                    }
+                  };
+
+                  info.el.replaceWith(popupContent); // Replace the default tab rendering
+                }
+              }}
               initialView="dayGridMonth"
               dayHeaderClassNames="bg-gradient-to-b w-full cursor-pointer from-[#2D2C2C80] to-[#000] text-white text-3xl font-bold py-8"
               dayCellClassNames={({ date }) => {
@@ -353,8 +406,8 @@ const DailyDose = () => {
       </div>
       <EventModal
         open={sheetOpen}
-        onClose={handleCloseModal}
-        event={selectedEvent}
+        onClose={() => setSheetOpen(false)} // Close modal
+        event={selectedEvent} // Pass the selected event
       />
     </>
   );
