@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import Image from "next/image";
 import DateRangeToolbar from "./DateRangeToolbar";
 
@@ -41,41 +41,42 @@ const SystemLogsTable = () => {
   return (
     <div className="overflow-auto w-full">
       <DateRangeToolbar />
-      <table className="table-auto w-full text-left text-sm border border-gray-300">
-        <thead>
-          <tr className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-white">
-            <th className="px-4 py-2 border border-gray-300">Employees</th>
-            <th className="px-4 py-2 border border-gray-300">Log Title</th>
-            <th className="px-4 py-2 border border-gray-300">Log Time</th>
-            <th className="px-4 py-2 border border-gray-300">Date</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div className="w-full text-center justify-center text-sm">
+        {/* Header */}
+        <div className="text-lg bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white flex">
+          <div className="flex-1 px-4 py-3 whitespace-nowrap">Employees</div>
+          <div className="flex-1 px-4 py-3 whitespace-nowrap">Log Title</div>
+          <div className="flex-1 px-4 py-3 whitespace-nowrap">Log Time</div>
+          <div className="flex-1 px-4 py-3 whitespace-nowrap">Date</div>
+        </div>
+        {/* Logs Data */}
+        <React.Fragment>
           {logsData.map((log) => (
-            <tr key={log.id}>
-              <td className="px-4 py-2 border border-gray-300">
-                <div className="flex items-center space-x-2">
-                  <Image
-                    src={log.employee.image}
-                    alt={log.employee.name}
-                    width={1000}
-                    height={1000}
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <span>{log.employee.name}</span>
-                </div>
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {log.logTitle}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {log.logTime}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">{log.date}</td>
-            </tr>
+            <div
+              key={log.id}
+              className="flex items-center text-center px-4 py-3 hover:bg-gray-100"
+            >
+              {/* Employee Column */}
+              <div className="flex-1 flex items-center justify-center space-x-2">
+                <Image
+                  src={log.employee.image}
+                  alt={log.employee.name}
+                  width={1000}
+                  height={1000}
+                  className="w-10 h-10 rounded-full"
+                />
+                <span>{log.employee.name}</span>
+              </div>
+              {/* Log Title Column */}
+              <div className="flex-1">{log.logTitle}</div>
+              {/* Log Time Column */}
+              <div className="flex-1">{log.logTime}</div>
+              {/* Date Column */}
+              <div className="flex-1">{log.date}</div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </React.Fragment>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,15 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Spinner from "@/app/components/Spinner"; // Import the Spinner component
+import Spinner from "@/app/components/Spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import {
+  fetchAllDepartment,
+  fetchEmployeeByDepartment,
+  resetSuccess,
+} from "@/redux/slices/organization.slice";
 
 const accessOptions = [
   "Able to buy courses",
@@ -37,15 +44,10 @@ const data = [
 ];
 
 const AccessControl = () => {
-  const [selectedDept, setSelectedDept] = React.useState<string>("Operations");
-
-  // Initialize the selected employee ID to the first employee's ID
+  const [selectedDept, setSelectedDept] = useState<any>();
   const [selectedEmployeeId, setSelectedEmployeeId] = React.useState<
-    number | null
-  >(
-    data[0]?.id || null // Default to the first employee's ID or null
-  );
-
+    null | number
+  >(1 || null);
   const [employeeAccess, setEmployeeAccess] = React.useState(
     data.reduce((acc, employee) => {
       acc[employee.id] = employee.access;
@@ -53,155 +55,172 @@ const AccessControl = () => {
     }, {} as Record<number, string[]>)
   );
 
-  const [loading, setLoading] = React.useState(true); // Loading state
-  const [logsAvailable, setLogsAvailable] = React.useState(true); // Flag for employees availability
+  const [employeeData, setEmployeeData] = useState<any>();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false); // Loading state for spinner
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const { departments, responseLoading, responseSuccess } = useSelector(
+    (state: RootState) => state.organization
+  );
+  const dispatch: any = useDispatch();
 
-  const departments = ["Operations", "Sales", "Finance", "IT"];
+  const organization_id = userData?.organization_id;
+
+  useEffect(() => {
+    if (!departments || departments.length == 0) {
+      dispatch(fetchAllDepartment({ organizationId: organization_id }));
+    }
+  }, []);
 
   const handleEmployeeClick = (id: number) => {
-    setSelectedEmployeeId(id === selectedEmployeeId ? null : id);
+    setSelectedEmployeeId(id);
+  };
+
+  useEffect(() => {
+    if (responseSuccess && selectedDept) {
+      handleDepartmentClick(selectedDept);
+    }
+
+    dispatch(resetSuccess());
+  }, [responseSuccess]);
+
+  useEffect(() => {
+    setSelectedDept(departments?.[0]?.id);
+  }, [departments?.length]);
+
+  useEffect(() => {
+    dispatch(
+      fetchEmployeeByDepartment({
+        departmentId: selectedDept || departments?.[0]?.id,
+      })
+    );
+  }, [selectedDept, dispatch]);
+
+  const handleDepartmentClick = (deptId: any) => {
+    setSelectedDept(deptId);
+
+    let employeeInfo =
+      departments &&
+      departments.length > 0 &&
+      departments.find((dept: any) => {
+        if (dept.id == deptId) {
+          return dept;
+        }
+      });
+
+    setEmployeeData(employeeInfo?.employees);
   };
 
   const handleAccessToggle = (employeeId: number, accessValue: string) => {
     setEmployeeAccess((prevAccess) => {
-      const updatedAccess = [...prevAccess[employeeId]];
-
+      const updatedAccess = [...prevAccess[employeeData?.id]];
       if (updatedAccess.includes(accessValue)) {
         updatedAccess.splice(updatedAccess.indexOf(accessValue), 1);
       } else {
         updatedAccess.push(accessValue);
       }
-
       return {
         ...prevAccess,
-        [employeeId]: updatedAccess,
+        [employeeData?.id]: updatedAccess,
       };
     });
   };
 
-  React.useEffect(() => {
-    // Simulate a delay for loading the data
-    setTimeout(() => {
-      if (data.length === 0) {
-        setLogsAvailable(false); // If no employees are found
-      }
-      setLoading(false); // Set loading to false after data is "fetched"
-    }, 1000);
-  }, []);
-
   return (
     <div className="overflow-auto w-full">
-      {loading ? (
-        // Show the loader while loading data
-        <div className="flex justify-center items-center py-4">
+      {loading || responseLoading ? (
+        <div className="flex justify-center items-center py-10">
           <Spinner height="30px" width="30px" />
         </div>
-      ) : !logsAvailable ? (
-        // Show message if no employees are found
-        <div className="text-center py-4 text-gray-600">
-          <p>No employees found</p>
-        </div>
       ) : (
-        // Show the table of employees and their access options
-        <table className="table-auto w-full text-center text-lg border border-[#62626280]">
-          <thead>
-            <tr className="bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-white">
-              <th className="px-4 py-2">Departments</th>
-              <th className="px-4 py-2">Employees</th>
-              <th className="px-4 py-2">Access</th>
-            </tr>
-          </thead>
-          <tbody>
-            {departments.map((dept, index) => (
-              <tr key={index}>
-                <td
-                  className={`px-2 py-1 rounded-xl ${
-                    selectedDept === dept
+        <div className="w-full text-center justify-center text-sm">
+          <div className="text-lg bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white flex">
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">
+              Departments
+            </div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Employees</div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Access</div>
+          </div>
+          <div className="flex">
+            <div className="w-2/5">
+              {departments.map((dept: any) => (
+                <div
+                  key={dept.id}
+                  className={`px-4 py-2 rounded-xl w-full text-center text-lg ${
+                    selectedDept === dept.id
                       ? "bg-red-600 text-white"
                       : "bg-black text-white"
                   }`}
+                  onClick={() => handleDepartmentClick(dept.id)}
                 >
-                  <button
-                    onClick={() => setSelectedDept(dept)}
-                    className="w-full text-center text-lg"
-                  >
-                    {dept}
-                  </button>
-                </td>
-                {index === 0 && (
-                  <>
-                    <td
-                      className="px-4 py-2 border border-[#62626280]"
-                      rowSpan={departments.length}
-                    >
-                      {data.map((row) => (
-                        <div
-                          key={row.id}
-                          className={`flex justify-center items-center space-x-2 my-4 text-lg cursor-pointer ${
-                            selectedEmployeeId === row.id
-                              ? "bg-gray-500"
-                              : "bg-transparent"
-                          } rounded-lg p-2`}
-                          onClick={() => handleEmployeeClick(row.id)}
-                        >
-                          {row.employees.image ? (
-                            <Image
-                              height={40}
-                              width={40}
-                              src={row.employees.image}
-                              alt={row.employees.name}
-                              className=" object-cover"
-                            />
-                          ) : (
-                            <div className="object-cover !m-0 !p-0 object-top rounded-2xl h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34]  relative transition duration-500">
-                              <span className="text-white text-sm md:text-sm font-bold py-3">
-                                {row.employees.name?.charAt(0).toUpperCase()}
-                              </span>
-                            </div>
-                          )}
-                          <div>
-                            <p>{row.employees.name}</p>
-                            <p>{row.designation}</p>
+                  {dept.name}
+                </div>
+              ))}
+            </div>
+            {employeeData && employeeData.length > 0 ? (
+              <div className="w-4/5 mx-8 grid grid-cols-2 gap-4">
+                <div>
+                  {employeeData.map((employee: any, index: any) => (
+                    <React.Fragment key={index}>
+                      <div
+                        className={`flex items-center space-x-6 px-2 py-3 my-3 rounded-lg ${
+                          selectedEmployeeId === employee.id
+                            ? "border border-gray-300"
+                            : "bg-transparent"
+                        }`}
+                        onClick={() => handleEmployeeClick(employee.id)}
+                      >
+                        {employee.profile_image ? (
+                          <Image
+                            height={40}
+                            width={40}
+                            src={employee.profile_image}
+                            alt={employee.first_name}
+                            className="object-cover rounded-full"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
+                            <span className="text-white text-sm font-bold">
+                              {employee.first_name?.charAt(0).toUpperCase() +
+                                employee?.last_name?.charAt(0).toUpperCase()}
+                            </span>
                           </div>
+                        )}
+                        <div>
+                          <p>
+                            {employee?.first_name + " " + employee?.last_name}
+                          </p>
                         </div>
-                      ))}
-                    </td>
-                    <td
-                      className="px-4 py-2 border border-[#62626280] align-top"
-                      rowSpan={departments.length}
-                    >
-                      {selectedEmployeeId && (
-                        <div className="space-y-2 p-2">
-                          {accessOptions.map((accessValue) => (
-                            <div
-                              key={accessValue}
-                              className="flex items-center"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={employeeAccess[
-                                  selectedEmployeeId
-                                ]?.includes(accessValue)}
-                                onChange={() =>
-                                  handleAccessToggle(
-                                    selectedEmployeeId,
-                                    accessValue
-                                  )
-                                }
-                                className="mr-2"
-                              />
-                              <label>{accessValue}</label>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      </div>
+                    </React.Fragment>
+                  ))}
+                </div>
+                <div className="flex flex-col my-2 4xl:text-sm text-lg mx-20">
+                  {accessOptions.map((accessValue) => (
+                    <label key={accessValue} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={
+                          selectedEmployeeId
+                            ? employeeAccess[selectedEmployeeId]?.includes(
+                                accessValue
+                              )
+                            : false
+                        }
+                        className="mr-2"
+                      />
+                      {accessValue}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center px-10 py-10 text-gray-600">
+                No employees found
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
