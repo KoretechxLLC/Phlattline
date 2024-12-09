@@ -363,16 +363,22 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("user_id");
+    const employeeId = searchParams.get("employee_id");
+    const organizationId = searchParams.get("organization_id");
 
-    if (!userId) {
+    if (!userId || !employeeId || !organizationId) {
       return NextResponse.json(
-        { message: "User ID is required.", success: false },
+        {
+          message: "User ID, Employee ID, and Organization ID are required.",
+          success: false,
+        },
         { status: 400 }
       );
     }
 
-    const user = await prisma.users.findUnique({
-      where: { id: parseInt(userId) },
+    // Fetch the user with their employee details
+    const user = await prisma.users.findFirst({
+      where: { employee_id: Number(employeeId) },
       include: { employees: true },
     });
 
@@ -383,29 +389,59 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    if (user.profile_image) {
-      const filePath = path.join(
-        process.cwd(),
-        "uploads/profileimage",
-        user.profile_image
-      );
-      await deleteFile(filePath);
-    }
-
-    await prisma.employees.delete({
-      where: { id: Number(user.employee_id) },
+    // Check if the employee belongs to the specified organization
+    const employee = await prisma.employees.findFirst({
+      where: {
+        id: Number(employeeId),
+        organization_id: Number(organizationId),
+      },
     });
 
-    await prisma.users.delete({
-      where: { id: parseInt(userId) },
+    if (!employee) {
+      return NextResponse.json(
+        {
+          message:
+            "Unauthorized: Employee does not belong to this organization.",
+          success: false,
+        },
+        { status: 403 }
+      );
+    }
+
+    // Perform deletion within a transaction
+    await prisma.$transaction(async (tx) => {
+      // Delete profile image if it exists
+      if (user.profile_image) {
+        const filePath = path.join(
+          process.cwd(),
+          "uploads/profileimage",
+          user.profile_image
+        );
+        try {
+          await fs.access(filePath);
+          await fs.unlink(filePath);
+        } catch (err) {
+          console.error(`File not found or already deleted: ${filePath}`);
+        }
+      }
+
+      // Delete employee
+      await tx.employees.delete({
+        where: { id: Number(employeeId) },
+      });
+
+      // Delete user
+      await tx.users.delete({
+        where: { id: Number(user.id) },
+      });
     });
 
     return NextResponse.json({
-      message: "User and employee deleted successfully",
+      message: "User and employee deleted successfully.",
       success: true,
     });
   } catch (error: any) {
-    console.error("Error deleting user and employee:", error.message);
+    console.error("Error deleting user and employee:", error);
     return NextResponse.json(
       { message: error.message || "Internal Server Error", success: false },
       { status: 500 }

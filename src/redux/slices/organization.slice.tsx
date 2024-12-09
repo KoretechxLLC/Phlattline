@@ -27,6 +27,10 @@ interface organizationResponseState {
   employeeApprovalLoading: boolean;
   employeeApprovalSuccess: any | null;
   employeeApprovalError: any | null;
+  employeeDeletion: any | null;
+  employeeDeletionLoading: boolean;
+  employeeDeletionSuccess: any | null;
+  employeeDeletionError: any | null;
 }
 
 const initialState: organizationResponseState = {
@@ -52,6 +56,10 @@ const initialState: organizationResponseState = {
   employeeApprovalLoading: false,
   employeeApprovalSuccess: null,
   employeeApprovalError: null,
+  employeeDeletion: null,
+  employeeDeletionLoading: false,
+  employeeDeletionSuccess: null,
+  employeeDeletionError: null,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -236,8 +244,30 @@ export const employeesApproval = createAsyncThunk<any, any>(
   async ({ data }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put("/api/auth/user-approval", data);
-    
+
       return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to Change User Status";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const employeesDelete = createAsyncThunk<any, any>(
+  "organization/employeesDelete",
+  async ({ data }: any, { rejectWithValue }) => {
+
+    try {
+      const response = await axiosInstance.delete(
+        `/api/auth/employeeregister?organization_id=${data.organization_id}&employee_id=${data.employee_id}&user_id=${data.user_id}`,
+        {
+          data,
+        }
+      );
+
+      return data;
     } catch (error: any) {
      
       const errorMessage =
@@ -261,6 +291,7 @@ const organizationSlice = createSlice({
       state.removeEmployeeSuccess = null;
       state.addEmployeeSuccess = null;
       state.employeeApprovalSuccess = null;
+      state.employeeDeletionSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
@@ -270,6 +301,7 @@ const organizationSlice = createSlice({
       state.removeEmployeeError = null;
       state.addEmployeeError = null;
       state.employeeApprovalError = null;
+      state.employeeDeletionError = null;
     },
   },
   extraReducers: (builder) => {
@@ -515,7 +547,6 @@ const organizationSlice = createSlice({
           };
         });
 
-      
         state.employeeApprovalSuccess = action.payload.message;
         state.employeeApprovalLoading = false;
       })
@@ -524,6 +555,36 @@ const organizationSlice = createSlice({
         state.employeeApprovalData = null;
         state.employeeApprovalSuccess = null;
         state.employeeApprovalError = action.payload;
+      })
+      .addCase(employeesDelete.pending, (state) => {
+        state.employeeDeletionLoading = true;
+        state.employeeDeletion = null;
+      })
+      .addCase(employeesDelete.fulfilled, (state, action) => {
+        state.employeeDeletion = action.payload;
+
+        const deletedEmployee = action.payload;
+
+        state.departments = state.departments.map((department) => {
+          return {
+            ...department,
+            employees: department.employees.filter((employee: any) => {
+              if (employee.id != deletedEmployee.employee_id) {
+                return employee;
+              }
+            }),
+          };
+        });
+
+        state.employeeDeletionSuccess = "Employee Deleted Successfully";
+        state.employeeDeletionLoading = false;
+      })
+      .addCase(employeesDelete.rejected, (state, action) => {
+     
+        state.employeeDeletionLoading = false;
+        state.employeeDeletion = null;
+        state.employeeDeletionSuccess = null;
+        state.employeeDeletionError = action.payload;
       });
   },
 });

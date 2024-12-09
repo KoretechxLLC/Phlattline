@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/app/components/tooltip";
-import { Eye, SquarePen, Trash2 } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import { Button } from "@/app/components/button-sidebar";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -17,12 +17,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
   employeesApproval,
+  employeesDelete,
   fetchAllDepartment,
   fetchEmployeeByDepartment,
   resetError,
   resetSuccess,
 } from "@/redux/slices/organization.slice";
 import StackedNotifications, { NotificationType } from "./Stackednotification";
+import Deletemodel from "./DeleteModal";
 
 const EmployeeSetting = ({
   onEmployeeSelect,
@@ -35,9 +37,12 @@ const EmployeeSetting = ({
   );
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [employeeData, setEmployeeData] = useState<any>();
+  const [singleEmployeeData, setSingleEmployeeData] = useState<any>();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false); // Loading state for spinner
+  const [deleteModal, setDeleteModal] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
+
   const {
     departments,
     responseLoading,
@@ -45,10 +50,13 @@ const EmployeeSetting = ({
     employeeApprovalError,
     employeeApprovalSuccess,
     employeeApprovalLoading,
+    employeeDeletionError,
+    employeeDeletionSuccess,
   } = useSelector((state: RootState) => state.organization);
   const dispatch: any = useDispatch();
 
   const organization_id = userData?.organization_id;
+  const user_id = userData?.id;
 
   useEffect(() => {
     if (!departments || departments.length == 0) {
@@ -127,8 +135,33 @@ const EmployeeSetting = ({
     }
   }, [employeeApprovalError, employeeApprovalSuccess]);
 
+  useEffect(() => {
+    if (employeeDeletionSuccess) {
+      setNotification({
+        id: Date.now(),
+        text: employeeDeletionSuccess,
+        type: "success",
+      });
+      dispatch(resetSuccess());
+    }
+    if (employeeDeletionError) {
+      setNotification({
+        id: Date.now(),
+        text: employeeDeletionError,
+        type: "error",
+      });
+      dispatch(resetError());
+    }
+  }, [employeeDeletionError, employeeDeletionSuccess]);
+
   const handleViewClick = (id: number) => {
     setSelectedId(id);
+    let singleEmployee = employeeData.find((item: any) => {
+      if (item.id === id) {
+        return item;
+      }
+    });
+    setSingleEmployeeData(singleEmployee);
     setIsViewModalOpen(true);
   };
   const handleDepartmentClick = (deptId: any) => {
@@ -160,6 +193,12 @@ const EmployeeSetting = ({
     }
   }, [departments]);
 
+  const handleDelete = (id: any) => {
+    dispatch(
+      employeesDelete({ data: { employee_id: id, organization_id, user_id } })
+    );
+    setDeleteModal(true);
+  };
   return (
     <div className="overflow-auto w-full">
       <StackedNotifications
@@ -170,8 +209,6 @@ const EmployeeSetting = ({
         <div className="flex justify-center items-center py-10">
           <Spinner height="30px" width="30px" />
         </div>
-      ) : employeeData?.length === 0 ? (
-        <div className="text-center py-10 text-lg">No employees found</div>
       ) : (
         <>
           <div className="w-full text-center justify-center text-sm border border-[#62626280]">
@@ -291,18 +328,23 @@ const EmployeeSetting = ({
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
-                        {/* Edit Button */}
 
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="w-10 h-10 ring-offset-transparent bg-red-500 border-default-200 dark:border-default-300 text-default-400"
-                              >
-                                <Trash2 className="w-7 h-7" />
-                              </Button>
+                              <Deletemodel
+                                trigger={(onClick: any) => (
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={onClick}
+                                    className="w-10 h-10 ring-offset-transparent bg-red-500 border-default-200 dark:border-default-300 text-default-400"
+                                  >
+                                    <Trash2 className="w-7 h-7" />
+                                  </Button>
+                                )}
+                                confirmAction={() => handleDelete(employee?.id)}
+                              />
                             </TooltipTrigger>
                             <TooltipContent
                               side="top"
@@ -325,11 +367,13 @@ const EmployeeSetting = ({
           </div>
         </>
       )}
+
       {isViewModalOpen && selectedId !== null && (
         <ViewEmployeeModal
           isOpen={isViewModalOpen}
           setIsOpen={setIsViewModalOpen}
           employeeId={selectedId}
+          singleEmployeeData={singleEmployeeData}
         />
       )}
     </div>
