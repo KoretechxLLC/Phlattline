@@ -25,12 +25,13 @@ import {
   DeleteUserProfile,
 } from "@/redux/slices/auth.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
-import DatePicker from "react-datepicker";
+
 import "react-datepicker/dist/react-datepicker.css";
 import { ImListNumbered } from "react-icons/im";
 import { GoCopy } from "react-icons/go";
-import { log } from "console";
 import { Select } from "@/app/components/select";
+import { Input } from "@/app/components/Input";
+import { CustomDatePicker } from "@/app/components/customDatePicker";
 import { getCategories } from "@/redux/slices/categories.slice";
 import ImageDeleteModal from "@/app/components/ImageDeleteModal";
 
@@ -183,8 +184,8 @@ const Profile = ({ profileImage }: any) => {
       />
       {/* First Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="first-name"
             type="text"
             placeholder="Organization Name"
@@ -195,8 +196,8 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="email"
             type="email"
             placeholder="Email"
@@ -211,8 +212,8 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Second Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="phone"
             type="tel"
             placeholder="Phone"
@@ -223,8 +224,8 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPhone className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <DatePicker
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <CustomDatePicker
             value={new Date(
               data?.organizations?.created_at
             ).toLocaleDateString()}
@@ -251,8 +252,8 @@ const Profile = ({ profileImage }: any) => {
 
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="num-emp"
             type="number"
             value={obj.NoOfEmployees}
@@ -267,8 +268,8 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Fourth Row */}
       <div className="grid grid-cols-1  gap-4">
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="Code"
             ref={inputRef}
             type="text"

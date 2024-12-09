@@ -24,7 +24,7 @@ import {
 import { RootState } from "@/redux/store";
 import StackedNotifications from "../components/Stackednotification";
 import { useDispatch, useSelector } from "react-redux";
-import DatePicker from "react-datepicker";
+import { CustomDatePicker } from "../components/customDatePicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import the DatePicker styles
 import { MdBadge } from "react-icons/md";
 
@@ -330,7 +330,7 @@ const EmployeeSignup = () => {
             <div className="w-full">
               {" "}
               {/* Wrap DatePicker in a full-width div */}
-              <DatePicker
+              <CustomDatePicker
                 selected={dob}
                 onChange={(date: any) => setDob(date)}
                 maxDate={sixteenYearsAgo} // Restrict to dates 16+ years ago
