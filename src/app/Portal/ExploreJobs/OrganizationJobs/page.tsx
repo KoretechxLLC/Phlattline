@@ -4,9 +4,8 @@ import * as React from "react";
 import { Button } from "@/app/components/button-sidebar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Spinner from "@/app/components/Spinner"; // Import Spinner component
+import Spinner from "@/app/components/Spinner";
 
-// Sample job data (can be replaced by actual data from an API)
 const jobData = [
   {
     id: 1,
@@ -49,88 +48,76 @@ const OrganizationJobs: React.FC<OrganizationJobsProps> = ({
 }) => {
   const searchParams = useSearchParams();
   const [data, setData] = useState<any>();
-  const [loading, setLoading] = useState(true); // Loader state
-  const [jobsAvailable, setJobsAvailable] = useState(true); // Check if jobs are available
+  const [loading, setLoading] = useState(true);
+  const [jobsAvailable, setJobsAvailable] = useState(true);
   const router = useRouter();
   const organizationId = searchParams.get("organizationId");
 
   useEffect(() => {
-    // Simulate loading delay
     setTimeout(() => {
       if (organizationId) {
         const filteredOrganizationData = jobData.filter(
           (e: any) => Number(e.id) === Number(organizationId)
         );
         if (filteredOrganizationData.length > 0) {
-          setData(filteredOrganizationData); // Set filtered job data
+          setData(filteredOrganizationData);
         } else {
-          setJobsAvailable(false); // No jobs found
+          setJobsAvailable(false);
         }
       }
-      setLoading(false); // Set loading to false after the simulated fetch
-    }, 1000); // Simulate delay for data fetching
+      setLoading(false);
+    }, 1000);
   }, [organizationId]);
 
   return (
     <div className="overflow-auto w-full">
       {loading ? (
-        // Show Spinner while loading
         <div className="flex justify-center items-center py-4">
           <Spinner height="30px" width="30px" />
         </div>
       ) : !jobsAvailable ? (
-        // Show message if no jobs available
         <div className="text-center py-4 text-gray-600">
           <p>No jobs available for this organization.</p>
         </div>
       ) : (
-        // Show the table when jobs are available
-        <table className="table-auto w-full text-center text-lg border border-[#62626280]">
-          <thead>
-            <tr className="bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white">
-              <th className="px-4 py-2">S.No</th>
-              <th className="px-4 py-2">Names</th>
-              <th className="px-4 py-2">Department</th>
-              <th className="px-4 py-2">Type</th>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jobData?.map((job, index) => (
-              <tr key={job.id}>
-                <td className="px-4 py-2 border border-[#62626280]">
-                  {index + 1}
-                </td>
-                <td className="px-4 py-2 border border-[#62626280]">
-                  {job.name}
-                </td>
-                <td className="px-4 py-2 border border-[#62626280]">
-                  {job.department}
-                </td>
-                <td className="px-4 py-2 border border-[#62626280]">
-                  {job.type}
-                </td>
-                <td className="px-4 py-2 border border-[#62626280]">
-                  {job.date}
-                </td>
-                <td className="px-4 py-2 border border-[#62626280]">
-                  <Button
-                    color="primary"
-                    className="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition"
-                    onClick={() =>
-                      router.push(
-                        `/Portal/ExploreJobs/OrganizationJobs/JobSummary?jobId=${job.id}`
-                      )
-                    }
-                  >
-                    Details
-                  </Button>
-                </td>
-              </tr>
+        <div className="w-full text-center justify-center text-sm">
+          {/* Header */}
+          <div className="text-lg bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white flex">
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">S.No</div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Name</div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Department</div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Type</div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Date</div>
+            <div className="flex-1 px-4 py-3 whitespace-nowrap">Action</div>
+          </div>
+          {/* Jobs Data */}
+          <div className="flex flex-col divide-y divide-gray-300">
+            {data?.map((job: any, index: number) => (
+              <React.Fragment key={job.id}>
+                <div className="flex items-center text-center px-4 py-3 ">
+                  <div className="flex-1">{index + 1}</div>
+                  <div className="flex-1">{job.name}</div>
+                  <div className="flex-1">{job.department}</div>
+                  <div className="flex-1">{job.type}</div>
+                  <div className="flex-1">{job.date}</div>
+                  <div className="flex-1">
+                    <Button
+                      color="primary"
+                      className="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition"
+                      onClick={() =>
+                        router.push(
+                          `/Portal/ExploreJobs/OrganizationJobs/JobSummary?jobId=${job.id}`
+                        )
+                      }
+                    >
+                      Details
+                    </Button>
+                  </div>
+                </div>
+              </React.Fragment>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       )}
     </div>
   );

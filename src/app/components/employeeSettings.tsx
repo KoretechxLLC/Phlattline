@@ -292,23 +292,7 @@ const EmployeeSetting = ({
                           </Tooltip>
                         </TooltipProvider>
                         {/* Edit Button */}
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="w-10 h-10 bg-green-500 border-default-200"
-                                onClick={() => onEmployeeSelect(employee.id)}
-                              >
-                                <SquarePen className="w-7 h-7 text-white" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top">
-                              <p>Edit</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -334,7 +318,7 @@ const EmployeeSetting = ({
                 </div>
               ) : (
                 <div className="flex flex-4 text-gray-300 col-span-4 py-4 w-4/5 items-center justify-center border-gray-300">
-                  Employees do not found
+                  Employees not found
                 </div>
               )}
             </div>
