@@ -363,23 +363,51 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("user_id");
+    const employeeId = searchParams.get("employee_id");
+    const organizationId = searchParams.get("organization_id");
 
-    if (!userId) {
+    if (!userId || !employeeId || !organizationId) {
       return NextResponse.json(
-        { message: "User ID is required.", success: false },
+        {
+          message: "User ID, Employee ID, and Organization ID are required.",
+          success: false,
+        },
         { status: 400 }
       );
     }
 
-    const user = await prisma.users.findUnique({
-      where: { id: parseInt(userId) },
-      include: { employees: true },
+   
+    const user = await prisma.users.findFirst({
+      where: { employee_id: Number(employeeId) },
+      include: {
+        employees: true,
+      },
     });
 
+ 
     if (!user || !user.employees) {
       return NextResponse.json(
         { message: "User or employee not found.", success: false },
         { status: 404 }
+      );
+    }
+
+   
+    const employee = await prisma.employees.findFirst({
+      where: {
+        id: Number(employeeId),
+        organization_id: Number(organizationId),
+      },
+    });
+
+    if (!employee) {
+      return NextResponse.json(
+        {
+          message:
+            "Unauthorized: Employee does not belong to this organization.",
+          success: false,
+        },
+        { status: 403 }
       );
     }
 
@@ -393,11 +421,11 @@ export async function DELETE(request: NextRequest) {
     }
 
     await prisma.employees.delete({
-      where: { id: Number(user.employee_id) },
+      where: { id: Number(employeeId) },
     });
 
     await prisma.users.delete({
-      where: { id: parseInt(userId) },
+      where: { id: Number(user.id) },
     });
 
     return NextResponse.json({

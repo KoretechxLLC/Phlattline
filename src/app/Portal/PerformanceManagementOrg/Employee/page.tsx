@@ -92,7 +92,7 @@ const Employee = () => {
               showPending={true}
               showCompleted={true}
               showSaved={false}
-              showTooltip={true}
+              showTooltip={false}
               label={"Goals"}
               isClickable={false}
             />

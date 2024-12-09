@@ -9,6 +9,7 @@ export type ModalProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   employeeId: number;
+  singleEmployeeData?: any;
 };
 
 const data = [
@@ -48,6 +49,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
   isOpen,
   setIsOpen,
   employeeId,
+  singleEmployeeData,
 }) => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -87,7 +89,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
       return () => clearTimeout(timeout);
     }
   }, [notification]);
-
+  
   return (
     <AnimatePresence>
       {isOpen && (
@@ -103,52 +105,78 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#000000b9]  rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-[#000000b9]  rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden border-2 border-white"
           >
             {/* Flex container to align fields and image */}
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
               {/* Left Side - Form Fields */}
-              <div className="flex-1 p-5 rounded-xl">
+              <div className="flex-1 p-4 rounded-xl">
                 {/* First Name Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">John</span>
+                  <span className="text-white  mx-3">
+                    {singleEmployeeData?.first_name}
+                  </span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Last Name Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">Doe</span>
+                  <span className="text-white  mx-3">
+                    {singleEmployeeData?.last_name}
+                  </span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Email Input (Disabled) */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">JohnDoe@gmail.com</span>
+                  <span className="text-white  mx-3">
+                    {singleEmployeeData?.email}
+                  </span>
                   <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Designation Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">Software Engineer</span>
+                  <span className="text-white  mx-3">
+                    {singleEmployeeData?.designation}
+                  </span>
                   <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
 
                 {/* Date Picker */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">11/2/2008</span>
+                  <span className="text-white  mx-3">
+                    {singleEmployeeData?.date_of_birth &&
+                      new Date(
+                        singleEmployeeData?.date_of_birth
+                      ).toLocaleDateString("en-US")}
+                  </span>
                   <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
                 </div>
               </div>
 
               {/* Right Side - Image */}
               <div className="w-52 h-52 ring-4 ring-[#000] my-10 mx-3 flex items-center justify-center rounded-full overflow-hidden">
-                <Image
-                  alt="User profile image"
-                  src={"/assets/DummyImg.png"}
-                  width={240} // Set width to fit the container
-                  height={240} // Set height to fit the container
-                  className="rounded-full object-cover" // Use object-cover for proper scaling
-                />
+                {singleEmployeeData?.profile_image ? (
+                  <Image
+                    src={`/api/images?filename=${singleEmployeeData?.profile_image}&folder=profileImage`}
+                    alt={"Unknown"}
+                    width={240}
+                    height={240}
+                    className="rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-56 h-52 ring-4 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
+                    <span className="text-white text-2xl md:text-8xl font-bold pt-3">
+                      {singleEmployeeData?.first_name
+                        ?.charAt(0)
+                        .toUpperCase() +
+                        singleEmployeeData?.last_name
+                          ?.charAt(0)
+                          .toUpperCase()}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>

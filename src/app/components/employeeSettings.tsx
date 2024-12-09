@@ -23,6 +23,9 @@ import {
   resetSuccess,
 } from "@/redux/slices/organization.slice";
 import StackedNotifications, { NotificationType } from "./Stackednotification";
+import { tree } from "next/dist/build/templates/app-page";
+import DeleteModal from "./DeleteModal";
+import Deletemodel from "./DeleteModal";
 
 const EmployeeSetting = ({
   onEmployeeSelect,
@@ -35,9 +38,12 @@ const EmployeeSetting = ({
   );
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [employeeData, setEmployeeData] = useState<any>();
+  const [singleEmployeeData, setSingleEmployeeData] = useState<any>();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false); // Loading state for spinner
+  const [deleteModal, setDeleteModal] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
+
   const {
     departments,
     responseLoading,
@@ -129,6 +135,12 @@ const EmployeeSetting = ({
 
   const handleViewClick = (id: number) => {
     setSelectedId(id);
+    let singleEmployee = employeeData.find((item: any) => {
+      if (item.id === id) {
+        return item;
+      }
+    });
+    setSingleEmployeeData(singleEmployee);
     setIsViewModalOpen(true);
   };
   const handleDepartmentClick = (deptId: any) => {
@@ -160,6 +172,9 @@ const EmployeeSetting = ({
     }
   }, [departments]);
 
+  const handleDelete = (id: any) => {
+    setDeleteModal(true);
+  };
   return (
     <div className="overflow-auto w-full">
       <StackedNotifications
@@ -291,34 +306,23 @@ const EmployeeSetting = ({
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
-                        {/* Edit Button */}
+
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="w-10 h-10 bg-green-500 border-default-200"
-                                onClick={() => onEmployeeSelect(employee.id)}
-                              >
-                                <SquarePen className="w-7 h-7 text-white" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top">
-                              <p>Edit</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="w-10 h-10 ring-offset-transparent bg-red-500 border-default-200 dark:border-default-300 text-default-400"
-                              >
-                                <Trash2 className="w-7 h-7" />
-                              </Button>
+                              <Deletemodel
+                                trigger={(onClick: any) => (
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={onClick}
+                                    className="w-10 h-10 ring-offset-transparent bg-red-500 border-default-200 dark:border-default-300 text-default-400"
+                                  >
+                                    <Trash2 className="w-7 h-7" />
+                                  </Button>
+                                )}
+                                confirmAction={() => handleDelete(employee?.id)}
+                              />
                             </TooltipTrigger>
                             <TooltipContent
                               side="top"
@@ -341,11 +345,13 @@ const EmployeeSetting = ({
           </div>
         </>
       )}
+
       {isViewModalOpen && selectedId !== null && (
         <ViewEmployeeModal
           isOpen={isViewModalOpen}
           setIsOpen={setIsViewModalOpen}
           employeeId={selectedId}
+          singleEmployeeData={singleEmployeeData}
         />
       )}
     </div>
