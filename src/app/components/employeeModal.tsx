@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { assignCourses, fetchAllDepartment, resetError, resetSuccess } from "@/redux/slices/organization.slice";
+import {
+  assignCourses,
+  fetchAllDepartment,
+  resetError,
+  resetSuccess,
+} from "@/redux/slices/organization.slice";
 import { RootState } from "@/redux/store";
 import Icon from "@/app/components/utility-icon";
 import Spinner from "@/app/components/Spinner";
@@ -23,13 +28,18 @@ const EmployeeModal = ({
   showSelectionControls?: boolean;
 }) => {
   const dispatch = useDispatch<any>();
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | null>(null);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<
+    number | null
+  >(null);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allcoursesassign, setAllCoursesAssign] = useState<any>([]);
-  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const [assigning, setAssigning] = useState(false);
-  const { departments, assignCoursesSuccess, assignCoursesError }: any = useSelector((state: RootState) => state.organization);
+  const { departments, assignCoursesSuccess, assignCoursesError }: any =
+    useSelector((state: RootState) => state.organization);
   const { userData } = useSelector((state: RootState) => state.auth);
   const organization_id = userData?.organization_id;
   const userId = userData?.id;
@@ -45,7 +55,9 @@ const EmployeeModal = ({
   useEffect(() => {
     if (selectedDepartmentId !== null) {
       setLoading(true);
-      const department = departments.find((dept: any) => dept.id === selectedDepartmentId);
+      const department = departments.find(
+        (dept: any) => dept.id === selectedDepartmentId
+      );
       setFilteredEmployees(department?.employees || []);
       setLoading(false);
     }
@@ -54,9 +66,9 @@ const EmployeeModal = ({
   // Set initial course assignments
   useEffect(() => {
     if (coursesAssign && coursesAssign?.length > 0) {
-
-      let assigned = coursesAssign.filter((assign:any)=>assign?.course_id== courseId)
-
+      let assigned = coursesAssign.filter(
+        (assign: any) => assign?.course_id == courseId
+      );
 
       setAllCoursesAssign(assigned);
     }
@@ -65,25 +77,37 @@ const EmployeeModal = ({
   // Handle notifications for success and error
   useEffect(() => {
     if (assignCoursesSuccess) {
-      setNotification({ id: Date.now(), text: assignCoursesSuccess, type: "success" });
+      setNotification({
+        id: Date.now(),
+        text: assignCoursesSuccess,
+        type: "success",
+      });
       dispatch(resetSuccess());
+      onClose();
     }
     if (assignCoursesError) {
       console.error("Course assignment error:", assignCoursesError);
-      setNotification({ id: Date.now(), text: assignCoursesError, type: "error" });
+      setNotification({
+        id: Date.now(),
+        text: assignCoursesError,
+        type: "error",
+      });
       dispatch(resetError());
     }
   }, [assignCoursesSuccess, assignCoursesError, dispatch]);
 
   // Handle assign/unassign logic
   const handleAssign = () => {
-    const initialAssignedIds = coursesAssign?.map((emp: any) => emp.employee_id) || [];
-    const currentAssignedIds = allcoursesassign.map((emp: any) => emp.employee_id);
-
+    const initialAssignedIds =
+      coursesAssign?.map((emp: any) => emp.employee_id) || [];
+    const currentAssignedIds = allcoursesassign.map(
+      (emp: any) => emp.employee_id
+    );
 
     const employeesToAssign = currentAssignedIds.filter((id: any) => id);
-    const employeesToUnassign = initialAssignedIds.filter((id: any) => !currentAssignedIds.includes(id));
-
+    const employeesToUnassign = initialAssignedIds.filter(
+      (id: any) => !currentAssignedIds.includes(id)
+    );
 
     if (currentAssignedIds.length > 0) {
       dispatch(
@@ -114,19 +138,21 @@ const EmployeeModal = ({
     }
   };
 
-
   const handlechangeassign = (employee: any) => {
     setAllCoursesAssign((prevAssignments: any) => {
       const isAssigned = prevAssignments.some(
         (assignment: any) =>
-          assignment.employee_id === employee.id && assignment.course_id === courseId
+          assignment.employee_id === employee.id &&
+          assignment.course_id === courseId
       );
-
 
       if (isAssigned) {
         return prevAssignments.filter(
           (assignment: any) =>
-            !(assignment.employee_id === employee.id && assignment.course_id === courseId)
+            !(
+              assignment.employee_id === employee.id &&
+              assignment.course_id === courseId
+            )
         );
       } else {
         return [
@@ -141,10 +167,16 @@ const EmployeeModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <StackedNotifications notification={notification} setNotification={setNotification} />
+      <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       <div className="relative p-5 bg-[#000000b2] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Close Button */}
-        <button onClick={onClose} className="absolute top-4 right-3 text-gray-700 hover:text-red-500">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-3 text-gray-700 hover:text-red-500"
+        >
           <Icon icon="ic:outline-close" className="text-3xl" />
         </button>
 
@@ -179,15 +211,25 @@ const EmployeeModal = ({
               {filteredEmployees.map((employee: any, index: number) => {
                 const isChecked = allcoursesassign.some(
                   (assignment: any) =>
-                    assignment.employee_id === employee.id && assignment.course_id === courseId
+                    assignment.employee_id === employee.id &&
+                    assignment.course_id === courseId
                 );
                 return (
-                  <li key={index} className={`${index < filteredEmployees.length - 1 ? "border-b border-gray-200" : ""}`}>
+                  <li
+                    key={index}
+                    className={`${
+                      index < filteredEmployees.length - 1
+                        ? "border-b border-gray-200"
+                        : ""
+                    }`}
+                  >
                     <CardContent className="flex items-center space-x-2 px-1 py-5 justify-between ml-3 mr-6">
                       <div className="flex items-center space-x-4">
                         <Avatar className="w-16 h-16">
                           <AvatarImage
-                            src={employee.profile_image || "/assets/profile.jpg"}
+                            src={
+                              employee.profile_image || "/assets/profile.jpg"
+                            }
                             alt={`${employee.first_name}-avatar`}
                             className="w-16 h-16 rounded-full border-2"
                           />
@@ -196,7 +238,9 @@ const EmployeeModal = ({
                           <span className="font-semibold text-white uppercase">
                             {employee.first_name} {employee.last_name}
                           </span>
-                          <span className="text-red-600 text-sm">{employee.email}</span>
+                          <span className="text-red-600 text-sm">
+                            {employee.email}
+                          </span>
                         </div>
                       </div>
                       {showSelectionControls && (

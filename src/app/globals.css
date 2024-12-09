@@ -131,7 +131,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dashcode-app-calendar .fc-event-main {
-  @apply absolute -bottom-6 -my-3;
+  @apply absolute -bottom-6 -my-3 -mx-3;
 }
 
 .dashcode-app-calendar .fc-daygrid-day-number {
@@ -144,6 +144,56 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .dashcode-app-calendar .fc-daygrid-day-top {
   @apply 4xl:h-8 4xl:text-3xl;
+}
+
+/* Tailwind Utilities for FullCalendar */
+
+.dashcode-app-calendar .fc-more-link {
+  @apply text-yellow-400 text-sm font-medium rounded-md bg-gray-800 mx-4 -my-12 px-2 py-1 cursor-pointer;
+}
+
+.dashcode-app-calendar .fc-more-link:hover {
+  @apply bg-yellow-400 text-black;
+}
+
+/* Event card styles */
+.dashcode-app-calendar .event-card {
+  @apply flex flex-col justify-between gap-y-2 px-3 py-5 rounded-md border-l-4 text-xs text-white;
+}
+
+.dashcode-app-calendar .fc-day-today .event-card {
+  @apply border-yellow-500;
+}
+
+/* FullCalendar More Link Popup Styles */
+.dashcode-app-calendar .fc-popover {
+  @apply bg-gray-900 text-white shadow-lg  rounded-lg border border-gray-800 z-50;
+}
+
+.dashcode-app-calendar .fc-popover-header {
+  @apply bg-gray-800 text-yellow-400 font-semibold px-4 py-1 rounded-t-lg border-b border-gray-700;
+}
+
+.dashcode-app-calendar .fc-popover-body {
+  @apply bg-gray-900 text-sm px-2 py-2 rounded-b-lg overflow-y-scroll;
+}
+
+.dashcode-app-calendar .fc-popover-body .fc-event-main {
+  @apply hidden;
+}
+
+
+/* Event name styling in the popup */
+.dashcode-app-calendar .event-popup-item {
+  @apply text-xs cursor-pointer font-medium text-white px-2  ;
+}
+
+.dashcode-app-calendar .event-popup-item:last-child {
+  @apply border-none; /* Remove border for the last item */
+}
+
+.dashcode-app-calendar .event-popup-item:hover {
+  @apply bg-yellow-500 text-black rounded-md; /* Add hover effect */
 }
 
 /* Shimmer Css */

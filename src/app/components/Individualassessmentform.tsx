@@ -14,7 +14,7 @@ import {
   setAssessmentUpdate,
 } from "@/redux/slices/auth.slice";
 import Spinner from "./Spinner";
-import { log } from "console";
+
 import { itemFromArray } from "@tsparticles/engine";
 
 export type NotificationType = {
@@ -30,7 +30,7 @@ const IndividualAssessmentForm = () => {
   const usertype = userData?.user_type_id;
   const { assessments, loading, error, success } = useSelector(
     (state: RootState) => state.assessment
-  ); 
+  );
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
@@ -45,50 +45,46 @@ const IndividualAssessmentForm = () => {
           page: 1,
           size: 5,
           categoryId: 1,
-          userId
+          userId,
         },
         type: "general",
       })
     );
   }, [dispatch]);
 
-
-  const handleOptionChange = (individual_assessment_id: any, questionId: string, optionText: string) => {
-
-
-
+  const handleOptionChange = (
+    individual_assessment_id: any,
+    questionId: string,
+    optionText: string
+  ) => {
     let resp = {
       assessmentsid: individual_assessment_id,
       selectedOption: optionText,
-      questionId: questionId
+      questionId: questionId,
     };
 
     if (responses && responses?.length > 0) {
-
       if (responses.some((resp: any) => resp.questionId == questionId)) {
         let response = responses.map((res: any) => {
-
           if (res.questionId == resp.questionId) {
-            return resp
+            return resp;
           } else {
-            return res
+            return res;
           }
-        })
-        setResponses(response)
+        });
+        setResponses(response);
       } else {
-        setResponses([...responses, resp])
+        setResponses([...responses, resp]);
       }
     } else {
-      setResponses([...responses, resp])
+      setResponses([...responses, resp]);
     }
-
 
     setErrors((prevErrors) => ({
       ...prevErrors,
       [questionId]: "",
     }));
   };
-
 
   useEffect(() => {
     if (success) {
@@ -130,17 +126,15 @@ const IndividualAssessmentForm = () => {
     }
 
     let assessmentId = assessments.map((item: any) => {
-      return item.id
-    })// Replace with actual logic if needed
-
-
+      return item.id;
+    }); // Replace with actual logic if needed
 
     dispatch(
       submitAssessmentResponses({
         userId,
         assessmentId,
         responses: responses,
-        user_type_id:usertype,
+        user_type_id: usertype,
       })
     );
   };
@@ -175,8 +169,9 @@ const IndividualAssessmentForm = () => {
                   (question: any, index: number) => (
                     <div
                       key={question.id}
-                      className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${errors[question.id] ? "border border-red-500" : ""
-                        }`}
+                      className={`p-4 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#6262624f] to-[#2D2C2C80] pt-8 pb-8 ${
+                        errors[question.id] ? "border border-red-500" : ""
+                      }`}
                     >
                       <label className="text-1xl text-gray-100 mb-2 block pt-0 pb-3 pl-3">
                         {`${index + 1}. ${question.question_text}`}
@@ -193,14 +188,17 @@ const IndividualAssessmentForm = () => {
                                 name={question.id.toString()}
                                 value={option.option_text}
                                 checked={
-                                  responses && responses?.length > 0 && responses?.find((res: any) => res.questionId == question?.id)?.selectedOption === option.option_text
+                                  responses &&
+                                  responses?.length > 0 &&
+                                  responses?.find(
+                                    (res: any) => res.questionId == question?.id
+                                  )?.selectedOption === option.option_text
                                 }
                                 onChange={() =>
                                   handleOptionChange(
                                     assessment.id,
                                     question.id,
-                                    option.option_text,
-
+                                    option.option_text
                                   )
                                 }
                                 className="form-radio text-yellow-500 focus:ring-0"

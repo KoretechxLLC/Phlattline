@@ -15,7 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setError, setSuccess, UpdateUser } from "@/redux/slices/auth.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
-import DatePicker from "react-datepicker";
+
+import { Input } from "@/app/components/Input";
+import { CustomDatePicker } from "./customDatePicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface PageProps {
@@ -136,8 +138,8 @@ const Profile = ({ profileImage }: any) => {
       />
       {/* First Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="first-name"
             type="text"
             placeholder="First Name"
@@ -148,8 +150,8 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="last-name"
             type="text"
             placeholder="Last Name"
@@ -164,8 +166,8 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Second Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="phone"
             type="tel"
             placeholder="Phone"
@@ -176,8 +178,8 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdPhone className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="email"
             type="email"
             placeholder="Email"
@@ -192,8 +194,8 @@ const Profile = ({ profileImage }: any) => {
 
       {/* Third Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <input
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <Input
             id="designation"
             type="text"
             placeholder="Designation"
@@ -203,13 +205,13 @@ const Profile = ({ profileImage }: any) => {
           />
           <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
-        <div className="relative py-2 border border-[#62626280] rounded-2xl">
-          <DatePicker
+        <div className="relative  border border-[#62626280] rounded-2xl">
+          <CustomDatePicker
             selected={date}
             onChange={(date) => setDate(date)} // Update state on date change
             maxDate={sixteenYearsAgo} // Restrict to dates 16+ years ago
             placeholderText="Date of Birth"
-            className="w-full bg-black text-white py-2 px-4 rounded-xl border-none focus:outline-none"
+            className="w-full bg-black text-white py-2 px-4 rounded-xl focus:outline-none"
             showMonthDropdown // Enable month dropdown
             showYearDropdown // Enable year dropdown
             dropdownMode="select" // Makes dropdowns a select element for smoother navigation

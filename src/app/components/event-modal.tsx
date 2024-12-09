@@ -56,12 +56,17 @@ const EventModal = ({
   event?: any;
 }) => {
   const router = useRouter();
+  const [imgError, setImgError] = useState(false);
 
   if (!open) return null; // Conditional rendering can still be used here
 
   let { videos } = event;
 
   let firstImage = videos?.[0]?.thumbnail_url;
+
+  const handleError = () => {
+    setImgError(true);
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -89,11 +94,16 @@ const EventModal = ({
 
           <div className="relative w-full mx-2 mb-2">
             <Image
-              src={`/api/images?filename=${firstImage}&folder=coursesthumbnails`}
+              src={
+                imgError
+                  ? "/assets/DummyImg.png"
+                  : `/api/images?filename=${firstImage}&folder=coursesthumbnails`
+              }
               alt="Course Image"
               className="w-full h-full rounded-lg object-cover"
               width={1000}
               height={1000}
+              onError={handleError} // If image fails to load, trigger the error handler
             />
             <div className="absolute left-0 bottom-0 m-4">
               <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
@@ -219,7 +229,7 @@ const EventModal = ({
               {/* <CardContent> */}
               {/* <ModuleList /> */}
 
-              <div className="overflow-x-scroll">
+              <div>
                 <div className="grid my-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
                   {event?.videos &&
                     event?.videos?.length > 0 &&
@@ -229,11 +239,16 @@ const EventModal = ({
                         className="relative border border-[#62626280] rounded-lg"
                       >
                         <Image
-                          src={`/api/images?filename=${videos[0].thumbnail_url}&folder=coursesthumbnails`}
+                          src={
+                            imgError
+                              ? "/assets/DummyImg.png"
+                              : `/api/images?filename=${videos[0].thumbnail_url}&folder=coursesthumbnails`
+                          }
                           alt={`Video Thumbnail ${video.id}`}
                           className="w-full h-full rounded-lg container border-2 border-red-600"
                           width={1000}
                           height={1000}
+                          onError={handleError} // If image fails to load, trigger the error handler
                         />
                         <div className="absolute inset-0 flex justify-center items-center">
                           <div className="backdrop-blur-md bg-opacity-50 p-3 rounded-full">
