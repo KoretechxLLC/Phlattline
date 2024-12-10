@@ -1,27 +1,84 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useConfig } from "@/app/hooks/use-config";
+import { useMediaQuery } from "@/app/hooks/use-media-query";
 import Spinner from "./Spinner";
-import { fetchAssessmentResult } from "@/redux/slices/assessmentResults.slice";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
+  if (!Array.isArray(assessmentsResponse) || !Array.isArray(assessments)) {
+    console.error("Invalid data structures", {
+      assessmentsResponse,
+      assessments,
+    });
+    return [];
+  }  
+
+  return assessments
+    .map((index: any) => {
+      const responseData = assessmentsResponse
+        .map((e: any) => {
+          if (e?.question?.individual_assessment_id === index?.id) {
+            const assessementTrack = Array.isArray(
+              e?.question?.individual_assessment_options
+            )
+              ? e?.question?.individual_assessment_options
+                  .map((option: any) => {
+                    if (e?.selected_option === option?.option_text) {
+                      return option.percentage;
+                    }
+                  })
+                  .filter(Boolean)
+              : [];
+
+            return {
+              id: e?.question?.individual_assessment_id,
+              percentage: assessementTrack,
+            };
+          }
+        })
+        .filter(Boolean);
+
+      let totalPercentage = 0;
+
+      responseData.forEach((item: any) => {
+        const currentSum = Array.isArray(item?.percentage)
+          ? item?.percentage.reduce((sum: number, val: number) => sum + val, 0)
+          : 0;
+
+        totalPercentage += currentSum;
+      });
+
+      if (responseData && responseData.length > 0) {
+        return {
+          title: index.title,
+          percentage:
+            totalPercentage /
+            (index.individual_assessment_questions?.length || 1),
+        };
+      }
+    })
+    .filter(Boolean);
+};
+
 const AssessmentResultPie = ({ height = 280 }) => {
-  const dispatch = useDispatch<any>();
-  const { userData } = useSelector((state: RootState) => state.auth);
-  const { result, improvementResultLoading } = useSelector(
-    (state: RootState) => state.assessmnentResult
-  );
+  const [config] = useConfig();
+  const isMediumScreen = useMediaQuery("(min-width: 768px)");
   const { assessments, loading } = useSelector(
     (state: RootState) => state.assessment
   );
   const { assessmentsResponse, responseLoading } = useSelector(
     (state: RootState) => state.assessmentResponse
   );
+  const { improvementResultLoading } = useSelector(
+    (state: RootState) => state.assessmnentResult
+  );
 
-  const [averagePercentage, setAveragePercentage] = useState<number>(0);
+  const [improvePer, setImprovePer] = useState<number>(0);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -29,81 +86,24 @@ const AssessmentResultPie = ({ height = 280 }) => {
   }, []);
 
   useEffect(() => {
-    if (userData?.id) {
-      dispatch(fetchAssessmentResult({ userId: userData.id }));
+    if (assessmentsResponse && assessments) {
+      // Call the calculatePercentages function instead of inline logic
+      const percentages = calculatePercentages(
+        assessmentsResponse,
+        assessments
+      );
+
+      const total = percentages.reduce(
+        (acc: any, curr: any) => acc + curr.percentage,
+        0
+      );
+      setImprovePer(Math.round(total / (percentages.length || 1)));
     }
-  }, [userData]);
+  }, [assessmentsResponse, assessments]);
 
-  useEffect(() => {
-    if (userData?.user_type_id === 1 && result && Array.isArray(result)) {
-      // Handle the logic for user_type_id === 3 using result
-      const totalPercentages = result
-        .map((item) =>
-          Array.isArray(item.percentages)
-            ? item.percentages.reduce((sum: any, val: any) => sum + val, 0) /
-              item.percentages.length
-            : 0
-        )
-        .filter((average) => average > 0);
-
-      const overallAverage =
-        totalPercentages.reduce((sum, val) => sum + val, 0) /
-        (totalPercentages.length || 1);
-
-      setAveragePercentage(Math.round(overallAverage));
-    } else if (assessmentsResponse && assessments) {
-      // Handle the logic for other user types (default behavior)
-      const percentages = assessments.map((index: any) => {
-        const responseData = assessmentsResponse
-          .map((e: any) => {
-            if (e?.question?.individual_assessment_id === index?.id) {
-              const assessmentTrack = Array.isArray(
-                e?.question?.individual_assessment_options
-              )
-                ? e?.question?.individual_assessment_options
-                    .map((option: any) =>
-                      e?.selected_option === option?.option_text
-                        ? option.percentage
-                        : null
-                    )
-                    .filter(Boolean)
-                : [];
-              return {
-                id: e?.question?.individual_assessment_id,
-                percentage: assessmentTrack,
-              };
-            }
-          })
-          .filter(Boolean);
-
-        let totalPercentage = 0;
-        responseData.forEach((item: any) => {
-          const currentSum = Array.isArray(item?.percentage)
-            ? item?.percentage.reduce(
-                (sum: number, val: number) => sum + val,
-                0
-              )
-            : 0;
-          totalPercentage += currentSum;
-        });
-
-        if (responseData && responseData.length > 0) {
-          return (
-            totalPercentage /
-            (index.individual_assessment_questions?.length || 1)
-          );
-        }
-      });
-
-      const total = percentages.reduce((acc: any, curr: any) => acc + curr, 0);
-
-      setAveragePercentage(Math.round(total / (percentages.length || 1)));
-    }
-  }, [userData, result, assessmentsResponse, assessments]);
-
-  const skillGap = 100 - averagePercentage;
-  const series = [averagePercentage, skillGap];
-  const isLoading = improvementResultLoading || loading || responseLoading;
+  const other = 100 - improvePer;
+  const series = [improvePer, other];
+  const isLoading = loading || responseLoading || improvementResultLoading;
 
   const options: any = {
     chart: {
@@ -114,13 +114,13 @@ const AssessmentResultPie = ({ height = 280 }) => {
     dataLabels: {
       enabled: true,
       style: {
-        fontSize: "14px",
+        fontSize: isMediumScreen ? "17px" : "12px",
       },
     },
     colors: ["#BAA716", "#FFFFFF"],
     tooltip: { enabled: false },
     legend: {
-      fontSize: "14px",
+      fontSize: isMediumScreen ? "16px" : "12px",
       labels: { colors: "#ffffff" },
       itemMargin: { horizontal: 5, vertical: 5 },
       markers: { width: 12, height: 12, radius: 12 },
@@ -130,10 +130,8 @@ const AssessmentResultPie = ({ height = 280 }) => {
   return (
     <div className="relative h-[280px]">
       {isLoading ? (
-        <div className="text-center text-gray-300 py-20">
-          <Spinner height="30px" width="30px" />
-        </div>
-      ) : isClient && averagePercentage > 0 ? (
+        <Spinner height="30px" width="30px" />
+      ) : isClient && improvePer ? (
         <Chart
           options={options}
           series={series}
@@ -142,9 +140,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
           width="100%"
         />
       ) : (
-        <div className="text-center text-gray-300  w-full flex justify-center items-center py-24">
-          No Data Found!
-        </div>
+        <div>No data found</div>
       )}
     </div>
   );
