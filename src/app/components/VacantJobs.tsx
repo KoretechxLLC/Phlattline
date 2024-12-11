@@ -8,149 +8,208 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
-import Spinner from "./Spinner"; // Assuming this is the loader component you have
-import { useSelector } from "react-redux";
+import Spinner from "./Spinner";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { ChevronLeft, ChevronRight, SquarePen } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Deletemodel from "./DeleteModal";
 import { FiTrash2 } from "react-icons/fi";
 import { MdEdit } from "react-icons/md";
+import {
+  deleteTalent,
+  fetchTalents,
+  resetDeleteTalentSuccess,
+  resetDeleteTalentError,
+} from "@/redux/slices/talentmanagement.slice";
+import StackedNotifications from "./Stackednotification";
+import { RiUserSearchFill } from "react-icons/ri";
 
-const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
-  const [showPopup, setShowPopup] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<string>("");
-  const [loading, setLoading] = useState(true); // Added loading state
+export type NotificationType = {
+  id: number;
+  text: string;
+  type: "error" | "success";
+};
+
+const VacantJobs = ({ onEditJob }: any) => {
+  const dispatch = useDispatch<any>();
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const { userData } = useSelector((state: RootState) => state.auth);
+  const {
+    fetchedTalents,
+    deleteTalentSuccess,
+    deleteTalentError,
+    fetchTalentsLoader,
+    deleteTalentLoader,
+  } = useSelector((state: RootState) => state.talent);
+
+  const [newjobs, setNewjobs] = useState<any[]>([]);
+  const organizationId = userData?.organization_id;
+
+  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const usertype = userData?.user_type_id;
+  const jobsPerPage = 3; // Number of jobs per page
 
+  const router = useRouter();
+
+  // Fetch talents on mount or when the organizationId changes
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false); // Stop loading after 2 seconds (simulate API call)
-    }, 2000);
-  }, []);
+    if (organizationId) {
+      dispatch(fetchTalents({ organizationId }));
+    }
+  }, [organizationId, dispatch]);
 
-  const handleDeleteGoal = (id: any) => {};
+  // Sync fetchedTalents to newjobs state
+  useEffect(() => {
+    if (fetchedTalents) {
+      setNewjobs(fetchedTalents);
+    }
+  }, [fetchedTalents]);
 
+  // Handle notifications for delete success or error
+  useEffect(() => {
+    if (deleteTalentSuccess) {
+      setNotification({
+        id: Date.now(),
+        text: deleteTalentSuccess,
+        type: "success",
+      });
+      dispatch(resetDeleteTalentSuccess());
+    }
+    if (deleteTalentError) {
+      setNotification({
+        id: Date.now(),
+        text: deleteTalentError,
+        type: "error",
+      });
+      dispatch(resetDeleteTalentError());
+    }
+  }, [deleteTalentSuccess, deleteTalentError, dispatch]);
+
+  const handleDeleteJob = (id: any) => {
+    dispatch(deleteTalent({ id }));
+  };
+
+  // Calculate Paginated Jobs
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = newjobs.slice(indexOfFirstJob, indexOfLastJob);
+
+  // Handle Pagination
   const handleNextPage = () => {
-    if (currentPage < totalPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
+    if (currentPage < Math.ceil(newjobs.length / jobsPerPage)) {
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
-  const router = useRouter();
+
   return (
     <Card className="border border-[#62626280] rounded-3xl">
-      {/* Title with Background */}
+      <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       <CardHeader className="mb-4 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
-        {(usertype === 1 || usertype === 3) && (
-          <CardTitle className="  text-white text-xs sm:text-md mb-0">
-            Your Desired Job
-          </CardTitle>
-        )}
-        {usertype === 2 && (
-          <CardTitle className=" text-white text-xs sm:text-md mb-0">
-            Available Jobs
-          </CardTitle>
-        )}
+        <CardTitle className="text-white text-xs sm:text-md mb-0">
+          Available Jobs
+        </CardTitle>
       </CardHeader>
 
-      {/* Jobs List */}
-      <CardContent className="  4xl:p-5 p-8">
-        {loading ? (
-          // Show loader if data is loading
+      <CardContent className="4xl:p-5 p-8">
+        {fetchTalentsLoader ? (
           <div className="flex justify-center items-center py-14">
             <Spinner height="30px" width="30px" />
           </div>
-        ) : jobs && jobs.length > 0 ? (
-          // Show message if no jobs are available
-          <ul className="space-y-8">
-            {jobs.map((job) => (
+        ) : currentJobs && currentJobs.length > 0 ? (
+          <ul className="space-y-4">
+            {currentJobs.map((job) => (
               <li
                 key={job.id}
                 className="flex justify-between items-center text-white pb-5"
               >
-                <span className="text-md">{job.title}</span>
-                {(usertype === 1 || usertype === 3) && (
+                <div className="flex items-center justify-center rounded-full h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34] relative transition duration-500">
+                  <span className="text-white text-[13px] md:text-sm font-bold">
+                    <RiUserSearchFill size={23} />
+                  </span>
+                </div>
+                  <span className="text-md text-left w-[10em] mr-[6em]">{job.position_name}</span>
+
+                <div className="flex space-x-2 items-center">
                   <Button
                     onClick={() =>
-                      router.push(`/Portal/JobSummary?jobId=${job.id}`)
+                      router.push(
+                        `/Portal/JobSummary?jobId=${job.id}&departmentId=${job.department_id}`
+                      )
                     }
                     color="primary"
-                    className="rounded-3xl"
+                    className="rounded"
                   >
-                    Apply
+                    Details
                   </Button>
-                )}
-                {usertype === 2 && (
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={() =>
-                        router.push(`/Portal/JobSummary?jobId=${job.id}`)
-                      }
-                      color="primary"
-                      className="rounded"
-                    >
-                      Details
-                    </Button>
-                    <button className="rounded bg-slate-400/30 px-3 py-3 text-sm text-white transition-colors hover:bg-green-600 hover:text-white">
-                      <MdEdit />
-                    </button>
-                    <Deletemodel
-                      trigger={(onClick: any) => (
-                        <button
-                          onClick={onClick}
-                          className="rounded bg-red-300/20 px-3 py-4 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      )}
-                      confirmAction={() => handleDeleteGoal(job.id)}
-                    />
-                  </div>
-                )}
+                  <button
+                    className="rounded bg-slate-400/30 px-3 py-4 text-sm text-white transition-colors hover:bg-green-600 hover:text-white"
+                    onClick={() => onEditJob(job)}
+                  >
+                    <MdEdit />
+                  </button>
+                  <Deletemodel
+                    trigger={(onClick: any) => (
+                      <button
+                        onClick={onClick}
+                        className="rounded bg-red-300/20 px-3 py-4 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    )}
+                    confirmAction={() => handleDeleteJob(job.id)}
+                  />
+                </div>
               </li>
             ))}
-            <div className="flex items-center justify-center gap-2 py-4">
-              <Button
-                variant="outline"
-                size="icon"
-                className="w-8 h-8 border-transparent hover:bg-transparent"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="w-5 h-5 text-default-900" />
-              </Button>
-              <span className="text-sm font-medium text-default-900">
-                Page {currentPage} of {totalPage}
-              </span>
-              <Button
-                variant="outline"
-                size="icon"
-                className="w-8 h-8 border-transparent hover:bg-transparent"
-                onClick={handleNextPage}
-                disabled={currentPage >= totalPage}
-              >
-                <ChevronRight className="w-5 h-5 text-default-900" />
-              </Button>
-            </div>
           </ul>
         ) : (
           <div className="text-center text-gray-300 py-20">
             No Desired Jobs Found
           </div>
         )}
+
+        {/* Pagination Controls */}
+        <div className="flex justify-between items-center mt-4">
+          <button
+            className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="text-white">
+            Page {currentPage} of {Math.ceil(newjobs.length / jobsPerPage)}
+          </span>
+          <button
+            className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === Math.ceil(newjobs.length / jobsPerPage)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+              }`}
+            onClick={handleNextPage}
+            disabled={currentPage === Math.ceil(newjobs.length / jobsPerPage)}
+          >
+            Next
+          </button>
+        </div>
       </CardContent>
     </Card>
   );
 };
 
 export default VacantJobs;
+

@@ -37,10 +37,10 @@ const Supervisor = () => {
   const { success, error } = useSelector(
     (state: RootState) => state.performance
   );
-  const [selectedGoal, setSelectedGoal] = useState<any | null>(null); // Track the goal to edit
+  const [selectedGoal, setSelectedGoal] = useState<any | null>(null); 
   const { userData } = useSelector((state: RootState) => state.auth);
   const dispatch: any = useDispatch();
-  const [loading, setLoading] = useState<boolean>(false); // Initialize loading state
+  const [loading, setLoading] = useState<boolean>(false); 
 
   const handleAddGoal = (goalData: any) => {
     const id = userData?.id;
@@ -51,8 +51,6 @@ const Supervisor = () => {
     formData.append("id", id);
     dispatch(submitGoal(formData));
   };
-
-
 
   const handleEditGoal = (goal: any) => {
     setSelectedGoal(goal); // Set the selected goal to edit
@@ -104,6 +102,7 @@ const Supervisor = () => {
               showTooltip={true}
               label={"Goals"}
               isClickable={false}
+              showEditIcon={() => true}
               onEditGoal={handleEditGoal} // Pass edit handler
             />
 

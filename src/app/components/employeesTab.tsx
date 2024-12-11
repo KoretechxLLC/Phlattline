@@ -75,7 +75,7 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
 
   return (
     <div>
-      <Card className="border w-full border-[#62626280] rounded-3xl">
+      <Card className="border w-full border-[#62626280] rounded-3xl h-[26.8em]">
         <CardHeader className="mb-6 4xl:mb-6 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <CardTitle>{title}</CardTitle>
         </CardHeader>
@@ -89,8 +89,9 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
                   : ""
               }`}
             >
-              <CardContent className="flex items-center space-x-4 4xl:p-6 p-8">
-                <Avatar className="w-10 h-10">
+              <CardContent className="flex items-center justify-between space-x-4 4xl:p-6 p-8">
+               <div className="flex items-center gap-6">
+               <Avatar className="w-10 h-10">
                   <AvatarImage
                     src={employee.image}
                     alt={`${employee.name}-avatar`}
@@ -98,6 +99,8 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
                   />
                 </Avatar>
                 <span className="font-semibold">{employee.name}</span>
+               </div>
+                
                 {employee.designation && (
                   <span className="text-yellow-400">
                     {employee.designation}

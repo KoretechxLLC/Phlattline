@@ -9,6 +9,7 @@ interface EmployeeReviewState {
   error: string | null;
   assigngoal: any;
   success: string | null; 
+  departmentCounts: any[] | null; // Add this for storing department counts
 }
 
 const initialState: EmployeeReviewState = {
@@ -18,6 +19,7 @@ const initialState: EmployeeReviewState = {
   error: null,
   assigngoal: null,
   success: null,
+  departmentCounts: null, // Initialize as null
 };
 
 // Async thunk for fetching all employee reviews by organization_id
@@ -43,6 +45,24 @@ export const assigngoalemployee = createAsyncThunk(
     } catch (error:any) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to assign goal to employees"
+      );
+    }
+  }
+);
+
+
+//Fetch Department in Organziation
+export const fetchDepartmentsWithCounts = createAsyncThunk(
+  "employee/fetchDepartmentsWithCounts",
+  async (organization_id: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/organization/deptPositionCount?organization_id=${organization_id}`
+      );
+      return response.data.data; // Extract the relevant data from the response
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch department counts"
       );
     }
   }
@@ -153,7 +173,23 @@ const employeeSlice = createSlice({
     builder.addCase(fetchEmployeeReviewById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+    })
+
+    // Fetech Department Count
+    builder.addCase(fetchDepartmentsWithCounts.pending, (state) => {
+      state.loading = true;
+      state.error = null;
     });
+    builder.addCase(fetchDepartmentsWithCounts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.departmentCounts = action.payload; // Store fetched data
+    });
+    builder.addCase(fetchDepartmentsWithCounts.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string; // Store error message
+    });
+
+
   },
 });
 

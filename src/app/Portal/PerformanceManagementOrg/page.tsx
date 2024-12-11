@@ -45,7 +45,6 @@ const PerformanceManagement = () => {
         />
       );
     }
-
     switch (activeTab) {
       case "Employee":
         return <Employee />;
