@@ -130,6 +130,7 @@ export const getRecommendedCourses = createAsyncThunk<any, { userId: number }>(
   }
 );
 
+
 export const getCourseById = createAsyncThunk<any, { courseId: number }>(
   "courses/getCourseById",
   async ({ courseId }, { rejectWithValue }) => {
@@ -280,7 +281,6 @@ export const purchasingCourse = createAsyncThunk<any, any>(
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || "Failed to purchase this course";
-
       return rejectWithValue(errorMessage);
     }
   }

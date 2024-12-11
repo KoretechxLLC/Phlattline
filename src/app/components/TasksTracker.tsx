@@ -20,6 +20,7 @@ import {
 } from "@/redux/slices/performanceManagement.slice";
 import { RootState } from "@/redux/store";
 import { div } from "three/webgpu";
+import { MdEdit } from "react-icons/md";
 
 interface TasksTrackerProps {
   showPending?: boolean;
@@ -28,6 +29,8 @@ interface TasksTrackerProps {
   showTooltip?: boolean;
   label: string;
   isClickable?: boolean;
+  onEditGoal?: (goal: any) => void; // Now optional
+
 }
 
 const TasksTracker = ({
@@ -37,30 +40,13 @@ const TasksTracker = ({
   showTooltip = true,
   label,
   isClickable = true,
+  onEditGoal,
 }: TasksTrackerProps) => {
-  const tooltipItems = [
-    {
-      id: 1,
-      name: "John Doe",
-      designation: "Software Engineer",
-      image: "/assets/User2.png",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      designation: "Product Manager",
-      image: "/assets/User1.png",
-    },
-    {
-      id: 3,
-      name: "Bob Johnson",
-      designation: "UX Designer",
-      image: "/assets/User3.png",
-    },
-  ];
+
 
   const [loading, setLoading] = useState<boolean>(false);
   const [goalData, setGoalData] = useState<any>({});
+  const [employees, setEmployees] = useState<any[]>([]); // State for storing employees
   const {
     goals,
     taskUpdateSuccess,
@@ -95,7 +81,7 @@ const TasksTracker = ({
 
   useEffect(() => {
     const fetchGoalsData = async () => {
-      if (userData?.id && userData.user_type_id == 1) {
+      if (userData?.id && (userData.user_type_id === 1 || userData.user_type_id === 2)) {
         setLoading(true); // Start loading
         const id = userData?.id;
         await dispatch(fetchGoals(id)); // Dispatch fetch goals action
@@ -104,6 +90,8 @@ const TasksTracker = ({
     };
     fetchGoalsData();
   }, [dispatch, userData]);
+
+
 
   useEffect(() => {
     const fetchGoalsData = async () => {
@@ -155,9 +143,22 @@ const TasksTracker = ({
         return task;
       }
     });
-
     dispatch(updateTask({ goalId, updatedTasks }));
   };
+
+
+  useEffect(() => {
+    if (!goals || goals.length === 0) return; // Ensure goals exist and are not empty
+
+    // Filter goals to get employees whose assignee_id matches the employee ID in the goal
+    const filteredEmployees = goals
+      .filter((goal: any) => goal.assignee_id === goal.employees?.id) // Match assignee_id with employee ID
+      .map((goal: any) => goal.employees); // Extract the employees object from the matching goals
+
+    setEmployees(filteredEmployees || []); // Set filtered employees
+  }, [goals]);
+
+
 
   useEffect(() => {
     if (taskUpdateSuccess) {
@@ -177,16 +178,24 @@ const TasksTracker = ({
     }
   }, [taskUpdateSuccess]);
 
+
+  const handleEditClick = (goal: any) => {
+    if (onEditGoal) {
+      onEditGoal(goal);
+    } else {
+      console.warn("Edit goal handler is not provided.");
+    }
+  };
+
   return (
     <div>
       <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-full">
         {showPending && (
           <button
-            className={`text-xs sm:text-xs h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
-              activeTab === "pending"
-                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-                : "text-default-600"
-            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            className={`text-xs sm:text-xs h-12 w-full rounded-tl-3xl rounded-tr-3xl ${activeTab === "pending"
+              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+              : "text-default-600"
+              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handlePendingTasksClick}
           >
             Goals
@@ -194,23 +203,21 @@ const TasksTracker = ({
         )}
         {showCompleted && (
           <button
-            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
-              activeTab === "completed"
-                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-                : "text-default-600"
-            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
-            // onClick={handleCompletedTasksClick}
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${activeTab === "completed"
+              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+              : "text-default-600"
+              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+          // onClick={handleCompletedTasksClick}
           >
             Tasks
           </button>
         )}
         {showSaved && (
           <button
-            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
-              activeTab === "saved"
-                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-                : "text-default-600"
-            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${activeTab === "saved"
+              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+              : "text-default-600"
+              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handleSavedTasksClick}
           >
             Saved {label}
@@ -252,72 +259,48 @@ const TasksTracker = ({
                           />
                         </Avatar>
                       )}
+
                       <span className="text-xs sm:text-sm px-1">
                         <button
                           onClick={() => handleGoalClick(item)}
                           className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-pointer relative group`}
-                          title={`Description: ${
-                            item.description
-                          }\nStart Date: ${new Date(
-                            item.start_date
-                          ).toLocaleDateString("en-GB")}`}
+                          title={`Description: ${item.description
+                            }\nStart Date: ${new Date(
+                              item.start_date
+                            ).toLocaleDateString("en-GB")}`}
                         >
                           {item.goal_name}
+
+
                         </button>
                       </span>
                     </div>
 
+
                     <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
-                      {showTooltip && <AnimatedTooltip items={tooltipItems} />}
-                      {/* <button
-                          className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
-                            new Date(item?.completion_date).toDateString() ===
-                            new Date().toDateString()
-                              ? "bg-green-800 text-green-400" // Green for today's completion date
-                              : new Date(item?.completion_date) < new Date()
-                              ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
-                              : "bg-zinc-800 text-zinc-400" // Default for future dates
-                          }`}
-                          title="Completion Date"
-                        >
-                          <div className="flex justify-center items-center">
-                            <div className="w-4">
-                              <SlCalender />
-                            </div>
-                            <span>
-                              {new Date(item?.completion_date)
-                                .toLocaleDateString("en-GB", {
-                                  day: "2-digit",
-                                  month: "short",
-                                })
-                                .replace(" ", "-")
-                                .toUpperCase()}
-                            </span>
-                          </div>
-                        </button> */}
-                      {/* <SaveModal
-                          trigger={(onClick: any) => (
-                            <button
-                              onClick={onClick}
-                              className="rounded bg-green-300/20 px-1.5 py-1 text-sm text-green-300 transition-colors hover:bg-green-600 hover:text-green-200"
-                            >
-                              <AiOutlineCheckCircle />
-                            </button>
-                          )}
-                          confirmAction={() => handleCompleteGoal(item?.id)}
-                        /> */}
+
+                      {/* {showTooltip && <AnimatedTooltip items={item.employees} />} */}
+
+                      <button
+
+                        className="rounded bg-slate-400/30 px-1.5 py-[0.4em] text-sm text-white transition-colors hover:bg-green-600 hover:text-white"
+                        onClick={() => handleEditClick(item)} >
+                        <MdEdit />
+
+                      </button>
 
                       <Deletemodel
                         trigger={(onClick: any) => (
                           <button
                             onClick={onClick}
-                            className="rounded bg-red-300/20 px-1.5 py-1 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                            className="rounded bg-red-300/20 px-1.5 py-[0.4em] text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
                           >
                             <FiTrash2 />
                           </button>
                         )}
                         confirmAction={() => handleDeleteGoal(item?.id)}
                       />
+
                     </div>
                   </div>
                 </li>
@@ -331,16 +314,15 @@ const TasksTracker = ({
             <div>
               <div className="flex gap-4 py-4 px-6">
                 <button
-                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
-                    goalData?.status
-                      ? "bg-green-800 text-green-400" // Green for today's completion date
-                      : new Date(goalData?.completion_date) < new Date() &&
-                        goalData?.goal_tasks?.some(
-                          (task: any) => !task?.isCompleted
-                        )
+                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${goalData?.status
+                    ? "bg-green-800 text-green-400" // Green for today's completion date
+                    : new Date(goalData?.completion_date) < new Date() &&
+                      goalData?.goal_tasks?.some(
+                        (task: any) => !task?.isCompleted
+                      )
                       ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
                       : "bg-zinc-800 text-zinc-400" // Default for future dates
-                  }`}
+                    }`}
                   title="Start Date"
                 >
                   <div className="flex justify-center items-center">
@@ -359,16 +341,15 @@ const TasksTracker = ({
                   </div>
                 </button>
                 <button
-                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
-                    goalData?.status
-                      ? "bg-green-800 text-green-400" // Green for today's completion date
-                      : new Date(goalData?.completion_date) < new Date() &&
-                        goalData?.goal_tasks?.some(
-                          (task: any) => !task?.isCompleted
-                        )
+                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${goalData?.status
+                    ? "bg-green-800 text-green-400" // Green for today's completion date
+                    : new Date(goalData?.completion_date) < new Date() &&
+                      goalData?.goal_tasks?.some(
+                        (task: any) => !task?.isCompleted
+                      )
                       ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
                       : "bg-zinc-800 text-zinc-400" // Default for future dates
-                  }`}
+                    }`}
                   title="Completion Date"
                 >
                   <div className="flex justify-center items-center">
@@ -401,7 +382,7 @@ const TasksTracker = ({
                         id={`task-${index}`}
                         onChange={(e) => handleTaskChange(e.target.value)}
                         className="mr-2"
-                        // Add additional logic here, e.g., onChange handler
+                      // Add additional logic here, e.g., onChange handler
                       />
                       <label
                         htmlFor={`task-${index}`}
@@ -436,7 +417,7 @@ const TasksTracker = ({
                     <span className="text-xs px-2 sm:text-sm">{item.goal}</span>
                   </div>
                   <div className="flex items-center ml-5">
-                    {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                    {/* {showTooltip && <AnimatedTooltip items={tooltipItems} />} */}
                     <Button color="primary" className="rounded-3xl">
                       Take
                     </Button>
@@ -480,11 +461,10 @@ const TasksTracker = ({
                           <span className="text-xs sm:text-sm px-1">
                             <button
                               className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
-                              title={`Description: ${
-                                item.description
-                              }\nStart Date: ${new Date(
-                                item.start_date
-                              ).toLocaleDateString("en-GB")}`}
+                              title={`Description: ${item.description
+                                }\nStart Date: ${new Date(
+                                  item.start_date
+                                ).toLocaleDateString("en-GB")}`}
                             >
                               {item.goal_name}
                             </button>
@@ -492,18 +472,17 @@ const TasksTracker = ({
                         </div>
 
                         <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
-                          {showTooltip && (
+                          {/* {showTooltip && (
                             <AnimatedTooltip items={tooltipItems} />
-                          )}
+                          )} */}
                           <button
-                            className={`inline-block  w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
-                              new Date(item?.completion_date).toDateString() ===
+                            className={`inline-block  w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-auto ${new Date(item?.completion_date).toDateString() ===
                               new Date().toDateString()
-                                ? "bg-green-800 text-green-400" // Green for today's completion date
-                                : new Date(item?.completion_date) < new Date()
+                              ? "bg-green-800 text-green-400" // Green for today's completion date
+                              : new Date(item?.completion_date) < new Date()
                                 ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
                                 : "bg-zinc-800 text-zinc-400" // Default for future dates
-                            }`}
+                              }`}
                             title="Completion Date"
                           >
                             <div className="flex justify-center items-center">
@@ -563,7 +542,7 @@ const TasksTracker = ({
           ) : activeTab === "completed" ? (
             EmployeeGoals && EmployeeGoals.length > 0 ? (
               EmployeeGoals.filter((item: any) => item.status === true).length >
-              0 ? (
+                0 ? (
                 EmployeeGoals.filter((item: any) => item.status === true).map(
                   (item: any) => (
                     <li
@@ -582,11 +561,10 @@ const TasksTracker = ({
                           <span className="text-xs sm:text-sm px-2">
                             <button
                               className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
-                              title={`Description: ${
-                                item.description
-                              }\nStart Date: ${new Date(
-                                item.start_date
-                              ).toLocaleDateString("en-GB")}`}
+                              title={`Description: ${item.description
+                                }\nStart Date: ${new Date(
+                                  item.start_date
+                                ).toLocaleDateString("en-GB")}`}
                             >
                               {item.goal_name}
                             </button>
@@ -594,9 +572,9 @@ const TasksTracker = ({
                         </div>
 
                         <div className="flex items-center ml-5">
-                          {showTooltip && (
+                          {/* {showTooltip && (
                             <AnimatedTooltip items={tooltipItems} />
-                          )}
+                          )} */}
                           <Deletemodel
                             trigger={(onClick: any) => (
                               <button
@@ -642,7 +620,7 @@ const TasksTracker = ({
                     <span className="text-xs px-2 sm:text-sm">{item.goal}</span>
                   </div>
                   <div className="flex items-center ml-5">
-                    {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                    {/* {showTooltip && <AnimatedTooltip items={tooltipItems} />} */}
                     <Button color="primary" className="rounded-3xl">
                       Take
                     </Button>

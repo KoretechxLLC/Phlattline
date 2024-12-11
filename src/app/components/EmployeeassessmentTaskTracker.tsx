@@ -142,7 +142,7 @@ const EmployeeassessmentTaskTracker = ({
                     </div>
 
                     <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
-                      {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                      {/* {showTooltip && <AnimatedTooltip items={tooltipItems} />} */}
 
                       <Button
                         className="text-md md:text-2 w-full sm:w-auto rounded-2xl px-3 py-2 sm:px-6 cursor-pointer"

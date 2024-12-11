@@ -206,7 +206,7 @@ const AssessmentTaskTracker = ({
                     />
                   </Avatar>
                   <span className="text-xs sm:text-sm">{item?.title}</span>
-                  {showTooltip && <AnimatedTooltip items={tooltipItems} />}
+                  {/* {showTooltip && <AnimatedTooltip items={tooltipItems} />} */}
                 </div>
 
                 {/* Date Section */}

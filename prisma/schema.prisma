@@ -47,6 +47,7 @@ model users {
   employees                 employees?                  @relation(fields: [employee_id], references: [id])
   organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
+  jobApplication            jobApplication[]
 }
 
 model organizations {
@@ -282,17 +283,28 @@ model user_assessment_responses {
 }
 
 model talent {
-  id                   Int           @id @default(autoincrement())
+  id                   Int              @id @default(autoincrement())
   department_id        Int
   organization_id      Int
   position_name        String
   description          String
-  created_at           DateTime      @default(now()) @db.Timestamp(6)
-  updatedAt            DateTime      @updatedAt
-  department           department    @relation(fields: [department_id], references: [id])
-  organizations        organizations @relation(fields: [organization_id], references: [id])
+  created_at           DateTime         @default(now()) @db.Timestamp(6)
+  updatedAt            DateTime         @updatedAt
+  department           department       @relation(fields: [department_id], references: [id])
+  organizations        organizations    @relation(fields: [organization_id], references: [id])
   qualification        String[]
   key_responsibilities String[]
+  jobApplication       jobApplication[]
+}
+
+model jobApplication {
+  id        Int    @id @default(autoincrement())
+  user_id   Int
+  talent_id Int
+  users     users  @relation(fields: [user_id], references: [id])
+  talent    talent @relation(fields: [talent_id], references: [id])
+  message   String
+  cv        String
 }
 
 model user_goal {

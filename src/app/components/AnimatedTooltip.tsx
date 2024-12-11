@@ -14,13 +14,14 @@ export const AnimatedTooltip = ({
 }: {
   items: {
     id: number;
-    name: string;
+    first_name: string;
     designation: string;
-    image: string;
+    profile_image: string;
   }[];
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [imgError, setImgError] = useState(false);
+  
   const handleError = () => {
     setImgError(true); // Set error flag when image fails to load
   };
@@ -40,12 +41,14 @@ export const AnimatedTooltip = ({
     x.set(event.nativeEvent.offsetX - halfWidth);
   };
 
+
+
   return (
     <>
       {items.map((item, idx) => (
         <div
           className="-mr-5  relative group"
-          key={item.name}
+          key={item.first_name}
           onMouseEnter={() => setHoveredIndex(item.id)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
@@ -74,27 +77,27 @@ export const AnimatedTooltip = ({
                 <div className="absolute inset-x-10 z-30 w-[10%] -bottom-px bg-gradient-to-r from-transparent via-gray-600 to-transparent h-px " />
                 <div className="absolute left-10 w-[30%] z-50 -bottom-px bg-gradient-to-r from-transparent via-yellow-800 to-transparent h-px " />
                 <div className="font-bold text-white relative z-50 text-base">
-                  {item.name}
+                  {item.first_name}
                 </div>
                 <div className="text-white text-xs">{item.designation}</div>
               </motion.div>
             )}
           </AnimatePresence>
-          {item.image ? (
+          {item.profile_image ? (
             <Image
-              onMouseMove={handleMouseMove}
-              height={40}
-              width={40}
-              src={item.image}
-              alt={item.name}
-              className="object-cover !m-0 !p-0 object-top rounded-2xl h-7 w-7 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
-            />
+            onMouseMove={handleMouseMove}
+            height={40}
+            width={40}
+            src={`/api/images?filename=${item.profile_image}&folder=profileImage`}
+            alt={item.first_name}
+            className="object-cover !m-0 !p-0 object-top rounded-2xl h-7 w-7 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
+          />
           ) : (
-            <div className="object-cover !m-0 !p-0 object-top rounded-2xl h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34]  relative transition duration-500">
-              <span className="text-white text-sm md:text-sm font-bold py-3">
-                {item.name?.charAt(0).toUpperCase()}
-              </span>
-            </div>
+            <div className="flex items-center justify-center rounded-full h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34] relative transition duration-500">
+            <span className="text-white text-[13px] md:text-sm font-bold">
+              {item.first_name?.charAt(0).toUpperCase()}
+            </span>
+          </div>
           )}
         </div>
       ))}
