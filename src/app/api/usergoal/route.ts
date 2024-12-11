@@ -136,31 +136,55 @@ export async function DELETE(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const user_id = Number(searchParams.get("id")); // Retrieve the user ID from the query parameters
+    const user_id = Number(searchParams.get("id"));
+    const assignee_id = searchParams.get("assignee_id")
+      ? Number(searchParams.get("assignee_id"))
+      : null;
 
-    if (!user_id) {
+    // Build the `where` condition dynamically
+    let where: any = {};
+    if (user_id) {
+      where.user_id = user_id;
+    }
+    if (assignee_id) {
+      where.assignee_id = {
+        has: assignee_id, // Check if the assignee_id array contains the specified ID
+      };
+    }
+
+    // Fetch goals
+    const goals = await prisma.user_goal.findMany({
+      where,
+    });
+
+    // Fetch employee details for the assignees
+    const goalsWithEmployees = await Promise.all(
+      goals.map(async (goal) => {
+        const employees = await prisma.employees.findMany({
+          where: {
+            id: { in: goal.assignee_id },
+          },
+        });
+        return {
+          ...goal,
+          employees, // Add employee details to each goal
+        };
+      })
+    );
+
+    if (!goalsWithEmployees.length) {
       return NextResponse.json(
-        { error: "User ID is required." },
-        { status: 400 }
+        { error: "No goals found for the given criteria." },
+        { status: 404 }
       );
     }
 
-    // Fetch the user goal by ID
-    const goal = await prisma.user_goal.findMany({
-      where: { user_id: Number(user_id) },
-    });
-
-    // Check if the goal not exists
-    if (!goal) {
-      return NextResponse.json({ error: "Goal not found." }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, data: goal }, { status: 200 });
+    return NextResponse.json({ success: true, data: goalsWithEmployees }, { status: 200 });
   } catch (error: any) {
-    console.error("Error fetching user goal:", error);
+    console.error("Error fetching user goals:", error);
     return NextResponse.json(
       {
-        error: error.message || "Failed to fetch user goal",
+        error: error.message || "Failed to fetch user goals",
         details: error.message,
       },
       { status: 500 }

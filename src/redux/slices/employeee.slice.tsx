@@ -7,6 +7,8 @@ interface EmployeeReviewState {
   review: any | null;
   loading: boolean;
   error: string | null;
+  assigngoal: any;
+  success: string | null; 
 }
 
 const initialState: EmployeeReviewState = {
@@ -14,6 +16,8 @@ const initialState: EmployeeReviewState = {
   review: null,
   loading: false,
   error: null,
+  assigngoal: null,
+  success: null,
 };
 
 // Async thunk for fetching all employee reviews by organization_id
@@ -28,6 +32,39 @@ export const fetchEmployeeReviews = createAsyncThunk(
     }
   }
 );
+
+
+export const assigngoalemployee = createAsyncThunk(
+  "employee/assigngoalemployee",
+  async (payload:any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`/api/organization/assignGoal`, payload);
+      return response.data; // Return the API response if successful
+    } catch (error:any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to assign goal to employees"
+      );
+    }
+  }
+);
+
+
+
+//Update Assign Goals
+export const updategoalemployee = createAsyncThunk(
+  "employee/updategoalemployee",
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`/api/organization/assignGoal`, payload);
+      return response.data; // Return the API response if successful
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update goal for employees"
+      );
+    }
+  }
+);
+
 
 // Async thunk for fetching a specific employee review by employee_id and organization_id
 export const fetchEmployeeReviewById = createAsyncThunk(
@@ -52,6 +89,10 @@ const employeeSlice = createSlice({
     resetError(state) {
       state.error = null;
     },
+    resetSuccess(state) {
+      state.assigngoal = null;
+    },
+   
   },
   extraReducers: (builder) => {
     // Fetch all reviews
@@ -66,7 +107,39 @@ const employeeSlice = createSlice({
     builder.addCase(fetchEmployeeReviews.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+    })
+
+    //Assign Goal API 
+    .addCase(assigngoalemployee.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(assigngoalemployee.fulfilled, (state, action) => {
+      state.loading = false;
+      state.assigngoal = action.payload.message;
+    })
+    .addCase(assigngoalemployee.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    })
+
+
+    //Updated Assign Goal
+    .addCase(updategoalemployee.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(updategoalemployee.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = action.payload;
+    })
+    .addCase(updategoalemployee.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
     });
+
+
+
 
     // Fetch a specific review
     builder.addCase(fetchEmployeeReviewById.pending, (state) => {
@@ -84,5 +157,5 @@ const employeeSlice = createSlice({
   },
 });
 
-export const { resetError } = employeeSlice.actions;
+export const { resetError,resetSuccess } = employeeSlice.actions;
 export default employeeSlice.reducer;

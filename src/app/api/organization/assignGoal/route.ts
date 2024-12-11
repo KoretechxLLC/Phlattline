@@ -152,12 +152,12 @@ export async function GET(req: NextRequest) {
     // }
 
 
-    let where : any = {}
+    let where: any = {}
 
-    if(user_id){
+    if (user_id) {
       where.user_id = user_id
     }
-    if(assignee_id){
+    if (assignee_id) {
       where.assignee_id = assignee_id
     }
 
@@ -188,42 +188,89 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = await req.json(); // Retrieve the `id` from the request body
+    const body = await request.formData();
 
-    if (!id) {
+    // Extract and validate form data
+    const goal_id = Number(body.get("goal_id")); // ID of the goal to update
+    const goal_name = String(body.get("goal_name") || "").trim();
+    const start_date = body.get("start_date")
+      ? new Date(String(body.get("start_date")))
+      : null;
+    const completion_date = body.get("completion_date")
+      ? new Date(String(body.get("completion_date")))
+      : null;
+    const goal_type = String(body.get("goal_type") || "").trim() as "Personal" | "Performance" | "Professional";
+    const description = body.get("description")
+      ? String(body.get("description")).trim()
+      : null;
+    const user_id = Number(body.get("user_id"));
+    const assignee_ids = body.getAll("asignee_Ids[]").map(Number); // Array of assignee IDs
+    const goal_tasks: string[] = body.getAll("goal_tasks[]") as string[];
+
+    // Validation
+    if (!goal_id) throw new Error("Goal ID is required.");
+    if (!goal_name && !start_date && !completion_date && !goal_type && !description && !assignee_ids.length && !goal_tasks.length) {
+      throw new Error("At least one field to update must be provided.");
+    }
+
+    // Validate dates
+    if (start_date && isNaN(start_date.getTime()))
+      throw new Error("Valid start date is required.");
+    if (completion_date && isNaN(completion_date.getTime()))
+      throw new Error("Valid completion date is required.");
+    if (start_date && completion_date && completion_date < start_date)
+      throw new Error("Completion date cannot be earlier than the start date.");
+
+    // Validate and format tasks
+    const tasks = goal_tasks
+      .map((task) => task.trim())
+      .filter((task) => task.length > 0)
+      .map((task) => ({ value: task, isCompleted: false }));
+
+    // Check if the goal exists
+    const existingGoal = await prisma.user_goal.findUnique({
+      where: { id: goal_id },
+    });
+
+    if (!existingGoal) {
       return NextResponse.json(
-        { error: "Goal ID is required." },
-        { status: 400 }
+        { error: "Goal not found.", success: false },
+        { status: 404 }
       );
     }
 
-    // Find the user goal by ID
-    const goal = await prisma.user_goal.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!goal) {
-      return NextResponse.json({ error: "Goal not found." }, { status: 404 });
+    // Prepare updated data
+    const updatedData: any = {};
+    if (goal_name) updatedData.goal_name = goal_name;
+    if (start_date) updatedData.start_date = start_date;
+    if (completion_date) updatedData.completion_date = completion_date;
+    if (goal_type) updatedData.goal_type = goal_type;
+    if (description) updatedData.description = description;
+    if (assignee_ids.length) {
+      updatedData.assignee_id = assignee_ids; // Replace existing assignees
     }
+    if (tasks.length) updatedData.goal_tasks = tasks; // Replace existing tasks
 
-    // Update the status to true
+
+    // Update the goal
     const updatedGoal = await prisma.user_goal.update({
-      where: { id: Number(id) },
-      data: { status: true }, // Set the status to true
+      where: { id: goal_id },
+      data: updatedData,
     });
 
-    return NextResponse.json(
-      { success: true, data: updatedGoal },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      message: "Goal successfully updated.",
+      success: true,
+      data: updatedGoal,
+    });
   } catch (error: any) {
-    console.error("Error updating goal status:", error);
+    console.error("Error updating goal:", error.message);
     return NextResponse.json(
       {
-        error: error.message || "Failed to update goal status",
-        details: error.message,
+        error: error.message || "Internal Server Error",
+        success: false,
       },
       { status: 500 }
     );
