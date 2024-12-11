@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
       individual_assessments_id,
       employee_ids,
       user_id,
+      type
     } = await request.json();
 
     if (
@@ -57,6 +58,19 @@ export async function POST(request: NextRequest) {
       existingAssignments.map((assignment : any) => assignment.employee_id)
     );
 
+    if (
+      type &&
+      employee_ids.every((id) => existingEmployeeIds.has(Number(id)))
+    ) {
+      return NextResponse.json(
+        {
+          message: "Assessment are already assigned to these employees.",
+          success: false,
+        },
+        { status: 400 }
+      );
+    }
+
     const employeesToUnassign = employee_ids
       .map(Number)
       .filter((id) => existingEmployeeIds.has(id));
@@ -65,7 +79,7 @@ export async function POST(request: NextRequest) {
       .map(Number)
       .filter((id) => !existingEmployeeIds.has(id));
 
-    if (employeesToUnassign.length > 0) {
+    if (!type && employeesToUnassign.length > 0) {
       await prisma.assignedAssessment.deleteMany({
         where: {
           user_id: Number(user_id),
@@ -76,7 +90,7 @@ export async function POST(request: NextRequest) {
     }
 
     // **Assign Employees**
-    if (employeesToAssign.length > 0) {
+    if (type && employeesToAssign.length > 0) {
       const employees = await prisma.employees.findMany({
         where: {
           id: { in: employeesToAssign },

@@ -10,9 +10,10 @@ import PaymentPopup from "@/app/components/PaymentPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { fetchCoursesAssign, fetchusercourses, getCourseById } from "@/redux/slices/courses.slice";
+import { fetchCoursesAssign, fetchusercourses, getCourseById } from "@/redux/slices/courses.slice"; 
 import Spinner from "@/app/components/Spinner";
 import EmployeeModal from "@/app/components/employeeModal";
+import StackedNotifications, { NotificationType } from "@/app/components/Stackednotification";
 
 interface CourseDetailsProps {
   params: {
@@ -25,6 +26,9 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   const [isBought, setIsBought] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const [data, setData] = useState<any>();
 
   const [imgError, setImgError] = useState(false);
@@ -85,7 +89,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
     (video: any) => video.sequence === 1
   );
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);  
 
   // Function to handle opening the modal
   const handleViewAllClick = () => {
@@ -107,8 +111,22 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
     }
   }, [fetchSingleCourse, fetchSingleCourse?.id]);
 
+
+
+const handleStateManage=(message:string,type:any)=>{
+  setNotification({
+    id: Date.now(),
+    text: message,
+    type: type,
+})
+}
+
   return (
     <>
+     <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       {fetchSingleCourseLoading ? (
         <Spinner height="30px" width="30px" />
       ) : (
@@ -276,7 +294,8 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
             setIsBought={setIsBought}
             courseId={courseId}
           />
-          <EmployeeModal open={isModalOpen} coursesAssign={coursesAssign} courseId={Number(courseId)} onClose={handleCloseModal} />
+          <EmployeeModal open={isModalOpen} coursesAssign={coursesAssign} courseId={Number(courseId)} onClose={handleCloseModal} 
+           handleStateManage={handleStateManage}  />
         </div>
       )}
     </>
