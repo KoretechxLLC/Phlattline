@@ -178,9 +178,12 @@ export const fetchCoursesAssign = createAsyncThunk<
       // Construct query parameters based on provided IDs
       const params = new URLSearchParams();
       if (employee_id) params.append("employee_id", employee_id.toString());
-      if (organization_id) params.append("organization_id", organization_id.toString());
+      if (organization_id)
+        params.append("organization_id", organization_id.toString());
 
-      const response = await axiosInstance.get(`/api/organization/AssignCourse?${params.toString()}`);
+      const response = await axiosInstance.get(
+        `/api/organization/AssignCourse?${params.toString()}`
+      );
       return response.data.data; // Adjust according to the API response structure
     } catch (error: any) {
       const errorMessage =
@@ -191,8 +194,6 @@ export const fetchCoursesAssign = createAsyncThunk<
     }
   }
 );
-
-
 
 // Thunk for fetching user-specific courses
 export const fetchusercourses = createAsyncThunk<any, any>(
@@ -338,6 +339,8 @@ const coursesSlice = createSlice({
       })
 
       //Assigned Courses Cases
+
+
       .addCase(fetchCoursesAssign.pending, (state) => {
         state.loading = true;
         state.error = null; // Reset error on new request
@@ -345,7 +348,7 @@ const coursesSlice = createSlice({
       .addCase(fetchCoursesAssign.fulfilled, (state, action) => {
         state.loading = false;
         state.coursesAssign = action.payload; // Update state with fetched data
-        state.success = "AssignCourses Successfully fetched";
+        state.success = "Assign Courses Successfully fetched";
       })
       .addCase(fetchCoursesAssign.rejected, (state, action) => {
         state.loading = false;

@@ -125,17 +125,9 @@ const Card = ({ card }: { card: CardType }) => {
             >
               Your
             </span>
-            <span className="w-[10%] absolute left-[11.2rem] bottom-[20rem] 3xl:left-[8.5rem] 3xl:bottom-[15rem] 4xl:left-[9.2rem] 4xl:bottom-[15.5rem] flex items-center">
+            <span className="w-[25%] 3xl:w-[20%] 4xl:w-[20%] absolute left-[-19rem] bottom-[24rem] cursor-pointer 3xl:left-[-15rem] 3xl:bottom-[16.5rem] 4xl:left-[-14rem] 4xl:bottom-[18rem] flex items-center">
               <Image
-                src="/assets/arrowGif.gif"
-                alt="Arrow Gif"
-                height={1000}
-                width={1000}
-              />
-            </span>
-            <span className="w-[20%] absolute left-[10rem] bottom-[12rem] 3xl:left-[7.5rem] 3xl:bottom-[7rem] 4xl:left-[8rem] 4xl:bottom-[7.5rem] flex items-center">
-              <Image
-                src="/assets/MobileAnimation.gif"
+                src="/assets/lets_talk.gif"
                 alt="Mobile Animation"
                 height={1000}
                 width={1000}

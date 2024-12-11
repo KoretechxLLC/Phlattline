@@ -12,21 +12,30 @@ import Spinner from "@/app/components/Spinner";
 import { CardContent } from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Button } from "./button-sidebar";
-import StackedNotifications, { NotificationType } from "./Stackednotification";
 
-const EmployeeModal = ({
+
+
+
+type EmployeeModalProps = {
+  open: boolean;
+  coursesAssign?: any; 
+  courseId?: number;
+  onClose: () => void;
+  handleStateManage?: (message:string,type:any) => void;
+  showSelectionControls?: boolean;
+};
+
+const EmployeeModal: React.FC<EmployeeModalProps> = ({
   open,
   coursesAssign,
   courseId,
   onClose,
+  handleStateManage = () => {},
   showSelectionControls = true,
-}: {
-  open: boolean;
-  onClose: () => void;
-  courseId?: number;
-  coursesAssign?: any; // Replace `any` with a specific type if possible
-  showSelectionControls?: boolean;
+  
 }) => {
+
+  
   const dispatch = useDispatch<any>();
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<
     number | null
@@ -34,15 +43,15 @@ const EmployeeModal = ({
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allcoursesassign, setAllCoursesAssign] = useState<any>([]);
-  const [notification, setNotification] = useState<NotificationType | null>(
-    null
-  );
+
   const [assigning, setAssigning] = useState(false);
   const { departments, assignCoursesSuccess, assignCoursesError }: any =
     useSelector((state: RootState) => state.organization);
   const { userData } = useSelector((state: RootState) => state.auth);
   const organization_id = userData?.organization_id;
   const userId = userData?.id;
+
+
 
   // Fetch departments
   useEffect(() => {
@@ -72,26 +81,21 @@ const EmployeeModal = ({
 
       setAllCoursesAssign(assigned);
     }
-  }, [coursesAssign]);
+  }, [coursesAssign])
 
-  // Handle notifications for success and error
+
+
   useEffect(() => {
     if (assignCoursesSuccess) {
-      setNotification({
-        id: Date.now(),
-        text: assignCoursesSuccess,
-        type: "success",
-      });
-      dispatch(resetSuccess());
+      handleStateManage(assignCoursesSuccess,"success")
       onClose();
+      dispatch(resetSuccess());
     }
     if (assignCoursesError) {
       console.error("Course assignment error:", assignCoursesError);
-      setNotification({
-        id: Date.now(),
-        text: assignCoursesError,
-        type: "error",
-      });
+
+      
+      handleStateManage(assignCoursesError,"error")
       dispatch(resetError());
     }
   }, [assignCoursesSuccess, assignCoursesError, dispatch]);
@@ -167,10 +171,7 @@ const EmployeeModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <StackedNotifications
-        notification={notification}
-        setNotification={setNotification}
-      />
+     
       <div className="relative p-5 bg-[#000000b2] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Close Button */}
         <button
