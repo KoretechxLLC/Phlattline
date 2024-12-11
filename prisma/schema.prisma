@@ -299,7 +299,7 @@ model talent {
 
 model jobApplication {
   id        Int    @id @default(autoincrement())
-  user_id   Int    @unique 
+  user_id   Int   
   talent_id Int
   users     users  @relation(fields: [user_id], references: [id])
   talent    talent @relation(fields: [talent_id], references: [id])
