@@ -127,7 +127,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
                   onClick={() => handleRemoveTask(index)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
                 >
-                 <FaTrash/>
+                  <FaTrash />
                 </button>
               )}
             </div>

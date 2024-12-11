@@ -105,9 +105,7 @@ const OrganizationJobs: React.FC<OrganizationJobsProps> = ({
                       color="primary"
                       className="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition"
                       onClick={() =>
-                        router.push(
-                          `/Portal/ExploreJobs/OrganizationJobs/JobSummary?jobId=${job.id}`
-                        )
+                        router.push(`/Portal/JobSummary?jobId=${job.id}`)
                       }
                     >
                       Details

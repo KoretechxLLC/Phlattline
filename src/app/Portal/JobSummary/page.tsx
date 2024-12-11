@@ -5,6 +5,8 @@ import { Button } from "@/app/components/button-sidebar";
 import { useSearchParams } from "next/navigation";
 import UploadCVPopup from "@/app/components/uploadCV";
 import Spinner from "@/app/components/Spinner"; // Import the Spinner component
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface JobDetails {
   id: string;
@@ -58,7 +60,8 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
   const searchParams = useSearchParams();
   const [data, setData] = useState<JobDetails | undefined>();
   const [loading, setLoading] = useState(true); // Loading state to show the loader initially
-
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const usertype = userData?.user_type_id;
   const jobId = searchParams.get("jobId");
 
   // Simulate loading of job data with a timeout (replace with actual data fetching logic)
@@ -89,13 +92,16 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <h2 className="text-3xl font-bold text-white">{data?.title}</h2>
-          <Button
-            onClick={() => setShowCVPopup(true)}
-            color="primary"
-            className="rounded-3xl"
-          >
-            Apply Now
-          </Button>
+
+          {usertype === 2 && (
+            <Button
+              onClick={() => setShowCVPopup(true)}
+              color="primary"
+              className="rounded-3xl"
+            >
+              Apply Now
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent>

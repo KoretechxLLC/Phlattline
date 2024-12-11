@@ -15,29 +15,30 @@ model user_types {
 
 model users {
   id                        Int                         @id @default(autoincrement())
+  user_type_id              Int
   email                     String                      @unique @db.VarChar(255)
-  app_provider              String                      @default("App")
-  assessment_status         Boolean                     @default(false)
-  categoryId                Int?
-  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
-  date_of_birth             DateTime?                   @db.Date
-  designation               String?                     @db.VarChar(100)
-  employee_id               Int?
-  first_name                String?                     @db.VarChar(100)
-  isLoggedIn                Boolean                     @default(false)
-  last_name                 String?                     @db.VarChar(100)
-  logout_at                 DateTime?                   @default(now()) @db.Timestamptz(6)
-  organization_id           Int?
-  password                  String?                     @db.VarChar(255)
   phone_number              String?                     @db.VarChar(20)
-  profile_image             String?                     @db.VarChar(255)
+  password                  String?                     @db.VarChar(255)
+  first_name                String?                     @db.VarChar(100)
+  last_name                 String?                     @db.VarChar(100)
+  designation               String?                     @db.VarChar(100)
+  date_of_birth             DateTime?                   @db.Date
   provider                  String?                     @default("app") @db.VarChar(50)
   status                    String?                     @default("pending") @db.VarChar(20)
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  isLoggedIn                Boolean                     @default(false)
+  logout_at                 DateTime?                   @default(now()) @db.Timestamptz(6)
+  organization_id           Int?
+  app_provider              String                      @default("App")
+  profile_image             String?                     @db.VarChar(255)
+  assessment_status         Boolean                     @default(false)
+  categoryId                Int?
   subCategoryId             Int?
-  user_type_id              Int
+  employee_id               Int?
   timeLogs                  TimeLog[]
   assignedAssessment        assignedAssessment[]
   assignedCourses           assignedCourses[]
+  jobApplication            jobApplication[]
   purchased_assessments     purchased_assessments[]
   trainingOnDemand          trainingOnDemand[]
   user_assessment_responses user_assessment_responses[]
@@ -47,7 +48,6 @@ model users {
   employees                 employees?                  @relation(fields: [employee_id], references: [id])
   organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
-  jobApplication            jobApplication[]
 }
 
 model organizations {
@@ -66,8 +66,8 @@ model organizations {
   employee_review    employee_review[]
   employees          employees[]
   leaderFeedback     leaderFeedback[]
-  users              users[]
   talent             talent[]
+  users              users[]
 }
 
 model employees {
@@ -76,11 +76,11 @@ model employees {
   last_name          String               @db.VarChar(225)
   email              String               @unique @db.VarChar(225)
   phone_number       String               @db.VarChar(50)
-  gender             EmployeeGender
   organization_code  String               @db.VarChar(255)
   organization_id    Int
   created_at         DateTime             @default(now()) @db.Timestamptz(6)
   updated_at         DateTime             @updatedAt
+  gender             EmployeeGender
   departmentId       Int?
   date_of_birth      DateTime?            @db.Date
   designation        String?              @db.VarChar(100)
@@ -92,8 +92,7 @@ model employees {
   department         department?          @relation(fields: [departmentId], references: [id])
   organization       organizations        @relation(fields: [organization_id], references: [id])
   leaderFeedback     leaderFeedback[]
-
-  users users[]
+  users              users[]
 }
 
 model department {
@@ -131,8 +130,8 @@ model courses {
   updated_at                DateTime                    @default(now()) @updatedAt
   categoryId                Int
   subCategoryId             Int
-  course_for                Int?
   options                   String?
+  course_for                Int?
   CoursesAssessmentResponse CoursesAssessmentResponse[]
   VideoProgress             VideoProgress[]
   assessments               assessments[]
@@ -285,26 +284,26 @@ model user_assessment_responses {
 model talent {
   id                   Int              @id @default(autoincrement())
   department_id        Int
-  organization_id      Int
   position_name        String
   description          String
   created_at           DateTime         @default(now()) @db.Timestamp(6)
   updatedAt            DateTime         @updatedAt
+  organization_id      Int
+  key_responsibilities String[]
+  qualification        String[]
+  jobApplication       jobApplication[]
   department           department       @relation(fields: [department_id], references: [id])
   organizations        organizations    @relation(fields: [organization_id], references: [id])
-  qualification        String[]
-  key_responsibilities String[]
-  jobApplication       jobApplication[]
 }
 
 model jobApplication {
   id        Int    @id @default(autoincrement())
   user_id   Int
   talent_id Int
-  users     users  @relation(fields: [user_id], references: [id])
-  talent    talent @relation(fields: [talent_id], references: [id])
   message   String
   cv        String
+  talent    talent @relation(fields: [talent_id], references: [id])
+  users     users  @relation(fields: [user_id], references: [id])
 }
 
 model user_goal {
@@ -318,10 +317,9 @@ model user_goal {
   status          Boolean  @default(false)
   created_at      DateTime @default(now()) @db.Timestamp(6)
   updated_at      DateTime @default(now()) @db.Timestamp(6)
-  assignee_id     Int[]
   goal_tasks      Json
-
-  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  assignee_id     Int[]
+  user            users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model user_video_progress {

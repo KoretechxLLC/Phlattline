@@ -5,10 +5,12 @@ import InterviewSchedulerTab from "@/app/components/interviewScheduler";
 import OpenPositionChart from "@/app/components/openPositionChart";
 import EmployeesTab from "@/app/components/employeesTab";
 import VacantJobs from "@/app/components/VacantJobs";
+
 const jobs = [
   { id: 1, title: "Finance Officer" },
   { id: 2, title: "Taxation" },
 ];
+
 const newHirings = [
   {
     image: "/assets/DummyImg.png",
@@ -32,29 +34,29 @@ const newHirings = [
 
 const TalentAcquisitions = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 p-2">
       {/* First Row */}
       <div className="md:col-span-1">
         <AddPositionForm />
       </div>
-      <div className="md:col-span-1">
+      <div className="md:col-span-2">
         <InterviewSchedulerTab />
       </div>
 
       {/* Second Row */}
-      <div className="">
+      <div>
+        <VacantJobs jobs={jobs} />
+      </div>
+      <div>
+        <OpenPositionChart />
+      </div>
+      <div>
         <EmployeesTab
           title="New Hiring"
           employees={newHirings}
           showBadge={true} // To display the "Onboard" badge
           hideViewAll={true} // Hides the "View All" button and modal
         />
-      </div>
-      <div className="">
-        <VacantJobs jobs={jobs} />
-      </div>
-      <div className="md:col-span-1">
-        <OpenPositionChart />
       </div>
     </div>
   );
