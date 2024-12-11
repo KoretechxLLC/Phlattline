@@ -30,6 +30,7 @@ interface TasksTrackerProps {
   label: string;
   isClickable?: boolean;
   onEditGoal?: (goal: any) => void; // Now optional
+  showEditIcon?: (goal: any) => boolean;
 
 }
 
@@ -41,6 +42,7 @@ const TasksTracker = ({
   label,
   isClickable = true,
   onEditGoal,
+  showEditIcon,
 }: TasksTrackerProps) => {
 
 
@@ -157,7 +159,6 @@ const TasksTracker = ({
 
     setEmployees(filteredEmployees || []); // Set filtered employees
   }, [goals]);
-
 
 
   useEffect(() => {
@@ -281,13 +282,21 @@ const TasksTracker = ({
 
                       {/* {showTooltip && <AnimatedTooltip items={item.employees} />} */}
 
-                      <button
-
+                      {/* <button
                         className="rounded bg-slate-400/30 px-1.5 py-[0.4em] text-sm text-white transition-colors hover:bg-green-600 hover:text-white"
                         onClick={() => handleEditClick(item)} >
                         <MdEdit />
+                      </button> */}
 
-                      </button>
+                      {showEditIcon && showEditIcon(item) && (
+                        <button
+                          className="rounded bg-slate-400/30 px-1.5 py-[0.4em] text-sm text-white transition-colors hover:bg-green-600 hover:text-white"
+                          onClick={() => handleEditClick(item)}
+                        >
+                          <MdEdit/>
+                        </button>
+                      )}
+
 
                       <Deletemodel
                         trigger={(onClick: any) => (

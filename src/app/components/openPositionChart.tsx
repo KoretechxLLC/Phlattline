@@ -2,37 +2,71 @@
 import { useConfig } from "@/app/hooks/use-config";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { fetchDepartmentsWithCounts } from "@/redux/slices/employeee.slice";
+import Spinner from "./Spinner";
+
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
 interface PrevResultsTrackerProps {
   height?: number;
   chartType?: "bar" | "area";
-  categories?: string[];
 }
+
 const OpenPositionChart = ({
-  height = 220,
+  height = 300,
   chartType = "bar",
-  categories = ["Sales", "Manufacture", "Financial"],
 }: PrevResultsTrackerProps) => {
+  const dispatch = useDispatch<any>();
   const [config] = useConfig();
   const { isRtl } = config;
   const { theme: mode } = useTheme();
-  const data = [44, 55, 57];
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const { departmentCounts } = useSelector((state: RootState) => state.employee);
+  const [allDepartments, setAllDepartments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state to show the loader initially
+
+  const organization_id = userData?.organization_id;
+
+  useEffect(() => {
+    if (organization_id) {
+      setLoading(true); // Start loading
+      dispatch(fetchDepartmentsWithCounts(organization_id))
+        .unwrap()
+        .then(() => setLoading(false)) // Stop loading on success
+        .catch(() => setLoading(false)); // Stop loading on error
+    }
+  }, [dispatch, organization_id]);
+
+  // Inside your component, update the data processing logic
+  useEffect(() => {
+    if (departmentCounts) {
+      // Sort departments by position_count in descending order and take the top 3
+      const topDepartments = [...departmentCounts]
+        .sort((a, b) => b.position_count - a.position_count)
+        .slice(0, 3);
+      setAllDepartments(topDepartments);
+    }
+  }, [departmentCounts]);
+
+  // Map allDepartments data to categories and data for the chart
+  const categories = allDepartments.map((dept) => dept.department_name);
+  const data = allDepartments.map((dept) => dept.position_count);
+
   const series = [
     {
-      name: "Open Position Dept",
+      name: "Open Positions",
       data: data.map((value, index) => ({
         x: categories[index],
         y: value,
-        fillColor: "#FFFFFF", // Bar fill color
       })),
     },
   ];
+
+
   const options: any = {
     chart: {
       toolbar: {
@@ -44,14 +78,13 @@ const OpenPositionChart = ({
         horizontal: false,
         endingShape: "rounded",
         columnWidth: "30%",
-        borderRadius: 5, // Adds rounded corners to the bars
+        borderRadius: 5,
       },
     },
-    // Adds stroke (border) to each bar
     stroke: {
       show: true,
-      width: 2, // Border thickness
-      colors: ["#000000"], // Border color (black)
+      width: 2,
+      colors: ["#FFFFFF"],
     },
     legend: {
       show: true,
@@ -67,7 +100,7 @@ const OpenPositionChart = ({
         radius: 12,
       },
       labels: {
-        colors: "#62626280",
+        colors: "#FFFFFF",
       },
       itemMargin: {
         horizontal: 15,
@@ -82,17 +115,16 @@ const OpenPositionChart = ({
       style: {
         fontSize: "20px",
         fontWeight: "500",
-        color: "#62626280",
+        color: "#FFFFFF",
       },
     },
     dataLabels: {
       enabled: false,
     },
     yaxis: {
-      percentage: [0, 10, 40, 70, 100],
       labels: {
         style: {
-          colors: "#ffffff",
+          colors: "#FFFFFF",
         },
       },
     },
@@ -100,7 +132,7 @@ const OpenPositionChart = ({
       categories: categories,
       labels: {
         style: {
-          colors: "#ffffff",
+          colors: "#FFFFFF",
         },
       },
       axisBorder: {
@@ -111,14 +143,14 @@ const OpenPositionChart = ({
       },
     },
     fill: {
-      opacity: 1, // Ensures the bars are fully filled
+      colors: ["#FFFFFF"],
+      opacity: 1,
     },
     tooltip: {
       theme: "dark",
-      style: {},
       y: {
         formatter: function (val: number) {
-          return val + "%";
+          return val + " Positions";
         },
       },
     },
@@ -141,29 +173,36 @@ const OpenPositionChart = ({
             bar: {
               columnWidth: "30%",
             },
-            chart: {
-              width: "50%",
-            },
           },
         },
       },
     ],
   };
+
   return (
     <Card className="border border-[#62626280] rounded-3xl h-full">
-      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
-        <CardTitle>Open Positions By Department</CardTitle>
-      </CardHeader>
-      <CardContent className="p-1">
-        <Chart
-          options={options}
-          series={series}
-          type={chartType}
-          height={height}
-          width={"100%"}
-        />
-      </CardContent>
+      <>
+        <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
+          <CardTitle>Open Positions By Department</CardTitle>
+        </CardHeader>
+        <CardContent className="p-1">
+          {loading ? (
+            <div className="flex justify-center items-center py-40">
+              <Spinner height="30px" width="30px" />
+            </div>
+          ) : (
+            <Chart
+              options={options}
+              series={series}
+              type={chartType}
+              height={height}
+              width={"100%"}
+            />
+          )}
+        </CardContent>
+      </>
     </Card>
   );
 };
+
 export default OpenPositionChart;

@@ -69,26 +69,25 @@ model organizations {
   resignation        resignation[]
   talent             talent[]
   users              users[]
- 
 }
 
 model employees {
-  id                 Int                  @id @default(autoincrement())
-  first_name         String               @db.VarChar(225)
-  last_name          String               @db.VarChar(225)
-  email              String               @unique @db.VarChar(225)
-  phone_number       String               @db.VarChar(50)
-  organization_code  String               @db.VarChar(255)
-  organization_id    Int
-  created_at         DateTime             @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime             @updatedAt
-  gender             EmployeeGender
-  departmentId       Int?
-  date_of_birth      DateTime?            @db.Date
-  designation        String?              @db.VarChar(100)
-  profile_image      String?              @db.VarChar(255)
-  left               Boolean              @default(false)
-  status             String               @default("pending") @db.VarChar(20)
+  id                Int            @id @default(autoincrement())
+  first_name        String         @db.VarChar(225)
+  last_name         String         @db.VarChar(225)
+  email             String         @unique @db.VarChar(225)
+  phone_number      String         @db.VarChar(50)
+  organization_code String         @db.VarChar(255)
+  organization_id   Int
+  created_at        DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime       @updatedAt
+  gender            EmployeeGender
+  departmentId      Int?
+  date_of_birth     DateTime?      @db.Date
+  designation       String?        @db.VarChar(100)
+  profile_image     String?        @db.VarChar(255)
+  left              Boolean        @default(false)
+  status            String         @default("pending") @db.VarChar(20)
 
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
@@ -111,8 +110,6 @@ model resignation {
   employees       employees          @relation(fields: [employee_id], references: [id])
   organization    organizations      @relation(fields: [organization_id], references: [id])
 }
-
-
 
 model department {
   id              Int              @id @default(autoincrement())
