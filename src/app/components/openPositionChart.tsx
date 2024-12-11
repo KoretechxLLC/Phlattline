@@ -15,7 +15,7 @@ interface PrevResultsTrackerProps {
   categories?: string[];
 }
 const OpenPositionChart = ({
-  height = 145,
+  height = 240,
   chartType = "bar",
   categories = ["Sales", "Manufacture", "Financial"],
 }: PrevResultsTrackerProps) => {

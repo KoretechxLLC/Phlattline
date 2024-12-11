@@ -11,12 +11,18 @@ import {
 import Spinner from "./Spinner"; // Assuming this is the loader component you have
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { ChevronLeft, ChevronRight, SquarePen } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Deletemodel from "./DeleteModal";
+import { FiTrash2 } from "react-icons/fi";
 
 const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedJob, setSelectedJob] = useState<string>("");
   const [loading, setLoading] = useState(true); // Added loading state
   const { userData } = useSelector((state: RootState) => state.auth);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const usertype = userData?.user_type_id;
 
   useEffect(() => {
@@ -29,7 +35,21 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
     setSelectedJob(jobTitle);
     setShowPopup(true);
   };
+  const handleDeleteGoal = (id: any) => {};
 
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const router = useRouter();
   return (
     <Card>
       {/* Title with Background */}
@@ -71,8 +91,62 @@ const VacantJobs = ({ jobs }: { jobs: { id: number; title: string }[] }) => {
                     Apply
                   </Button>
                 )}
+                {usertype === 2 && (
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="w-8 h-8 my-2 bg-green-500 border-default-200"
+                    >
+                      <SquarePen className="w-7 h-7 text-white" />
+                    </Button>
+                    <Deletemodel
+                      trigger={(onClick: any) => (
+                        <button
+                          onClick={onClick}
+                          className="rounded-lg bg-red-600 px-3 py-2 text-lg text-white transition-colors hover:bg-red-600 hover:text-red-200"
+                        >
+                          <FiTrash2 />
+                        </button>
+                      )}
+                      confirmAction={() => handleDeleteGoal(job.id)}
+                    />
+                    <Button
+                      onClick={() =>
+                        router.push(`/Portal/JobSummary?jobId=${job.id}`)
+                      }
+                      color="primary"
+                      className="rounded-3xl"
+                    >
+                      Details
+                    </Button>
+                  </div>
+                )}
               </li>
             ))}
+            <div className="flex items-center justify-center gap-2 py-4">
+              <Button
+                variant="outline"
+                size="icon"
+                className="w-8 h-8 border-transparent hover:bg-transparent"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="w-5 h-5 text-default-900" />
+              </Button>
+              <span className="text-sm font-medium text-default-900">
+                Page {currentPage} of {totalPage}
+              </span>
+              <Button
+                variant="outline"
+                size="icon"
+                className="w-8 h-8 border-transparent hover:bg-transparent"
+                onClick={handleNextPage}
+                disabled={currentPage >= totalPage}
+              >
+                <ChevronRight className="w-5 h-5 text-default-900" />
+              </Button>
+            </div>
           </ul>
         ) : (
           <div className="text-center text-gray-300 py-20">
