@@ -3,20 +3,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body: any = await request.formData();
+    const body = await request.formData();
 
-    const goal_name = String(body.get("goal_name")).trim();
+    // Extract and validate form data
+    const goal_name = String(body.get("goal_name") || "").trim();
     const start_date = new Date(String(body.get("start_date")));
     const completion_date = new Date(String(body.get("completion_date")));
-    const goal_type = String(body.get("goal_type")).trim() as
-      | "Personal"
-      | "Performance"
-      | "Professional";
-    const description = String(body.get("description")).trim();
-    const user_id = Number(body.get("id"));
-    const organization_id = Number(body.get("organization_id"));
-    let assignee_ids: any = body.getAll("asignee_Ids[]") as string[];
+    const goal_type = String(body.get("goal_type") || "").trim() as "Personal" | "Performance" | "Professional";
+    const description = String(body.get("description") || "").trim();
+    const user_id = Number(body.get("user_id"));
+    const assignee_ids = body.getAll("asignee_Ids[]").map(Number); // Array of assignee IDs
+    const goal_tasks: string[] = body.getAll("goal_tasks[]") as string[];
 
+    // Validation
     if (!goal_name) throw new Error("Goal name is required.");
     if (!start_date || isNaN(start_date.getTime()))
       throw new Error("Valid start date is required.");
@@ -27,71 +26,68 @@ export async function POST(request: NextRequest) {
     if (!["Personal", "Performance", "Professional"].includes(goal_type))
       throw new Error("Valid goal type is required.");
     if (!user_id) throw new Error("User ID is required.");
-    if (!organization_id) throw new Error("Organization ID is required.");
-
     if (!Array.isArray(assignee_ids) || assignee_ids.length === 0) {
-      throw new Error("Assignee IDs must be a non-empty array.");
-    } else {
-      assignee_ids = assignee_ids.map((id: any) => {
-        return Number(id);
-      });
+      throw new Error("At least one assignee is required.");
     }
 
-    const existingAssignments = await prisma.user_goal.findMany({
-      where: { user_id, assignee_id: { in: assignee_ids } },
+    // Validate and format tasks
+    const tasks = goal_tasks
+      .map((task) => task.trim())
+      .filter((task) => task.length > 0)
+      .map((task) => ({ value: task, isCompleted: false }));
+
+    if (tasks.length === 0) {
+      throw new Error("At least one valid goal task is required.");
+    }
+
+    // Check for an existing goal with the same name, start date, and user_id
+    const existingGoal = await prisma.user_goal.findFirst({
+      where: {
+        goal_name,
+        start_date,
+        user_id,
+      },
     });
 
-    const alreadyAssignedIds = new Set(
-      existingAssignments.map((assignment : any) => assignment.assignee_id)
-    );
-
-    const employeesToUnassign = assignee_ids.filter((id: any) =>
-      alreadyAssignedIds.has(id)
-    );
-    const employeesToAssign = assignee_ids.filter(
-      (id: any) => !alreadyAssignedIds.has(id)
-    );
-
-    await prisma.$transaction(async (tx : any) => {
-      if (employeesToUnassign.length > 0) {
-        await tx.user_goal.deleteMany({
-          where: { user_id, assignee_id: { in: employeesToUnassign } },
-        });
-      }
-
-      const validEmployees = await tx.employees.findMany({
-        where: { id: { in: employeesToAssign }, organization_id },
+    if (existingGoal) {
+      // If the goal already exists, update the assignee_id array to include new assignees (if any)
+      const updatedAssignees = Array.from(new Set([...existingGoal.assignee_id, ...assignee_ids])); // Merge and remove duplicates
+      await prisma.user_goal.update({
+        where: { id: existingGoal.id },
+        data: { assignee_id: updatedAssignees },
       });
 
-      if (validEmployees.length !== employeesToAssign.length) {
-        throw new Error(
-          "Some employees do not belong to the specified organization."
-        );
-      }
-
-      if (employeesToAssign.length > 0) {
-        const assignments = employeesToAssign.map((employee_id: any) => ({
+      return NextResponse.json({
+        message: "Existing goal updated with new assignees.",
+        success: true,
+      });
+    } else {
+      // Create a new goal
+      await prisma.user_goal.create({
+        data: {
           goal_name,
           start_date,
           completion_date,
           goal_type,
           description,
           user_id,
-          assignee_id: employee_id,
-        }));
+          assignee_id: assignee_ids,
+          goal_tasks: tasks,
+        },
+      });
 
-        await tx.user_goal.createMany({ data: assignments });
-      }
-    });
-
-    return NextResponse.json({
-      message: "Goal Processed successfully.",
-      success: true,
-    });
+      return NextResponse.json({
+        message: "New goal successfully created and assigned to employees.",
+        success: true,
+      });
+    }
   } catch (error: any) {
     console.error("Error processing goal assignments:", error.message);
     return NextResponse.json(
-      { message: error.message || "Internal Server Error", success: false },
+      {
+        error: error.message || "Internal Server Error",
+        success: false,
+      },
       { status: 500 }
     );
   }
