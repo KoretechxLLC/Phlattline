@@ -1,8 +1,6 @@
-import Employee from "@/app/Portal/PerformanceManagementOrg/Employee/page";
 import axiosInstance from "@/app/utils/privateAxios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { string } from "zod";
 
 interface organizationResponseState {
   loading: boolean;
