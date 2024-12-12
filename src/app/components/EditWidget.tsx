@@ -53,7 +53,7 @@ const EditWidget = ({}) => {
       </SheetTrigger>
       <SheetContent
         overlayClass=" bg-transparent "
-        className="lg:w-3/4 w-full max-w-full md:max-w-sm px-6 pt-0 pb-6 dark:border-r dark:border-default-300"
+        className="lg:w-3/4 w-full bg-black max-w-full md:max-w-sm px-6 pt-0 pb-6 dark:border-r dark:border-default-300"
       >
         <SheetHeader className=" text-start -mx-6 px-6 py-4 shadow-sm md:shadow-none">
           <SheetTitle className="flex justify-between items-start">
@@ -74,7 +74,7 @@ const EditWidget = ({}) => {
         <ScrollArea className="h-[calc(100%-120px)] -mx-6">
           <div className=" space-y-8 mt-3">
             <Tabs defaultValue="style" className=" w-full">
-              <TabsList className="w-full border border-solid border-default-200 dark:border-default-300 rounded-none p-0 divide-x gap-0 ">
+              {/* <TabsList className="w-full border border-solid border-default-200 dark:border-default-300 rounded-none p-0 divide-x gap-0 ">
                 <TabsTrigger
                   className="flex-1 data-[state=active]:bg-default-200 dark:data-[state=active]:bg-secondary  data-[state=active]:text-default-900 shadow-none py-3  dark:text-secondary-foreground"
                   value="style"
@@ -87,7 +87,7 @@ const EditWidget = ({}) => {
                 >
                   Theme Color
                 </TabsTrigger>
-              </TabsList>
+              </TabsList> */}
               <TabsContent
                 value="style"
                 className="p-6 divide-y divide-default-300"
@@ -106,13 +106,13 @@ const EditWidget = ({}) => {
                   </div>
                   <SetContentWidth />
                 </div>
-                <HeaderStyle />
-                <FooterStyle />
+                {/* <HeaderStyle />
+                <FooterStyle /> */}
                 <div className="!border-t-0 -mx-6 p-6 pb-0">
                   <FullScreenToggle />
                 </div>
               </TabsContent>
-              <TabsContent
+              {/* <TabsContent
                 value="color"
                 className="p-6  divide-y divide-default-300 "
               >
@@ -122,7 +122,7 @@ const EditWidget = ({}) => {
                 <div className="!border-t-0 -mx-6 px-6">
                   <FullScreenToggle />
                 </div>
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
           </div>
         </ScrollArea>
