@@ -18,7 +18,9 @@ import StackedNotifications from "@/app/components/Stackednotification";
 
 import { Input } from "@/app/components/Input";
 import { CustomDatePicker } from "./customDatePicker";
+import { Button } from "./button-sidebar";
 import "react-datepicker/dist/react-datepicker.css";
+import ResignationPopup from "./resignationPopup";
 
 interface PageProps {
   employeeId?: number;
@@ -43,6 +45,7 @@ const Profile = ({ profileImage }: any) => {
   const [date, setDate] = useState<Date | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showResignationPopup, setShowResignationPopup] = useState(false);
 
   const router = useRouter();
   const { userData, success, error } = useSelector(
@@ -51,6 +54,15 @@ const Profile = ({ profileImage }: any) => {
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
+
+  const handleLeaveOrganizationClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission on button click
+    setShowResignationPopup(true); // Show the popup when the button is clicked
+  };
+
+  const handleClosePopup = () => {
+    setShowResignationPopup(false); // Close the popup
+  };
 
   useEffect(() => {
     // Initialize state variables with user data
@@ -65,7 +77,9 @@ const Profile = ({ profileImage }: any) => {
   }, [userData]);
   const sixteenYearsAgo = new Date();
   sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
-
+  const userType = userData?.user_type_id;
+  const organizationName = userData?.organizations?.organization_name;
+  console.log({ organizationName });
   const [data, setData] = useState<any>();
 
   const dispatch: any = useDispatch();
@@ -219,6 +233,36 @@ const Profile = ({ profileImage }: any) => {
           <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
         </div>
       </div>
+
+      {userType === 3 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="relative  border border-[#62626280] rounded-2xl">
+            <Input
+              id="designation"
+              type="text"
+              placeholder="Organization"
+              value={organizationName} // Use state variable for input
+              disabled
+              className="w-full bg-black text-white py-2 px-4 rounded-xl focus:outline-none"
+            />
+            <MdDateRange className="absolute top-1/2 right-5 transform -translate-y-1/2 text-white" />
+          </div>
+          <div>
+            <Button
+              color="primary"
+              size="lg"
+              className="text-lg rounded-xl my-2 mx-12 "
+              onClick={handleLeaveOrganizationClick} // Trigger popup when clicked
+            >
+              Leave Organization
+            </Button>
+          </div>
+          <ResignationPopup
+            show={showResignationPopup}
+            onClose={handleClosePopup} // Close handler for the popup
+          />
+        </div>
+      )}
 
       {/* Buttons */}
       <div className="flex flex-col sm:flex-row justify-center gap-8 py-2 mx-4 mt-10">

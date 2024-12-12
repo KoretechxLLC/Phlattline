@@ -23,7 +23,6 @@ import {
 import { RootState } from "@/redux/store";
 import StackedNotifications from "../components/Stackednotification";
 import { useDispatch, useSelector } from "react-redux";
-import { pass } from "three/webgpu";
 import { getCategories } from "@/redux/slices/categories.slice";
 
 const SignupScreen = () => {
