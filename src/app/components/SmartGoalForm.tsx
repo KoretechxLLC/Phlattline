@@ -121,7 +121,7 @@ const SmartGoalForm = ({ handleAddGoal, success }: any) => {
               />
 
               {/* Delete Button (only show when the task is not empty) */}
-              {task && (
+              {index > 0 && task && (
                 <button
                   type="button"
                   onClick={() => handleRemoveTask(index)}

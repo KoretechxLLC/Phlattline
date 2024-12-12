@@ -118,7 +118,7 @@ const OrganizationAssessmentForm = () => {
   }
 
   return (
-    <div className="text-white ml-[18em] mr-[2em] 4xl:p-2 p-6 bg-black border-[2px] border-neutral-800 rounded-lg">
+    <div className="text-white   4xl:p-2 p-6 bg-black border-[2px] border-neutral-800 rounded-lg">
       <StackedNotifications
         notification={notification}
         setNotification={setNotification}

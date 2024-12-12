@@ -34,7 +34,7 @@ const newHirings = [
 
 const TalentAcquisitions = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 p-2">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-2 p-1">
       {/* First Row */}
       <div className="md:col-span-1">
         <AddPositionForm />

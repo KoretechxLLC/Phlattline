@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/app/components/Card";
 import Spinner from "@/app/components/Spinner"; // Assuming you have a spinner component
+import { MdEdit } from "react-icons/md";
 
 const OrganizationGoalsTab: React.FC = () => {
   // Static array of organization goals with their completion percentage
@@ -78,13 +79,9 @@ const OrganizationGoalsTab: React.FC = () => {
                 <CardContent className="flex justify-between items-center">
                   <div className="text-sm font-semibold">{goal.goal}</div>
                   {/* Percentage display with color coordination */}
-                  <div
-                    className={`text-sm font-semibold ${getCompletionColor(
-                      goal.completion
-                    )}`}
-                  >
-                    {goal.completion}%
-                  </div>
+                  <button className="rounded bg-slate-400/30 px-3 py-3 text-sm text-white transition-colors hover:bg-green-600 hover:text-white">
+                    <MdEdit />
+                  </button>
                 </CardContent>
               </li>
             ))}

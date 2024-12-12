@@ -11,8 +11,8 @@ import { Progress } from "./progress";
 const EmployeeDataTab = () => {
   return (
     <div>
-      <Card className="border border-[#62626280] rounded-b-3xl">
-        <CardHeader className="mb-2 rounded-lg bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+      <Card className="border border-[#62626280] rounded-3xl">
+        <CardHeader className="mb-2 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <CardTitle>Employee Data</CardTitle>
         </CardHeader>
         <CardContent>

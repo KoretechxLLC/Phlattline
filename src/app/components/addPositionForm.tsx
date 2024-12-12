@@ -112,7 +112,7 @@ const AddPositionForm = ({ handleAddGoal, success }: any) => {
                 }
                 className="w-full p-2 mt-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
               />
-              {qualification.trim() && (
+              {index > 0 && qualification.trim() && (
                 <button
                   type="button"
                   onClick={() =>
@@ -142,7 +142,7 @@ const AddPositionForm = ({ handleAddGoal, success }: any) => {
             <div key={index} className="relative">
               <input
                 type="text"
-                placeholder={`Responsibility ${index + 1}`}
+                placeholder={`Key Responsibility ${index + 1}`}
                 value={responsibility}
                 onChange={(e) =>
                   handleFieldChange(
@@ -154,7 +154,7 @@ const AddPositionForm = ({ handleAddGoal, success }: any) => {
                 }
                 className="w-full p-2 mt-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
               />
-              {responsibility.trim() && (
+              {index > 0 && responsibility.trim() && (
                 <button
                   type="button"
                   onClick={() =>
@@ -179,7 +179,7 @@ const AddPositionForm = ({ handleAddGoal, success }: any) => {
               }
               className="text-white mt-2"
             >
-              + Add Responsibility
+              + Add Key Responsibility
             </button>
           )}
         </div>

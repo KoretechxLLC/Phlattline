@@ -15,7 +15,7 @@ interface PrevResultsTrackerProps {
   categories?: string[];
 }
 const OpenPositionChart = ({
-  height = 240,
+  height = 220,
   chartType = "bar",
   categories = ["Sales", "Manufacture", "Financial"],
 }: PrevResultsTrackerProps) => {
@@ -43,7 +43,7 @@ const OpenPositionChart = ({
       bar: {
         horizontal: false,
         endingShape: "rounded",
-        columnWidth: "15%",
+        columnWidth: "30%",
         borderRadius: 5, // Adds rounded corners to the bars
       },
     },
@@ -151,7 +151,7 @@ const OpenPositionChart = ({
   };
   return (
     <Card className="border border-[#62626280] rounded-3xl h-full">
-      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
+      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
         <CardTitle>Open Positions By Department</CardTitle>
       </CardHeader>
       <CardContent className="p-1">

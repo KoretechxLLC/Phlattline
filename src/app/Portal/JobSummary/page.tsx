@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/app/components/Card";
 import { Button } from "@/app/components/button-sidebar";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import UploadCVPopup from "@/app/components/uploadCV";
 import Spinner from "@/app/components/Spinner"; // Import the Spinner component
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Icon from "@/app/components/utility-icon";
 
 interface JobDetails {
   id: string;
@@ -63,6 +64,7 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
   const { userData } = useSelector((state: RootState) => state.auth);
   const usertype = userData?.user_type_id;
   const jobId = searchParams.get("jobId");
+  const router = useRouter();
 
   // Simulate loading of job data with a timeout (replace with actual data fetching logic)
   useEffect(() => {
@@ -90,10 +92,25 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
     <Card className="border border-[#62626280] py-8">
       <CardHeader className="rounded-xl shadow-lg p-8 mx-auto w-full bg-black">
         {/* Header */}
-        <div className="mb-6 flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-white">{data?.title}</h2>
-
-          {usertype === 2 && (
+        <div className="mb-6 flex items-center justify-between">
+          <Button
+            onClick={() => router.back()}
+            color="default"
+            className="mb-4"
+          >
+            <Icon
+              icon="weui:back-outlined"
+              className="w-10 h-10 text-white mr-2"
+            />
+          </Button>
+          <h2
+            className={`text-3xl font-bold text-white ${
+              usertype === 1 || usertype === 3 ? "" : "flex-grow text-center"
+            }`}
+          >
+            {data?.title}
+          </h2>
+          {(usertype === 1 || usertype === 3) && (
             <Button
               onClick={() => setShowCVPopup(true)}
               color="primary"
@@ -104,6 +121,7 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
           )}
         </div>
       </CardHeader>
+
       <CardContent>
         {/* Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
