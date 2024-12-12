@@ -10,6 +10,7 @@ import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Badge } from "./badge";
 import { Button } from "./button-sidebar";
 import EmployeeModal from "./employeeModal";
+import ResignationPopup from "./resignationPopup"; // Import ResignationPopup
 
 type EmployeeData = {
   image: string;
@@ -35,6 +36,10 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
   hideViewAll = false,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isResignationPopupOpen, setIsResignationPopupOpen] = useState(false); // State to control ResignationPopup visibility
+  const [selectedEmployee, setSelectedEmployee] = useState<EmployeeData | null>(
+    null
+  ); // Store the selected employee for resignation
 
   const handleViewAllClick = () => {
     setIsModalOpen(true);
@@ -42,6 +47,15 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleResignationPopupOpen = (employee: EmployeeData) => {
+    setSelectedEmployee(employee); // Store the selected employee
+    setIsResignationPopupOpen(true); // Open the resignation popup
+  };
+
+  const handleCloseResignationPopup = () => {
+    setIsResignationPopupOpen(false); // Close the resignation popup
   };
 
   return (
@@ -75,7 +89,12 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
                   </span>
                 )}
                 {showReason && employee.reason && (
-                  <span className="text-red-500">{employee.reason}</span>
+                  <Button
+                    onClick={() => handleResignationPopupOpen(employee)} // Open resignation popup on click
+                    color="primary"
+                  >
+                    View
+                  </Button>
                 )}
                 {showBadge && employee.status && (
                   <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
@@ -104,6 +123,18 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
           />
         )}
       </Card>
+
+      {/* Resignation Popup */}
+      {isResignationPopupOpen && selectedEmployee && (
+        <ResignationPopup
+          show={isResignationPopupOpen}
+          onClose={handleCloseResignationPopup}
+          employee={{
+            name: selectedEmployee.name,
+            message: selectedEmployee.reason || "No reason provided",
+          }}
+        />
+      )}
     </div>
   );
 };
