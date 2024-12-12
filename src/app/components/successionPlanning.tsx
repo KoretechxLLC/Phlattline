@@ -69,8 +69,8 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
 
   return (
     <div>
-      <Card className="border w-full border-[#62626280] rounded-xl">
-        <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-xl">
+      <Card className="border w-full border-[#62626280] rounded-3xl">
+        <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
           <CardTitle>Succession Planning</CardTitle>
         </CardHeader>
         <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 4xl:px-3 p-2">

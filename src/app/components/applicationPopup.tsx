@@ -12,20 +12,20 @@ import { Avatar, AvatarImage } from "./avatar";
 const ApplicationPopup = ({
   show,
   onClose,
-  employeeName,
-  designation,
-  message,
-  cvLink,
+  employee,
 }: {
   show: boolean;
   onClose: () => void;
-  employeeName: string;
-  designation: string;
-  message: string;
-  cvLink: string;
+  employee: {
+    name: string;
+    designation: string;
+    message: string;
+    cvLink: string;
+  };
 }) => {
   const [loading, setLoading] = useState(true); // Loading state to show the loader initially
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Simulate loading of employee data with a timeout (replace with actual data fetching logic)
   useEffect(() => {
     if (show) {
@@ -69,11 +69,11 @@ const ApplicationPopup = ({
                 />
               </Avatar>
               <div>
-                <span className="font-semibold text-sm block">
-                  {employeeName}
+                <span className="font-semibold text-white text-sm block">
+                  {employee.name}
                 </span>
                 <span className="font-semibold text-xs text-gray-400 block mt-1">
-                  {designation}
+                  {employee.designation}
                 </span>
               </div>
             </div>
@@ -81,6 +81,8 @@ const ApplicationPopup = ({
             <div className="mb-6">
               <textarea
                 placeholder="Matter"
+                value={employee.message}
+                readOnly
                 className="w-full p-10 rounded-md border bg-white text-black border-gray-300 placeholder-gray-400 resize-none"
               />
             </div>
@@ -91,7 +93,13 @@ const ApplicationPopup = ({
               <span className="text-black text-sm font-semibold">
                 View Attached CV
               </span>
-              <BsCloudDownload className="w-8 h-8 text-black" />
+              <a
+                href={employee.cvLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <BsCloudDownload className="w-8 h-8 text-black" />
+              </a>
             </div>
           </div>
         )}
@@ -111,7 +119,6 @@ const ApplicationPopup = ({
     </div>
   );
 };
-
 export default ApplicationPopup;
 
 const SpringModal = ({

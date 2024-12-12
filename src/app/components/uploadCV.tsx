@@ -38,10 +38,10 @@ const UploadCVPopup = ({
         </div>
 
         {/* Upload Section */}
-        <div className="flex items-center border rounded-md p-4 mb-6 bg-gray-900">
+        <div className="flex items-center border rounded-md p-4 mb-6 bg-white">
           <label
             htmlFor="cv-upload"
-            className="px-6 py-2 bg-white text-white font-bold rounded-full cursor-pointer hover:bg-gray-400"
+            className="px-6 py-2 bg-gray-700 text-white font-bold rounded-full cursor-pointer hover:bg-gray-400"
           >
             Upload
           </label>
@@ -51,7 +51,7 @@ const UploadCVPopup = ({
             className="hidden"
             onChange={handleFileUpload}
           />
-          <span className="ml-4 text-white">
+          <span className="ml-4 text-black">
             {cvFile ? cvFile.name : "Upload CV"}
           </span>
         </div>

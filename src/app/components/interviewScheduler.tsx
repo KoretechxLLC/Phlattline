@@ -21,6 +21,9 @@ const InterviewSchedulerTab: React.FC = () => {
       name: "John Doe",
       designation: "Software Engineer",
       interviewStatus: "View",
+      message:
+        "I'm excited to apply for this position and contribute to your team.",
+      cvLink: "https://example.com/john_doe_cv.pdf",
     },
     {
       id: 2,
@@ -28,6 +31,8 @@ const InterviewSchedulerTab: React.FC = () => {
       name: "Jane Smith",
       designation: "Product Manager",
       interviewStatus: "View",
+      message: "Looking forward to discussing this role further.",
+      cvLink: "https://example.com/jane_smith_cv.pdf",
     },
     {
       id: 3,
@@ -35,41 +40,83 @@ const InterviewSchedulerTab: React.FC = () => {
       name: "Alice Johnson",
       designation: "UI/UX Designer",
       interviewStatus: "Complete",
+      message: "Thank you for considering my application.",
+      cvLink: "https://example.com/alice_johnson_cv.pdf",
+    },
+    {
+      id: 4,
+      image: "/assets/DummyImg.png",
+      name: "Michael Brown",
+      designation: "Data Scientist",
+      interviewStatus: "View",
+      message: "Excited to bring my skills to your organization.",
+      cvLink: "https://example.com/michael_brown_cv.pdf",
+    },
+    {
+      id: 5,
+      image: "/assets/DummyImg.png",
+      name: "Emma Davis",
+      designation: "HR Specialist",
+      interviewStatus: "Complete",
+      message: "Hoping to contribute effectively to your team.",
+      cvLink: "https://example.com/emma_davis_cv.pdf",
+    },
+    {
+      id: 6,
+      image: "/assets/DummyImg.png",
+      name: "Samuel Lee",
+      designation: "Backend Developer",
+      interviewStatus: "View",
+      message: "Eager to utilize my backend development skills.",
+      cvLink: "https://example.com/samuel_lee_cv.pdf",
+    },
+    {
+      id: 7,
+      image: "/assets/DummyImg.png",
+      name: "Sophia Martinez",
+      designation: "Marketing Specialist",
+      interviewStatus: "Complete",
+      message: "Looking forward to joining the marketing team.",
+      cvLink: "https://example.com/sophia_martinez_cv.pdf",
+    },
+    {
+      id: 8,
+      image: "/assets/DummyImg.png",
+      name: "Lucas Green",
+      designation: "DevOps Engineer",
+      interviewStatus: "View",
+      message: "Excited to streamline infrastructure and processes.",
+      cvLink: "https://example.com/lucas_green_cv.pdf",
     },
   ];
 
   // State to manage modal visibility
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
 
-  // Function to handle opening the modal when "Schedule Interview" button is clicked
-  const handleScheduleClick = () => {
-    setIsModalOpen(true); // Open the modal
-  };
-
-  const handleDeleteGoal = (id: any) => {};
-
-  const handleOpenPopup = () => {
+  const handleOpenPopup = (employee: any) => {
+    setSelectedEmployee(employee);
     setIsPopupVisible(true);
   };
 
   const handleClosePopup = () => {
     setIsPopupVisible(false);
+    setSelectedEmployee(null);
   };
 
   return (
     <div className="flex flex-col items-center">
       {/* Centered Heading */}
-      <Card className="border border-[#62626280] rounded-xl w-full max-w-3xl">
+      <Card className="border border-[#62626280] rounded-xl w-full h-full ">
         <CardHeader>
           <h2 className="text-2xl items-center font-semibold mb-3">
             Latest Updates
           </h2>
           {/* Label Bar for Columns */}
           <div className="flex justify-between px-8 py-3 text-white bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
-            <span>Name</span>
-            <span>Designation</span>
-            <span>Action</span>
+            <span className="w-1/3 text-left">Name</span>
+            <span className="w-1/3 text-center">Designation</span>
+            <span className="w-1/3 text-right">Action</span>
           </div>
         </CardHeader>
         <ul>
@@ -82,9 +129,9 @@ const InterviewSchedulerTab: React.FC = () => {
                   : ""
               }`}
             >
-              <CardContent className="flex items-center justify-between 4xl:p-3 px-8 py-8 space-x-2">
+              <CardContent className="flex justify-between items-center 4xl:p-3 px-8 py-4">
                 {/* Name and Avatar */}
-                <div className="flex items-center space-x-4">
+                <div className="w-1/3 flex items-center space-x-4">
                   <Avatar className="w-10 h-10">
                     <AvatarImage
                       src={interview.image}
@@ -98,12 +145,12 @@ const InterviewSchedulerTab: React.FC = () => {
                 </div>
 
                 {/* Designation */}
-                <div className="text-center text-sm text-yellow-400">
+                <div className="w-1/3 text-center text-sm text-yellow-400">
                   {interview.designation}
                 </div>
 
                 {/* Status Button with Conditional Color and Disabled State */}
-                <div className="flex space-x-2">
+                <div className="w-1/3 flex justify-end items-center space-x-2">
                   <Button
                     color={
                       interview.interviewStatus === "Complete"
@@ -111,10 +158,10 @@ const InterviewSchedulerTab: React.FC = () => {
                         : "primary"
                     }
                     size="md"
-                    className="rounded-3xl"
+                    className="rounded-lg text-sm"
                     onClick={
                       interview.interviewStatus !== "Complete"
-                        ? handleOpenPopup
+                        ? () => handleOpenPopup(interview)
                         : undefined
                     } // Prevent modal opening if scheduled
                     disabled={interview.interviewStatus === "Complete"} // Disable button if scheduled
@@ -125,12 +172,12 @@ const InterviewSchedulerTab: React.FC = () => {
                     trigger={(onClick: any) => (
                       <button
                         onClick={onClick}
-                        className="rounded-lg bg-red-600 px-3 py-2 text-lg text-white transition-colors hover:bg-red-600 hover:text-red-200"
+                        className="rounded-lg bg-red-300/20 px-3 py-2 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
                       >
                         <FiTrash2 />
                       </button>
                     )}
-                    confirmAction={() => handleDeleteGoal(interview.id)}
+                    confirmAction={() => {}}
                   />
                 </div>
               </CardContent>
@@ -139,15 +186,13 @@ const InterviewSchedulerTab: React.FC = () => {
         </ul>
       </Card>
 
-      <ApplicationPopup
-        show={isPopupVisible}
-        onClose={handleClosePopup}
-        employeeName="John Doe"
-        designation="Software Engineer"
-        message="I'm excited to apply for this position and contribute to your team."
-        cvLink="https://example.com/john_doe_cv.pdf"
-      />
-      {/* Pass the modal state to the SpringModal */}
+      {selectedEmployee && (
+        <ApplicationPopup
+          show={isPopupVisible}
+          onClose={handleClosePopup}
+          employee={selectedEmployee}
+        />
+      )}
     </div>
   );
 };

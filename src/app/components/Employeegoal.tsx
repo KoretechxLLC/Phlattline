@@ -21,9 +21,16 @@ export type NotificationType = {
   type: "error" | "success";
 };
 
-const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }: any) => {
+const Employeegoal = ({
+  handleAddGoal,
+  handleUpdateGoal,
+  selectedGoal,
+  success,
+}: any) => {
   const dispatch = useDispatch<any>();
-  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
 
   // Form States
   const [goalName, setGoalName] = useState("");
@@ -32,32 +39,42 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
   const [goalType, setGoalType] = useState("");
   const [description, setDescription] = useState("");
   const [tasks, setTasks] = useState<string[]>([""]);
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | null>(null);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<
+    number | null
+  >(null);
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]); // Updated for multi-select
   const [filteredEmployees, setFilteredEmployees] = useState<any[]>([]);
   const [loading, setLoading] = useState(false); // Loading state
 
-
   // Redux State
   const { userData } = useSelector((state: RootState) => state.auth);
   const { error } = useSelector((state: RootState) => state.employee);
-  const { departments }: any = useSelector((state: RootState) => state.organization);
+  const { departments }: any = useSelector(
+    (state: RootState) => state.organization
+  );
   const organization_id = userData?.organization_id;
   const user_id = userData?.id;
-
 
   useEffect(() => {
     if (selectedGoal) {
       setGoalName(selectedGoal.goal_name || "");
-      setStartDate(selectedGoal.start_date ? new Date(selectedGoal.start_date) : null);
-      setCompletionDate(selectedGoal.completion_date ? new Date(selectedGoal.completion_date) : null);
+      setStartDate(
+        selectedGoal.start_date ? new Date(selectedGoal.start_date) : null
+      );
+      setCompletionDate(
+        selectedGoal.completion_date
+          ? new Date(selectedGoal.completion_date)
+          : null
+      );
       setGoalType(selectedGoal.goal_type || "");
       setDescription(selectedGoal.description || "");
       setTasks(selectedGoal.goal_tasks?.map((task: any) => task.value) || [""]);
       setSelectedEmployeeIds(selectedGoal.assignee_id || []); // Pre-select assigned employees
 
       const associatedDepartment = departments?.find((dept: any) =>
-        dept?.employees?.some((emp: any) => selectedGoal.assignee_id?.includes(emp.id))
+        dept?.employees?.some((emp: any) =>
+          selectedGoal.assignee_id?.includes(emp.id)
+        )
       );
 
       if (associatedDepartment) {
@@ -68,8 +85,6 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
       handleClearForm(); // Clear form if no goal is selected
     }
   }, [selectedGoal, departments]);
-
-
 
   // Fetch Departments
   useEffect(() => {
@@ -84,7 +99,8 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
     updatedTasks[index] = value;
     setTasks(updatedTasks);
   };
-  const handleRemoveTask = (index: number) => setTasks(tasks.filter((_, i) => i !== index));
+  const handleRemoveTask = (index: number) =>
+    setTasks(tasks.filter((_, i) => i !== index));
 
   // Update employees when a department is selected
   useEffect(() => {
@@ -96,13 +112,17 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
     }
   }, [selectedDepartmentId, departments]);
 
-
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-  
+
     // Validate required fields
-    if (!goalName || !startDate || !completionDate || !goalType || selectedEmployeeIds.length === 0) {
+    if (
+      !goalName ||
+      !startDate ||
+      !completionDate ||
+      !goalType ||
+      selectedEmployeeIds.length === 0
+    ) {
       setNotification({
         id: Date.now(),
         text: "Please fill in all required fields.",
@@ -110,7 +130,7 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
       });
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("goal_name", goalName);
     formData.append("start_date", startDate.toISOString());
@@ -119,19 +139,19 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
     formData.append("description", description);
     formData.append("organization_id", organization_id.toString());
     formData.append("user_id", user_id);
-  
+
     // Append employee IDs
     selectedEmployeeIds.forEach((id) => {
       formData.append("asignee_Ids[]", id.toString());
     });
-  
+
     // Append tasks
     tasks.forEach((task) => {
       if (task.trim() !== "") {
         formData.append(`goal_tasks[]`, task);
       }
     });
-  
+
     try {
       setLoading(true); // Show loading spinner
       if (selectedGoal) {
@@ -152,13 +172,13 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
           type: "success",
         });
       }
-  
+
       // Fetch updated goals
       await dispatch(fetchGoals(userData?.id));
       handleClearForm(); // Reset form after successful submission
     } catch (error: any) {
       console.error("Error during goal submission:", error);
-  
+
       setNotification({
         id: Date.now(),
         text: error.message || "An error occurred while processing the goal.",
@@ -168,12 +188,17 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
       setLoading(false); // Hide loading spinner
     }
   };
-  
 
   const handleUpdated = async (e: any) => {
     e.preventDefault();
 
-    if (!goalName || !startDate || !completionDate || !goalType || selectedEmployeeIds.length === 0) {
+    if (
+      !goalName ||
+      !startDate ||
+      !completionDate ||
+      !goalType ||
+      selectedEmployeeIds.length === 0
+    ) {
       setNotification({
         id: Date.now(),
         text: "Please fill in all required fields.",
@@ -221,12 +246,10 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
       handleClearForm(); // Clear the form upon successful submission
     } catch (error) {
       console.error("Failed to process goal:", error);
-    }
-    finally {
+    } finally {
       setLoading(false); // Stop loading
     }
   };
-
 
   useEffect(() => {
     if (success !== null) {
@@ -267,15 +290,14 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
     });
   };
 
-
-
-
   return (
     <div className="bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] text-white p-14 rounded-xl shadow-lg w-full">
       {loading && (
         <div className="absolute inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
           <Spinner height="50px" width="50px" />
-          <p className="mt-3 text-white text-lg font-semibold">Please wait, processing your goal...</p>
+          <p className="mt-3 text-white text-lg font-semibold">
+            Please wait, processing your goal...
+          </p>
         </div>
       )}
       <StackedNotifications
@@ -362,7 +384,6 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
                   <p className="text-sm text-gray-400">No employees found.</p>
                 )}
               </div>
-
             </div>
           )}
         </div>
@@ -389,7 +410,7 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
                 placeholder="Add Task"
                 className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262] pr-10"
               />
-              {task && (
+              {index > 0 && task && (
                 <button
                   type="button"
                   onClick={() => handleRemoveTask(index)}
@@ -418,9 +439,7 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
         />
 
         <div className="flex justify-between gap-3">
-
           {selectedGoal ? (
-
             <button
               type="submit"
               onClick={handleUpdated}
@@ -429,16 +448,13 @@ const Employeegoal = ({ handleAddGoal, handleUpdateGoal, selectedGoal, success }
               Update Goal
             </button>
           ) : (
-
             <button
               type="submit"
               className="w-full sm:w-40 rounded-lg bg-gradient-to-b from-[#BAA716] to-[#B50D34] px-4 py-2 text-center font-medium text-white text-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
             >
               Submit
             </button>
-
           )}
-
 
           <button
             type="button"

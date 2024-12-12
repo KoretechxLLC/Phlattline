@@ -30,19 +30,19 @@ const InterviewTab: React.FC = () => {
           image: "/assets/DummyImg.png",
           name: "John Doe",
           designation: "Software Engineer",
-          interviewStatus: "Pending",
+          interviewStatus: "Satisfied",
         },
         {
           image: "/assets/DummyImg.png",
           name: "Jane Smith",
           designation: "Product Manager",
-          interviewStatus: "Completed",
+          interviewStatus: "Satisfied",
         },
         {
           image: "/assets/DummyImg.png",
           name: "Alice Johnson",
           designation: "UI/UX Designer",
-          interviewStatus: "Scheduled",
+          interviewStatus: "Satisfied",
         },
       ]);
       setLoading(false);
