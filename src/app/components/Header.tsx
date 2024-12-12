@@ -66,7 +66,7 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
         <div className="flex gap-2 mx-5 items-start">
           {/* Show the EditWidget and HeaderSearch only on medium and larger screens */}
           <div className="hidden md:flex gap-2 my-1">
-            {/* <EditWidget /> */}
+            <EditWidget />
             {/* <HeaderSearch /> */}
           </div>
 
