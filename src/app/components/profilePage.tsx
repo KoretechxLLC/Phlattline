@@ -79,7 +79,7 @@ const Profile = ({ profileImage }: any) => {
   sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
   const userType = userData?.user_type_id;
   const organizationName = userData?.organizations?.organization_name;
-  console.log({ organizationName });
+
   const [data, setData] = useState<any>();
 
   const dispatch: any = useDispatch();

@@ -69,6 +69,7 @@ model organizations {
   resignation        resignation[]
   talent             talent[]
   users              users[]
+ 
 }
 
 model employees {
@@ -86,16 +87,17 @@ model employees {
   date_of_birth      DateTime?            @db.Date
   designation        String?              @db.VarChar(100)
   profile_image      String?              @db.VarChar(255)
-  status             String               @default("pending") @db.VarChar(20)
   left               Boolean              @default(false)
+  status             String               @default("pending") @db.VarChar(20)
+
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
   employee_review    employee_review[]
   department         department?          @relation(fields: [departmentId], references: [id])
   organization       organizations        @relation(fields: [organization_id], references: [id])
   leaderFeedback     leaderFeedback[]
-  resignation        resignation[]
   users              users[]
+  resignation        resignation[]
 }
 
 model resignation {
@@ -109,6 +111,8 @@ model resignation {
   employees       employees          @relation(fields: [employee_id], references: [id])
   organization    organizations      @relation(fields: [organization_id], references: [id])
 }
+
+
 
 model department {
   id              Int              @id @default(autoincrement())
