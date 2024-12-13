@@ -72,11 +72,11 @@ const EventModal = ({
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div
         style={{ maxHeight: "90%", overflow: "auto" }}
-        className="relative p-5 bg-[#000000b9] rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row"
+        className="relative p-5 bg-white rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row"
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white hover:text-red-500"
+          className="absolute top-4 right-4 text-black hover:text-red-500"
         >
           <Icon icon="ic:outline-close" className="text-3xl" />
         </button>
@@ -84,7 +84,7 @@ const EventModal = ({
         {/* Left Side: Event Details */}
         <div className="flex-grow flex flex-col">
           <div className="flex items-center justify-between px-5 py-2">
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-black">
               {event.course_name}
             </h1>
             <Badge className="font-normal rounded-3xl text-lg bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-white">
@@ -117,12 +117,12 @@ const EventModal = ({
 
           {/* Course Details Section */}
           <div className="space-y-3 w-full my-2 mx-2 flex-grow">
-            <Card className="bg-gray-800 p-4 rounded-2xl">
+            <Card className=" border border-gray-800 p-4 rounded-2xl">
               <CardContent>
-                <h1 className="text-3xl font-bold mb-2 text-white">
+                <h1 className="text-3xl font-bold mb-2 text-black">
                   About this course
                 </h1>
-                <div className="flex items-center justify-between text-white text-sm lg:text-base font-normal">
+                <div className="flex items-center justify-between text-black text-sm lg:text-base font-normal">
                   {/* <div className="flex items-center gap-1.5">
                     <Icon icon="ph:star-fill" className="text-red-600" />
                     <Icon icon="ph:star-fill" className="text-red-600" />
@@ -140,7 +140,7 @@ const EventModal = ({
                   </div>
                 </div>
 
-                <div className="text-white text-sm lg:text-base font-normal ">
+                <div className="text-black text-sm lg:text-base font-normal ">
                   <p>{event?.description}</p>
                 </div>
               </CardContent>
@@ -258,7 +258,7 @@ const EventModal = ({
                             />
                           </div>
                         </div>
-                        <div className="absolute bottom-0 left-0 p-2 text-white bg-opacity-60 rounded-br-lg rounded-tl-lg">
+                        <div className="absolute bottom-0 left-0 p-2 text-black bg-opacity-60 rounded-br-lg rounded-tl-lg">
                           <span
                             className="text-lg font-bold"
                             style={{ textShadow: "2px 2px 4px black" }}

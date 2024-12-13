@@ -1,12 +1,12 @@
+"use client";
 import React from "react";
-import Image from "next/image";
-import HeaderSearch from "@/app/components/header-search";
+import { usePathname, useRouter } from "next/navigation";
+import RedBadge from "@/app/components/RedBadge";
 import ProfileInfo from "@/app/components/profile-info";
 import Notifications from "@/app/components/notifications";
-import EditWidget from "@/app/components/EditWidget";
-import { Badge } from "@/app/components/badge";
-import RedBadge from "@/app/components/RedBadge";
 import { Hamburger } from "./hamburger";
+import Icon from "@/app/components/utility-icon"; // Ensure correct Icon component is imported
+import { Button } from "@/app/components/button-sidebar"; // Ensure correct Button component is imported
 
 interface HeaderProps {
   HeadingText: string;
@@ -14,12 +14,39 @@ interface HeaderProps {
 }
 
 const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
+  const router = useRouter();
+  const path = usePathname();
+
+  const pathContentMap: { [key: string]: boolean } = {
+    "/Portal/Dashboard": true,
+    "/Portal/DailyDose": true,
+    "/Portal/Courses": true,
+    "/Portal/Reports": true,
+    "/Portal/Assessments": true,
+    "/Portal/PerformanceManagement": true,
+    "/Portal/PerformanceManagementOrg": true,
+    "/Portal/TalentManagement": true,
+    "/Portal/ODaas": true,
+    "/Portal/Settings": true,
+    "/Portal/ExploreJobs": true,
+  };
+
+  // Check if the current path is in the pathContentMap
+  const showBackButton = !pathContentMap[path];
+
   return (
     <div className="w-full">
       {/* Full header responsive layout */}
-      <div className="flex flex-wrap items-center justify-between py-4  xl:pl-64 gap-5">
+      <div className="flex flex-wrap items-center justify-between py-4 xl:pl-64 gap-5">
         {/* Heading Section */}
         <div className="flex items-center gap-3 flex-1">
+          {/* Back Button */}
+          {showBackButton && (
+            <Button onClick={() => router.back()} color="default">
+              <Icon icon="weui:back-outlined" className="w-8 h-8 text-white" />
+            </Button>
+          )}
+
           {/* Heading and Description */}
           <div className="flex flex-col space-y-2">
             <h1 className="text-xl sm:text-2xl md:text-3xl mx-2 font-bold">
@@ -48,7 +75,7 @@ const Header = ({ HeadingText, HeadingDesc }: HeaderProps) => {
             <ProfileInfo /> {/* Show ProfileInfo on screens above xl */}
           </div>
           <div className="block xl:hidden">
-            <Hamburger /> {/* Show Example on screens below xl */}
+            <Hamburger /> {/* Show Hamburger on screens below xl */}
           </div>
         </div>
       </div>

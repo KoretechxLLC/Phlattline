@@ -11,6 +11,7 @@ import { Badge } from "./badge";
 import { Button } from "./button-sidebar";
 import EmployeeModal from "./employeeModal";
 import ResignationPopup from "./resignationPopup"; // Import ResignationPopup
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type EmployeeData = {
   image: string;
@@ -40,6 +41,8 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeData | null>(
     null
   ); // Store the selected employee for resignation
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   const handleViewAllClick = () => {
     setIsModalOpen(true);
@@ -56,6 +59,18 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
 
   const handleCloseResignationPopup = () => {
     setIsResignationPopupOpen(false); // Close the resignation popup
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   return (
@@ -104,6 +119,29 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
               </CardContent>
             </li>
           ))}
+          <div className="flex items-center justify-center gap-2 py-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-8 h-8 border-transparent hover:bg-transparent"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="w-5 h-5 text-default-900" />
+            </Button>
+            <span className="text-sm font-medium text-default-900">
+              Page {currentPage} of {totalPage}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-8 h-8 border-transparent hover:bg-transparent"
+              onClick={handleNextPage}
+              disabled={currentPage >= totalPage}
+            >
+              <ChevronRight className="w-5 h-5 text-default-900" />
+            </Button>
+          </div>
         </ul>
         {!hideViewAll && (
           <Button

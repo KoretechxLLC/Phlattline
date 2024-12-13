@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Icon } from "@iconify/react";
 
-const LDStrategyTab = ({ handleAddGoal, success }: any) => {
+const LDStrategyTab = () => {
   // State for form fields
   const [goalName, setGoalName] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -37,43 +37,13 @@ const LDStrategyTab = ({ handleAddGoal, success }: any) => {
   ];
   const [filteredAssignees, setFilteredAssignees] = useState(goalsAssignees);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const goalData = {
-      goal_name: goalName,
-      start_date: startDate?.toISOString(),
-      completion_date: completionDate?.toISOString(),
-      goal_type: goalType,
-      description: description,
-    };
-    handleAddGoal(goalData);
-  };
-
-  useEffect(() => {
-    if (success) {
-      setGoalName("");
-      setStartDate(null);
-      setCompletionDate(null);
-      setGoalType("");
-      setDescription("");
-    }
-  }, [success]);
-
-  useEffect(() => {
-    setFilteredAssignees(
-      goalsAssignees.filter((assignee) =>
-        assignee.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [searchTerm]);
-
   return (
     <div className="bg-gradient-to-b from-[#62626250] to-[#2D2C2C50] text-white 4xl:p-3 p-2 rounded-xl shadow-lg w-full">
       <h2 className="text-xl font-semibold mb-4 text-center">L&D Strategies</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column: Goal Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form className="space-y-4">
           <div>
             <input
               type="text"

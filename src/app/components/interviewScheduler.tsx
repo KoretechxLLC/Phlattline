@@ -8,9 +8,10 @@ import {
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Button } from "./button-sidebar";
 
-import ApplicationPopup from "./ApplicationPopup";
+import ApplicationPopup from "./applicationPopup";
 import Deletemodel from "./DeleteModal";
 import { FiTrash2 } from "react-icons/fi";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const InterviewSchedulerTab: React.FC = () => {
   // Static array of interview data
@@ -70,29 +71,13 @@ const InterviewSchedulerTab: React.FC = () => {
       message: "Eager to utilize my backend development skills.",
       cvLink: "https://example.com/samuel_lee_cv.pdf",
     },
-    {
-      id: 7,
-      image: "/assets/DummyImg.png",
-      name: "Sophia Martinez",
-      designation: "Marketing Specialist",
-      interviewStatus: "Complete",
-      message: "Looking forward to joining the marketing team.",
-      cvLink: "https://example.com/sophia_martinez_cv.pdf",
-    },
-    {
-      id: 8,
-      image: "/assets/DummyImg.png",
-      name: "Lucas Green",
-      designation: "DevOps Engineer",
-      interviewStatus: "View",
-      message: "Excited to streamline infrastructure and processes.",
-      cvLink: "https://example.com/lucas_green_cv.pdf",
-    },
   ];
 
   // State to manage modal visibility
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   const handleOpenPopup = (employee: any) => {
     setSelectedEmployee(employee);
@@ -102,6 +87,18 @@ const InterviewSchedulerTab: React.FC = () => {
   const handleClosePopup = () => {
     setIsPopupVisible(false);
     setSelectedEmployee(null);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   return (
@@ -183,6 +180,29 @@ const InterviewSchedulerTab: React.FC = () => {
               </CardContent>
             </li>
           ))}
+          <div className="flex items-center justify-center gap-2 py-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-8 h-8 border-transparent hover:bg-transparent"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="w-5 h-5 text-default-900" />
+            </Button>
+            <span className="text-sm font-medium text-default-900">
+              Page {currentPage} of {totalPage}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-8 h-8 border-transparent hover:bg-transparent"
+              onClick={handleNextPage}
+              disabled={currentPage >= totalPage}
+            >
+              <ChevronRight className="w-5 h-5 text-default-900" />
+            </Button>
+          </div>
         </ul>
       </Card>
 

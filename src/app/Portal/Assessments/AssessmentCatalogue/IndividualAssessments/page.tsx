@@ -32,13 +32,13 @@ const IndividualAssessments = () => {
   const dispatch: any = useDispatch();
   const user_Id = userData?.id;
   useEffect(() => {
-    if(user_Id){
-    dispatch(
-      fetchassessmentsCount({
-        filter: { userId: user_Id, assessmentFor: "individual" },
-      })
-    );
-  }
+    if (user_Id) {
+      dispatch(
+        fetchassessmentsCount({
+          filter: { userId: user_Id, assessmentFor: "individual" },
+        })
+      );
+    }
   }, [dispatch, userData]);
 
   useEffect(() => {

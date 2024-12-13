@@ -25,7 +25,7 @@ const highPotentialEmployees = [
 
 const TalentDevelopment = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* First Row */}
       <div>
         <EmployeesTab
@@ -33,12 +33,12 @@ const TalentDevelopment = () => {
           employees={highPotentialEmployees}
         />
       </div>
-      <div>
+      <div className="md:col-span-2">
         <LDStrategyTab />
       </div>
 
       {/* Second Row */}
-      <div className="md:col-span-2">
+      <div className="md:col-span-3">
         <SuccessionPlanningTab />
       </div>
     </div>

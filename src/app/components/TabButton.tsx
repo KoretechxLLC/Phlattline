@@ -212,7 +212,7 @@ const SpringModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#000000b9] p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-white p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             <h1 className="text-center text-3xl font-bold text-[#B51533] -mb-[1em]">
               Training-On Demand

@@ -13,15 +13,12 @@ import { CardContent } from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Button } from "./button-sidebar";
 
-
-
-
 type EmployeeModalProps = {
   open: boolean;
-  coursesAssign?: any; 
+  coursesAssign?: any;
   courseId?: number;
   onClose: () => void;
-  handleStateManage?: (message:string,type:any) => void;
+  handleStateManage?: (message: string, type: any) => void;
   showSelectionControls?: boolean;
 };
 
@@ -32,10 +29,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
   onClose,
   handleStateManage = () => {},
   showSelectionControls = true,
-  
 }) => {
-
-  
   const dispatch = useDispatch<any>();
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<
     number | null
@@ -50,8 +44,6 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
   const { userData } = useSelector((state: RootState) => state.auth);
   const organization_id = userData?.organization_id;
   const userId = userData?.id;
-
-
 
   // Fetch departments
   useEffect(() => {
@@ -81,21 +73,18 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
       setAllCoursesAssign(assigned);
     }
-  }, [coursesAssign])
-
-
+  }, [coursesAssign]);
 
   useEffect(() => {
     if (assignCoursesSuccess) {
-      handleStateManage(assignCoursesSuccess,"success")
+      handleStateManage(assignCoursesSuccess, "success");
       onClose();
       dispatch(resetSuccess());
     }
     if (assignCoursesError) {
       console.error("Course assignment error:", assignCoursesError);
 
-      
-      handleStateManage(assignCoursesError,"error")
+      handleStateManage(assignCoursesError, "error");
       dispatch(resetError());
     }
   }, [assignCoursesSuccess, assignCoursesError, dispatch]);
@@ -171,8 +160,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-     
-      <div className="relative p-5 bg-[#000000b2] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
+      <div className="relative p-5 bg-white rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -184,7 +172,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
         {/* Department Dropdown */}
         <div className="px-5 py-4 text-center">
           <select
-            className="w-full p-2 rounded-xl h-14 bg-[#00000073] border border-[#626262] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]"
+            className="w-full p-2 rounded-xl h-14 bg-white border border-[#626262] text-black focus:outline-none focus:ring-1 focus:ring-[#626262]"
             value={selectedDepartmentId || ""}
             onChange={(e) => setSelectedDepartmentId(Number(e.target.value))}
           >
@@ -204,7 +192,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
               <Spinner height="30px" width="30px" />
             </div>
           ) : filteredEmployees.length === 0 ? (
-            <div className="text-center text-white pt-10 pb-10">
+            <div className="text-center text-black pt-10 pb-10">
               <p>No employees found for this department.</p>
             </div>
           ) : (
@@ -236,7 +224,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
                           />
                         </Avatar>
                         <div className="flex flex-col">
-                          <span className="font-semibold text-white uppercase">
+                          <span className="font-semibold text-black uppercase">
                             {employee.first_name} {employee.last_name}
                           </span>
                           <span className="text-red-600 text-sm">
@@ -266,13 +254,14 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
             <Button
               onClick={handleAssign}
               disabled={assigning}
-              className="p-2 bg-[#B86623] hover:bg-[#B86623] focus:ring-[#B86623] focus:ring-opacity-50 disabled:opacity-50 text-white text-lg rounded-full flex justify-center items-center"
+              color="primary"
+              className="rounded-3xl"
             >
               {assigning ? (
                 <Spinner height="25px" width="25px" />
               ) : (
                 <>
-                  <span className="mr-2">Done</span>
+                  <span>Done</span>
                   <Icon icon="material-symbols:done-outline" />
                 </>
               )}

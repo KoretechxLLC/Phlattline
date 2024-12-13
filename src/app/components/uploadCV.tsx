@@ -23,7 +23,7 @@ const UploadCVPopup = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div
-        className="bg-[#000000b9] rounded-lg shadow-lg p-6"
+        className="bg-white rounded-lg shadow-lg p-6"
         style={{ width: "760px", height: "546px" }}
       >
         {/* Popup Header */}
@@ -33,7 +33,7 @@ const UploadCVPopup = ({
             onClick={onClose}
             className="text-red-500 text-xl font-bold hover:text-red-700"
           >
-            Close
+            ×
           </button>
         </div>
 
