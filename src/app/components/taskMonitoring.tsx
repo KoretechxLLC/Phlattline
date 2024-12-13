@@ -11,6 +11,7 @@ import { Button } from "./button-sidebar";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import Icon from "./utility-icon";
 import Spinner from "./Spinner";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Assignee {
   name: string;
@@ -27,6 +28,8 @@ interface Task {
 const TaskMonitoring: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -106,6 +109,18 @@ const TaskMonitoring: React.FC = () => {
     fetchTasks();
   }, []);
 
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
   return (
     <div>
       <CardHeader>
@@ -171,6 +186,29 @@ const TaskMonitoring: React.FC = () => {
                             </span>
                           </li>
                         ))}
+                        <div className="flex items-center justify-center gap-2 py-4">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="w-8 h-8 border-transparent hover:bg-transparent"
+                            onClick={handlePreviousPage}
+                            disabled={currentPage === 1}
+                          >
+                            <ChevronLeft className="w-5 h-5 text-default-900" />
+                          </Button>
+                          <span className="text-sm font-medium text-default-900">
+                            Page {currentPage} of {totalPage}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="w-8 h-8 border-transparent hover:bg-transparent"
+                            onClick={handleNextPage}
+                            disabled={currentPage >= totalPage}
+                          >
+                            <ChevronRight className="w-5 h-5 text-default-900" />
+                          </Button>
+                        </div>
                       </ul>
                     </CardContent>
                   </div>

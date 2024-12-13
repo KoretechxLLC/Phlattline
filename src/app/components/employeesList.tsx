@@ -8,6 +8,7 @@ import {
 } from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Button } from "./button-sidebar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Define a type that includes both current and left employee properties
 type Employee = {
@@ -21,6 +22,8 @@ type Employee = {
 const EmployeesListTab: React.FC = () => {
   // State to track which tab is active
   const [activeTab, setActiveTab] = useState<"current" | "left">("current");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   // Static arrays for current and left employees
   const currentEmployees: Employee[] = [
@@ -85,6 +88,17 @@ const EmployeesListTab: React.FC = () => {
   const displayedEmployees =
     activeTab === "current" ? currentEmployees : leftEmployees;
 
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
   return (
     <div>
       {/* Tab Buttons */}
@@ -152,6 +166,29 @@ const EmployeesListTab: React.FC = () => {
               </CardContent>
             </li>
           ))}
+          <div className="flex items-center justify-center gap-2 py-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-8 h-8 border-transparent hover:bg-transparent"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="w-5 h-5 text-default-900" />
+            </Button>
+            <span className="text-sm font-medium text-default-900">
+              Page {currentPage} of {totalPage}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-8 h-8 border-transparent hover:bg-transparent"
+              onClick={handleNextPage}
+              disabled={currentPage >= totalPage}
+            >
+              <ChevronRight className="w-5 h-5 text-default-900" />
+            </Button>
+          </div>
         </ul>
       </Card>
     </div>

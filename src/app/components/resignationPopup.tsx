@@ -40,10 +40,10 @@ const ResignationPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[#000000b9] rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
         {/* Popup Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold text-black">
             {userType === 2
               ? "Employee Resignation Request"
               : "Submit Resignation Request"}
@@ -75,7 +75,7 @@ const ResignationPopup = ({
                     />
                   </Avatar>
                   <div>
-                    <span className="font-semibold text-white text-sm block">
+                    <span className="font-semibold text-black text-sm block">
                       {employee?.name}
                     </span>
                   </div>

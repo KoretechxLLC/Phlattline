@@ -114,7 +114,7 @@ const WriteReviewModal = ({
         notification={notification}
         setNotification={setNotification}
       />
-      <div className="relative p-5 bg-[#000000b9] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
+      <div className="relative p-5 bg-white rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -124,9 +124,7 @@ const WriteReviewModal = ({
         </button>
         {/* Title Section */}
         <div className="px-5 py-4 text-center">
-          <h1 className="text-3xl font-bold text-white">
-            Write a Review for {employeeName}
-          </h1>
+          <h1 className="text-3xl font-bold text-black">Write a Review</h1>
         </div>
         {/* Rating Section */}
         <div className="flex justify-center space-x-2 py-4">

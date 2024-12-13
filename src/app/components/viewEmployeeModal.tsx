@@ -89,7 +89,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
       return () => clearTimeout(timeout);
     }
   }, [notification]);
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -105,7 +105,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#000000b9]  rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden border-2 border-white"
+            className="bg-white  rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden border-2 border-white"
           >
             {/* Flex container to align fields and image */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
@@ -113,7 +113,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
               <div className="flex-1 p-4 rounded-xl">
                 {/* First Name Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">
+                  <span className="text-black  mx-3">
                     {singleEmployeeData?.first_name}
                   </span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
@@ -121,7 +121,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
 
                 {/* Last Name Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">
+                  <span className="text-black  mx-3">
                     {singleEmployeeData?.last_name}
                   </span>
                   <MdPerson className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
@@ -129,7 +129,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
 
                 {/* Email Input (Disabled) */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">
+                  <span className="text-black  mx-3">
                     {singleEmployeeData?.email}
                   </span>
                   <MdEmail className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
@@ -137,7 +137,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
 
                 {/* Designation Input */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">
+                  <span className="text-black  mx-3">
                     {singleEmployeeData?.designation}
                   </span>
                   <MdWork className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500" />
@@ -145,7 +145,7 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
 
                 {/* Date Picker */}
                 <div className="relative py-4 my-2 border border-[#62626280] rounded-2xl">
-                  <span className="text-white  mx-3">
+                  <span className="text-black  mx-3">
                     {singleEmployeeData?.date_of_birth &&
                       new Date(
                         singleEmployeeData?.date_of_birth
@@ -168,12 +168,8 @@ export const ViewEmployeeModal: React.FC<ModalProps> = ({
                 ) : (
                   <div className="w-56 h-52 ring-4 ring-white md:mt-0 mt-3 flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
                     <span className="text-white text-2xl md:text-8xl font-bold pt-3">
-                      {singleEmployeeData?.first_name
-                        ?.charAt(0)
-                        .toUpperCase() +
-                        singleEmployeeData?.last_name
-                          ?.charAt(0)
-                          .toUpperCase()}
+                      {singleEmployeeData?.first_name?.charAt(0).toUpperCase() +
+                        singleEmployeeData?.last_name?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}

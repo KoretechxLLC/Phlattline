@@ -213,7 +213,7 @@ const EmployeeAddModal = ({
         notification={notification}
         setNotification={setNotification}
       />
-      <div className="relative p-5 bg-[#000000b9] rounded-3xl w-3/4 md:w-1/3 flex flex-col">
+      <div className="relative p-5 bg-white rounded-3xl w-3/4 md:w-1/3 flex flex-col">
         {/* Header Section with Close Button and Employee Count */}
         <div className="flex justify-between items-center pb-4">
           <button
@@ -291,10 +291,10 @@ const EmployeeAddModal = ({
                             </div>
                           )}
                           <div className="flex flex-col">
-                            <span className="font-semibold text-white uppercase">
+                            <span className="font-semibold text-black uppercase">
                               {employees.first_name} {employees.last_name}
                             </span>
-                            <span className="text-gray-600 text-sm">
+                            <span className="text-red-600 text-sm">
                               {employees.email}
                             </span>
                           </div>

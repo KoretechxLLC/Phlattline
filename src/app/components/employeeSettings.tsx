@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/app/components/tooltip";
-import { Eye, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Trash2 } from "lucide-react";
 import { Button } from "@/app/components/button-sidebar";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -42,6 +42,8 @@ const EmployeeSetting = ({
   const [loading, setLoading] = useState<boolean>(false); // Loading state for spinner
   const [deleteModal, setDeleteModal] = useState(false);
   const { userData } = useSelector((state: RootState) => state.auth);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   const {
     departments,
@@ -198,6 +200,18 @@ const EmployeeSetting = ({
       employeesDelete({ data: { employee_id: id, organization_id, user_id } })
     );
     setDeleteModal(true);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
   return (
     <div className="overflow-auto w-full">
@@ -376,6 +390,29 @@ const EmployeeSetting = ({
           singleEmployeeData={singleEmployeeData}
         />
       )}
+      <div className="flex items-center justify-center gap-2 py-4">
+        <Button
+          variant="outline"
+          size="icon"
+          className="w-8 h-8 border-transparent hover:bg-transparent"
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+        >
+          <ChevronLeft className="w-5 h-5 text-default-900" />
+        </Button>
+        <span className="text-sm font-medium text-default-900">
+          Page {currentPage} of {totalPage}
+        </span>
+        <Button
+          variant="outline"
+          size="icon"
+          className="w-8 h-8 border-transparent hover:bg-transparent"
+          onClick={handleNextPage}
+          disabled={currentPage >= totalPage}
+        >
+          <ChevronRight className="w-5 h-5 text-default-900" />
+        </Button>
+      </div>
     </div>
   );
 };

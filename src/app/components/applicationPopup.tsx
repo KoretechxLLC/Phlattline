@@ -40,10 +40,10 @@ const ApplicationPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[#000000b9] rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
         {/* Popup Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-white">Employee Details</h2>
+          <h2 className="text-3xl font-bold text-black">Employee Details</h2>
           <button
             onClick={onClose}
             className="text-red-600 text-3xl font-extrabold hover:text-red-800"
@@ -69,10 +69,10 @@ const ApplicationPopup = ({
                 />
               </Avatar>
               <div>
-                <span className="font-semibold text-white text-sm block">
+                <span className="font-semibold text-black text-sm block">
                   {employee.name}
                 </span>
-                <span className="font-semibold text-xs text-gray-400 block mt-1">
+                <span className="font-semibold text-xs text-red-600 block mt-1">
                   {employee.designation}
                 </span>
               </div>
@@ -173,7 +173,7 @@ const SpringModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#000000b9] p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-white p-10 rounded-xl w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             <h1 className="text-center text-3xl font-bold text-[#B51533] -mb-[1em]">
               Schedule Interview

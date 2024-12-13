@@ -93,16 +93,6 @@ const JobSummary: React.FC<JobSummaryProps> = ({ params: { id } }) => {
       <CardHeader className="rounded-xl shadow-lg p-8 mx-auto w-full bg-black">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <Button
-            onClick={() => router.back()}
-            color="default"
-            className="mb-4"
-          >
-            <Icon
-              icon="weui:back-outlined"
-              className="w-10 h-10 text-white mr-2"
-            />
-          </Button>
           <h2
             className={`text-3xl font-bold text-white ${
               usertype === 1 || usertype === 3 ? "" : "flex-grow text-center"

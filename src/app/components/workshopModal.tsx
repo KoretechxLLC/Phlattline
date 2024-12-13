@@ -57,7 +57,7 @@ const WorkshopModal = ({
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div
         style={{ maxHeight: "90%", overflow: "auto" }}
-        className="relative p-5 bg-[#000000b9] rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row"
+        className="relative p-5 bg-white rounded-3xl w-4/5 md:w-1/2 flex flex-col md:flex-row"
       >
         <button
           onClick={onClose}
