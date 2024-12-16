@@ -12,25 +12,21 @@ const organizationData = [
     id: 1,
     name: "Tech Solutions Ltd.",
     type: "IT",
-    rating: 4.5,
   },
   {
     id: 2,
     name: "Creative Minds",
     type: "Design",
-    rating: 4.2,
   },
   {
     id: 3,
     name: "Build and Grow",
     type: "Construction",
-    rating: 3.8,
   },
   {
     id: 4,
     name: "Health First",
     type: "Healthcare",
-    rating: 4.7,
   },
 ];
 
@@ -78,7 +74,6 @@ const ExploreJobs = () => {
               <div className="flex-1 px-4 py-3 whitespace-nowrap">S.NO</div>
               <div className="flex-1 px-4 py-3 whitespace-nowrap">Names</div>
               <div className="flex-1 px-4 py-3 whitespace-nowrap">Type</div>
-              <div className="flex-1 px-4 py-3 whitespace-nowrap">Rating</div>
               <div className="flex-1 px-4 py-3 whitespace-nowrap">Action</div>
             </div>
             {/* Organizations Data */}
@@ -89,9 +84,6 @@ const ExploreJobs = () => {
                     <div className="flex-1">{index + 1}</div>
                     <div className="flex-1">{organization.name}</div>
                     <div className="flex-1">{organization.type}</div>
-                    <div className="flex-1">
-                      {organization.rating.toFixed(1)}
-                    </div>
                     <div className="flex-1">
                       <Button
                         color="primary"

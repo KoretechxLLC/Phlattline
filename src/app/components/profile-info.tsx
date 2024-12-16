@@ -100,7 +100,7 @@ const ProfileInfo = () => {
             href="/Portal/Settings?view=profilesettings"
           />
           <hr className="border-t border-gray-300 " />
-          <Option
+          {/* <Option
             setOpen={setOpen}
             icon="heroicons:credit-card"
             text="Billing Method"
@@ -113,7 +113,7 @@ const ProfileInfo = () => {
             text="Purchase History"
             href="/Portal/Settings/PurchaseHistory"
           />
-          <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " /> */}
           <Option
             setOpen={setOpen}
             icon="heroicons:arrow-right-on-rectangle"

@@ -106,8 +106,8 @@ const Assessments = () => {
               activeTab === "catalogue" ||
               activeTab === "individualAssessments" ||
               activeTab === "recommendedAssessments" ||
-               activeTab === "TeamAssessments" ||
-                activeTab === "OrganizationAssesments"
+              activeTab === "TeamAssessments" ||
+              activeTab === "OrganizationAssesments"
                 ? "primary"
                 : "default"
             }
@@ -117,15 +117,6 @@ const Assessments = () => {
           </Button>
         )}
 
-        {/* Assessment Results Button */}
-        <Button
-          className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
-          color={activeTab === "results" ? "primary" : "default"}
-          onClick={() => setActiveTab("results")}
-        >
-          Assessment Results
-        </Button>
-
         {/* My Assessments Button */}
         <Button
           className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
@@ -133,6 +124,15 @@ const Assessments = () => {
           onClick={() => setActiveTab("myAssessments")}
         >
           My Assessments
+        </Button>
+
+        {/* Assessment Results Button */}
+        <Button
+          className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4 py-2 sm:px-6"
+          color={activeTab === "results" ? "primary" : "default"}
+          onClick={() => setActiveTab("results")}
+        >
+          Assessment Results
         </Button>
       </div>
       {/* Render Content Based on Active Tab */}

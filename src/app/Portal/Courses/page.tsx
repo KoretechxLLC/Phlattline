@@ -105,9 +105,9 @@ const Courses = () => {
             <Card className="shadow-md rounded-3xl w-full h-full">
               <CardHeader>
                 <div className="flex justify-between gap-3 items-center">
-                  <h1 className="text-xs">Upcoming Videos and Blogs</h1>
+                  <h1 className="text-lg">Upcoming Videos and Blogs</h1>
                   <p
-                    className="text-sm underline cursor-pointer"
+                    className="text-lg underline cursor-pointer"
                     onClick={() => router.push("/Portal/DailyDose")}
                   >
                     View

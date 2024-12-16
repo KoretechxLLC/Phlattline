@@ -202,19 +202,6 @@ const EventModal = ({
               </div>
             </div>
           </div> */}
-
-          {/* Button */}
-          <div className="flex-shrink-0 mt-2">
-            <Button
-              color="primary"
-              className="w-full text-white px-4 py-2 rounded-3xl"
-              onClick={() =>
-                router.push(`/Portal/Courses/CourseDetail?courseId=${event.id}`)
-              }
-            >
-              Get Started
-            </Button>
-          </div>
         </div>
 
         {/* Right Side: Module List Only */}

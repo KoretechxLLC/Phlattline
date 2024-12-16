@@ -36,7 +36,7 @@ const PersonalGoals: React.FC<PersonalGoalsProps> = ({ showAvatar }) => {
         </div>
       ) : goals && goals.length > 0 ? (
         goals.filter((item: any) => item.status === true).length > 0 ? (
-          <ul className="space-y-1 w-full justify-center">
+          <ul className="space-y-1 w-full justify-center p-3">
             {goals
               .filter((item: any) => item.status === true)
               .map((item: any) => (
