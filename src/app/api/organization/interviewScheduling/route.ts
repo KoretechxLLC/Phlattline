@@ -1,11 +1,26 @@
 import { prisma } from "@/app/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function PUT(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
-    const { organizaiton_id, application_id } = data;
-    if (!organizaiton_id || !application_id) {
+    const data: any = await req.json();
+
+    const {
+      organization_id,
+      application_id,
+      interview_date,
+      interview_time,
+      candidate_id,
+      message,
+    } = data;
+    if (
+      !organization_id ||
+      !application_id ||
+      !interview_date ||
+      !interview_time ||
+      !candidate_id ||
+      !message
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -34,7 +49,7 @@ export async function PUT(req: NextRequest) {
       where: {
         id: Number(application_id),
         talent: {
-          organization_id: Number(organizaiton_id),
+          organization_id: Number(organization_id),
         },
       },
     });
@@ -49,6 +64,16 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    const createdSchedule = await prisma.interviewSchedule.create({
+      data: {
+        interview_date: new Date(interview_date),
+        interview_time,
+        organization_id,
+        candidate_user_id: candidate_id,
+        message,
+      },
+    });
+
     const updateStatus = await prisma.jobApplication.update({
       where: {
         id: Number(application_id),
@@ -57,12 +82,12 @@ export async function PUT(req: NextRequest) {
         scheduled: true,
       },
     });
-
+   
     return NextResponse.json(
       {
         success: true,
         message: "Interview scheduled successfully",
-        data: updateStatus,
+        data: createdSchedule + "  " + updateStatus,
       },
       { status: 201 }
     );
