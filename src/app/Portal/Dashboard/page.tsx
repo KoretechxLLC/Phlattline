@@ -62,9 +62,9 @@ const Dashboard = () => {
           <Card className="shadow-md rounded-3xl w-full h-full">
             <CardHeader>
               <div className="flex justify-between gap-3 items-center">
-                <h1 className="text-xs">Upcoming Videos and Blogs</h1>
+                <h1 className="text-lg">Upcoming Videos and Blogs</h1>
                 <p
-                  className="text-sm underline cursor-pointer"
+                  className="text-lg underline cursor-pointer"
                   onClick={() => router.push("/Portal/DailyDose")}
                 >
                   View
@@ -75,6 +75,19 @@ const Dashboard = () => {
               <NotesCalendar />
             </CardContent>
           </Card>
+        </div>
+
+        <div>
+          <TabButton
+            backgroundColor="#FF0000"
+            text="Training-On Demand"
+            imageSrc="/assets/LiveIcon.png"
+            textColor="#FFFFFF"
+            arrowImageSrc="/assets/ArrowRightUp.png"
+            showModalOnClick={true}
+            isClickable={true}
+            modalType="spring"
+          />
         </div>
 
         <div className="w-full">
@@ -97,19 +110,6 @@ const Dashboard = () => {
               <PersonalGoals showAvatar={true} />
             </CardContent>
           </Card>
-        </div>
-
-        <div>
-          <TabButton
-            backgroundColor="#FF0000"
-            text="Training-On Demand"
-            imageSrc="/assets/LiveIcon.png"
-            textColor="#FFFFFF"
-            arrowImageSrc="/assets/ArrowRightUp.png"
-            showModalOnClick={true}
-            isClickable={true}
-            modalType="spring"
-          />
         </div>
       </div>
     </div>
