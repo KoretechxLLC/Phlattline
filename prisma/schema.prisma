@@ -48,6 +48,7 @@ model users {
   employees                 employees?                  @relation(fields: [employee_id], references: [id])
   organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
+  interviewSchedule         interviewSchedule[]
 }
 
 model organizations {
@@ -69,25 +70,27 @@ model organizations {
   resignation        resignation[]
   talent             talent[]
   users              users[]
+  interviewSchedule  interviewSchedule[]
 }
 
 model employees {
-  id                 Int                  @id @default(autoincrement())
-  first_name         String               @db.VarChar(225)
-  last_name          String               @db.VarChar(225)
-  email              String               @unique @db.VarChar(225)
-  phone_number       String               @db.VarChar(50)
-  organization_code  String               @db.VarChar(255)
-  organization_id    Int
-  created_at         DateTime             @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime             @updatedAt
-  gender             EmployeeGender
-  departmentId       Int?
-  date_of_birth      DateTime?            @db.Date
-  designation        String?              @db.VarChar(100)
-  profile_image      String?              @db.VarChar(255)
-  status             String               @default("pending") @db.VarChar(20)
-  left               Boolean              @default(false)
+  id                Int            @id @default(autoincrement())
+  first_name        String         @db.VarChar(225)
+  last_name         String         @db.VarChar(225)
+  email             String         @unique @db.VarChar(225)
+  phone_number      String         @db.VarChar(50)
+  organization_code String         @db.VarChar(255)
+  organization_id   Int
+  created_at        DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime       @updatedAt
+  gender            EmployeeGender
+  departmentId      Int?
+  date_of_birth     DateTime?      @db.Date
+  designation       String?        @db.VarChar(100)
+  profile_image     String?        @db.VarChar(255)
+  left              Boolean        @default(false)
+  status            String         @default("pending") @db.VarChar(20)
+
   assignedAssessment assignedAssessment[]
   assignedCourses    assignedCourses[]
   employee_review    employee_review[]
@@ -96,6 +99,19 @@ model employees {
   leaderFeedback     leaderFeedback[]
   resignation        resignation[]
   users              users[]
+}
+
+model interviewSchedule {
+  id                Int           @id @default(autoincrement())
+  interview_date    DateTime      @db.Timestamptz(6)
+  interview_time    String
+  organization_id   Int
+  candidate_user_id Int
+  message           String
+  created_at        DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime      @updatedAt
+  users             users         @relation(fields: [candidate_user_id], references: [id])
+  organization      organizations @relation(fields: [organization_id], references: [id])
 }
 
 model resignation {
