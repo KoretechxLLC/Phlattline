@@ -21,10 +21,13 @@ const ApplicationPopup = ({
     designation: string;
     message: string;
     cvLink: string;
+    profileImage: string;
   };
+
 }) => {
   const [loading, setLoading] = useState(true); // Loading state to show the loader initially
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   // Simulate loading of employee data with a timeout (replace with actual data fetching logic)
   useEffect(() => {
@@ -46,7 +49,7 @@ const ApplicationPopup = ({
           <h2 className="text-3xl font-bold text-black">Employee Details</h2>
           <button
             onClick={onClose}
-            className="text-red-600 text-3xl font-extrabold hover:text-red-800"
+            className="text-red-600 text-6xl font-extrabold hover:text-red-800"
           >
             ×
           </button>
@@ -61,15 +64,19 @@ const ApplicationPopup = ({
           <div>
             {/* Employee Details */}
             <div className="flex items-center space-x-4 py-10">
-              <Avatar className="w-14 h-14">
+              <Avatar className="w-14 h-14 ">
                 <AvatarImage
-                  src="/assets/DummyImg.png"
+                  src={employee.profileImage
+                    ? `/api/images?filename=${employee.profileImage}&folder=profileImage`
+                    : "/assets/DummyImg.png"
+                  }
                   alt="avatar"
-                  className="w-14 h-14"
+                  className="w-14 h-14 "
                 />
+
               </Avatar>
               <div>
-                <span className="font-semibold text-black text-sm block">
+                <span className="font-semibold text-black text-sm block uppercase">
                   {employee.name}
                 </span>
                 <span className="font-semibold text-xs text-red-600 block mt-1">
@@ -88,20 +95,25 @@ const ApplicationPopup = ({
             </div>
 
             {/* CV Attachment */}
-            <div className="mt-6 flex items-center justify-between border p-4 border-[#62626280] bg-white rounded-2xl">
-              <Icon icon="vscode-icons:file-type-pdf2" className="w-8 h-8" />
-              <span className="text-black text-sm font-semibold">
-                View Attached CV
-              </span>
-              <a
-                href={employee.cvLink}
+            <a
+                href={`/api/images?filename=${employee.cvLink}&folder=cvFiles`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <BsCloudDownload className="w-8 h-8 text-black" />
-              </a>
+            <div className="mt-6 flex items-center justify-between border p-4 border-[#62626280] bg-white rounded-2xl">
+              
+             
+             
+                <Icon icon="vscode-icons:file-type-pdf2" className="w-8 h-8" />
+                 <span className="text-black text-sm font-semibold">
+                View Attached CV
+              </span>
+              <BsCloudDownload className="w-8 h-8 text-black" />
+              
             </div>
+            </a>
           </div>
+          
         )}
 
         {/* Footer */}

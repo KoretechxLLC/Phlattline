@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
-
 const allowedMimeTypes = [
   "application/pdf", // PDF files
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX files
 ];
+
 const saveFile = async (file: File, folderPath: string): Promise<string> => {
   const fileName = `${Date.now()}_${file.name}`;
   const filePath = path.join(process.cwd(), folderPath, fileName);
@@ -17,7 +17,6 @@ const saveFile = async (file: File, folderPath: string): Promise<string> => {
 
   return fileName;
 };
-
 
 export async function POST(req: NextRequest) {
   try {
@@ -86,7 +85,7 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+};
 
 export async function GET(req: NextRequest) {
   try {
@@ -159,7 +158,7 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+};
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -230,4 +229,4 @@ export async function DELETE(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+};

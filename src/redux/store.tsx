@@ -14,7 +14,8 @@ import categoriesReducer from "./slices/categories.slice";
 import organizationReducer from "./slices/organization.slice";
 import employeeMyAssessmentReducer from "./slices/employeemyassessment.slice"
 import employeeReducer from "./slices/employeee.slice";
-import talentReducer from "./slices/talentmanagement.slice"
+import talentReducer from "./slices/talentmanagement.slice";
+import jobApplicationReducer from "./slices/jobapplication.slice";
 
 
 const persistConfig = {
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   employeeMyAssessment: employeeMyAssessmentReducer,
   employee:employeeReducer,
   talent:talentReducer,
+  jobapplication:jobApplicationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

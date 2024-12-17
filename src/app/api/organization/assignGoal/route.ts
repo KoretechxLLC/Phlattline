@@ -143,38 +143,26 @@ export async function GET(req: NextRequest) {
       ? Number(searchParams.get("assignee_id"))
       : null;
 
-    // Validate user_id
-    // if (!user_id) {
-    //   return NextResponse.json(
-    //     { error: "User ID is required." },
-    //     { status: 400 }
-    //   );
-    // }
-
-
-    let where: any = {}
+    // Build the `where` condition dynamically
+    let where: any = {};
 
     if (user_id) {
-      where.user_id = user_id
-    }
-    if (assignee_id) {
-      where.assignee_id = assignee_id
+      where.user_id = user_id;
     }
 
+    if (assignee_id !== null) {
+      // Use `has` to filter goals where assignee_id array contains the given ID
+      where.assignee_id = {
+        has: assignee_id,
+      };
+    }
 
-    // Fetch goals based on the presence of assignee_id
+    // Fetch goals based on the `where` condition
     const goals = await prisma.user_goal.findMany({
-      where: where,
+      where,
     });
 
-    // Check if no goals are found
-    // if (!goals.length) {
-    //   return NextResponse.json(
-    //     { error: "No goals found for the given criteria." },
-    //     { status: 404 }
-    //   );
-    // }
-
+    // Return the response
     return NextResponse.json({ success: true, data: goals }, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching user goals:", error);

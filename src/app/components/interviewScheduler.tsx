@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Button } from "./button-sidebar";
@@ -12,76 +11,79 @@ import ApplicationPopup from "./applicationPopup";
 import Deletemodel from "./DeleteModal";
 import { FiTrash2 } from "react-icons/fi";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteJobApplication, fetchJobApplications } from "@/redux/slices/jobapplication.slice";
+import { RootState } from "@/redux/store";
+import StackedNotifications, { NotificationType } from "./Stackednotification";
+import Spinner from "./Spinner";
 
 const InterviewSchedulerTab: React.FC = () => {
-  // Static array of interview data
-  const interviewData = [
-    {
-      id: 1,
-      image: "/assets/DummyImg.png",
-      name: "John Doe",
-      designation: "Software Engineer",
-      interviewStatus: "View",
-      message:
-        "I'm excited to apply for this position and contribute to your team.",
-      cvLink: "https://example.com/john_doe_cv.pdf",
-    },
-    {
-      id: 2,
-      image: "/assets/DummyImg.png",
-      name: "Jane Smith",
-      designation: "Product Manager",
-      interviewStatus: "View",
-      message: "Looking forward to discussing this role further.",
-      cvLink: "https://example.com/jane_smith_cv.pdf",
-    },
-    {
-      id: 3,
-      image: "/assets/DummyImg.png",
-      name: "Alice Johnson",
-      designation: "UI/UX Designer",
-      interviewStatus: "Complete",
-      message: "Thank you for considering my application.",
-      cvLink: "https://example.com/alice_johnson_cv.pdf",
-    },
-    {
-      id: 4,
-      image: "/assets/DummyImg.png",
-      name: "Michael Brown",
-      designation: "Data Scientist",
-      interviewStatus: "View",
-      message: "Excited to bring my skills to your organization.",
-      cvLink: "https://example.com/michael_brown_cv.pdf",
-    },
-    {
-      id: 5,
-      image: "/assets/DummyImg.png",
-      name: "Emma Davis",
-      designation: "HR Specialist",
-      interviewStatus: "Complete",
-      message: "Hoping to contribute effectively to your team.",
-      cvLink: "https://example.com/emma_davis_cv.pdf",
-    },
-    {
-      id: 6,
-      image: "/assets/DummyImg.png",
-      name: "Samuel Lee",
-      designation: "Backend Developer",
-      interviewStatus: "View",
-      message: "Eager to utilize my backend development skills.",
-      cvLink: "https://example.com/samuel_lee_cv.pdf",
-    },
-  ];
-
-  // State to manage modal visibility
+  const dispatch = useDispatch<any>();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [jobs, setJobs] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState(1);
+  const [notification, setNotification] = useState<NotificationType | null>(
+      null
+    );
+  const [jobusers, setJobusers] = useState<any>(null);
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const { jobApplications,jobApplicationsLoader } = useSelector((state: RootState) => state.jobapplication);
+  const organizationId = userData?.organization_id;
 
-  const handleOpenPopup = (employee: any) => {
-    setSelectedEmployee(employee);
-    setIsPopupVisible(true);
+  useEffect(() => {
+    if (organizationId) {
+      dispatch(fetchJobApplications({ organizationId }));
+    }
+  }, [dispatch, organizationId]);
+
+
+  useEffect(() => {
+    if (jobApplications) {
+      setJobs(jobApplications);
+    }
+  }, [jobApplications]);
+
+  const handleOpenPopup = (job: any) => {
+    // Pass the entire job object or necessary fields to the popup
+    const employeeData = {
+      name: `${job.users?.first_name} ${job.users?.last_name}`,
+      designation: job.users?.designation || "Not Specified",
+      message: job.message,
+      cvLink: job.cv,
+      profileImage: job.users?.profile_image,
+    };
+
+    setSelectedEmployee(employeeData); // Set selected employee data
+    setIsPopupVisible(true); // Show the popup
+  };
+
+  // Function to handle job deletion
+  const handleDeleteJob = (applicationId: number) => {
+    // Optimistic update: Remove the job from local state immediately
+    const updatedJobs = jobs.filter(job => job.id !== applicationId);
+    setJobs(updatedJobs);
+
+    // Dispatch the delete job application action
+    dispatch(deleteJobApplication({ applicationId }))
+      .then(() => {
+        // Successfully deleted, show success notification
+        setNotification({
+          id: Date.now(),
+          text: "Application Deleted Successfully!",
+          type: "success",
+        });
+      })
+      .catch((error: any) => {
+        // Restore the job in case of error
+        dispatch(fetchJobApplications({ organizationId }));
+        setNotification({
+          id: Date.now(),
+          text: `Error: ${error.message || "Failed to delete application"}`,
+          type: "error",
+        });
+      });
   };
 
   const handleClosePopup = () => {
@@ -89,81 +91,68 @@ const InterviewSchedulerTab: React.FC = () => {
     setSelectedEmployee(null);
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
-
   return (
     <div className="flex flex-col items-center">
-      {/* Centered Heading */}
-      <Card className="border border-[#62626280] rounded-xl w-full h-full ">
+       <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
+      <Card className="border border-[#62626280] rounded-xl w-full h-full">
         <CardHeader>
           <h2 className="text-2xl items-center font-semibold mb-3">
-            Latest Updates
+            Latest Applications
           </h2>
-          {/* Label Bar for Columns */}
-          <div className="flex justify-between px-8 py-3 text-white bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
+          {/* Label Bar */}
+          <div className="flex justify-between px-8 py-3 text-white bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-sm font-medium">
             <span className="w-1/3 text-left">Name</span>
             <span className="w-1/3 text-center">Designation</span>
             <span className="w-1/3 text-right">Action</span>
           </div>
         </CardHeader>
-        <ul>
-          {interviewData.map((interview, index) => (
+
+        {jobApplicationsLoader ? (
+          <div className="flex justify-center items-center py-10">
+            <Spinner height="30px" width="30px" />
+          </div>
+        ) : (
+        <ul className="h-[36em]">
+          {jobs.map((job) => (
             <li
-              key={index}
-              className={`${
-                index < interviewData.length - 1
-                  ? "border-b border-gray-600"
-                  : ""
-              }`}
+              key={job.id}
+              className="border-b border-gray-600"
             >
-              <CardContent className="flex justify-between items-center 4xl:p-3 px-8 py-4">
+              <CardContent className="flex justify-between items-center px-8 py-4">
                 {/* Name and Avatar */}
                 <div className="w-1/3 flex items-center space-x-4">
-                  <Avatar className="w-10 h-10">
+                  <Avatar className="w-10 h-10 border-2 border-slate-600">
                     <AvatarImage
-                      src={interview.image}
-                      alt={`${interview.name}-avatar`}
-                      className="w-10 h-10"
+                      src={
+                        job.users?.profile_image
+                          ? `/api/images?filename=${job.users.profile_image}&folder=profileImage`
+                          : "/assets/DummyImg.png"
+                      }
+                      alt={`${job.users?.first_name} ${job.users?.last_name}-avatar`}
                     />
                   </Avatar>
-                  <span className="font-semibold text-sm">
-                    {interview.name}
+                  <span className="font-semibold text-sm capitalize">
+                    {`${job.users?.first_name || "N/A"} ${job.users?.last_name || ""}`}
                   </span>
                 </div>
 
                 {/* Designation */}
                 <div className="w-1/3 text-center text-sm text-yellow-400">
-                  {interview.designation}
+                  {job.users?.designation || "Not Specified"}
                 </div>
 
-                {/* Status Button with Conditional Color and Disabled State */}
+                {/* Action Buttons */}
                 <div className="w-1/3 flex justify-end items-center space-x-2">
                   <Button
-                    color={
-                      interview.interviewStatus === "Complete"
-                        ? "secondary"
-                        : "primary"
-                    }
-                    size="sm"
-                    className="rounded-lg text-xs"
-                    onClick={
-                      interview.interviewStatus !== "Complete"
-                        ? () => handleOpenPopup(interview)
-                        : undefined
-                    } // Prevent modal opening if scheduled
-                    disabled={interview.interviewStatus === "Complete"} // Disable button if scheduled
+                    color={"primary"}
+                    size="md"
+                    className="rounded-lg text-sm"
+                    onClick={() => handleOpenPopup(job)}
                   >
-                    {interview.interviewStatus}
+                    View
                   </Button>
                   <Deletemodel
                     trigger={(onClick: any) => (
@@ -174,36 +163,14 @@ const InterviewSchedulerTab: React.FC = () => {
                         <FiTrash2 />
                       </button>
                     )}
-                    confirmAction={() => {}}
+                    confirmAction={() => handleDeleteJob(job.id)}
                   />
                 </div>
               </CardContent>
             </li>
           ))}
-          <div className="flex items-center justify-center gap-2 py-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-8 h-8 border-transparent hover:bg-transparent"
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="w-5 h-5 text-default-900" />
-            </Button>
-            <span className="text-sm font-medium text-default-900">
-              Page {currentPage} of {totalPage}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-8 h-8 border-transparent hover:bg-transparent"
-              onClick={handleNextPage}
-              disabled={currentPage >= totalPage}
-            >
-              <ChevronRight className="w-5 h-5 text-default-900" />
-            </Button>
-          </div>
         </ul>
+         )}
       </Card>
 
       {selectedEmployee && (
@@ -211,6 +178,7 @@ const InterviewSchedulerTab: React.FC = () => {
           show={isPopupVisible}
           onClose={handleClosePopup}
           employee={selectedEmployee}
+
         />
       )}
     </div>
