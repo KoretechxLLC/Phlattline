@@ -154,8 +154,8 @@ const InterviewSchedulerTab: React.FC = () => {
                         ? "secondary"
                         : "primary"
                     }
-                    size="md"
-                    className="rounded-lg text-sm"
+                    size="sm"
+                    className="rounded-lg text-xs"
                     onClick={
                       interview.interviewStatus !== "Complete"
                         ? () => handleOpenPopup(interview)
@@ -169,7 +169,7 @@ const InterviewSchedulerTab: React.FC = () => {
                     trigger={(onClick: any) => (
                       <button
                         onClick={onClick}
-                        className="rounded-lg bg-red-300/20 px-3 py-2 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                        className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-600 hover:text-red-200"
                       >
                         <FiTrash2 />
                       </button>

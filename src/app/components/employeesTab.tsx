@@ -75,54 +75,58 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
 
   return (
     <div>
-      <Card className="border w-full border-[#62626280] rounded-3xl h-[26.8em]">
+      <Card className="border w-full border-[#62626280] rounded-3xl h-[28em] flex flex-col">
         <CardHeader className="mb-6 4xl:mb-6 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <ul>
-          {employees.map((employee, index) => (
-            <li
-              key={index}
-              className={`${
-                index < employees.length - 1
-                  ? "border-b border-[#62626280]"
-                  : ""
-              }`}
-            >
-              <CardContent className="flex items-center justify-between space-x-4 4xl:p-6 p-8">
-               <div className="flex items-center gap-6">
-               <Avatar className="w-10 h-10">
-                  <AvatarImage
-                    src={employee.image}
-                    alt={`${employee.name}-avatar`}
-                    className="w-10 h-10"
-                  />
-                </Avatar>
-                <span className="font-semibold">{employee.name}</span>
-               </div>
-                
-                {employee.designation && (
-                  <span className="text-yellow-400">
-                    {employee.designation}
-                  </span>
-                )}
-                {showReason && employee.reason && (
-                  <Button
-                    onClick={() => handleResignationPopupOpen(employee)} // Open resignation popup on click
-                    color="primary"
-                  >
-                    View
-                  </Button>
-                )}
-                {showBadge && employee.status && (
-                  <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
-                    {employee.status}
-                  </Badge>
-                )}
-              </CardContent>
-            </li>
-          ))}
-          <div className="flex items-center justify-center gap-2 py-4">
+        <div className="flex flex-col flex-grow">
+          <ul className="flex-grow">
+            {employees && employees.length > 0 && employees.map((employee, index) => (
+              <li
+                key={index}
+                className={`${
+                  index < employees.length - 1
+                    ? "border-b border-[#62626280]"
+                    : ""
+                }`}
+              >
+                <CardContent className="flex items-center justify-between space-x-4 4xl:p-6 p-8">
+                  <div className="flex items-center gap-6">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage
+                        src={employee.image}
+                        alt={`${employee.name}-avatar`}
+                        className="w-10 h-10"
+                      />
+                    </Avatar>
+                    <span className="font-semibold">{employee.name}</span>
+                  </div>
+
+                  {employee.designation && (
+                    <span className="text-yellow-400">
+                      {employee.designation}
+                    </span>
+                  )}
+                  {showReason && employee.reason && (
+                    <Button
+                      onClick={() => handleResignationPopupOpen(employee)} // Open resignation popup on click
+                      color="primary"
+                    >
+                      View
+                    </Button>
+                  )}
+                  {showBadge && employee.status && (
+                    <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
+                      {employee.status}
+                    </Badge>
+                  )}
+                </CardContent>
+              </li>
+            ))}
+          </ul>
+
+          {/* Pagination controls inside the card */}
+          <div className="flex items-center justify-center gap-2 py-4 mt-auto">
             <Button
               variant="outline"
               size="icon"
@@ -145,25 +149,29 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
               <ChevronRight className="w-5 h-5 text-default-900" />
             </Button>
           </div>
-        </ul>
-        {!hideViewAll && (
-          <Button
-            className="text-white px-2 flex w-full justify-center items-center rounded-3xl mt-4"
-            size="md"
-            color="primary"
-            onClick={handleViewAllClick}
-          >
-            View All
-          </Button>
-        )}
-        {!hideViewAll && (
-          <EmployeeModal
-            open={isModalOpen}
-            onClose={handleCloseModal}
-            showSelectionControls={false}
-          />
-        )}
+
+          {/* View All Button inside the card */}
+          {!hideViewAll && (
+            <Button
+              className="text-white px-2 flex w-full justify-center items-center rounded-3xl"
+              size="md"
+              color="primary"
+              onClick={handleViewAllClick}
+            >
+              View All
+            </Button>
+          )}
+        </div>
       </Card>
+
+      {/* Employee Modal */}
+      {!hideViewAll && (
+        <EmployeeModal
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          showSelectionControls={false}
+        />
+      )}
 
       {/* Resignation Popup */}
       {isResignationPopupOpen && selectedEmployee && (

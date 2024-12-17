@@ -111,7 +111,6 @@ const VacantJobs = ({ onEditJob }: any) => {
     }
   };
 
-
   return (
     <Card className="border border-[#62626280] rounded-3xl">
       <StackedNotifications
@@ -141,7 +140,9 @@ const VacantJobs = ({ onEditJob }: any) => {
                     <RiUserSearchFill size={23} />
                   </span>
                 </div>
-                  <span className="text-md text-left w-[10em] mr-[6em]">{job.position_name}</span>
+                <span className="text-md text-left w-[10em] mr-[6em]">
+                  {job.position_name}
+                </span>
 
                 <div className="flex space-x-2 items-center">
                   <Button
@@ -151,7 +152,7 @@ const VacantJobs = ({ onEditJob }: any) => {
                       )
                     }
                     color="primary"
-                    className="rounded"
+                    className="rounded-lg"
                   >
                     Details
                   </Button>
@@ -165,7 +166,7 @@ const VacantJobs = ({ onEditJob }: any) => {
                     trigger={(onClick: any) => (
                       <button
                         onClick={onClick}
-                        className="rounded bg-red-300/20 px-3 py-4 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                        className="rounded bg-red-600 px-3 py-4 text-sm text-white transition-colors hover:bg-red-600 hover:text-red-200"
                       >
                         <FiTrash2 />
                       </button>
@@ -183,28 +184,28 @@ const VacantJobs = ({ onEditJob }: any) => {
         )}
 
         {/* Pagination Controls */}
-        <div className="flex justify-between items-center mt-4">
-          <button
-            className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+        <div className="flex items-center justify-center gap-2 py-4 mt-auto">
+          <Button
+            variant="outline"
+            size="icon"
+            className="w-8 h-8 border-transparent hover:bg-transparent"
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
           >
-            Previous
-          </button>
+            <ChevronLeft className="w-5 h-5 text-default-900" />
+          </Button>
           <span className="text-white">
             Page {currentPage} of {Math.ceil(newjobs.length / jobsPerPage)}
           </span>
-          <button
-            className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === Math.ceil(newjobs.length / jobsPerPage)
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-              }`}
+          <Button
+            variant="outline"
+            size="icon"
+            className="w-8 h-8 border-transparent hover:bg-transparent"
             onClick={handleNextPage}
             disabled={currentPage === Math.ceil(newjobs.length / jobsPerPage)}
           >
-            Next
-          </button>
+            <ChevronRight className="w-5 h-5 text-default-900" />
+          </Button>
         </div>
       </CardContent>
     </Card>
@@ -212,4 +213,3 @@ const VacantJobs = ({ onEditJob }: any) => {
 };
 
 export default VacantJobs;
-
