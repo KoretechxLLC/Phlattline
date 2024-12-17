@@ -12,7 +12,6 @@ import { login, setError, setSuccess } from "../../redux/slices/auth.slice";
 import StackedNotifications from "../components/Stackednotification";
 import Image from "next/image";
 import { SparklesCore } from "../components/sparkles";
-import { AuroraBackground } from "../components/AuroraBackground";
 
 const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
 
@@ -35,7 +34,9 @@ export type NotificationType = {
 const Login = () => {
   const router = useRouter();
   const dispatch: any = useDispatch();
-  const { success, error } = useSelector((state: RootState) => state.auth);
+  const { loginSuccess, error, userData } = useSelector(
+    (state: RootState) => state.auth
+  );
   const [email, setEmail] = useState<string>("");
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [password, setPassword] = useState<string>("");
@@ -68,18 +69,17 @@ const Login = () => {
     }
   };
 
+
   useEffect(() => {
-    if (success !== null) {
+    if (loginSuccess) {
       setNotification({
         id: Date.now(),
-        text: success,
+        text: loginSuccess,
         type: "success",
       });
       dispatch(setSuccess());
-      setTimeout(() => {
-        router.push("/Portal/Dashboard");
-      }, 2000);
     }
+
     if (error !== null) {
       setNotification({
         id: Date.now(),
@@ -88,7 +88,7 @@ const Login = () => {
       });
       dispatch(setError());
     }
-  }, [success, router, error, dispatch]);
+  }, [loginSuccess, router, error, dispatch]);
 
   const { data: session } = useSession();
 

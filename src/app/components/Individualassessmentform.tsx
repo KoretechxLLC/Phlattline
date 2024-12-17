@@ -5,7 +5,7 @@ import {
 } from "@/redux/slices/individualassessment.slice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store"; // Import types
+import { RootState } from "@/redux/store"; 
 import StackedNotifications from "./Stackednotification";
 import { useRouter } from "next/navigation";
 import {
@@ -15,7 +15,7 @@ import {
 } from "@/redux/slices/auth.slice";
 import Spinner from "./Spinner";
 
-import { itemFromArray } from "@tsparticles/engine";
+
 
 export type NotificationType = {
   id: number;
@@ -38,18 +38,21 @@ const IndividualAssessmentForm = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // State for validation errors
   const userId = userData?.id; // Replace with actual userId
 
+
   useEffect(() => {
-    dispatch(
-      fetchAssessments({
-        filter: {
-          page: 1,
-          size: 5,
-          categoryId: 1,
-          userId,
-        },
-        type: "general",
-      })
-    );
+    if (userId) {
+      dispatch(
+        fetchAssessments({
+          filter: {
+            page: 1,
+            size: 5,
+            categoryId: 1,
+            userId,
+          },
+          type: "general",
+        })
+      );
+    }
   }, [dispatch]);
 
   const handleOptionChange = (

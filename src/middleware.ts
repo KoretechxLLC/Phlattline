@@ -29,10 +29,37 @@ export async function middleware(request: NextRequest) {
 
   if (path && path.includes("/Portal")) {
     const token = request.cookies.get("accessToken")?.value;
-
     if (token) {
-      return NextResponse.next();
-    } else {
+      const data: any = await verifyAccessToken(token);
+
+      let userId = data?.id;
+
+      if (userId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/auth/getUsers?user_id=${userId}`
+          );
+          let data = await response.json();
+ 
+          if (data?.data?.assessment_status) {
+            return NextResponse.next();
+          } else {
+            return NextResponse.redirect(
+              new URL("/Individualassessment", request.url)
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        }
+      }
+      else {
+        return NextResponse.redirect(new URL("/Login", request.url));
+      }
+    }
+    // if (token) {
+    //   return NextResponse.next();
+    // }
+     else {
       return NextResponse.redirect(new URL("/Login", request.url));
     }
   }
