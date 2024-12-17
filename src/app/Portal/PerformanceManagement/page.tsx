@@ -76,10 +76,32 @@ const PerformanceManagement = () => {
     }
   }, [success, error, dispatch]);
 
-  const suggestions = [
-    "Define Clear Strategic Goals",
-    "Improve Time Management Skills",
-    "Increase Team Collaboration",
+  const defaultWidgets = [
+    {
+      id: "smartGoalForm",
+      name: "Smart Goal Form",
+      isVisible: true,
+    },
+    {
+      id: "tasksTracker",
+      name: "Tasks Tracker",
+      isVisible: true,
+    },
+    {
+      id: "timeManagement",
+      name: "Time Management",
+      isVisible: true,
+    },
+    {
+      id: "vacantJobs",
+      name: "Vacant Jobs",
+      isVisible: true,
+    },
+    {
+      id: "desiredGoals",
+      name: "Desired Goals",
+      isVisible: true,
+    },
   ];
 
   return (

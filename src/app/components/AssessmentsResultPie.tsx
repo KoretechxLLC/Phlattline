@@ -16,7 +16,7 @@ const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
       assessments,
     });
     return [];
-  }  
+  }
 
   return assessments
     .map((index: any) => {
@@ -140,7 +140,9 @@ const AssessmentResultPie = ({ height = 280 }) => {
           width="100%"
         />
       ) : (
-        <div>No data found</div>
+        <div className="text-center   text-gray-300 py-20">
+          Please Submit Assessments First!
+        </div>
       )}
     </div>
   );

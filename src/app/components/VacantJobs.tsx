@@ -123,7 +123,7 @@ const VacantJobs = ({ onEditJob }: any) => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="4xl:p-5 p-8">
+      <CardContent className="4xl:p-3 p-8">
         {fetchTalentsLoader ? (
           <div className="flex justify-center items-center py-14">
             <Spinner height="30px" width="30px" />
@@ -140,7 +140,7 @@ const VacantJobs = ({ onEditJob }: any) => {
                     <RiUserSearchFill size={23} />
                   </span>
                 </div>
-                <span className="text-md text-left w-[10em] mr-[6em]">
+                <span className="text-md text-left w-[10em] 4xl:w-[5em] 4xl:mr-[3em] mr-[4em]">
                   {job.position_name}
                 </span>
 
