@@ -10,6 +10,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   success: string | null;
+  loginSuccess: string | null;
   updateUserData: any | null;
   organizationIsLoading: boolean;
   organizationError: any | null;
@@ -32,6 +33,7 @@ const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   success: null,
+  loginSuccess: null,
   updateUserData: null,
   organizationIsLoading: false,
   organizationError: null,
@@ -63,6 +65,8 @@ export const login = createAsyncThunk<any, any>(
       if (typeof window !== "undefined") {
         document.cookie = `access_token=${accessToken}; path=/; max-age=86400; secure; samesite=strict`;
       }
+
+
 
       return response.data;
     } catch (error: any) {
@@ -294,6 +298,7 @@ const authSlice = createSlice({
     },
     setSuccess: (state) => {
       state.success = null;
+      state.loginSuccess = null;
     },
     setOrganizationSuccess: (state) => {
       state.organizationSuccess = null;
@@ -331,9 +336,9 @@ const authSlice = createSlice({
 
     setAssessmentUpdate: (state) => {
       state.userData.assessment_status = true;
-      // if (typeof window !== "undefined") {
-      //   window.location.href = "/Portal/Dashboard";
-      // }
+      if (typeof window !== "undefined") {
+        window.location.href = "/Portal/Dashboard";
+      }
     },
   },
   extraReducers: (builder) => {
@@ -347,11 +352,14 @@ const authSlice = createSlice({
         state.userData = action.payload.data;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
-        state.success = action.payload.message;
+        state.loginSuccess = action.payload.message;
         localforage.setItem("access_token", action.payload.accessToken);
         localforage.setItem("refresh_Token", action.payload.refreshToken);
+        const status = action.payload.data;
 
-        window.location.href = "/Portal/Dashboard";
+        status?.assessment_status
+          ? (window.location.href = "/Portal/Dashboard")
+          : (window.location.href = "/Individualassessment");
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -422,7 +430,7 @@ const authSlice = createSlice({
         state.userData = null;
         state.accessToken = null;
         state.refreshToken = null;
-        state.success = "Logout successful";
+
         if (typeof window !== "undefined" && window)
           window.location.href = "/Login";
       })
