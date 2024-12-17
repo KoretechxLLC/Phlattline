@@ -11,14 +11,18 @@ import Spinner from "@/app/components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTalents } from "@/redux/slices/talentmanagement.slice";
 import { RootState } from "@/redux/store";
+import { Button } from "@/app/components/button-sidebar";
+import UploadCVPopup from "@/app/components/uploadCV";
 
 const JobSummary = () => {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
   const departmentId = searchParams.get("departmentId");
-
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userType = userData?.user_type_id;
   const [loading, setLoading] = useState(true);
   const [jobDetails, setJobDetails] = useState<any>(null);
+  const [showCVPopup, setShowCVPopup] = useState(false);
 
   const dispatch = useDispatch<any>();
   const { fetchedTalents } = useSelector((state: RootState) => state.talent);
@@ -37,9 +41,8 @@ const JobSummary = () => {
         dispatch(fetchTalents({ departmentId }))
           .unwrap()
           .then((data: any) => {
-            const fetchedJob = data && data?.find(
-              (job: any) => job.id === Number(jobId)
-            );
+            const fetchedJob =
+              data && data?.find((job: any) => job.id === Number(jobId));
             setJobDetails(fetchedJob);
             setLoading(false);
           })
@@ -66,8 +69,19 @@ const JobSummary = () => {
 
   return (
     <Card className="border border-[#62626280]  ">
-      <CardHeader className="h-16 w-60 rounded-r-xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
-        <CardTitle>{jobDetails?.position_name}</CardTitle>
+      <CardHeader>
+        <CardTitle className="h-12 w-60 p-2 rounded-r-xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+          {jobDetails?.position_name}
+        </CardTitle>
+        {(userType === 1 || userType === 3) && (
+          <Button
+            onClick={() => setShowCVPopup(true)}
+            color="primary"
+            className="rounded-3xl"
+          >
+            Apply Now
+          </Button>
+        )}
       </CardHeader>
 
       <CardContent>
@@ -104,6 +118,7 @@ const JobSummary = () => {
           </ul>
         </div>
       </CardContent>
+      <UploadCVPopup show={showCVPopup} onClose={() => setShowCVPopup(false)} />
     </Card>
   );
 };

@@ -16,6 +16,69 @@ const PerformanceManagement = () => {
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const defaultWidgets = [
+    {
+      id: "smartGoalForm",
+      name: "Smart Goal Form",
+      isVisible: true,
+    },
+    {
+      id: "tasksTracker",
+      name: "Tasks Tracker",
+      isVisible: true,
+    },
+    {
+      id: "timeManagement",
+      name: "Time Management",
+      isVisible: true,
+    },
+    {
+      id: "vacantJobs",
+      name: "Vacant Jobs",
+      isVisible: true,
+    },
+    {
+      id: "desiredGoals",
+      name: "Desired Goals",
+      isVisible: true,
+    },
+    {
+      id: "employeeGoalsForm",
+      name: "Employee Goals Form",
+      isVisible: true,
+    },
+    {
+      id: "organizationGoals",
+      name: "Organization Goals",
+      isVisible: true,
+    },
+    {
+      id: "performanceReviews",
+      name: "Performance Reviews",
+      isVisible: true,
+    },
+    {
+      id: "performanceDepts",
+      name: "Performance Depts",
+      isVisible: true,
+    },
+    {
+      id: "employeePerformance",
+      name: "employee Performance",
+      isVisible: true,
+    },
+    {
+      id: "issuesReported",
+      name: "Issues Reported",
+      isVisible: true,
+    },
+    {
+      id: "KPI",
+      name: "KPI",
+      isVisible: true,
+    },
+  ];
+
   const handleTabChange = (tab: string) => {
     setLoading(true);
     setActiveTab(tab);
