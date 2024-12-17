@@ -19,7 +19,6 @@ import {
   updateTask,
 } from "@/redux/slices/performanceManagement.slice";
 import { RootState } from "@/redux/store";
-import { div } from "three/webgpu";
 import { MdEdit } from "react-icons/md";
 
 interface TasksTrackerProps {
@@ -31,7 +30,6 @@ interface TasksTrackerProps {
   isClickable?: boolean;
   onEditGoal?: (goal: any) => void; // Now optional
   showEditIcon?: (goal: any) => boolean;
-
 }
 
 const TasksTracker = ({
@@ -44,34 +42,15 @@ const TasksTracker = ({
   onEditGoal,
   showEditIcon,
 }: TasksTrackerProps) => {
-
-
   const [loading, setLoading] = useState<boolean>(false);
   const [goalData, setGoalData] = useState<any>({});
   const [employees, setEmployees] = useState<any[]>([]); // State for storing employees
-  const {
-    goals,
-    taskUpdateSuccess,
-    taskUpdateError,
-    taskUpdateLoader,
-    taskUpdate,
-    EmployeeGoals,
-  } = useSelector((state: RootState) => state.performance);
+  const { goals, taskUpdateSuccess, taskUpdate, EmployeeGoals } = useSelector(
+    (state: RootState) => state.performance
+  );
   const { userData } = useSelector((state: RootState) => state.auth);
 
   const dispatch: any = useDispatch();
-
-  const pendingTasks = [
-    { id: 1, goal: "Goal 1", percentage: 30, userId: 1 },
-    { id: 2, goal: "Goal 2", percentage: 60, userId: 2 },
-    { id: 3, goal: "Goal 3", percentage: 90, userId: 3 },
-  ];
-
-  const completedTasks = [
-    { id: 4, goal: "Goal 4", userId: 1 },
-    { id: 5, goal: "Goal 5", userId: 2 },
-    { id: 6, goal: "Goal 6", userId: 3 },
-  ];
 
   const savedTasks = [
     { id: 7, goal: "Goal 7", userId: 1 },
@@ -83,7 +62,10 @@ const TasksTracker = ({
 
   useEffect(() => {
     const fetchGoalsData = async () => {
-      if (userData?.id && (userData.user_type_id === 1 || userData.user_type_id === 2)) {
+      if (
+        userData?.id &&
+        (userData.user_type_id === 1 || userData.user_type_id === 2)
+      ) {
         setLoading(true); // Start loading
         const id = userData?.id;
         await dispatch(fetchGoals(id)); // Dispatch fetch goals action
@@ -92,8 +74,6 @@ const TasksTracker = ({
     };
     fetchGoalsData();
   }, [dispatch, userData]);
-
-
 
   useEffect(() => {
     const fetchGoalsData = async () => {
@@ -123,7 +103,6 @@ const TasksTracker = ({
   };
 
   const handlePendingTasksClick = () => setActiveTab("pending");
-  const handleCompletedTasksClick = () => setActiveTab("completed");
   const handleSavedTasksClick = () => setActiveTab("saved");
   const handleGoalClick = (item: any) => {
     setActiveTab("completed");
@@ -148,7 +127,6 @@ const TasksTracker = ({
     dispatch(updateTask({ goalId, updatedTasks }));
   };
 
-
   useEffect(() => {
     if (!goals || goals.length === 0) return; // Ensure goals exist and are not empty
 
@@ -159,7 +137,6 @@ const TasksTracker = ({
 
     setEmployees(filteredEmployees || []); // Set filtered employees
   }, [goals]);
-
 
   useEffect(() => {
     if (taskUpdateSuccess) {
@@ -179,7 +156,6 @@ const TasksTracker = ({
     }
   }, [taskUpdateSuccess]);
 
-
   const handleEditClick = (goal: any) => {
     if (onEditGoal) {
       onEditGoal(goal);
@@ -193,10 +169,11 @@ const TasksTracker = ({
       <div className="flex gap-4 md:gap-4 justify-start md:justify-start w-full">
         {showPending && (
           <button
-            className={`text-xs sm:text-xs h-12 w-full rounded-tl-3xl rounded-tr-3xl ${activeTab === "pending"
-              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-              : "text-default-600"
-              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            className={`text-xs sm:text-xs h-12 w-full rounded-tl-3xl rounded-tr-3xl ${
+              activeTab === "pending"
+                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+                : "text-default-600"
+            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handlePendingTasksClick}
           >
             Goals
@@ -204,21 +181,23 @@ const TasksTracker = ({
         )}
         {showCompleted && (
           <button
-            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${activeTab === "completed"
-              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-              : "text-default-600"
-              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
-          // onClick={handleCompletedTasksClick}
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+              activeTab === "completed"
+                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+                : "text-default-600"
+            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            // onClick={handleCompletedTasksClick}
           >
             Tasks
           </button>
         )}
         {showSaved && (
           <button
-            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${activeTab === "saved"
-              ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
-              : "text-default-600"
-              } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+            className={`text-xs sm:text-xs w-full h-12 rounded-tl-3xl rounded-tr-3xl ${
+              activeTab === "saved"
+                ? "bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white"
+                : "text-default-600"
+            } ${isClickable ? "cursor-pointer" : "cursor-default"}`}
             onClick={handleSavedTasksClick}
           >
             Saved {label}
@@ -265,21 +244,18 @@ const TasksTracker = ({
                         <button
                           onClick={() => handleGoalClick(item)}
                           className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-pointer relative group`}
-                          title={`Description: ${item.description
-                            }\nStart Date: ${new Date(
-                              item.start_date
-                            ).toLocaleDateString("en-GB")}`}
+                          title={`Description: ${
+                            item.description
+                          }\nStart Date: ${new Date(
+                            item.start_date
+                          ).toLocaleDateString("en-GB")}`}
                         >
                           {item.goal_name}
-
-
                         </button>
                       </span>
                     </div>
 
-
                     <div className="flex justify-center md:items-center ml-3 sm:ml-5 gap-2">
-
                       {/* {showTooltip && <AnimatedTooltip items={item.employees} />} */}
 
                       {/* <button
@@ -293,23 +269,21 @@ const TasksTracker = ({
                           className="rounded bg-slate-400/30 px-1.5 py-[0.4em] text-sm text-white transition-colors hover:bg-green-600 hover:text-white"
                           onClick={() => handleEditClick(item)}
                         >
-                          <MdEdit/>
+                          <MdEdit />
                         </button>
                       )}
-
 
                       <Deletemodel
                         trigger={(onClick: any) => (
                           <button
                             onClick={onClick}
-                            className="rounded bg-red-300/20 px-1.5 py-[0.4em] text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                            className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-600 hover:text-red-200"
                           >
                             <FiTrash2 />
                           </button>
                         )}
                         confirmAction={() => handleDeleteGoal(item?.id)}
                       />
-
                     </div>
                   </div>
                 </li>
@@ -323,15 +297,16 @@ const TasksTracker = ({
             <div>
               <div className="flex gap-4 py-4 px-6">
                 <button
-                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${goalData?.status
-                    ? "bg-green-800 text-green-400" // Green for today's completion date
-                    : new Date(goalData?.completion_date) < new Date() &&
-                      goalData?.goal_tasks?.some(
-                        (task: any) => !task?.isCompleted
-                      )
+                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
+                    goalData?.status
+                      ? "bg-green-800 text-green-400" // Green for today's completion date
+                      : new Date(goalData?.completion_date) < new Date() &&
+                        goalData?.goal_tasks?.some(
+                          (task: any) => !task?.isCompleted
+                        )
                       ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
                       : "bg-zinc-800 text-zinc-400" // Default for future dates
-                    }`}
+                  }`}
                   title="Start Date"
                 >
                   <div className="flex justify-center items-center">
@@ -350,15 +325,16 @@ const TasksTracker = ({
                   </div>
                 </button>
                 <button
-                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${goalData?.status
-                    ? "bg-green-800 text-green-400" // Green for today's completion date
-                    : new Date(goalData?.completion_date) < new Date() &&
-                      goalData?.goal_tasks?.some(
-                        (task: any) => !task?.isCompleted
-                      )
+                  className={`inline-block w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-pointer ${
+                    goalData?.status
+                      ? "bg-green-800 text-green-400" // Green for today's completion date
+                      : new Date(goalData?.completion_date) < new Date() &&
+                        goalData?.goal_tasks?.some(
+                          (task: any) => !task?.isCompleted
+                        )
                       ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
                       : "bg-zinc-800 text-zinc-400" // Default for future dates
-                    }`}
+                  }`}
                   title="Completion Date"
                 >
                   <div className="flex justify-center items-center">
@@ -391,7 +367,7 @@ const TasksTracker = ({
                         id={`task-${index}`}
                         onChange={(e) => handleTaskChange(e.target.value)}
                         className="mr-2"
-                      // Add additional logic here, e.g., onChange handler
+                        // Add additional logic here, e.g., onChange handler
                       />
                       <label
                         htmlFor={`task-${index}`}
@@ -470,10 +446,11 @@ const TasksTracker = ({
                           <span className="text-xs sm:text-sm px-1">
                             <button
                               className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
-                              title={`Description: ${item.description
-                                }\nStart Date: ${new Date(
-                                  item.start_date
-                                ).toLocaleDateString("en-GB")}`}
+                              title={`Description: ${
+                                item.description
+                              }\nStart Date: ${new Date(
+                                item.start_date
+                              ).toLocaleDateString("en-GB")}`}
                             >
                               {item.goal_name}
                             </button>
@@ -485,13 +462,14 @@ const TasksTracker = ({
                             <AnimatedTooltip items={tooltipItems} />
                           )} */}
                           <button
-                            className={`inline-block  w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-auto ${new Date(item?.completion_date).toDateString() ===
+                            className={`inline-block  w-[70px] items-center 4xl:gap-0 gap-1.5 whitespace-nowrap rounded 4xl:px-0 px-1.5 py-1 text-xs font-bold text-start cursor-auto ${
+                              new Date(item?.completion_date).toDateString() ===
                               new Date().toDateString()
-                              ? "bg-green-800 text-green-400" // Green for today's completion date
-                              : new Date(item?.completion_date) < new Date()
+                                ? "bg-green-800 text-green-400" // Green for today's completion date
+                                : new Date(item?.completion_date) < new Date()
                                 ? "bg-[#7A2C2C] text-[#F28B82]" // Red for past dates
                                 : "bg-zinc-800 text-zinc-400" // Default for future dates
-                              }`}
+                            }`}
                             title="Completion Date"
                           >
                             <div className="flex justify-center items-center">
@@ -526,7 +504,7 @@ const TasksTracker = ({
                             trigger={(onClick: any) => (
                               <button
                                 onClick={onClick}
-                                className="rounded bg-red-300/20 px-1.5 py-1 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                                className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-600 hover:text-red-200"
                               >
                                 <FiTrash2 />
                               </button>
@@ -551,7 +529,7 @@ const TasksTracker = ({
           ) : activeTab === "completed" ? (
             EmployeeGoals && EmployeeGoals.length > 0 ? (
               EmployeeGoals.filter((item: any) => item.status === true).length >
-                0 ? (
+              0 ? (
                 EmployeeGoals.filter((item: any) => item.status === true).map(
                   (item: any) => (
                     <li
@@ -570,12 +548,13 @@ const TasksTracker = ({
                           <span className="text-xs sm:text-sm px-2">
                             <button
                               className={`inline-block w-[120px] items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-1 text-md font-bold text-start cursor-auto relative group`}
-                              title={`Description: ${item.description
-                                }\nStart Date: ${new Date(
-                                  item.start_date
-                                ).toLocaleDateString("en-GB")}`}
+                              title={`Description: ${
+                                item.description
+                              }\nStart Date: ${new Date(
+                                item.start_date
+                              ).toLocaleDateString("en-GB")}`}
                             >
-                              {item.goal_name}
+                              {item?.goal_name}
                             </button>
                           </span>
                         </div>
@@ -588,7 +567,7 @@ const TasksTracker = ({
                             trigger={(onClick: any) => (
                               <button
                                 onClick={onClick}
-                                className="rounded bg-red-300/20 px-1.5 py-1 text-sm text-red-300 transition-colors hover:bg-red-600 hover:text-red-200"
+                                className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-600 hover:text-red-200"
                               >
                                 <FiTrash2 />
                               </button>

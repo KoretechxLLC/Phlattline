@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/Card";
 import Spinner from "@/app/components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTalents } from "@/redux/slices/talentmanagement.slice";
@@ -31,8 +36,10 @@ const JobSummary = () => {
         // Fetch job details using departmentId if not already fetched
         dispatch(fetchTalents({ departmentId }))
           .unwrap()
-          .then((data:any) => {
-            const fetchedJob = data.find((job: any) => job.id === Number(jobId));
+          .then((data: any) => {
+            const fetchedJob = data && data?.find(
+              (job: any) => job.id === Number(jobId)
+            );
             setJobDetails(fetchedJob);
             setLoading(false);
           })
@@ -58,38 +65,42 @@ const JobSummary = () => {
   }
 
   return (
-    <Card className="border border-[#62626280] py-8">
-      <CardHeader className="rounded-xl shadow-lg p-8 mx-auto w-full bg-black">
-        <CardTitle className="text-3xl font-bold text-white">
-          {jobDetails.position_name}
-        </CardTitle>
+    <Card className="border border-[#62626280]  ">
+      <CardHeader className="h-16 w-60 rounded-r-xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+        <CardTitle>{jobDetails?.position_name}</CardTitle>
       </CardHeader>
 
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-5">
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-3">Description:</h3>
-            <p className="text-white leading-7">{jobDetails.description}</p>
+            <h3 className="text-xl font-bold text-[#C4421B] mb-3">
+              Description:
+            </h3>
+            <p className="text-white leading-7">{jobDetails?.description}</p>
           </div>
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-3">
+            <h3 className="text-xl font-bold text-[#C4421B] mb-3">
               Key Responsibilities:
             </h3>
             <ul className="list-disc pl-6 text-white leading-7">
-              {jobDetails.key_responsibilities?.map((responsibility: string, index: number) => (
-                <li key={index}>{responsibility}</li>
-              ))}
+              {jobDetails?.key_responsibilities?.map(
+                (responsibility: string, index: number) => (
+                  <li key={index}>{responsibility}</li>
+                )
+              )}
             </ul>
           </div>
         </div>
-        <div>
-          <h3 className="text-xl font-bold text-red-600 mb-3">
+        <div className="p-5">
+          <h3 className="text-xl font-bold text-[#C4421B] mb-3 ">
             Qualifications:
           </h3>
           <ul className="list-disc pl-6 text-white leading-7">
-            {jobDetails.qualification?.map((qualification: string, index: number) => (
-              <li key={index}>{qualification}</li>
-            ))}
+            {jobDetails?.qualification?.map(
+              (qualification: string, index: number) => (
+                <li key={index}>{qualification}</li>
+              )
+            )}
           </ul>
         </div>
       </CardContent>
