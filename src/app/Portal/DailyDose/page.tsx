@@ -11,88 +11,6 @@ import { fetchcourses } from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
 import { RootState } from "@/redux/store";
 
-interface CalendarEvent {
-  id: string;
-  tabmessage: string;
-  start: string;
-  allDay?: boolean;
-  calendar: string;
-  authorName: string;
-  authorImage: string;
-}
-
-const coursesData = [
-  {
-    id: 1,
-    tabmessage: "New Blog Post",
-    start: "2024-10-20",
-    allDay: true,
-    calendar: "new blog",
-    thumbnail: "/assets/framepic2.png",
-    title: "AI and Virtual",
-    type: "Basic",
-    subscribers: 1014,
-    rating: 3.4,
-    instructorname: "Jack Edwards",
-    instructorimage: "/assets/DummyImg.png",
-    Lessons: 14,
-    Hours: 12,
-    Price: 40,
-  },
-  {
-    id: 2,
-    tabmessage: "New Video Release",
-    start: "2024-10-25",
-    allDay: true,
-    calendar: "new video",
-    thumbnail: "/assets/framepic2.png",
-    title: "Data Science Fundamentals",
-    type: "Premium",
-    subscribers: 850,
-    rating: 4.2,
-    instructorname: "Sarah Johnson",
-    instructorimage: "/assets/DummyImg.png",
-    Lessons: 20,
-    Hours: 25,
-    Price: 60,
-  },
-  {
-    id: 3,
-    tabmessage: "New Video Release",
-    start: "2024-10-26",
-    allDay: true,
-    calendar: "new video",
-    thumbnail: "/assets/framepic2.png",
-    title: "Data Science Fundamentals",
-    type: "Premium",
-    subscribers: 850,
-    rating: 4.2,
-    instructorname: "Sarah Johnson",
-    instructorimage: "/assets/DummyImg.png",
-    Lessons: 20,
-    Hours: 25,
-    Price: 60,
-  },
-  {
-    id: 4,
-    tabmessage: "New Blog Post",
-    start: "2024-10-21",
-    allDay: true,
-    calendar: "new blog",
-    thumbnail: "/assets/framepic2.png",
-    title: "AI and Virtual",
-    type: "Basic",
-    subscribers: 1014,
-    rating: 3.4,
-    instructorname: "Jack Edwards",
-    instructorimage: "/assets/DummyImg.png",
-    Lessons: 14,
-    Hours: 12,
-    Price: 40,
-  },
-  // ... other courses
-];
-
 const DailyDose = () => {
   const dispatch = useDispatch<any>();
   const [updatedCourses, setUpdatedCourses] = useState<any>([]);
@@ -170,8 +88,8 @@ const DailyDose = () => {
     setSheetOpen(false);
   };
 
-  const renderEventContent = ({ event, view }: any) => {
-    const { calendar, course_name, date } = event.extendedProps;
+  const renderEventContent = ({ event }: any) => {
+    const { calendar, date } = event.extendedProps;
     const eventDate = new Date(date);
     const currentDate = new Date();
 

@@ -5,7 +5,6 @@ import { MdEmail, MdLock } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
 import { RootState } from "@/redux/store";
 import { Input } from "../components/Input";
 import { login, setError, setSuccess } from "../../redux/slices/auth.slice";
@@ -13,11 +12,9 @@ import StackedNotifications from "../components/Stackednotification";
 import Image from "next/image";
 import { SparklesCore } from "../components/sparkles";
 
-const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
-
 const LoginScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
+    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 4xl:p-3 p-4">
       <div className="flex items-center justify-center">
         <Login />
       </div>
@@ -69,7 +66,6 @@ const Login = () => {
     }
   };
 
-
   useEffect(() => {
     if (loginSuccess) {
       setNotification({
@@ -115,7 +111,7 @@ const Login = () => {
       whileInView="animate"
       transition={{ staggerChildren: 0.05 }}
       viewport={{ once: true }}
-      className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
+      className="flex items-center justify-center 4xl:py-8 px-4 py-10 md:py-20 z-50"
     >
       <StackedNotifications
         notification={notification}
@@ -194,7 +190,6 @@ const Login = () => {
             )}
           </motion.div>
 
-          {/* Buttons */}
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-8 py-2 mx-4 mt-10">
             <div className="group relative inline-block">

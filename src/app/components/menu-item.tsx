@@ -30,7 +30,7 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
 
   return (
     <div
-      className={`justify-start text-sm font-medium capitalize h-auto py-3 md:px-3 px-3 transition-all duration-300  ${
+      className={`justify-start text-sm font-medium capitalize h-auto 5xl:py-1 py-3 md:px-3 px-3 transition-all duration-300  ${
         isSelected
           ? "bg-black  rounded-l-3xl w-l-54"
           : "hover:bg-black hover:text-white hover:rounded-l-3xl hover:rounded-r-none hover:pl-5"
@@ -48,10 +48,10 @@ const MenuItem = ({ href, label, icon }: MenuItemProps) => {
             alt={label}
             width={60}
             height={60}
-            className={"h-5 w-5 mb-1 mx-5"}
+            className={"5xl:h-3 5xl:w-3 h-5 w-5 mb-1 mx-5"}
           />
           {(!config.collapsed || hovered) && (
-            <p className={"w-28 text-sm flex items-start text-start"}>
+            <p className={"w-28 5xl:w-20 text-sm flex items-start text-start"}>
               {label}
             </p>
           )}

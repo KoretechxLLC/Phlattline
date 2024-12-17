@@ -1,42 +1,24 @@
 import Image from "next/image";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/app/components/sheet";
 import { ScrollArea } from "@/app/components/scroll-area";
-import Icon from "@/app/components/utility-icon";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/app/components/tabs";
-import ColorSchema from "./color-schema";
-import SetSkin from "./set-skin";
-import MenuHidden from "./menu-hidden";
-import SearchBarToggle from "./search-bar-toggle";
-import TeamSwitcherToggle from "./team-switcher-toggle";
 import SetContentWidth from "./set-content-width";
-import SetLayout from "./set-layout";
 import SetSidebar from "./set-sidebar";
-import SidebarColor from "./sidebar-color";
-import HeaderColor from "./header-color";
-import SidebarBg from "./sidebar-bg";
-import HeaderStyle from "./header-style";
-import FooterStyle from "./footer-style";
-import ResetConfig from "./reset-config";
-import FullScreenToggle from "./full-screen";
-import CopyCustomizer from "./copy-cutomizer";
 
-const EditWidget = ({}) => {
+interface EditWidgetProps {
+  widgets: { id: string; name: string; isVisible: boolean }[]; // List of widgets
+  onToggleWidget: (id: string) => void; // Handler for toggling visibility
+}
+
+const EditWidget = ({ widgets, onToggleWidget }: EditWidgetProps) => {
   return (
     <Sheet>
+      {/* Trigger Button */}
       <SheetTrigger asChild>
         <button
           type="button"
@@ -51,80 +33,52 @@ const EditWidget = ({}) => {
           />
         </button>
       </SheetTrigger>
+
+      {/* Sheet Content */}
       <SheetContent
-        overlayClass=" bg-transparent "
+        overlayClass="bg-transparent"
         className="lg:w-3/4 w-full bg-black max-w-full md:max-w-sm px-6 pt-0 pb-6 dark:border-r dark:border-default-300"
       >
-        <SheetHeader className=" text-start -mx-6 px-6 py-4 shadow-sm md:shadow-none">
+        {/* Header */}
+        <SheetHeader className="text-start -mx-6 px-6 py-4 shadow-sm">
           <SheetTitle className="flex justify-between items-start">
-            <div className=" flex-1">
+            <div className="flex-1">
               <p className="text-default-700 font-medium text-base">
-                Template Customizer
+                Widget Customizer
               </p>
-              <p className="text-default-500 dark:text-default-600 font-normal text-xs">
-                Customize and preview in real time
+              <p className="text-default-500 font-normal text-xs">
+                Enable or disable widgets for this page.
               </p>
-            </div>
-            <div className="flex-none flex gap-3">
-              <CopyCustomizer />
-              <ResetConfig />
             </div>
           </SheetTitle>
         </SheetHeader>
-        <ScrollArea className="h-[calc(100%-120px)] -mx-6">
-          <div className=" space-y-8 mt-3">
-            <Tabs defaultValue="style" className=" w-full">
-              {/* <TabsList className="w-full border border-solid border-default-200 dark:border-default-300 rounded-none p-0 divide-x gap-0 ">
-                <TabsTrigger
-                  className="flex-1 data-[state=active]:bg-default-200 dark:data-[state=active]:bg-secondary  data-[state=active]:text-default-900 shadow-none py-3  dark:text-secondary-foreground"
-                  value="style"
-                >
-                  Theme Style
-                </TabsTrigger>
-                <TabsTrigger
-                  className="flex-1 data-[state=active]:bg-default-200 dark:data-[state=active]:bg-secondary data-[state=active]:text-default-900 shadow-none py-3 dark:text-secondary-foreground"
-                  value="color"
-                >
-                  Theme Color
-                </TabsTrigger>
-              </TabsList> */}
-              <TabsContent
-                value="style"
-                className="p-6 divide-y divide-default-300"
-              >
-                <div className="space-y-6 pb-6">
-                  <ColorSchema />
-                  <SetSkin />
-                </div>
-                <div className="space-y-6 -mx-6 p-6">
-                  <SetLayout />
-                  <SetSidebar />
-                  <div className="space-y-3">
-                    <MenuHidden />
-                    <SearchBarToggle />
-                    <TeamSwitcherToggle />
-                  </div>
-                  <SetContentWidth />
-                </div>
-                {/* <HeaderStyle />
-                <FooterStyle /> */}
-                <div className="!border-t-0 -mx-6 p-6 pb-0">
-                  <FullScreenToggle />
-                </div>
-              </TabsContent>
-              {/* <TabsContent
-                value="color"
-                className="p-6  divide-y divide-default-300 "
-              >
-                <SidebarColor />
-                <HeaderColor />
-                <SidebarBg />
-                <div className="!border-t-0 -mx-6 px-6">
-                  <FullScreenToggle />
-                </div>
-              </TabsContent> */}
-            </Tabs>
+
+        {/* Scrollable Widget List */}
+        <ScrollArea className="h-[calc(100%-120px)] -mx-6 px-6">
+          <div>
+            <SetSidebar />
           </div>
+          <ul className="space-y-4">
+            {widgets.map((widget) => (
+              <li
+                key={widget.id}
+                className="flex justify-between items-center text-white"
+              >
+                {/* Widget Name */}
+                <span className="font-medium">{widget.name}</span>
+
+                {/* Checkbox */}
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={widget.isVisible}
+                    onChange={() => onToggleWidget(widget.id)}
+                    className="form-checkbox h-5 w-5 rounded text-blue-500 focus:ring-2 focus:ring-blue-400"
+                  />
+                </label>
+              </li>
+            ))}
+          </ul>
         </ScrollArea>
       </SheetContent>
     </Sheet>

@@ -133,8 +133,6 @@ const AsessmentTracker = ({
     }
   }, [assessments]);
 
- 
-
   const data = calculatePercentages(assessmentsResponse, assessments);
 
   const chartColors = generateColors(allCategories.length);
@@ -274,7 +272,7 @@ const AsessmentTracker = ({
           <Spinner height="30px" width="30px" />
         </div>
       ) : data && data.length > 0 ? (
-        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[200px] ">
+        <div className="w-full max-h-[300px] sm:h-[150px] md:h-[180px] lg:h-[200px] 4xl:h-[180px] ">
           <Chart
             options={options}
             series={series}

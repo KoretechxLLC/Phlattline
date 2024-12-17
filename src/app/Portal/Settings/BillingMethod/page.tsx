@@ -27,7 +27,7 @@ const BillingMethod = () => {
         </>
       ) : (
         <>
-          <div className="flex justify-start mb-4">
+          <div className="flex justify-start 4xl:mb-2 mb-4">
             <Button
               className="rounded-lg"
               color="default"

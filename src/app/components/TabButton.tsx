@@ -75,7 +75,7 @@ const TabButton: React.FC<TabButtonProps> = ({
             className="mx-5"
           />
           <span
-            className="4xl:text-sm lg:text-xl mx-1"
+            className="4xl:text-xs lg:text-xl mx-1"
             style={{ color: textColor }}
           >
             {text}

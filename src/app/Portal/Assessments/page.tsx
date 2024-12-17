@@ -18,6 +18,49 @@ const Assessments = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
   const userType = userData?.user_type_id;
 
+  const defaultWidgets = [
+    {
+      id: "individualAssesments",
+      name: "Individual Assesments",
+      isVisible: true,
+    },
+    {
+      id: "recommendedAssessments",
+      name: "Recommended Assessments",
+      isVisible: true,
+    },
+    {
+      id: "organizationAssessments",
+      name: "Organization Assessments",
+      isVisible: true,
+    },
+    {
+      id: "teamAssessments",
+      name: "Team Assessments",
+      isVisible: true,
+    },
+    {
+      id: "purchasedAssessments",
+      name: "Purchased Assessments",
+      isVisible: true,
+    },
+    {
+      id: "completedAssessments",
+      name: "Completed Assessments",
+      isVisible: true,
+    },
+    {
+      id: "previousResults",
+      name: "Previous Results",
+      isVisible: true,
+    },
+    {
+      id: "assessmentResults",
+      name: "Assessment Results",
+      isVisible: true,
+    },
+  ];
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const view = urlParams.get("view");

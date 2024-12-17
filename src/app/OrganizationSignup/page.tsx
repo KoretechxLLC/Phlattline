@@ -351,7 +351,7 @@ const OrganizationSignup = () => {
           </div>
         </form>
         <motion.div className="text-center">
-          <h1 className="text-xl py-5 text-white">OR</h1>
+          <h1 className="text-xl 4xl:py-1 py-5 text-white">OR</h1>
           <div className="flex justify-center gap-4">
             <motion.button className="w-12 mx-4 sm:w-16">
               <Image

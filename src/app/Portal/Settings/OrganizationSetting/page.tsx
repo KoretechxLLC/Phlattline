@@ -267,7 +267,7 @@ const Profile = ({ profileImage }: any) => {
       </div>
 
       {/* Fourth Row */}
-      <div className="grid grid-cols-1  gap-4">
+      <div className="grid grid-cols-1 4xl:gap-3  gap-4">
         <div className="relative  border border-[#62626280] rounded-2xl">
           <Input
             id="Code"
@@ -291,7 +291,7 @@ const Profile = ({ profileImage }: any) => {
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col sm:flex-row justify-center gap-8 py-2 mx-4 mt-10">
+      <div className="flex flex-col sm:flex-row justify-center 4xl:gap-7 4xl:mt-5 gap-8 py-2 mx-4 mt-10">
         <div className="cursor-pointer w-full sm:w-40 rounded-lg border border-red-500 text-red-500 bg-black px-2 py-2 text-center font-medium">
           Cancel
         </div>

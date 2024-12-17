@@ -15,6 +15,88 @@ import Spinner from "@/app/components/Spinner";
 const OdaasStrategic = () => {
   const [activeTab, setActiveTab] = useState<string>("Diagnostics");
   const [loading, setLoading] = useState<boolean>(true); // Initialize as true for initial loading
+  const defaultWidgets = [
+    {
+      id: "assesmentResults",
+      name: "Assesment Results",
+      isVisible: true,
+    },
+    {
+      id: "interviews",
+      name: "Interviews",
+      isVisible: true,
+    },
+    {
+      id: "performanceReviews",
+      name: "Performance Reviews",
+      isVisible: true,
+    },
+    {
+      id: "openPositionsDept",
+      name: "Open Positions Dept",
+      isVisible: true,
+    },
+    {
+      id: "operationalGaps",
+      name: "Operational Gaps",
+      isVisible: true,
+    },
+    {
+      id: "workLoad",
+      name: "workLoadTab",
+      isVisible: true,
+    },
+    {
+      id: "courses",
+      name: "Courses",
+      isVisible: true,
+    },
+    {
+      id: "assesmentTabs",
+      name: "Assesment Tabs",
+      isVisible: true,
+    },
+    {
+      id: "coachingTab",
+      name: "Coaching Tab",
+      isVisible: true,
+    },
+    {
+      id: "individualReport",
+      name: "individualReport",
+      isVisible: true,
+    },
+    {
+      id: "assignCourses",
+      name: "Assign Courses",
+      isVisible: true,
+    },
+    {
+      id: "taskMonitoring",
+      name: "Task Monitoring",
+      isVisible: true,
+    },
+    {
+      id: "courseResults",
+      name: "Course Results",
+      isVisible: true,
+    },
+    {
+      id: "workshops",
+      name: "Workshops",
+      isVisible: true,
+    },
+    {
+      id: "goalsAchieved",
+      name: "Goals Achieved",
+      isVisible: true,
+    },
+    {
+      id: "leadersFeedback",
+      name: "Leaders Feedback",
+      isVisible: true,
+    },
+  ];
   const { userData } = useSelector((state: RootState) => state.auth);
 
   const router = useRouter();

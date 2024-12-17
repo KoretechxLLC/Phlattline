@@ -104,7 +104,7 @@ export function MenuClassic() {
             alt="Website Logo"
             width={150}
             height={150}
-            className="w-24 4xl:w-32 sm:w-36"
+            className="w-24 4xl:w-32  sm:w-36"
           />
         </div>
       </div>
@@ -121,7 +121,7 @@ export function MenuClassic() {
 
       {/* Menu Widget without list dot */}
       {userData && userData?.user_type_id === 2 && (
-        <li className="w-full list-none pl-3 4xl:pb-3 pb-8">
+        <li className="w-full list-none 4xl:pl-5 pl-3 4xl:pb-3 pb-8">
           <MenuWidget
             isActive={activeMenu === "/Portal/ODaas"}
             onClick={() => handleMenuClick("/Portal/ODaas")}
@@ -130,7 +130,7 @@ export function MenuClassic() {
       )}
 
       {isDesktop && (
-        <div className="pl-8 pb-12 w-full">
+        <div className="pl-8 4xl:pb-3 pb-12 w-full">
           <MenuItem
             label="Settings"
             href="/Settings"

@@ -16,7 +16,7 @@ const EmployeeDataTab = () => {
           <CardTitle>Employee Data</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 4xl:p-2">
             {/* First Row */}
             <Card className="border border-[#62626280] 4xl:w-44 w-52 rounded-xl">
               <CardHeader className="rounded-xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-white">

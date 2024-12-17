@@ -85,7 +85,7 @@ const AssessmentReport = () => {
       <div style={{ display: userType === 1 ? "block" : "none" }}>
         <div className="flex w-full gap-3 max-h-[120vh] min-h-[38vh]">
           {/* First component taking full width on small screens and half on medium screens */}
-          <Card className="border-[1px] border-gray-500 rounded-3xl w-[65%]">
+          <Card className="border-[1px] border-[#62626280] rounded-3xl w-[65%]">
             <CardHeader className="h-30 rounded-3xl">
               <div className="text-sm my-1 flex justify-between">
                 <CardTitle>Previous Results</CardTitle>
@@ -96,7 +96,7 @@ const AssessmentReport = () => {
             </CardContent>
           </Card>
           {/* Second component taking full width on small screens and half on medium screens */}
-          <Card className="border-[1px] border-gray-500 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full w-[35%]">
+          <Card className="border-[1px] border-[#62626280] bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl h-full w-[35%]">
             <CardHeader className="h-16 rounded-3xl">
               <div className="text-sm flex justify-between">
                 <CardTitle>Assessment Results</CardTitle>
