@@ -8,6 +8,10 @@ import Spinner from "@/app/components/Spinner"; // Assuming this is where the Sp
 import { BsCloudDownload } from "react-icons/bs"; // Importing a cloud download icon
 import Icon from "@/app/components/utility-icon"; // Importing utility Icon component
 import { Avatar, AvatarImage } from "./avatar";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchJobApplications, scheduleInterview } from "@/redux/slices/jobapplication.slice";
+import { RootState } from "@/redux/store";
+import StackedNotifications, { NotificationType } from "./Stackednotification";
 
 const ApplicationPopup = ({
   show,
@@ -22,12 +26,14 @@ const ApplicationPopup = ({
     message: string;
     cvLink: string;
     profileImage: string;
+    applicationid: number;
+    employeeid: number;
   };
 
 }) => {
   const [loading, setLoading] = useState(true); // Loading state to show the loader initially
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [notification, setNotification] = useState<NotificationType | null>(null);
 
   // Simulate loading of employee data with a timeout (replace with actual data fetching logic)
   useEffect(() => {
@@ -43,6 +49,7 @@ const ApplicationPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <StackedNotifications notification={notification} setNotification={setNotification} />
       <div className="bg-white rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
         {/* Popup Header */}
         <div className="flex justify-between items-center mb-6">
@@ -96,24 +103,19 @@ const ApplicationPopup = ({
 
             {/* CV Attachment */}
             <a
-                href={`/api/images?filename=${employee.cvLink}&folder=cvFiles`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-            <div className="mt-6 flex items-center justify-between border p-4 border-[#62626280] bg-white rounded-2xl">
-              
-             
-             
+              href={`/api/images?filename=${employee.cvLink}&folder=cvFiles`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div className="mt-6 flex items-center justify-between border p-4 border-[#62626280] bg-white rounded-2xl">
                 <Icon icon="vscode-icons:file-type-pdf2" className="w-8 h-8" />
-                 <span className="text-black text-sm font-semibold">
-                View Attached CV
-              </span>
-              <BsCloudDownload className="w-8 h-8 text-black" />
-              
-            </div>
+                <span className="text-black text-sm font-semibold">
+                  View Attached CV
+                </span>
+                <BsCloudDownload className="w-8 h-8 text-black" />
+              </div>
             </a>
           </div>
-          
         )}
 
         {/* Footer */}
@@ -127,7 +129,7 @@ const ApplicationPopup = ({
           </Button>
         </div>
       </div>
-      <SpringModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+      <SpringModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} employeeid={employee.employeeid} applicationid={employee.applicationid} setNotification={setNotification} />
     </div>
   );
 };
@@ -136,30 +138,84 @@ export default ApplicationPopup;
 const SpringModal = ({
   isOpen,
   setIsOpen,
+  applicationid,
+  employeeid,
+  setNotification,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  applicationid: number;
+  employeeid: number;
+  setNotification: (notification: NotificationType | null) => void;
 }) => {
+  const dispatch = useDispatch<any>();
   const [matter, setMatter] = useState("");
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState<string | null>(null);
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const organizationId = userData?.organization_id;
 
   const handleContinue = () => {
     setLoading(true);
-
+  
     if (!matter || !date || !time) {
-      setNotification("Please fill in all fields.");
+      setNotification({
+        id: Date.now(),
+        text: "All fields are required.",
+        type: "error",
+      });
       setLoading(false);
       return;
     }
-
-    // Handle successful scheduling (you can replace this with your actual scheduling logic)
-    setLoading(false);
-    setIsOpen(false);
-    setNotification("Interview scheduled successfully!");
+  
+    const interviewData = {
+      organization_id: organizationId, // Replace with actual org ID
+      application_id: applicationid, // Pass the employeeId or application_id
+      interview_date: date?.toISOString().split("T")[0] || "", // Format to YYYY-MM-DD
+      interview_time: time || "",
+      candidate_id: employeeid, // Replace with actual candidate ID
+      message: matter,
+    };
+  
+    // Dispatch the schedule interview action
+    dispatch(scheduleInterview(interviewData))
+      .unwrap() // Use `.unwrap()` to handle the success and error properly
+      .then(() => {
+        setNotification({
+          id: Date.now(),
+          text: "Interview scheduled successfully!",
+          type: "success",
+        });
+  
+        // Fetch updated job applications after scheduling the interview
+        return dispatch(fetchJobApplications({ organizationId })).unwrap();
+      })
+      .then(() => {
+        setLoading(false);
+        setIsOpen(false); // Close modal
+      })
+      .catch((error: string) => {
+        setLoading(false);
+  
+        // Check for specific error message
+        if (error === "Interview already scheduled!") {
+          setNotification({
+            id: Date.now(),
+            text: "Interview already scheduled!",
+            type: "error",
+          });
+          setIsOpen(false); // Close modal
+        } else {
+          setNotification({
+            id: Date.now(),
+            text: error || "Failed to schedule interview.",
+            type: "error",
+          });
+        }
+      });
   };
+  
 
   useEffect(() => {
     // Clear notification after 3 seconds
@@ -168,7 +224,7 @@ const SpringModal = ({
     }, 3000);
 
     return () => clearTimeout(timeout);
-  }, [notification]);
+  }, [setNotification]);
 
   return (
     <AnimatePresence>
@@ -190,18 +246,14 @@ const SpringModal = ({
             <h1 className="text-center text-3xl font-bold text-[#B51533] -mb-[1em]">
               Schedule Interview
             </h1>
-            {notification && (
-              <div className="text-center text-red-500 my-4">
-                {notification}
-              </div>
-            )}
+
             <div className="p-5 rounded-xl my-6">
               <div className="my-4 flex items-center gap-2">
                 <MdOutlineTextFields className="text-gray-500 text-2xl" />
                 <textarea
                   value={matter}
                   onChange={(e) => setMatter(e.target.value)}
-                  placeholder="Matter"
+                  placeholder="Message"
                   className="w-full p-2 rounded-md border text-gray-600 border-gray-300 placeholder-gray-400 resize-none"
                 />
               </div>
@@ -223,13 +275,10 @@ const SpringModal = ({
                   onChange={(selectedDate) => {
                     if (selectedDate) {
                       setDate(selectedDate);
-                      const selectedTime = selectedDate.toLocaleTimeString(
-                        "en-GB",
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      );
+                      const selectedTime = selectedDate.toLocaleTimeString("en-GB", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
                       setTime(selectedTime);
                     }
                   }}
