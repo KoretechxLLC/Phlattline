@@ -14,6 +14,11 @@ interface JobApplicationsState {
 
   deletedApplicationSuccess: string | null;
   deletedApplicationError: string | null;
+
+  interviewSchedulingLoader: boolean | null;
+  interviewSchedulingSuccess: string | null;
+  interviewSchedulingError: string | null;
+
 }
 
 const initialState: JobApplicationsState = {
@@ -29,6 +34,12 @@ const initialState: JobApplicationsState = {
 
   deletedApplicationSuccess: null,
   deletedApplicationError: null,
+
+  // Initializing the interview scheduling state
+  interviewSchedulingLoader: false,
+  interviewSchedulingSuccess: null,
+  interviewSchedulingError: null,
+
 };
 
 // Async Thunks
@@ -79,6 +90,46 @@ export const deleteJobApplication = createAsyncThunk<any, { applicationId: numbe
   }
 );
 
+
+export const scheduleInterview = createAsyncThunk<any, {
+  organization_id: number;
+  application_id: number;
+  interview_date: string;
+  interview_time: string;
+  candidate_id: number;
+  message: string;
+}>(
+  "jobApplications/scheduleInterview",
+  async (
+    { organization_id, application_id, interview_date, interview_time, candidate_id, message },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post("/api/organization/interviewScheduling", {
+        organization_id,
+        application_id,
+        interview_date,
+        interview_time,
+        candidate_id,
+        message,
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Failed to schedule interview";
+
+      // Handle specific message for "Interview already scheduled"
+      if (errorMessage === "Interview already scheduled!") {
+        return rejectWithValue("Interview already scheduled!");
+      }
+
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
+
 // Slice Definition
 const jobApplicationsSlice = createSlice({
   name: "jobApplications",
@@ -95,7 +146,7 @@ const jobApplicationsSlice = createSlice({
       state.deletedApplicationError = null;
     },
     resetApplications(state) {
-        state.jobApplications = [];
+      state.jobApplications = [];
     },
   },
   extraReducers: (builder) => {
@@ -115,7 +166,7 @@ const jobApplicationsSlice = createSlice({
         state.jobApplicationsError = action.payload as string;
       })
 
-    // Submit Job Application
+      // Submit Job Application
       .addCase(submitJobApplication.pending, (state) => {
         state.submittedApplicationLoader = true;
         state.submittedApplicationError = null;
@@ -131,7 +182,7 @@ const jobApplicationsSlice = createSlice({
         state.submittedApplicationError = action.payload as string;
       })
 
-    // Delete Job Application
+      // Delete Job Application
       .addCase(deleteJobApplication.pending, (state) => {
         state.deletedApplicationError = null;
       })
@@ -144,6 +195,27 @@ const jobApplicationsSlice = createSlice({
       .addCase(deleteJobApplication.rejected, (state, action) => {
         state.deletedApplicationError = action.payload as string;
       })
+
+
+      .addCase(scheduleInterview.pending, (state) => {
+        state.interviewSchedulingLoader = true;
+        state.interviewSchedulingError = null;
+      })
+      .addCase(scheduleInterview.fulfilled, (state, action) => {
+        state.interviewSchedulingLoader = false;
+        state.interviewSchedulingSuccess = "Interview scheduled successfully!";
+      })
+      .addCase(scheduleInterview.rejected, (state, action) => {
+        state.interviewSchedulingLoader = false;
+      
+        // Check for "Interview already scheduled!" message
+        if (action.payload === "Interview already scheduled!") {
+          state.interviewSchedulingError = "Interview already scheduled!";
+        } else {
+          state.interviewSchedulingError = action.payload as string;
+        }
+      });
+      
   },
 });
 
