@@ -7,6 +7,7 @@ import StackedNotifications from "@/app/components/Stackednotification";
 import { RootState } from "@/redux/store";
 import {
   addDepartment,
+  deleteDepartment,
   fetchAllDepartment,
   fetchAllEmployee,
   resetError,
@@ -36,8 +37,13 @@ const Departments = () => {
     departments,
     responseLoading,
     employee,
+    departmentDeletionLoading,
+    departmentDeletionsuccess,
+    departmentDeletionerror
   } = useSelector((state: RootState) => state.organization);
   const { userData } = useSelector((state: RootState) => state.auth);
+
+  const organization_id = userData?.organization_id;
   useEffect(() => {
     dispatch(fetchAllDepartment({ organizationId: userData?.organization_id }));
     dispatch(fetchAllEmployee({ organizationId: userData?.organization_id }));
@@ -95,6 +101,35 @@ const Departments = () => {
       dispatch(resetError());
     }
   }, [addDepartmentSuccess, addDepartmentError]);
+
+  const handleDelete = (id: any) => {
+    dispatch(
+      deleteDepartment({
+        data: { department_id: id, organization_id },
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (departmentDeletionsuccess) {
+      setNotification({
+        id: Date.now(),
+        text: departmentDeletionsuccess,
+        type: "success",
+      });
+      dispatch(resetSuccess());
+      setDeptSize("");
+      setDeptName("");
+    } else if (departmentDeletionerror) {
+      setNotification({
+        id: Date.now(),
+        text: departmentDeletionerror,
+        type: "error",
+      });
+      dispatch(resetError());
+    }
+  }, [departmentDeletionsuccess, departmentDeletionerror]);
+
 
   return (
     <>
@@ -155,7 +190,7 @@ const Departments = () => {
         {/* Right Column: Display Department Name and Size */}
         <div>
           <div className="relative rounded-2xl">
-            {responseLoading ? ( // Show loader while departments are being fetched
+            {responseLoading || departmentDeletionLoading ? ( // Show loader while departments are being fetched
               <div className="flex justify-center items-center py-10">
                 <Spinner height="30px" width="30px" />
               </div>
@@ -172,12 +207,13 @@ const Departments = () => {
                       className="w-8 h-8 text-green-500 cursor-pointer"
                       onClick={() => {
                         setShowModal(true);
-                        setDepartmentID(department.id);
+                        setDepartmentID(department?.id);
                       }}
                     />
                     <Icon
+                      onClick={() => handleDelete(department?.id)}
                       icon="tabler:trash"
-                      className="w-8 h-8 text-red-500"
+                      className="w-8 h-8 text-red-500 cursor-pointer"
                     />
                   </div>
                 </div>

@@ -20,7 +20,7 @@ interface organizationResponseState {
   assignAssessmentLoading: boolean;
   assignAssessmentError: string | null;
   assignAssessmentSuccess: string | null;
-  assignAssessmentData:any[];
+  assignAssessmentData: any[];
   organizationAssessmentAssign: any;
   leaderFeedback: any;
   leaderFeedbackSuccess: string | null;
@@ -37,6 +37,10 @@ interface organizationResponseState {
   employeeDeletionLoading: boolean;
   employeeDeletionSuccess: any | null;
   employeeDeletionError: any | null;
+  departmentDeletion: any | null;
+  departmentDeletionsuccess: any | null;
+  departmentDeletionerror: any | null;
+  departmentDeletionLoading: boolean;
 }
 
 const initialState: organizationResponseState = {
@@ -51,8 +55,8 @@ const initialState: organizationResponseState = {
   assignCoursesLoading: false,
   assignCoursesError: null,
   assignCoursesSuccess: null,
-  assignAssessmentData:[],
-  organizationAssessmentAssign:[],
+  assignAssessmentData: [],
+  organizationAssessmentAssign: [],
   assignAssessmentLoading: false,
   assignAssessmentError: null,
   assignAssessmentSuccess: null,
@@ -74,6 +78,10 @@ const initialState: organizationResponseState = {
   employeeDeletionLoading: false,
   employeeDeletionSuccess: null,
   employeeDeletionError: null,
+  departmentDeletion: null,
+  departmentDeletionsuccess: null,
+  departmentDeletionerror: null,
+  departmentDeletionLoading: false,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -130,7 +138,7 @@ export const fetchAssignAssessment = createAsyncThunk<
       const response = await axiosInstance.get(
         `/api/organization/assignAssessment?${params.toString()}`
       );
-   
+
       return response.data.data; // Adjust according to the API response structure
     } catch (error: any) {
       const errorMessage =
@@ -142,11 +150,9 @@ export const fetchAssignAssessment = createAsyncThunk<
   }
 );
 
-
 export const assignAssessment = createAsyncThunk<any, any>(
   "organization/assignAssessment",
   async ({ data }: any, { rejectWithValue }) => {
-  
     try {
       const response = await axiosInstance.post(
         `/api/organization/assignAssessment`,
@@ -168,7 +174,7 @@ export const fetchAllDepartment = createAsyncThunk<any, any>(
   async ({ organizationId }: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/organization/manageDepartments/?organization_id=${organizationId}`
+        `/api/organization/manageDepartments/?organization_id=${organizationId}&`
       );
       return response.data.data;
     } catch (error: any) {
@@ -194,6 +200,26 @@ export const addDepartment = createAsyncThunk<any, any>(
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const deleteDepartment = createAsyncThunk<any, any>(
+  "organization/deleteDepartment",
+  async ({ data }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/api/organization/manageDepartments?organization_id=${data.organization_id}&department_id=${data.department_id}`,
+        data
+      );
+
+      return data;
+    } catch (error: any) {
+      console.log(error.response?.data?.message, "hello hello");
+      const errorMessage =
+        error.response?.data?.message ||
         error.message ||
         "Failed to fetch assessments";
       return rejectWithValue(errorMessage);
@@ -340,7 +366,6 @@ export const employeesDelete = createAsyncThunk<any, any>(
   }
 );
 
-
 const organizationSlice = createSlice({
   name: "organizationResponse",
   initialState,
@@ -355,6 +380,7 @@ const organizationSlice = createSlice({
       state.addEmployeeSuccess = null;
       state.employeeApprovalSuccess = null;
       state.employeeDeletionSuccess = null;
+      state.departmentDeletionsuccess = null;
     },
     resetError(state) {
       state.responseError = null;
@@ -366,6 +392,7 @@ const organizationSlice = createSlice({
       state.addEmployeeError = null;
       state.employeeApprovalError = null;
       state.employeeDeletionError = null;
+      state.departmentDeletionerror = null;
     },
   },
   extraReducers: (builder) => {
@@ -404,8 +431,8 @@ const organizationSlice = createSlice({
       })
       .addCase(assignAssessment.fulfilled, (state, action) => {
         state.assignAssessmentLoading = false;
-        state.assignAssessmentData=action.payload;
-      
+        state.assignAssessmentData = action.payload;
+
         state.assignAssessmentSuccess = "Successfully Proceed";
       })
       .addCase(assignAssessment.rejected, (state, action) => {
@@ -421,7 +448,7 @@ const organizationSlice = createSlice({
       .addCase(fetchAssignAssessment.fulfilled, (state, action) => {
         state.loading = false;
         state.organizationAssessmentAssign = action.payload; // Update state with fetched data
-   
+
         state.success = "Assign Courses Successfully fetched";
       })
       .addCase(fetchAssignAssessment.rejected, (state, action) => {
@@ -429,7 +456,6 @@ const organizationSlice = createSlice({
         state.error = action.payload as string; // Update state with error message
       })
 
-      
       .addCase(fetchAllDepartment.pending, (state) => {
         state.responseLoading = true;
       })
@@ -680,6 +706,27 @@ const organizationSlice = createSlice({
         state.employeeDeletion = null;
         state.employeeDeletionSuccess = null;
         state.employeeDeletionError = action.payload;
+      })
+      .addCase(deleteDepartment.pending, (state) => {
+        state.departmentDeletionLoading = true;
+        state.departmentDeletion = null;
+      })
+      .addCase(deleteDepartment.fulfilled, (state, action) => {
+        state.departmentDeletionLoading = false;
+        state.departmentDeletion = action.payload;
+        let departId = action?.payload?.department_id;
+
+        state.departments = state.departments.filter((depart: any) => {
+          if (depart.id != departId) {
+            return depart;
+          }
+        });
+        console.log(departId, "hello this is Matt");
+        state.departmentDeletionsuccess = "Departments Deleted Successfully";
+      })
+      .addCase(deleteDepartment.rejected, (state, action) => {
+        state.departmentDeletionLoading = false;
+        state.departmentDeletionerror = action.payload || "unknown error";
       });
   },
 });
