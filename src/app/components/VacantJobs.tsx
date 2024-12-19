@@ -140,7 +140,7 @@ const VacantJobs = ({ onEditJob }: any) => {
                     <RiUserSearchFill size={23} />
                   </span>
                 </div>
-                <span className="text-md text-left w-[10em] mr-[6em]">
+                <span className="text-md text-left w-[10em] mr-[4em]">
                   {job.position_name}
                 </span>
 
