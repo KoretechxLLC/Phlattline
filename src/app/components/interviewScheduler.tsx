@@ -14,7 +14,7 @@ import Deletemodel from "./DeleteModal";
 import { FiTrash2 } from "react-icons/fi";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteJobApplication, fetchJobApplications } from "@/redux/slices/jobapplication.slice";
+import { deleteJobApplication, fetchJobApplications } from "../../redux/slices/jobApplication.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications, { NotificationType } from "./Stackednotification";
 import Spinner from "./Spinner";

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/app/components/Spinner";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchjoborganization } from "@/redux/slices/jobapplication.slice";
+import { fetchjoborganization } from "../../../../redux/slices/jobApplication.slice";
 import { RootState } from "@/redux/store";
 
 interface OrganizationJobsProps {

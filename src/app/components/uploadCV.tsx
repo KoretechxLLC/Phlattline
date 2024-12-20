@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "./button-sidebar";
-import { resetError, submitJobApplication } from "@/redux/slices/jobapplication.slice";
+import { resetError, submitJobApplication } from "../../redux/slices/jobApplication.slice";
 import StackedNotifications, { NotificationType } from "./Stackednotification";
 import { RootState } from "@/redux/store";
 

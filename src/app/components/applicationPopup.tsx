@@ -9,7 +9,7 @@ import { BsCloudDownload } from "react-icons/bs"; // Importing a cloud download 
 import Icon from "@/app/components/utility-icon"; // Importing utility Icon component
 import { Avatar, AvatarImage } from "./avatar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchJobApplications, scheduleInterview } from "@/redux/slices/jobapplication.slice";
+import { fetchJobApplications, scheduleInterview } from "../../redux/slices/jobApplication.slice";
 import { RootState } from "@/redux/store";
 import StackedNotifications, { NotificationType } from "./Stackednotification";
 
