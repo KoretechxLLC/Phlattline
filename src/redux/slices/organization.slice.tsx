@@ -41,10 +41,14 @@ interface organizationResponseState {
   departmentDeletionsuccess: any | null;
   departmentDeletionerror: any | null;
   departmentDeletionLoading: boolean;
-  organizationscount: number; 
+  organizationscount: number;
   allOrganizations: any[];
   allOrganizationsLoading: boolean;
   allOrganizationsError: string | null;
+  organizationEmployees: any | null;
+  employeesCountByOrganizationIdSuccess: any | null;
+  employeesCountByOrganizationIdError: any | null;
+  employeesCountByOrganizationIdLoading: boolean;
 }
 
 const initialState: organizationResponseState = {
@@ -90,8 +94,11 @@ const initialState: organizationResponseState = {
   organizationscount: 0,
   allOrganizationsLoading: false,
   allOrganizationsError: null,
+  organizationEmployees: null,
+  employeesCountByOrganizationIdSuccess: null,
+  employeesCountByOrganizationIdError: null,
+  employeesCountByOrganizationIdLoading: false,
 };
-
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
   "organization/fetchAllEmployee",
@@ -112,41 +119,41 @@ export const fetchAllEmployee = createAsyncThunk<any, any>(
   }
 );
 
-
 // Fetch all Organizations
-export const fetchAllOrganizations = createAsyncThunk<any, void, { rejectValue: string }>(
-  "organization/fetchAllOrganizations",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get(`/api/auth/organization_register`);
-      return response.data.data; // Adjust according to your API response structure
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || error.message || "Failed to fetch all organizations";
-      return rejectWithValue(errorMessage);
-    }
+export const fetchAllOrganizations = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("organization/fetchAllOrganizations", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(`/api/auth/organization_register`);
+    return response.data.data; // Adjust according to your API response structure
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch all organizations";
+    return rejectWithValue(errorMessage);
   }
-);
-
+});
 
 // Fetch all Organizations
 export const fetchAllOrganizationsCount = createAsyncThunk(
-  'organization/fetchAllOrganizationsCount',
+  "organization/fetchAllOrganizationsCount",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/api/allcompanycount');
+      const response = await axiosInstance.get("/api/allcompanycount");
       return response.data.count; // Adjust based on actual structure
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || error.message || 'Failed to fetch all organizations count';
-      console.error('Error in API call:', errorMessage);
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch all organizations count";
+      console.error("Error in API call:", errorMessage);
       return rejectWithValue(errorMessage);
     }
   }
 );
-
-
-
 
 export const assignCourses = createAsyncThunk<any, any>(
   "organization/assignCourses",
@@ -409,6 +416,24 @@ export const employeesDelete = createAsyncThunk<any, any>(
     }
   }
 );
+export const employeesCountByOrganizationId = createAsyncThunk<any, any>(
+  "organization/employeesCountByOrganizationId",
+  async ({ organization_id }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/organization/employeeCount?organization_id=${organization_id}`
+      );
+
+      return response?.data?.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to Change User Status";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 
 const organizationSlice = createSlice({
   name: "organizationResponse",
@@ -425,6 +450,7 @@ const organizationSlice = createSlice({
       state.employeeApprovalSuccess = null;
       state.employeeDeletionSuccess = null;
       state.departmentDeletionsuccess = null;
+      state.employeesCountByOrganizationIdSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
@@ -437,6 +463,7 @@ const organizationSlice = createSlice({
       state.employeeApprovalError = null;
       state.employeeDeletionError = null;
       state.departmentDeletionerror = null;
+      state.employeesCountByOrganizationIdError = null;
     },
   },
   extraReducers: (builder) => {
@@ -795,6 +822,21 @@ const organizationSlice = createSlice({
       .addCase(fetchAllOrganizationsCount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(employeesCountByOrganizationId.pending, (state) => {
+        state.employeesCountByOrganizationIdLoading = true;
+        state.organizationEmployees = null;
+      })
+      .addCase(employeesCountByOrganizationId.fulfilled, (state, action) => {
+        state.employeesCountByOrganizationIdLoading = false;
+        state.organizationEmployees = action.payload;
+        state.employeesCountByOrganizationIdSuccess =
+          "Count Fetched Successfully";
+      })
+      .addCase(employeesCountByOrganizationId.rejected, (state, action) => {
+        state.employeesCountByOrganizationIdLoading = false;
+        state.employeesCountByOrganizationIdError =
+          action.payload || "unknown error";
       });
   },
 });

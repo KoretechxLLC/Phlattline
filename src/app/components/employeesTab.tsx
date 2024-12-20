@@ -76,91 +76,97 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
   return (
     <div>
       <Card className="border w-full border-[#62626280] rounded-3xl h-[28em] flex flex-col">
-        <CardHeader className="mb-6 4xl:mb-6 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+        <CardHeader className="mb-6 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <div className="flex flex-col flex-grow">
-          <ul className="flex-grow">
-            {employees && employees.length > 0 && employees.map((employee, index) => (
-              <li
-                key={index}
-                className={`${
-                  index < employees.length - 1
-                    ? "border-b border-[#62626280]"
-                    : ""
-                }`}
-              >
-                <CardContent className="flex items-center justify-between space-x-4 4xl:p-6 p-8">
-                  <div className="flex items-center gap-6">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage
-                        src={employee.image}
-                        alt={`${employee.name}-avatar`}
-                        className="w-10 h-10"
-                      />
-                    </Avatar>
-                    <span className="font-semibold">{employee.name}</span>
-                  </div>
+          <ul className="flex-grow overflow-y-auto">
+            {employees &&
+              employees.length > 0 &&
+              employees.map((employee, index) => (
+                <li
+                  key={index}
+                  className={`${
+                    index < employees.length - 1
+                      ? "border-b border-[#62626280]"
+                      : ""
+                  }`}
+                >
+                  <CardContent className="flex items-center justify-between space-x-4 p-6">
+                    <div className="flex items-center gap-6">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage
+                          src={employee.image}
+                          alt={`${employee.name}-avatar`}
+                          className="w-10 h-10"
+                        />
+                      </Avatar>
+                      <span className="font-semibold">{employee.name}</span>
+                    </div>
 
-                  {employee.designation && (
-                    <span className="text-yellow-400">
-                      {employee.designation}
-                    </span>
-                  )}
-                  {showReason && employee.reason && (
-                    <Button
-                      onClick={() => handleResignationPopupOpen(employee)} // Open resignation popup on click
-                      color="primary"
-                    >
-                      View
-                    </Button>
-                  )}
-                  {showBadge && employee.status && (
-                    <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
-                      {employee.status}
-                    </Badge>
-                  )}
-                </CardContent>
-              </li>
-            ))}
+                    {employee.designation && (
+                      <span className="text-yellow-400">
+                        {employee.designation}
+                      </span>
+                    )}
+                    {showReason && employee.reason && (
+                      <Button
+                        onClick={() => handleResignationPopupOpen(employee)} // Open resignation popup on click
+                        color="primary"
+                      >
+                        View
+                      </Button>
+                    )}
+                    {showBadge && employee.status && (
+                      <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
+                        {employee.status}
+                      </Badge>
+                    )}
+                  </CardContent>
+                </li>
+              ))}
           </ul>
 
-          {/* Pagination controls inside the card */}
-          <div className="flex items-center justify-center gap-2 py-4 mt-auto">
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-8 h-8 border-transparent hover:bg-transparent"
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="w-5 h-5 text-default-900" />
-            </Button>
-            <span className="text-sm font-medium text-default-900">
-              Page {currentPage} of {totalPage}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-8 h-8 border-transparent hover:bg-transparent"
-              onClick={handleNextPage}
-              disabled={currentPage >= totalPage}
-            >
-              <ChevronRight className="w-5 h-5 text-default-900" />
-            </Button>
+          {/* Footer Section for Pagination and View All */}
+          <div className="p-4 bg-[#2D2C2C80] mt-auto rounded-b-3xl">
+            <div className="flex items-center justify-between">
+              {/* Pagination Controls */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-8 h-8 border-transparent hover:bg-transparent"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="w-5 h-5 text-default-900" />
+                </Button>
+                <span className="text-sm font-medium text-default-900">
+                  Page {currentPage} of {totalPage}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-8 h-8 border-transparent hover:bg-transparent"
+                  onClick={handleNextPage}
+                  disabled={currentPage >= totalPage}
+                >
+                  <ChevronRight className="w-5 h-5 text-default-900" />
+                </Button>
+              </div>
+              {/* View All Button */}
+              {!hideViewAll && (
+                <Button
+                  className="text-white rounded-3xl px-4 py-2"
+                  size="md"
+                  color="primary"
+                  onClick={handleViewAllClick}
+                >
+                  View All
+                </Button>
+              )}
+            </div>
           </div>
-
-          {/* View All Button inside the card */}
-          {!hideViewAll && (
-            <Button
-              className="text-white px-2 flex w-full justify-center items-center rounded-3xl"
-              size="md"
-              color="primary"
-              onClick={handleViewAllClick}
-            >
-              View All
-            </Button>
-          )}
         </div>
       </Card>
 

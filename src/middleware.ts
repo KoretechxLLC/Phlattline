@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   // if (!token && !isPublicPath) {
   //   return NextResponse.redirect(new URL("/Login", request.url));
   // }
-
+  const baseURL = process.env.NEXT_PUBLIC_API_URL;
   if (path && path.includes("/Portal")) {
     const token = request.cookies.get("accessToken")?.value;
     if (token) {
@@ -37,10 +37,10 @@ export async function middleware(request: NextRequest) {
       if (userId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/auth/getUsers?user_id=${userId}`
+            `${baseURL}/api/auth/getUsers?user_id=${userId}`
           );
           let data = await response.json();
- 
+
           if (data?.data?.assessment_status) {
             return NextResponse.next();
           } else {
@@ -50,16 +50,16 @@ export async function middleware(request: NextRequest) {
           }
         } catch (error) {
           console.error("Error fetching users:", error);
+          return NextResponse.redirect(new URL("/Login", request.url));
         }
-      }
-      else {
+      } else {
         return NextResponse.redirect(new URL("/Login", request.url));
       }
     }
     // if (token) {
     //   return NextResponse.next();
     // }
-     else {
+    else {
       return NextResponse.redirect(new URL("/Login", request.url));
     }
   }

@@ -36,6 +36,12 @@ const exitInterviewEmployees = [
     designation: "Product Manager",
     status: "Completed",
   },
+  {
+    image: "/assets/DummyImg.png",
+    name: "Jane Smith",
+    designation: "Product Manager",
+    status: "Completed",
+  },
 ];
 
 const triageEmployees = [
@@ -53,34 +59,40 @@ const triageEmployees = [
 
 const TalentRetentions = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-      {/* First Row */}
-      <div>
-        <EmployeesTab
-          title="High Potential Employees"
-          employees={highPotentialEmployees}
-        />
-      </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* First Row */}
+        <div>
+          <EmployeesTab
+            title="High Potential Employees"
+            employees={highPotentialEmployees}
+          />
+        </div>
 
-      <div>
-        <EmployeesTab
-          title="Exit Interview Tab"
-          employees={exitInterviewEmployees}
-          showBadge={true}
-        />
+        <div>
+          <EmployeesTab
+            title="Exit Interview Tab"
+            employees={exitInterviewEmployees}
+            showBadge={true}
+          />
+        </div>
+        <div>
+          <EmployeesTab
+            title="Triage"
+            employees={triageEmployees}
+            showReason={true}
+          />
+        </div>
+
+        {/* Second Row */}
       </div>
-      <div>
-        <EmployeesTab
-          title="Triage"
-          employees={triageEmployees}
-          showReason={true}
-        />
-      </div>
-      <div>
-        <EmployeesListTab />
-      </div>
-      <div className="col-span-2">
-        <EmployeeDataTab />
+      <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="col-span-1">
+          <EmployeesListTab />
+        </div>
+        <div className="col-span-2">
+          <EmployeeDataTab />
+        </div>
       </div>
     </div>
   );

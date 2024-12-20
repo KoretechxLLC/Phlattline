@@ -190,14 +190,13 @@ export async function GET(request: NextRequest) {
       take = Number(size);
     }
 
-
     // Fetch organizations with or without pagination
     const organizations = await prisma.organizations.findMany({
       skip,
       take,
-      include:{
-        assessment_category:true,
-      }
+      include: {
+        assessment_category: true,
+      },
     });
 
     // Check if organizations exist
