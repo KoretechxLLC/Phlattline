@@ -66,8 +66,6 @@ export const login = createAsyncThunk<any, any>(
         document.cookie = `access_token=${accessToken}; path=/; max-age=86400; secure; samesite=strict`;
       }
 
-
-
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
