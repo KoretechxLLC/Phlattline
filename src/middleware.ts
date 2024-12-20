@@ -97,6 +97,7 @@ export async function middleware(request: NextRequest) {
 
       let token = authHeader.split(" ")?.[1];
 
+
       if (!token) {
         return NextResponse.redirect(new URL("/", request.url));
       }

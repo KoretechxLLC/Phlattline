@@ -1,42 +1,12 @@
-"use client";
-
-import * as React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import { Button } from "@/app/components/button-sidebar";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import Spinner from "@/app/components/Spinner";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const jobData = [
-  {
-    id: 1,
-    name: "Front end Developer",
-    department: "Development",
-    type: "IT",
-    date: "2024-11-10",
-  },
-  {
-    id: 2,
-    name: "UI/UX",
-    department: "Design",
-    type: "Design",
-    date: "2024-11-15",
-  },
-  {
-    id: 3,
-    name: "Architect",
-    department: "Construction",
-    type: "Construction",
-    date: "2024-11-20",
-  },
-  {
-    id: 4,
-    name: "Biomedical Engineer",
-    department: "Healthcare",
-    type: "Healthcare",
-    date: "2024-11-22",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchjoborganization } from "@/redux/slices/jobapplication.slice";
+import { RootState } from "@/redux/store";
 
 interface OrganizationJobsProps {
   params: {
@@ -48,29 +18,23 @@ const OrganizationJobs: React.FC<OrganizationJobsProps> = ({
   params: { id },
 }) => {
   const searchParams = useSearchParams();
-  const [data, setData] = useState<any>();
+  const dispatch = useDispatch<any>();
   const [loading, setLoading] = useState(true);
-  const [jobsAvailable, setJobsAvailable] = useState(true);
   const router = useRouter();
-  const organizationId = searchParams.get("organizationId");
+  const { JobbyOrganization }: any = useSelector((state: RootState) => state.jobapplication);
+  const organizationId = searchParams.get("organizationId"); // Get organizationId from URL
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
+
   useEffect(() => {
-    setTimeout(() => {
-      if (organizationId) {
-        const filteredOrganizationData = jobData.filter(
-          (e: any) => Number(e.id) === Number(organizationId)
-        );
-        if (filteredOrganizationData.length > 0) {
-          setData(filteredOrganizationData);
-        } else {
-          setJobsAvailable(false);
-        }
-      }
-      setLoading(false);
-    }, 1000);
-  }, [organizationId]);
+    if (organizationId) {
+      setLoading(true);
+      dispatch(fetchjoborganization({ organizationId: Number(organizationId) })).then(() => {
+        setLoading(false);
+      });
+    }
+  }, [organizationId, dispatch]);
 
   const handleNextPage = () => {
     if (currentPage < totalPage) {
@@ -83,43 +47,47 @@ const OrganizationJobs: React.FC<OrganizationJobsProps> = ({
       setCurrentPage((prevPage) => prevPage - 1);
     }
   };
+
+  // Filter jobs based on organizationId
+  const jobs = JobbyOrganization?.data?.filter(
+    (job: any) => job.organization_id === Number(organizationId)
+  ) || [];
+
   return (
     <div className="overflow-auto w-full">
       {loading ? (
         <div className="flex justify-center items-center py-4">
           <Spinner height="30px" width="30px" />
         </div>
-      ) : !jobsAvailable ? (
+      ) : jobs.length === 0 ? (
         <div className="text-center py-4 text-gray-600">
           <p>No jobs available for this organization.</p>
         </div>
       ) : (
         <div className="w-full text-center justify-center text-sm">
           {/* Header */}
-          <div className="text-lg bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white flex">
+          <div className="text-lg bg-gradient-to-b from-gray-700 to-gray-800 text-white flex font-semibold shadow-md rounded-t-lg">
             <div className="flex-1 px-4 py-3 whitespace-nowrap">S.No</div>
             <div className="flex-1 px-4 py-3 whitespace-nowrap">Name</div>
             <div className="flex-1 px-4 py-3 whitespace-nowrap">Department</div>
-            <div className="flex-1 px-4 py-3 whitespace-nowrap">Type</div>
             <div className="flex-1 px-4 py-3 whitespace-nowrap">Date</div>
             <div className="flex-1 px-4 py-3 whitespace-nowrap">Action</div>
           </div>
           {/* Jobs Data */}
-          <div className="flex flex-col divide-y divide-gray-300">
-            {data?.map((job: any, index: number) => (
+          <div className="flex flex-col bg-black border-[1px] border-slate-800 shadow-md rounded-b-lg overflow-hidden">
+            {jobs.map((job: any, index: number) => (
               <React.Fragment key={job.id}>
-                <div className="flex items-center text-center px-4 py-3 ">
+                <div className="flex items-center text-center px-4 py-3 transition border-[0.3px] border-slate-600">
                   <div className="flex-1">{index + 1}</div>
-                  <div className="flex-1">{job.name}</div>
-                  <div className="flex-1">{job.department}</div>
-                  <div className="flex-1">{job.type}</div>
-                  <div className="flex-1">{job.date}</div>
+                  <div className="flex-1">{job.position_name}</div>
+                  <div className="flex-1">{job.department.name}</div>
+                  <div className="flex-1">{new Date(job.created_at).toLocaleDateString()}</div>
                   <div className="flex-1">
                     <Button
                       color="primary"
                       className="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition"
                       onClick={() =>
-                        router.push(`/Portal/JobSummary?jobId=${job.id}`)
+                        router.push(`/Portal/JobSummary?jobId=${job.id}&departmentId=${job.department_id}`)
                       }
                     >
                       Details

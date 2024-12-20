@@ -35,7 +35,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       description: "",
     },
     "/Portal/ExploreJobs": {
-      heading: "Hey Jack",
+      heading: "Explore Jobs",
       description:
         "Discover Opportunities, Explore Careers—Your Next Job Awaits!",
     },
