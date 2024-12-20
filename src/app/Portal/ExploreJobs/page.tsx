@@ -1,49 +1,56 @@
 "use client";
-
 import * as React from "react";
 import { Button } from "@/app/components/button-sidebar";
 import { useRouter } from "next/navigation";
 import Spinner from "@/app/components/Spinner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const organizationData = [
-  {
-    id: 1,
-    name: "Tech Solutions Ltd.",
-    type: "IT",
-  },
-  {
-    id: 2,
-    name: "Creative Minds",
-    type: "Design",
-  },
-  {
-    id: 3,
-    name: "Build and Grow",
-    type: "Construction",
-  },
-  {
-    id: 4,
-    name: "Health First",
-    type: "Healthcare",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { fetchAllOrganizations, fetchAllOrganizationsCount } from "@/redux/slices/organization.slice";
 
 const ExploreJobs = () => {
-  const [loading, setLoading] = React.useState(true);
-  const [organizations, setOrganizations] = React.useState(organizationData);
+  const dispatch = useDispatch<any>();
   const router = useRouter();
+
+  // Redux state
+  const { allOrganizations,organizationscount,allOrganizationsLoading,allOrganizationsError } =
+    useSelector((state: RootState) => state.organization);
+
+  // Local state to store organizations and pagination info
+  const [organizations, setOrganizations] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [organizationsPerPage] = useState(9); // Items per page
   const [totalPage, setTotalPage] = useState(1);
 
-  // Simulate loading delay
-  React.useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+  // Fetch organizations and total count on mount
+  useEffect(() => {
+    dispatch(fetchAllOrganizations());
+    dispatch(fetchAllOrganizationsCount());
+  }, [dispatch]);
 
+  // Update organizations state when allOrganizations changes
+  useEffect(() => {
+    if (allOrganizations) {
+      setOrganizations(allOrganizations);
+    }
+  }, [allOrganizations]);
+
+  // Calculate total pages whenever organizationscount changes
+  useEffect(() => {
+    if (organizationscount) {
+      const totalPages = Math.ceil(organizationscount / organizationsPerPage);
+      setTotalPage(totalPages);
+    }
+  }, [organizationscount, organizationsPerPage]);
+
+  // Slice data for the current page
+  const paginatedOrganizations = organizations.slice(
+    (currentPage - 1) * organizationsPerPage,
+    currentPage * organizationsPerPage
+  );
+
+  // Handle pagination actions
   const handleNextPage = () => {
     if (currentPage < totalPage) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -58,11 +65,16 @@ const ExploreJobs = () => {
 
   return (
     <div className="overflow-auto w-full">
-      {loading ? (
+      {/* Loading Spinner */}
+      {allOrganizationsLoading ? (
         <div className="flex justify-center items-center py-4">
           <Spinner height="40px" width="40px" />
         </div>
-      ) : organizations.length === 0 ? (
+      ) : allOrganizationsError ? (
+        <div className="text-center py-4 text-red-500">
+          <p>{allOrganizationsError}</p>
+        </div>
+      ) : paginatedOrganizations?.length === 0 ? (
         <div className="text-center py-4 text-gray-600">
           <p>No organizations available.</p>
         </div>
@@ -70,24 +82,24 @@ const ExploreJobs = () => {
         <React.Fragment>
           <div className="w-full text-center justify-center text-sm">
             {/* Header */}
-            <div className="text-lg bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] text-white flex">
+            <div className="text-lg bg-gradient-to-b from-gray-700 to-gray-800 text-white flex font-semibold shadow-md rounded-t-lg">
               <div className="flex-1 px-4 py-3 whitespace-nowrap">S.NO</div>
-              <div className="flex-1 px-4 py-3 whitespace-nowrap">Names</div>
-              <div className="flex-1 px-4 py-3 whitespace-nowrap">Type</div>
-              <div className="flex-1 px-4 py-3 whitespace-nowrap">Action</div>
+              <div className="flex-1 px-4 py-3 whitespace-nowrap uppercase">Names</div>
+              <div className="flex-1 px-4 py-3 whitespace-nowrap uppercase">Type</div>
+              <div className="flex-1 px-4 py-3 whitespace-nowrap uppercase">Action</div>
             </div>
             {/* Organizations Data */}
-            <div className="flex flex-col ">
-              {organizations.map((organization, index) => (
+            <div className="flex flex-col bg-black border-[1px] border-slate-800 shadow-md rounded-b-lg overflow-hidden">
+              {paginatedOrganizations.map((organization, index) => (
                 <React.Fragment key={organization.id}>
-                  <div className="flex items-center text-center px-4 py-3 ">
-                    <div className="flex-1">{index + 1}</div>
-                    <div className="flex-1">{organization.name}</div>
-                    <div className="flex-1">{organization.type}</div>
+                  <div className="flex items-center text-center px-4 py-3 transition border-[0.3px] border-slate-600">
+                    <div className="flex-1">{(currentPage - 1) * organizationsPerPage + index + 1}</div>
+                    <div className="flex-1 font-medium">{organization.organization_name}</div>
+                    <div className="flex-1 text-gray-300">{organization.assessment_category.name}</div>
                     <div className="flex-1">
                       <Button
                         color="primary"
-                        className="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition"
+                        className="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition shadow"
                         onClick={() =>
                           router.push(
                             `/Portal/ExploreJobs/OrganizationJobs?organizationId=${organization.id}`
@@ -101,27 +113,27 @@ const ExploreJobs = () => {
                 </React.Fragment>
               ))}
             </div>
-            <div className="flex items-center justify-center gap-2 py-4">
+            <div className="flex items-center justify-center gap-4 py-4">
               <Button
                 variant="outline"
                 size="icon"
-                className="w-8 h-8 border-transparent hover:bg-transparent"
+                className="w-10 h-10 border-gray-300 hover:bg-gray-600 rounded-full shadow"
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft className="w-5 h-5 text-default-900" />
+                <ChevronLeft className="w-6 h-6 text-gray-300" />
               </Button>
-              <span className="text-sm font-medium text-default-900">
+              <span className="text-sm font-medium text-gray-300">
                 Page {currentPage} of {totalPage}
               </span>
               <Button
                 variant="outline"
                 size="icon"
-                className="w-8 h-8 border-transparent hover:bg-transparent"
+                className="w-10 h-10 border-gray-300 hover:bg-gray-600 rounded-full shadow"
                 onClick={handleNextPage}
                 disabled={currentPage >= totalPage}
               >
-                <ChevronRight className="w-5 h-5 text-default-900" />
+                <ChevronRight className="w-6 h-6 text-gray-300 hover:text-white" />
               </Button>
             </div>
           </div>

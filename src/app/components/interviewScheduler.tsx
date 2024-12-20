@@ -186,7 +186,7 @@ const InterviewSchedulerTab: React.FC = () => {
                       confirmAction={() => handleDeleteJob(job.id)}
                     />
                     <button
-                      className={`rounded-lg px-2 py-2 text-[20px] text-white transition-colors ${job.scheduled === true ? "bg-green-600 hover:bg-green-700" : "bg-transparent hover:bg-gray-200 border-[1px] border-slate-600"
+                      className={`rounded-lg px-2 py-2 text-[20px] text-white transition-colors ${job.scheduled === true ? "bg-green-600 hover:bg-green-700" : "bg-transparent hover:bg-green-600 border-[1px] border-slate-600"
                         }`}
                     >
                       <IoCheckmarkDoneCircleOutline />

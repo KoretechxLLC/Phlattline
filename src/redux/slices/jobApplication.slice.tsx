@@ -19,6 +19,10 @@ interface JobApplicationsState {
   interviewSchedulingSuccess: string | null;
   interviewSchedulingError: string | null;
 
+  JobbyOrganization: any[] | null;
+  JobbyOrganizationLoader: boolean;
+  JobbyOrganizationError: string | null;
+
 }
 
 const initialState: JobApplicationsState = {
@@ -40,9 +44,29 @@ const initialState: JobApplicationsState = {
   interviewSchedulingSuccess: null,
   interviewSchedulingError: null,
 
+
+  JobbyOrganization: null,
+  JobbyOrganizationLoader: false,
+  JobbyOrganizationError: null,
+
 };
 
-// Async Thunks
+
+// Fetch All Jobs
+export const fetchjoborganization = createAsyncThunk(
+  "jobApplications/fetchjoborganization",
+  async ({ organizationId }:any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/api/getAllJobs`, {
+        params: { organizationId },
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to fetch jobs");
+    }
+  }
+);
+
 
 // Fetch Job Applications
 export const fetchJobApplications = createAsyncThunk<any, { organizationId: number }>(
@@ -214,6 +238,20 @@ const jobApplicationsSlice = createSlice({
         } else {
           state.interviewSchedulingError = action.payload as string;
         }
+      })
+
+      //Jobs By Organizations
+      .addCase(fetchjoborganization.pending, (state) => {
+        state.JobbyOrganizationLoader = true;
+        state.JobbyOrganizationError = null;
+      })
+      .addCase(fetchjoborganization.fulfilled, (state, action) => {
+        state.JobbyOrganizationLoader = false;
+        state.JobbyOrganization = action.payload;
+      })
+      .addCase(fetchjoborganization.rejected, (state, action) => {
+        state.JobbyOrganizationLoader = false;
+        state.JobbyOrganizationError = action.payload as string;
       });
       
   },

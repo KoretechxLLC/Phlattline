@@ -135,14 +135,17 @@ const VacantJobs = ({ onEditJob }: any) => {
                 key={job.id}
                 className="flex justify-between items-center text-white pb-5"
               >
+                <div className="flex items-center gap-3 w-[20em] -ml-[0.6em]">
                 <div className="flex items-center justify-center rounded-full h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34] relative transition duration-500">
                   <span className="text-white text-[13px] md:text-sm font-bold">
                     <RiUserSearchFill size={23} />
                   </span>
                 </div>
-                <span className="text-md text-left w-[10em] mr-[4em]">
+
+                <span className="text-[15px] text-left w-[10em] mr-[4em]">
                   {job.position_name}
                 </span>
+                </div>
 
                 <div className="flex space-x-2 items-center">
                   <Button

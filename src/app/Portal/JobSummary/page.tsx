@@ -9,23 +9,28 @@ import {
 } from "@/app/components/Card";
 import Spinner from "@/app/components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTalents } from "@/redux/slices/talentmanagement.slice";
+import { fetchTalents, fetchTalentsforindividuals } from "@/redux/slices/talentmanagement.slice";
 import { RootState } from "@/redux/store";
+import { Button } from "@/app/components/button-sidebar";
+import UploadCVPopup from "@/app/components/uploadCV";
 
 const JobSummary = () => {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
   const departmentId = searchParams.get("departmentId");
-
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userType = userData?.user_type_id;
   const [loading, setLoading] = useState(true);
   const [jobDetails, setJobDetails] = useState<any>(null);
-
+  const [showCVPopup, setShowCVPopup] = useState(false);
   const dispatch = useDispatch<any>();
+  const userid = userData?.id;
   const { fetchedTalents } = useSelector((state: RootState) => state.talent);
 
   useEffect(() => {
-    if (jobId) {
-      // Check if the job details are already in the fetched talents
+    if (!jobId) return;
+  
+    if (userType === 2) {
       const existingJob = fetchedTalents?.find(
         (job: any) => job.id === Number(jobId)
       );
@@ -33,20 +38,39 @@ const JobSummary = () => {
         setJobDetails(existingJob);
         setLoading(false);
       } else {
-        // Fetch job details using departmentId if not already fetched
         dispatch(fetchTalents({ departmentId }))
           .unwrap()
           .then((data: any) => {
-            const fetchedJob = data && data?.find(
-              (job: any) => job.id === Number(jobId)
-            );
+            const fetchedJob =
+              data && data?.find((job: any) => job.id === Number(jobId));
             setJobDetails(fetchedJob);
             setLoading(false);
           })
           .catch(() => setLoading(false));
       }
     }
-  }, [jobId, departmentId, dispatch, fetchedTalents]);
+  
+    if (userType === 1) {
+      const existingJob = fetchedTalents?.find(
+        (job: any) => job.id === Number(jobId)
+      );
+      if (existingJob) {
+        setJobDetails(existingJob);
+        setLoading(false);
+      } else {
+        dispatch(fetchTalentsforindividuals({ departmentId }))
+          .unwrap()
+          .then((data: any) => {
+            const fetchedJob =
+              data && data?.find((job: any) => job.id === Number(jobId));
+            setJobDetails(fetchedJob);
+            setLoading(false);
+          })
+          .catch(() => setLoading(false));
+      }
+    }
+  }, [userType, jobId, departmentId, dispatch, fetchedTalents]);
+  
 
   if (loading) {
     return (
@@ -65,10 +89,22 @@ const JobSummary = () => {
   }
 
   return (
-    <Card className="border border-[#62626280]  ">
-      <CardHeader className="h-16 w-60 rounded-r-xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+    <Card className="border border-[#62626280]">
+      <CardHeader className="h-16 w-fit rounded-r-xl pl-10 pr-10 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
         <CardTitle>{jobDetails?.position_name}</CardTitle>
+       
       </CardHeader>
+      <div className="flex justify-end mr-10">
+      {(userType === 1 || userType === 3) && (
+          <Button
+            onClick={() => setShowCVPopup(true)}
+            color="primary"
+            className="rounded-3xl"
+          >
+            Apply Now
+          </Button>
+        )}
+      </div>
 
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-5">
@@ -104,6 +140,7 @@ const JobSummary = () => {
           </ul>
         </div>
       </CardContent>
+        <UploadCVPopup talentId={jobDetails.id} userId={userid} show={showCVPopup} onClose={() => setShowCVPopup(false)} />
     </Card>
   );
 };

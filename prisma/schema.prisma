@@ -71,6 +71,7 @@ model organizations {
   talent             talent[]
   users              users[]
   interviewSchedule  interviewSchedule[]
+  assessment_category assessment_category @relation(fields: [categoryId], references:[id])
 }
 
 model employees {
@@ -424,6 +425,7 @@ model assessment_category {
   createdAt                DateTime                 @default(now())
   assessment_subCategories assessment_subCategory[]
   individual_assessments   individual_assessments[]
+  organizations            organizations[]
 }
 
 model assessment_subCategory {

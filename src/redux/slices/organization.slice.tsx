@@ -41,6 +41,10 @@ interface organizationResponseState {
   departmentDeletionsuccess: any | null;
   departmentDeletionerror: any | null;
   departmentDeletionLoading: boolean;
+  organizationscount: number; 
+  allOrganizations: any[];
+  allOrganizationsLoading: boolean;
+  allOrganizationsError: string | null;
 }
 
 const initialState: organizationResponseState = {
@@ -82,7 +86,12 @@ const initialState: organizationResponseState = {
   departmentDeletionsuccess: null,
   departmentDeletionerror: null,
   departmentDeletionLoading: false,
+  allOrganizations: [],
+  organizationscount: 0,
+  allOrganizationsLoading: false,
+  allOrganizationsError: null,
 };
+
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
   "organization/fetchAllEmployee",
@@ -102,6 +111,42 @@ export const fetchAllEmployee = createAsyncThunk<any, any>(
     }
   }
 );
+
+
+// Fetch all Organizations
+export const fetchAllOrganizations = createAsyncThunk<any, void, { rejectValue: string }>(
+  "organization/fetchAllOrganizations",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/api/auth/organization_register`);
+      return response.data.data; // Adjust according to your API response structure
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Failed to fetch all organizations";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
+// Fetch all Organizations
+export const fetchAllOrganizationsCount = createAsyncThunk(
+  'organization/fetchAllOrganizationsCount',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/api/allcompanycount');
+      return response.data.count; // Adjust based on actual structure
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || error.message || 'Failed to fetch all organizations count';
+      console.error('Error in API call:', errorMessage);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
+
 
 export const assignCourses = createAsyncThunk<any, any>(
   "organization/assignCourses",
@@ -217,7 +262,6 @@ export const deleteDepartment = createAsyncThunk<any, any>(
 
       return data;
     } catch (error: any) {
-      console.log(error.response?.data?.message, "hello hello");
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
@@ -721,12 +765,36 @@ const organizationSlice = createSlice({
             return depart;
           }
         });
-        console.log(departId, "hello this is Matt");
         state.departmentDeletionsuccess = "Departments Deleted Successfully";
       })
       .addCase(deleteDepartment.rejected, (state, action) => {
         state.departmentDeletionLoading = false;
         state.departmentDeletionerror = action.payload || "unknown error";
+      })
+      .addCase(fetchAllOrganizations.pending, (state) => {
+        state.allOrganizationsLoading = true;
+        state.allOrganizationsError = null;
+      })
+      .addCase(fetchAllOrganizations.fulfilled, (state, action) => {
+        state.allOrganizationsLoading = false;
+        state.allOrganizations = action.payload; // Update with all organizations
+      })
+      .addCase(fetchAllOrganizations.rejected, (state, action) => {
+        state.allOrganizationsLoading = false;
+        state.allOrganizationsError = action.payload as string; // Store the error message
+      })
+
+      .addCase(fetchAllOrganizationsCount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllOrganizationsCount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.organizationscount = action.payload; // Update with numeric count
+      })
+      .addCase(fetchAllOrganizationsCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

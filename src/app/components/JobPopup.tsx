@@ -118,10 +118,10 @@ const JobPopup = ({
         </div>
 
         {/* UploadCVPopup */}
-        <UploadCVPopup
+        {/* <UploadCVPopup
           show={showCVPopup}
           onClose={() => setShowCVPopup(false)}
-        />
+        /> */}
       </div>
     </div>
   );

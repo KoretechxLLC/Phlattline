@@ -92,6 +92,33 @@ export const fetchTalents = createAsyncThunk<any, any>(
 
 
 
+// Async Thunk for fetching talents (GET)
+export const fetchTalentsforindividuals = createAsyncThunk<any, any>(
+    "talent/fetchTalentsforindividuals",
+    async (
+        { organizationId, departmentId, talentId }: { organizationId?: number; departmentId?: number; talentId?: number },
+        { rejectWithValue }
+    ) => {
+        try {
+            // Build query string dynamically
+            const queryParams = new URLSearchParams();
+            if (organizationId) queryParams.append("organizationId", organizationId.toString());
+            if (departmentId) queryParams.append("departmentId", departmentId.toString());
+            if (talentId) queryParams.append("talentId", talentId.toString());
+
+            const response = await axiosInstance.get(`/api/jobsummaryfetchdetail?${queryParams.toString()}`);
+            return response.data;
+        } catch (error: any) {
+            const errorMessage =
+                error?.response?.data?.message || "Failed to fetch talents.";
+            return rejectWithValue(errorMessage);
+        }
+    }
+);
+
+
+
+
 // Async Thunk for deleting talents (DELETE)
 export const deleteTalent = createAsyncThunk<any, any>(
     "talent/deleteTalent",
@@ -159,6 +186,21 @@ const talentSlice = createSlice({
                 state.fetchedTalents = action.payload.data;
             })
             .addCase(fetchTalents.rejected, (state, action) => {
+                state.fetchTalentsLoader = false;
+                state.fetchTalentsError = action.payload as string;
+            })
+
+            // Fetch Talents for indiviudals
+            .addCase(fetchTalentsforindividuals.pending, (state) => {
+                state.fetchTalentsLoader = true;
+                state.fetchTalentsError = null;
+            })
+            .addCase(fetchTalentsforindividuals.fulfilled, (state, action) => {
+                state.fetchTalentsLoader = false;
+                state.fetchTalentsSuccess = "Talents fetched successfully.";
+                state.fetchedTalents = action.payload.data;
+            })
+            .addCase(fetchTalentsforindividuals.rejected, (state, action) => {
                 state.fetchTalentsLoader = false;
                 state.fetchTalentsError = action.payload as string;
             })

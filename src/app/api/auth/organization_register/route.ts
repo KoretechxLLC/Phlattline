@@ -178,41 +178,47 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const organization_id = searchParams.get("organization_id");
-    let organization: any;
-    if (organization_id) {
-      organization = await prisma.organizations.findUnique({
-        where: { id: Number(organization_id) },
-      });
+    const page = searchParams.get("page");
+    const size = searchParams.get("size");
 
-      if (!organization || organization.length == 0) {
-        return NextResponse.json(
-          { message: "Organization not found", success: false },
-          { status: 404 }
-        );
-      } else {
-        return NextResponse.json({
-          message: "Organization Fetched successfully",
-          success: true,
-          data: {
-            organization: organization,
-          },
-        });
+    let skip = 0;
+    let take = undefined; // Fetch all by default
+
+    // If page and size are valid numbers and greater than 0, set skip and take
+    if (page && size && Number(page) > 0 && Number(size) > 0) {
+      skip = (Number(page) - 1) * Number(size);
+      take = Number(size);
+    }
+
+
+    // Fetch organizations with or without pagination
+    const organizations = await prisma.organizations.findMany({
+      skip,
+      take,
+      include:{
+        assessment_category:true,
       }
-    } else {
-      organization = await prisma.organizations.findMany();
+    });
 
+    // Check if organizations exist
+    if (!organizations || organizations.length === 0) {
       return NextResponse.json(
-        {
-          message: "All Organizations Fetched successfully",
-          success: true,
-          data: organization,
-        },
-        { status: 200 }
+        { message: "No Organizations found", success: false },
+        { status: 404 }
       );
     }
+
+    // Return fetched organizations
+    return NextResponse.json(
+      {
+        message: "Organizations fetched successfully",
+        success: true,
+        data: organizations,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    console.error("Error fetching Organization:", error.message);
+    console.error("Error fetching organizations:", error.message);
     return NextResponse.json(
       { message: error.message || "Internal Server Error", success: false },
       { status: 500 }
