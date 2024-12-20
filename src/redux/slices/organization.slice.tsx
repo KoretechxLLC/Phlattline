@@ -721,7 +721,7 @@ const organizationSlice = createSlice({
             return depart;
           }
         });
-        console.log(departId, "hello this is Matt");
+
         state.departmentDeletionsuccess = "Departments Deleted Successfully";
       })
       .addCase(deleteDepartment.rejected, (state, action) => {
