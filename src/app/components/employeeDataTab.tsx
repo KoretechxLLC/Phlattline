@@ -34,13 +34,13 @@ const EmployeeDataTab = () => {
               <ul className="w-full">
                 <li className="flex-1 items-center justify-between">
                   <span>
-                    Male <Progress value={100} color={"warning"} size="md" />
+                    Male <Progress value={48} color={"warning"} size="md"/> 48
                   </span>
                 </li>
                 <li className="flex-1 items-center justify-between mt-2">
                   <span>
                     Female
-                    <Progress value={12} color={"info"} size="md" />
+                    <Progress value={100} color={"info"} size="md" />
                   </span>
                 </li>
               </ul>
@@ -53,13 +53,13 @@ const EmployeeDataTab = () => {
                 <li className="flex-1 items-center justify-between">
                   <span>
                     20-30
-                    <Progress value={45} color={"success"} size="sm" />
+                    <Progress value={10} color={"success"} size="sm" />
                   </span>
                 </li>
                 <li className="flex-1 items-center justify-between mt-2">
                   <span>
                     31-40
-                    <Progress value={30} color={"info"} size="sm" />
+                    <Progress value={10} color={"info"} size="sm" />
                   </span>
                 </li>
                 <li className="flex-1 items-center justify-between mt-2">
