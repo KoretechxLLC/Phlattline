@@ -108,6 +108,7 @@ export async function GET(req: NextRequest) {
     if (id) {
       whereClause.id = Number(id);
     }
+    whereClause.status = "pending";
 
     const resignation = await prisma.resignation.findMany({
       where: whereClause,
@@ -137,6 +138,13 @@ export async function GET(req: NextRequest) {
     );
   } catch (error: any) {
     console.error("Error getting resignation");
+    return NextResponse.json(
+      {
+        success: false,
+        error: error,
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -157,28 +165,26 @@ export async function DELETE(req: NextRequest) {
     }
 
     const isResignation = await prisma.resignation.findFirst({
-        where: {
-            id: Number(id),
-            organization_id: Number(organization_id),
-          },
-    })
+      where: {
+        id: Number(id),
+        organization_id: Number(organization_id),
+      },
+    });
     if (!isResignation) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Resignation not Found",
-          },
-          { status: 400 }
-        );
-      }
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Resignation not Found",
+        },
+        { status: 400 }
+      );
+    }
     const deletedResignation = await prisma.resignation.delete({
       where: {
         id: Number(id),
         organization_id: Number(organization_id),
       },
     });
-
-    
 
     return NextResponse.json(
       {

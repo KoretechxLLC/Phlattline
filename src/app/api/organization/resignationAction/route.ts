@@ -12,6 +12,7 @@ export async function PUT(req: NextRequest) {
       where: {
         id: id,
         organization_id: organization_id,
+        status: "pending",
       },
     });
     if (!isResignation) {
@@ -88,9 +89,12 @@ export async function PUT(req: NextRequest) {
     }
   } catch (error: any) {
     console.error("Failed to update resignation status");
-    return NextResponse.json({
-      success: false,
-      message: "Failed to update the resignation",
-    },{status:500});
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to update the resignation",
+      },
+      { status: 500 }
+    );
   }
 }
