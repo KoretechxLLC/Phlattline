@@ -49,6 +49,14 @@ interface organizationResponseState {
   employeesCountByOrganizationIdSuccess: any | null;
   employeesCountByOrganizationIdError: any | null;
   employeesCountByOrganizationIdLoading: boolean;
+  allResignation: null;
+  allResignationLoader: boolean;
+  allResignationError: any;
+  allResigantionSuccess: any;
+  resignationAction: null;
+  resignationActionSuccess: any;
+  resignationActionError: any;
+  resignationActionLoading: boolean;
 }
 
 const initialState: organizationResponseState = {
@@ -98,6 +106,14 @@ const initialState: organizationResponseState = {
   employeesCountByOrganizationIdSuccess: null,
   employeesCountByOrganizationIdError: null,
   employeesCountByOrganizationIdLoading: false,
+  allResignation: null,
+  allResignationLoader: false,
+  allResignationError: null,
+  allResigantionSuccess: null,
+  resignationAction: null,
+  resignationActionSuccess: null,
+  resignationActionError: null,
+  resignationActionLoading: false,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -428,6 +444,45 @@ export const employeesCountByOrganizationId = createAsyncThunk<any, any>(
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message ||
+        error.message ||
+        "Failed to Change User Status";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const getAllResignation = createAsyncThunk<any, any>(
+  "organization/getAllResignation",
+
+  async ({ organization_id }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/resignation?organization_id=${organization_id}`
+      );
+      return response.data.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to Change User Status";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const organizationResignationAction = createAsyncThunk<any, any>(
+  "organization/organizationResignationAction",
+
+  async ({ data }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/organization/resignationAction`,
+        data
+      );
+
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
         error.message ||
         "Failed to Change User Status";
       return rejectWithValue(errorMessage);
@@ -837,6 +892,35 @@ const organizationSlice = createSlice({
         state.employeesCountByOrganizationIdLoading = false;
         state.employeesCountByOrganizationIdError =
           action.payload || "unknown error";
+      })
+      .addCase(getAllResignation.pending, (state) => {
+        state.allResignationLoader = true;
+        state.allResignation = null;
+      })
+      .addCase(getAllResignation.fulfilled, (state, action) => {
+        state.allResignationLoader = false;
+        state.allResignation = action.payload;
+        state.allResigantionSuccess = action.payload.message;
+      })
+      .addCase(getAllResignation.rejected, (state, action) => {
+        state.allResignationLoader = false;
+
+        state.allResignationError = action.payload || "unknown error";
+      })
+      .addCase(organizationResignationAction.pending, (state) => {
+        state.resignationActionLoading = true;
+        state.resignationAction = null;
+      })
+      .addCase(organizationResignationAction.fulfilled, (state, action) => {
+        state.resignationActionLoading = false;
+        state.resignationAction = action.payload;
+
+        state.resignationActionSuccess = action.payload.message;
+      })
+      .addCase(organizationResignationAction.rejected, (state, action) => {
+        state.resignationActionLoading = false;
+
+        state.resignationActionError = action.payload || "unknown error";
       });
   },
 });
