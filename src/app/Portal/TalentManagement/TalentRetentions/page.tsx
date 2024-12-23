@@ -65,8 +65,6 @@ const TalentRetentions = () => {
     dispatch(getAllResignation({ organization_id, page: currentPage, size }));
   }, [currentPage]);
 
-
-
   useEffect(() => {
     let resignedEmployees: any = [];
     allResignation &&

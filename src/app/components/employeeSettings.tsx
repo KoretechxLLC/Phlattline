@@ -246,7 +246,7 @@ const EmployeeSetting = ({
                 {departments.map((dept: any) => (
                   <div
                     key={dept.id}
-                    className={`px-4 py-2 rounded-xl w-full text-center text-lg ${
+                    className={`px-4 py-2 rounded-xl cursor-pointer w-full text-center text-lg ${
                       selectedDept == dept?.id
                         ? "bg-red-600 text-white"
                         : "bg-black text-white"

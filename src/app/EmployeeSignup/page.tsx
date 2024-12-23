@@ -177,7 +177,7 @@ const EmployeeSignup = () => {
         staggerChildren: 0.05,
       }}
       viewport={{ once: true }}
-      className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
+      className="flex items-center justify-center px-4 4xl:py-5 py-10 md:py-20 z-50"
     >
       <StackedNotifications
         notification={notification}
@@ -215,7 +215,7 @@ const EmployeeSignup = () => {
         <form onSubmit={handleSubmit} noValidate className="w-full">
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="first-name"
@@ -234,7 +234,7 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="last-name"
@@ -253,7 +253,7 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="email-input"
@@ -272,7 +272,7 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="your-designation"
@@ -291,7 +291,7 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <CustomPhoneInput
               value={empPhone}
@@ -305,12 +305,12 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-2 relative"
           >
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="bg-black border-2 border-[#b74b279d] text-white w-full p-2 rounded pt-4 pb-4 mt-2"
+              className="bg-black border-2 border-[#b74b279d] text-white w-full p-2 rounded 4xl:py-3 py-4  mt-2"
               required
             >
               <option value="" disabled>
@@ -325,7 +325,7 @@ const EmployeeSignup = () => {
           </motion.div>
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <div className="w-full">
               {" "}
@@ -335,7 +335,7 @@ const EmployeeSignup = () => {
                 onChange={(date: any) => setDob(date)}
                 maxDate={sixteenYearsAgo} // Restrict to dates 16+ years ago
                 placeholderText="Select Your Date of Birth"
-                className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full pt-3 pb-3"
+                className="bg-black border-2 border-[#b74b279d] text-white p-2 rounded w-full "
                 showMonthDropdown // Enable month dropdown
                 showYearDropdown // Enable year dropdown
                 dateFormat="MM/dd/yyyy"
@@ -349,7 +349,7 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="password-input"
@@ -368,7 +368,7 @@ const EmployeeSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="employee-code-input"
@@ -384,7 +384,7 @@ const EmployeeSignup = () => {
               <p className="text-red-500 text-sm mt-1">{errors.employeeCode}</p>
             )}
           </motion.div>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2 mt-6">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 py-2 4xl:mt-4 mt-6">
             <motion.button
               variants={primaryVariants}
               whileTap={{

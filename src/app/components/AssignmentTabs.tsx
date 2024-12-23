@@ -32,22 +32,18 @@ const AssignmentTabs: React.FC = () => {
   const router = useRouter();
   const { userData } = useSelector((state: RootState) => state.auth);
   const organization_id = userData?.organization_id;
-  const { getemployeeaseesments } = useSelector((state: RootState) => state.employeeMyAssessment);
-  const { purchasedAssessmentData, purchasedAssessmentDataLoader } = useSelector((state: RootState) => state.purchaseAssessment);
+  const { getemployeeaseesments } = useSelector(
+    (state: RootState) => state.employeeMyAssessment
+  );
+  const { purchasedAssessmentData, purchasedAssessmentDataLoader } =
+    useSelector((state: RootState) => state.purchaseAssessment);
   const [assessments, setAssessments] = useState<any[]>([]);
-
-
-
 
   useEffect(() => {
     if (userData?.id) {
       dispatch(fetchedPurchaseAssessment({ user_Id: userData.id })); // Ensure key matches expected payload
     }
   }, [userData?.id, dispatch]);
-
-
-
-
 
   useEffect(() => {
     if (purchasedAssessmentData) {
@@ -60,7 +56,6 @@ const AssignmentTabs: React.FC = () => {
       router.push(`/paidAssessment?assessmentId=${id}`);
     }
   };
-
 
   const handleRetakeAssessmentsClick = () => {
     router.push("/Portal/ODaas?tab=Diagnostics");
@@ -129,8 +124,6 @@ const AssignmentTabs: React.FC = () => {
               </Card>
             </div>
           </div>
-
-
         </>
       )}
     </div>

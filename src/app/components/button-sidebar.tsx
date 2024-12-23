@@ -188,6 +188,7 @@ export interface ButtonProps
   rounded?: rounded;
   fullWidth?: boolean;
   size?: "default" | "sm" | "md" | "lg" | "icon";
+  nonClickable?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -201,6 +202,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       shadow,
       rounded,
       asChild = false,
+      nonClickable = false, // Add a disabled prop with a default value
       ...props
     },
     ref
@@ -217,9 +219,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             color,
             shadow,
             className,
-          })
+          }),
+          nonClickable && "pointer-events-none cursor-not-allowed"
         )}
         ref={ref}
+        onClick={nonClickable ? undefined : props.onClick}
         {...props}
       />
     );

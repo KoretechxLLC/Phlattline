@@ -45,7 +45,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       >
         <select
           className={cn(
-            `flex h-14 w-full bg-gray-50 text-black shadow-input rounded-md px-3 py-2 text-sm
+            `flex 4xl:h-12 h-14 w-full bg-gray-50 text-black shadow-input rounded-md px-3 py-2 text-sm
     placeholder:text-neutral-400 
     disabled:cursor-not-allowed disabled:opacity-50`,
             className

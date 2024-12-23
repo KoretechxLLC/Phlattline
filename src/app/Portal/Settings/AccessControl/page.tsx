@@ -146,7 +146,7 @@ const AccessControl = () => {
               {departments.map((dept: any) => (
                 <div
                   key={dept.id}
-                  className={`px-4 py-2 rounded-xl w-full text-center text-lg ${
+                  className={`px-4 py-2 cursor-pointer rounded-xl w-full text-center text-lg ${
                     selectedDept === dept.id
                       ? "bg-red-600 text-white"
                       : "bg-black text-white"
@@ -163,7 +163,7 @@ const AccessControl = () => {
                   {employeeData.map((employee: any, index: any) => (
                     <React.Fragment key={index}>
                       <div
-                        className={`flex items-center space-x-6 px-2 py-3 my-3 rounded-lg ${
+                        className={`flex cursor-pointer items-center space-x-6 px-2 py-3 my-3 rounded-lg ${
                           selectedEmployeeId === employee.id
                             ? "border border-gray-300"
                             : "bg-transparent"

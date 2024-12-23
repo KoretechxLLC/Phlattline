@@ -37,22 +37,22 @@ const EmployeeDataTab = () => {
           <Spinner />
         </div>
       ) : (
-        <Card className="border border-[#62626280] rounded-3xl">=
+        <Card className="border border-[#62626280] rounded-3xl">
           <CardHeader className="mb-2 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
             <CardTitle>Employee Data</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-2 gap-2 p-2">
+              <div className="flex justify-center mx-4">
                 {/* First Row */}
-                <Card className="border border-[#62626280] 4xl:w-44 w-52 rounded-xl">
+                <Card className="border border-[#62626280] w-[120px] md:w-[200px] rounded-xl">
                   <CardHeader className="rounded-xl bg-gradient-to-b from-[#B50D34] to-[#BAA716] text-white">
-                    <CardTitle className="justify-center mx-4 items-center">
+                    <CardTitle className="justify-center text-center items-center">
                       Employees
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <h1 className="text-3xl font-bold mx-14 4xl:mx-16 my-10">
+                  <CardContent className="flex justify-center items-center">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold my-6">
                       {organizationEmployees?.total}
                     </h1>
                   </CardContent>

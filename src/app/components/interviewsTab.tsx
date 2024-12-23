@@ -9,6 +9,7 @@ import {
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { Badge } from "./badge";
 import Spinner from "@/app/components/Spinner";
+import { Button } from "./button-sidebar";
 
 const InterviewTab: React.FC = () => {
   // Static array of interview data
@@ -96,9 +97,13 @@ const InterviewTab: React.FC = () => {
 
                   {/* Status Badge */}
                   <div className="mx-4">
-                    <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
+                    <Button
+                      color="primary"
+                      className="rounded-3xl"
+                      nonClickable
+                    >
                       {interview.interviewStatus}
-                    </Badge>
+                    </Button>
                   </div>
                 </CardContent>
               </li>

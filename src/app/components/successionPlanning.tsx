@@ -1,6 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/Card";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -19,9 +24,15 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
   const dispatch = useDispatch<any>();
   const { userData } = useSelector((state: RootState) => state.auth);
   const { departments } = useSelector((state: RootState) => state.organization);
-  const { usercoursesresult } = useSelector((state: RootState) => state.courses);
-  const { responseLoading } = useSelector((state: RootState) => state.organization);
-  const { usersbyorganization } = useSelector((state: RootState) => state.employee);
+  const { usercoursesresult } = useSelector(
+    (state: RootState) => state.courses
+  );
+  const { responseLoading } = useSelector(
+    (state: RootState) => state.organization
+  );
+  const { usersbyorganization } = useSelector(
+    (state: RootState) => state.employee
+  );
   // State to store extracted employees and courses
   const [employees, setEmployees] = useState<any[]>([]);
   const [employeesWithCourses, setEmployeesWithCourses] = useState<any[]>([]);
@@ -30,7 +41,6 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
   useEffect(() => {
     dispatch(fetchusercoursesresult({})); // Fetch all user courses
   }, [dispatch]);
-
 
   useEffect(() => {
     if (userData?.organization_id) {
@@ -41,10 +51,11 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
   // Fetch departments
   useEffect(() => {
     if (userData?.organization_id) {
-      dispatch(fetchAllDepartment({ organizationId: userData.organization_id }));
+      dispatch(
+        fetchAllDepartment({ organizationId: userData.organization_id })
+      );
     }
   }, [dispatch, userData?.organization_id]);
-
 
   useEffect(() => {
     if (usersbyorganization) {
@@ -57,7 +68,6 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
       setEmployees(mappedEmployees);
     }
   }, [usersbyorganization]);
-
 
   // Match employees with usercoursesresult data
   useEffect(() => {
@@ -116,68 +126,69 @@ const SuccessionPlanningTab: React.FC<SuccessionPlanningTabProps> = ({
 
   return (
     <div>
-    <Card className="border w-full border-[#62626280] rounded-3xl">
-      <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
-        <CardTitle>Succession Planning</CardTitle>
-      </CardHeader>
-      {responseLoading ? (
-        <div className="text-center text-gray-300 py-20">
-          <Spinner height="30px" width="30px" />
-        </div>
-      ) : employeesWithCourses.length > 0 ? (
-        // Added a scrollable container with a fixed height
-        <div className="overflow-y-auto max-h-96"> 
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 4xl:px-3 p-2">
-            {employeesWithCourses.slice(0, maxEmployeesToShow).map((employee) => (
-              <li
-                key={employee.id}
-                className="border border-[#62626280] rounded-lg 4xl:px-2 p-4"
-              >
-                <CardContent className="flex items-center space-x-4">
-                  {employee.image ? (
-                    <Avatar className="4xl:w-8 4xl:h-8 w-10 h-10 border-[1px]">
-                      <AvatarImage
-                        src={`/api/images?filename=${employee.image}&folder=profileImage`}
-                        alt={`${employee.name}-avatar`}
-                        className="4xl:w-8 4xl:h-8 w-10 h-10"
-                      />
-                    </Avatar>
-                  ) : (
-                    <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
-                      <span className="text-white text-sm font-bold">
-                        {employee.name.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-  
-                  <div className="flex-grow">
-                    <span className="font-semibold uppercase">
-                      {employee.name}
-                    </span>
-                    <span className="text-gray-400 block">
-                      {employee.designation}
-                    </span>
-                  </div>
-                  <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-full border font-semibold ${getCompletionColor(
-                      employee.completion
-                    )}`}
+      <Card className="border w-full border-[#62626280] rounded-3xl">
+        <CardHeader className="mb-2 bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] rounded-3xl">
+          <CardTitle>Succession Planning</CardTitle>
+        </CardHeader>
+        {responseLoading ? (
+          <div className="text-center text-gray-300 py-20">
+            <Spinner height="30px" width="30px" />
+          </div>
+        ) : employeesWithCourses.length > 0 ? (
+          // Added a scrollable container with a fixed height
+          <div className="overflow-y-auto max-h-96">
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 4xl:px-3 p-2">
+              {employeesWithCourses
+                .slice(0, maxEmployeesToShow)
+                .map((employee) => (
+                  <li
+                    key={employee.id}
+                    className="border border-[#62626280] rounded-lg 4xl:px-2 p-4"
                   >
-                    {employee.completion}%
-                  </div>
-                </CardContent>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <div className="text-center text-gray-300 py-20">
-          There are no Employees Available
-        </div>
-      )}
-    </Card>
-  </div>
-  
+                    <CardContent className="flex items-center space-x-4">
+                      {employee.image ? (
+                        <Avatar className="4xl:w-8 4xl:h-8 w-10 h-10 border-[1px]">
+                          <AvatarImage
+                            src={`/api/images?filename=${employee.image}&folder=profileImage`}
+                            alt={`${employee.name}-avatar`}
+                            className="4xl:w-8 4xl:h-8 w-10 h-10"
+                          />
+                        </Avatar>
+                      ) : (
+                        <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
+                          <span className="text-white text-sm font-bold">
+                            {employee.name.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex-grow">
+                        <span className="font-semibold uppercase">
+                          {employee.name}
+                        </span>
+                        <span className="text-gray-400 block">
+                          {employee.designation}
+                        </span>
+                      </div>
+                      <div
+                        className={`flex items-center justify-center w-10 h-10 rounded-full border font-semibold ${getCompletionColor(
+                          employee.completion
+                        )}`}
+                      >
+                        {employee.completion}%
+                      </div>
+                    </CardContent>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="text-center text-gray-300 py-20">
+            There are no Employees Available
+          </div>
+        )}
+      </Card>
+    </div>
   );
 };
 

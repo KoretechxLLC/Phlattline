@@ -12,6 +12,7 @@ import RecommendedCourses from "./RecommendedCourses/page";
 import MyCourses from "./MyCourse/page";
 import { RootState } from "@/redux/store";
 import EmployeeCourses from "./EmployeeCourses/page";
+import { fetchcourses, fetchcoursesCount, getRecommendedCourses } from "@/redux/slices/courses.slice";
 
 const Courses = () => {
   const router = useRouter();
@@ -19,6 +20,13 @@ const Courses = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
   const [activeTab, setActiveTab] = useState<string>("RecommendedCourses");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [coursesData, setCoursesData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const [displayedCourses, setDisplayedCourses] = useState<any>([]);
+
+  const coursesPerPage = 6;
 
   const {
     courses,
@@ -29,27 +37,82 @@ const Courses = () => {
     coursesCount,
     coursesCountLoading,
     coursesCountSuccess,
+    recommendedCourses,
+    usercourses,
   } = useSelector((state: any) => state.courses);
 
-  const handleTabChange = (tab: string) => {
-    setIsLoading(true);
-    setActiveTab(tab);
+  // Fetch the total count of courses once
+  useEffect(() => {
+    dispatch(fetchcoursesCount({}));
+  }, [dispatch]);
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  };
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "RecommendedCourses":
-        return <RecommendedCourses />;
-      case "MyCourses":
-        return <MyCourses />;
-      default:
-        return null;
+  useEffect(() => {
+    if (userData?.id) {
+      dispatch(getRecommendedCourses({ userId: userData.id }));
     }
-  };
+  }, [dispatch, userData]);
+
+  // Calculate total pages based on the courses count
+  useEffect(() => {
+    if (coursesCountSuccess) {
+      const pages = Math.ceil(count / coursesPerPage);
+      setTotalPage(pages);
+    }
+  }, [coursesCountSuccess, count, coursesPerPage]);
+
+  // Fetch courses for the current page whenever `currentPage` changes
+  useEffect(() => {
+    const filter = { page: currentPage, size: coursesPerPage };
+    dispatch(fetchcourses(filter));
+  }, [dispatch, currentPage]);
+
+  // Update `coursesData` when `coursesSuccess` changes
+  useEffect(() => {
+    if (coursesSuccess) {
+      const categoryCourses =
+        courses &&
+        courses.length > 0 &&
+        courses.filter(
+          (course: any) => course.categoryId === userData?.categoryId
+        );
+      setCoursesData(categoryCourses);
+    }
+  }, [coursesSuccess, courses, userData]);
+
+  useEffect(() => {
+    if (
+      (coursesData && coursesData.length > 0) ||
+      (recommendedCourses && recommendedCourses.length > 0)
+    ) {
+      // Extract purchased course IDs
+      const purchasedCourseIds = new Set(
+        userData?.user_courses?.map((course: any) => course.course_id) || [] // Map to IDs
+      );
+
+      // Combine coursesData and recommendedCourses
+      const combinedCourses = [
+        ...(recommendedCourses || []),
+        ...(coursesData || []),
+      ];
+
+      const startIndex = (currentPage - 1) * coursesPerPage;
+      const endIndex = startIndex + coursesPerPage;
+      // Filter out duplicates and purchased courses
+      const uniqueCourses = combinedCourses.filter(
+        (course, index, self) =>
+          index === self.findIndex((t) => t.id === course.id) && // Ensure uniqueness
+          !purchasedCourseIds.has(course.id) // Exclude purchased courses
+      );
+
+      const finalCourses = uniqueCourses.filter((course) => {
+        return !purchasedCourseIds.has(Number(course.id)); // Check if course.id is NOT in the Set
+      });
+
+      // Update displayed courses
+
+      setDisplayedCourses(finalCourses);
+    }
+  }, [coursesData, recommendedCourses, currentPage, userData]);
 
   return (
     <div>
@@ -66,35 +129,45 @@ const Courses = () => {
           ) : (
             <>
               {/* Tab Buttons */}
-              <div className="flex flex-col gap-2 sm:flex-row sm:gap-1 justify-start items-start my-0 ">
-                <Button
-                  className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4  sm:px-6"
-                  color={
-                    activeTab === "RecommendedCourses" ? "primary" : "default"
-                  }
-                  onClick={() => handleTabChange("RecommendedCourses")}
-                >
-                  Recommended Courses
-                </Button>
-
-                <Button
-                  className="text-md md:text-2xl w-full sm:w-auto rounded-2xl px-4  sm:px-6"
-                  color={activeTab === "MyCourses" ? "primary" : "default"}
-                  onClick={() => handleTabChange("MyCourses")}
-                >
-                  My Courses
-                </Button>
+              <div className="p-8">
+                <div className="flex justify-between items-center">
+                  <h1 className="text-xl font-bold">Recommended Courses</h1>
+                  <Button
+                    color="primary"
+                    className="rounded-3xl"
+                    onClick={() => router.push("/Portal/RecommendedCourses")}
+                  >
+                    View All
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {/* Add your RecommendedCourses component here */}
+                  <div>{/* Placeholder for Recommended Courses */}</div>
+                </div>
               </div>
 
-              {/* Render Tab Content */}
-              <div className="content 4xl:-ml-12 -ml-6  4xl:w-[70em] w-[100em]  ">
-                {renderContent()}
+              {/* My Courses */}
+              <div className="p-8">
+                <div className="flex justify-between items-center">
+                  <h1 className="text-xl font-bold">My Courses</h1>
+                  <Button
+                    color="primary"
+                    className="rounded-3xl"
+                    onClick={() => router.push("/Portal/MyCourses")}
+                  >
+                    View All
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {/* Add your MyCourses component here */}
+                  <div>{/* Placeholder for My Courses */}</div>
+                </div>
               </div>
             </>
           )}
         </div>
         <div
-          className="w-[100em]"
+          className="4xl:w-[78em] w-[100em]"
           style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}
         >
           <EmployeeCourses />

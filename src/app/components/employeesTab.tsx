@@ -129,7 +129,6 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
       dispatch(resetSuccess());
       dispatch(resetError());
       setActualCount(actualCount ? actualCount - 1 : 0);
-   
     }
   }),
     [resignationActionSuccess, resignationActionError];
@@ -154,7 +153,7 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
               </div>
             ) : (
               <div className="flex flex-col flex-grow">
-                <ul className="flex-grow overflow-y-auto">
+                <ul className="flex-grow overflow-y-auto p-2">
                   {employees &&
                     employees?.length > 0 &&
                     employees.map((employee: any, index: any) => (
@@ -206,13 +205,20 @@ const EmployeesTab: React.FC<EmployeesTabProps> = ({
                               handleResignationPopupOpen(employee?.id)
                             }
                             color="primary"
+                            size="sm"
+                            className="rounded-3xl"
                           >
                             View
                           </Button>
                           {showBadge && employee?.status && (
-                            <Badge className="bg-gradient-to-b text-sm from-[#B50D34] to-[#BAA716] whitespace-nowrap">
+                            <Button
+                              color="primary"
+                              size="sm"
+                              className="rounded-3xl"
+                              nonClickable
+                            >
                               {employee?.status}
-                            </Badge>
+                            </Button>
                           )}
                         </CardContent>
                       </li>

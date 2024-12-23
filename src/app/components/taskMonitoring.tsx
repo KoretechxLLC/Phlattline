@@ -11,7 +11,6 @@ import { Button } from "./button-sidebar";
 import { Avatar, AvatarImage } from "@/app/components/avatar";
 import Icon from "./utility-icon";
 import Spinner from "./Spinner";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Assignee {
   name: string;
@@ -78,27 +77,6 @@ const TaskMonitoring: React.FC = () => {
               },
             ],
           },
-          {
-            image: "/assets/TaskImg.png",
-            date: "20 August",
-            assignees: [
-              {
-                name: "Jacob Jones",
-                completion: "50%",
-                avatar: "/assets/DummyImg.png",
-              },
-              {
-                name: "Sarah Johnson",
-                completion: "30%",
-                avatar: "/assets/DummyImg.png",
-              },
-              {
-                name: "Michael Brown",
-                completion: "70%",
-                avatar: "/assets/DummyImg.png",
-              },
-            ],
-          },
         ];
 
         setTasks(data);
@@ -135,7 +113,7 @@ const TaskMonitoring: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
           {tasks.map((task, index) => (
             <Card key={index} className="w-full">
-              <CardContent className="4xl:p-0 p-1 space-y-3">
+              <CardContent className="4xl:p-2 p-1 space-y-3">
                 <div className="grid grid-cols-2 gap-0">
                   {/* Left Column */}
                   <div className="flex flex-col items-center space-y-2">
@@ -156,7 +134,7 @@ const TaskMonitoring: React.FC = () => {
                   </div>
 
                   {/* Right Column */}
-                  <div className="border border-gray-600 rounded-md 4xl:p-3 p-2">
+                  <div className="border border-[#62626280] rounded-md 4xl:p-3 p-2">
                     <CardHeader className="text-center">
                       <h2 className="4xl:text-sm text-xl font-bold">
                         Assignees Completion
@@ -167,7 +145,7 @@ const TaskMonitoring: React.FC = () => {
                         {task.assignees.map((assignee, assigneeIndex) => (
                           <li
                             key={assigneeIndex}
-                            className="flex items-center border-b border-gray-600 pb-2 last:border-0"
+                            className="flex items-center border-b border-[#62626280] pb-2 last:border-0"
                           >
                             <div className="flex items-center gap-3">
                               <Icon
@@ -186,29 +164,6 @@ const TaskMonitoring: React.FC = () => {
                             </span>
                           </li>
                         ))}
-                        <div className="flex items-center justify-center gap-2 py-4">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="w-8 h-8 border-transparent hover:bg-transparent"
-                            onClick={handlePreviousPage}
-                            disabled={currentPage === 1}
-                          >
-                            <ChevronLeft className="w-5 h-5 text-default-900" />
-                          </Button>
-                          <span className="text-sm font-medium text-default-900">
-                            Page {currentPage} of {totalPage}
-                          </span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="w-8 h-8 border-transparent hover:bg-transparent"
-                            onClick={handleNextPage}
-                            disabled={currentPage >= totalPage}
-                          >
-                            <ChevronRight className="w-5 h-5 text-default-900" />
-                          </Button>
-                        </div>
                       </ul>
                     </CardContent>
                   </div>

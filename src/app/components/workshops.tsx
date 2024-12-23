@@ -70,7 +70,7 @@ const Workshops = () => {
             Workshops
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="4xl:p-1 p-6">
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <Spinner height="40px" width="40px" />

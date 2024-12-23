@@ -39,7 +39,7 @@ const Departments = () => {
     employee,
     departmentDeletionLoading,
     departmentDeletionsuccess,
-    departmentDeletionerror
+    departmentDeletionerror,
   } = useSelector((state: RootState) => state.organization);
   const { userData } = useSelector((state: RootState) => state.auth);
 
@@ -130,7 +130,6 @@ const Departments = () => {
     }
   }, [departmentDeletionsuccess, departmentDeletionerror]);
 
-
   return (
     <>
       <StackedNotifications
@@ -200,7 +199,7 @@ const Departments = () => {
                   key={department.id}
                   className="w-full bg-black text-white py-6 px-4 my-5 border border-[#62626280] rounded-2xl flex justify-between items-center"
                 >
-                  <p className="text-sm">{department.name}</p>
+                  <p className="text-sm cursor-default">{department.name}</p>
                   <div className="flex space-x-2">
                     <Icon
                       icon="dashicons:welcome-write-blog"

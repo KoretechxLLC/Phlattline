@@ -12,27 +12,11 @@ import { submitGoal } from "@/redux/slices/performanceManagement.slice";
 import { CardHeader, CardTitle } from "@/app/components/Card";
 import PerformanceReviews from "@/app/components/performanceReviewsTab";
 
-const highPotentialEmployees = [
-  {
-    image: "/assets/DummyImg.png",
-    name: "John Doe",
-    designation: "Software Engineer",
-  },
-  {
-    image: "/assets/DummyImg.png",
-    name: "Jane Smith",
-    designation: "Product Manager",
-  },
-  {
-    image: "/assets/DummyImg.png",
-    name: "Alice Johnson",
-    designation: "Team Lead",
-  },
-];
-
 const TalentDevelopment = () => {
   const dispatch = useDispatch<any>();
-  const { success, error } = useSelector((state: RootState) => state.performance);
+  const { success, error } = useSelector(
+    (state: RootState) => state.performance
+  );
   const { userData } = useSelector((state: RootState) => state.auth);
   const [selectedGoal, setSelectedGoal] = useState<any | null>(null);
 
@@ -55,10 +39,14 @@ const TalentDevelopment = () => {
       {/* First Row */}
       <div className="md:col-span-1 flex gap-6">
         <div>
-          <Employeegoal handleAddGoal={handleAddGoal} success={success} selectedGoal={selectedGoal} />
+          <Employeegoal
+            handleAddGoal={handleAddGoal}
+            success={success}
+            selectedGoal={selectedGoal}
+          />
         </div>
-        <div>
-          <div className="space-y-5 w-[60em]">
+        <div className="md:col-span-1">
+          <div className="space-y-5">
             <TasksTracker
               showPending={true}
               showCompleted={true}
@@ -67,7 +55,7 @@ const TalentDevelopment = () => {
               label={"Goals"}
               isClickable={false}
               showEditIcon={() => true}
-              onEditGoal={handleEditGoal} // Pass edit handler
+              onEditGoal={handleEditGoal}
             />
           </div>
           <div className=" border border-[#62626280] rounded-3xl mt-10">

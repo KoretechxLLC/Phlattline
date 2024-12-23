@@ -44,12 +44,12 @@ const CustomPhoneInput: React.FC<PhoneInputProps> = ({ value, onChange }) => {
         country={"us"}
         value={value}
         onChange={onChange}
-        inputClass="flex h-14 w-full bg-gray-50 text-black border-[#b74b279d] rounded-lg px-4 py-2 text-sm placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50"
-        containerClass="w-full flex h-14 border-2 border-[#b74b279d] shadow-input rounded-md"
+        inputClass="flex 4xl:h-12 h-14 w-full bg-gray-50 text-black border-[#b74b279d] rounded-lg px-4 py-2 text-sm placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50"
+        containerClass="w-full flex 4xl:h-12 h-14 border-2 border-[#b74b279d] shadow-input rounded-md"
         buttonClass="phone-input-button"
         inputStyle={{
           width: "100%",
-          height: "50px", // Tailwind h-14 equivalent
+          height: "45px", // Tailwind h-14 equivalent
           backgroundColor: "#000", // Tailwind bg-gray-50 equivalent
           color: "#fff", // Tailwind text-black equivalent
           border: "0px", // Custom border color

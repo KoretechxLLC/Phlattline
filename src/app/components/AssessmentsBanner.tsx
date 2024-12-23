@@ -29,7 +29,7 @@ const Banner = () => {
   };
 
   return (
-    <Card className="w-full rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-7 4xl:p-3 md:h-full">
+    <Card className="w-full rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80] p-7 4xl:p-2 md:h-full">
       <CardHeader className="flex flex-col md:flex-row">
         <CardTitle className="flex-1 text-2xl md:text-3xl mx-5">
           Assessments
