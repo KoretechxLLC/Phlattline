@@ -139,17 +139,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dashcode-app-calendar .fc-daygrid-day-top {
-  @apply 4xl:h-8 4xl:text-3xl;
+  @apply 4xl:h-7 4xl:text-3xl;
 }
-
-.dashcode-app-calendar .fc-daygrid-day-top {
-  @apply 4xl:h-8 4xl:text-3xl;
-}
-
 /* Tailwind Utilities for FullCalendar */
 
 .dashcode-app-calendar .fc-more-link {
-  @apply text-yellow-400 text-sm font-medium rounded-md bg-gray-800 mx-4 -my-12 px-2 py-1 cursor-pointer;
+  @apply text-yellow-400 text-sm font-medium rounded-md bg-gray-800 4xl:mx-1 4xl:-my-10 mx-4 -my-12 4xl:px-1 px-2 py-1 cursor-pointer;
 }
 
 .dashcode-app-calendar .fc-more-link:hover {
@@ -182,10 +177,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   @apply hidden;
 }
 
-
 /* Event name styling in the popup */
 .dashcode-app-calendar .event-popup-item {
-  @apply text-xs cursor-pointer font-medium text-white px-2  ;
+  @apply text-xs cursor-pointer font-medium text-white px-2;
 }
 
 .dashcode-app-calendar .event-popup-item:last-child {

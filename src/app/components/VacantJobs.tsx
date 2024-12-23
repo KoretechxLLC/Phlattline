@@ -123,28 +123,28 @@ const VacantJobs = ({ onEditJob }: any) => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="4xl:p-5 p-8">
+      <CardContent className="4xl:p-3 p-8">
         {fetchTalentsLoader ? (
           <div className="flex justify-center items-center py-14">
             <Spinner height="30px" width="30px" />
           </div>
         ) : currentJobs && currentJobs.length > 0 ? (
-          <ul className="space-y-4">
+          <ul className="space-y-4 4xl:p-3">
             {currentJobs.map((job) => (
               <li
                 key={job.id}
                 className="flex justify-between items-center text-white pb-5"
               >
                 <div className="flex items-center gap-3 w-[20em] -ml-[0.6em]">
-                <div className="flex items-center justify-center rounded-full h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34] relative transition duration-500">
-                  <span className="text-white text-[13px] md:text-sm font-bold">
-                    <RiUserSearchFill size={23} />
-                  </span>
-                </div>
+                  <div className="flex items-center justify-center rounded-full h-10 w-10 border-2 group-hover:scale-105 group-hover:z-30 border-white bg-gradient-to-b from-[#BAA716] to-[#B50D34] relative transition duration-500">
+                    <span className="text-white text-[13px] md:text-sm font-bold">
+                      <RiUserSearchFill size={23} />
+                    </span>
+                  </div>
 
-                <span className="text-[15px] text-left w-[10em] mr-[4em]">
-                  {job.position_name}
-                </span>
+                  <span className="text-[15px] text-left w-[10em] mr-[4em] 4xl:w-[5em] 4xl:mr-[3em] ">
+                    {job.position_name}
+                  </span>
                 </div>
 
                 <div className="flex space-x-2 items-center">

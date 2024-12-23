@@ -22,18 +22,18 @@ const MenuWidget: React.FC<MenuWidgetProps> = ({ isActive, onClick }) => {
       }`}
     >
       <div
-        className={`rounded-lg w-52 h-20 cursor-pointer transition-all duration-300 ${
+        className={`rounded-lg 4xl:w-48 4xl:h-16 w-52 h-20 cursor-pointer transition-all duration-300 ${
           isActive ? "bg-black ml-5 text-white" : "bg-white text-black"
         }`}
         onClick={handleClick}
       >
         <div
-          className={`mb-5 mt-8 p-2 relative text-center rounded-2xl transition-colors duration-300 ${
+          className={`4xl:mb-2 4xl:mt-2 4xl:p-1 mb-5 mt-8 p-2 relative text-center rounded-2xl transition-colors duration-300 ${
             isActive ? "text-white" : "text-black"
           }`}
         >
           <div className="flex items-center justify-center">
-            <div className="h-16 border-l-4 border-orange-700" />
+            <div className="4xl:h-14 h-16 border-l-4 border-orange-700" />
             <Image
               className={`ml-5 mr-4 transition-filter duration-300 ${
                 isActive ? "filter invert" : ""

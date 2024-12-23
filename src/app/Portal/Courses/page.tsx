@@ -87,14 +87,14 @@ const Courses = () => {
               </div>
 
               {/* Render Tab Content */}
-              <div className="content 4xl:-ml-12 -ml-6  4xl:w-[70em] w-[100em]  ">
+              <div className="content 4xl:-ml-12 -ml-6  4xl:w-[78em] w-[100em]  ">
                 {renderContent()}
               </div>
             </>
           )}
         </div>
         <div
-          className="w-[100em]"
+          className="4xl:w-[78em] w-[100em]"
           style={{ display: userData?.user_type_id === 3 ? "block" : "none" }}
         >
           <EmployeeCourses />

@@ -14,7 +14,7 @@ import SuggestionTabs from "@/app/components/SuggestionTabs";
 
 const ProgramEvolutions = () => {
   return (
-    <div className="max-h-[120vh] min-h-[40vh] space-y-4">
+    <div className="max-h-[120vh] 4xl:min-h-[30vh] min-h-[40vh] space-y-4">
       {/* Dropdown at the top */}
       <div className="mb-4">
         <select className="w-full p-2 rounded-xl h-14 bg-[#2d2c2c] text-white focus:outline-none focus:ring-1 focus:ring-[#626262]">
@@ -54,7 +54,7 @@ const ProgramEvolutions = () => {
           <LeadersFeedback />
         </div>
 
-        <div className="col-span-2 p-2">
+        <div className="col-span-2 4xl:p-1 p-2">
           <CardTitle>Need to more actions for fast growth</CardTitle>
           <SuggestionTabs />
         </div>

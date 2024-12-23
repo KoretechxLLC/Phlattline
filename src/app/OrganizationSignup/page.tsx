@@ -177,7 +177,7 @@ const OrganizationSignup = () => {
         staggerChildren: 0.05,
       }}
       viewport={{ once: true }}
-      className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
+      className="flex items-center justify-center px-4 4xl:py-5 py-10 md:py-20 z-50"
     >
       <StackedNotifications
         notification={notification}
@@ -218,7 +218,7 @@ const OrganizationSignup = () => {
         <form onSubmit={handleSubmit} noValidate className="w-full">
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="org-name"
@@ -229,14 +229,14 @@ const OrganizationSignup = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <RiTeamFill className="absolute top-5 right-5 size-5 text-white" />
+            <RiTeamFill className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.orgName && (
               <p className="text-red-500 text-sm mt-1">{errors.orgName}</p>
             )}
           </motion.div>
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="email-input"
@@ -247,20 +247,20 @@ const OrganizationSignup = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdEmail className="absolute top-5 right-5 size-5 text-white" />
+            <MdEmail className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.orgEmail && (
               <p className="text-red-500 text-sm mt-1">{errors.orgEmail}</p>
             )}
           </motion.div>
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <CustomPhoneInput
               value={orgPhone}
               onChange={(phone) => setOrgPhone(phone)}
             />
-            <MdPhone className="absolute top-5 right-5 size-5 text-white" />
+            <MdPhone className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.orgPhone && (
               <p className="text-red-500 text-sm mt-1">{errors.orgPhone}</p>
             )}
@@ -268,7 +268,7 @@ const OrganizationSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Select
               id="organization type"
@@ -279,7 +279,7 @@ const OrganizationSignup = () => {
               placeholder={"Select Organization Type"}
               required
             />
-            <MdDomain className="absolute top-5 right-6 size-5 text-white" />
+            <MdDomain className="absolute 4xl:top-4 top-5 right-6 size-5 text-white" />
             {errors.orgType && (
               <p className="text-red-500 text-sm mt-1">{errors.orgType}</p>
             )}
@@ -287,7 +287,7 @@ const OrganizationSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-4 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="num-emp"
@@ -298,7 +298,7 @@ const OrganizationSignup = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <ImListNumbered className="absolute top-5 right-5 size-5 text-white" />
+            <ImListNumbered className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.employeeNumber && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.employeeNumber}
@@ -308,7 +308,7 @@ const OrganizationSignup = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="password-input"
@@ -319,7 +319,7 @@ const OrganizationSignup = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdLock className="absolute top-5 right-5 size-5 text-white" />
+            <MdLock className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}

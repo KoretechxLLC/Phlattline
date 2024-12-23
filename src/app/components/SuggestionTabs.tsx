@@ -68,7 +68,7 @@ const SuggestionTabs: React.FC = () => {
               {suggestions.map((suggestion, index) => (
                 <li
                   key={index}
-                  className="flex items-center space-x-4 p-10 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-3xl"
+                  className="flex items-center space-x-4 4xl:p-8 p-10 bg-gradient-to-b from-[#62626280] to-[#2D2C2C80] rounded-3xl"
                 >
                   <span className="text-lg">{suggestion}</span>
                   {userType === 2 ? (

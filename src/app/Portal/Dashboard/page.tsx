@@ -38,19 +38,19 @@ const Dashboard = () => {
   }, [dispatch]); // Add dependencies for safety
 
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full 4xl:space-y-0 lg:space-y-24 5xl:space-y-9 overflow-hidden items-end">
-      <div className="space-y-4 md:space-y-6">
+    <div className=" grid grid-cols-1 md:grid-cols-[70%_30%] 4xl:gap-2 gap-4 w-full h-full 4xl:space-y-0 lg:space-y-24 5xl:space-y-9 overflow-hidden items-end">
+      <div className="space-y-4  md:space-y-6">
         <div>
           <AssessmentsBanner />
         </div>
         <div>
           <Card className="border-[1px] border-[#62626280] rounded-3xl h-auto">
-            <CardHeader className="h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
+            <CardHeader className="4xl:h-12 h-16 rounded-3xl bg-gradient-to-b whitespace-nowrap from-[#62626280] to-[#2D2C2C80]">
               <div className="text-sm 4xl:mb-12 mb-16 flex justify-between">
                 <CardTitle>Assessments Reports</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="4xl:p-1 p-4">
+            <CardContent className="4xl:p-0 p-4">
               <AssessmentsTracker />
             </CardContent>
           </Card>

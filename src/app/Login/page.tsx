@@ -15,7 +15,7 @@ import { SparklesCore } from "../components/sparkles";
 
 const LoginScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
+    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 4xl:p-1 p-4">
       <div className="flex items-center justify-center">
         <Login />
       </div>

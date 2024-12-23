@@ -12,7 +12,6 @@ import {
 } from "react-icons/md";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { Input } from "../components/Input";
 import { Select } from "../components/select";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,11 +26,9 @@ import {
   getSubCategories,
 } from "@/redux/slices/categories.slice";
 
-const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
-
 const SignupScreen = () => {
   return (
-    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
+    <section className="grid min-h-screen  grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] 4xl:p-0 gap-4 p-4">
       <div className="flex items-center justify-center">
         <IndividualSignUp />
       </div>
@@ -181,8 +178,6 @@ const IndividualSignUp = () => {
     }
   }, [success, error, dispatch]);
 
-  
-
   return (
     <motion.div
       initial="initial"
@@ -191,7 +186,7 @@ const IndividualSignUp = () => {
         staggerChildren: 0.05,
       }}
       viewport={{ once: true }}
-      className="flex items-center justify-center px-4 py-10 md:py-20 z-50"
+      className="flex items-center justify-center px-4 4xl:py-5 py-10 md:py-20 z-50"
     >
       <StackedNotifications
         notification={notification}
@@ -199,10 +194,10 @@ const IndividualSignUp = () => {
       />
       <div className="w-full max-w-lg">
         <div className="w-full bg-transparent flex flex-col items-center justify-center overflow-hidden rounded-md">
-          <h1 className="md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
+          <h1 className="4xl:text-2xl md:text-3xl text-3xl lg:text-3xl font-bold text-center text-white relative z-20">
             SIGNUP
           </h1>
-          <div className="w-[40rem] relative">
+          <div className=" w-[40rem] relative">
             {/* Gradients */}
             <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#B50D34] to-transparent h-[2px] w-3/4 blur-sm" />
             <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#BAA716] to-transparent h-px w-3/4" />
@@ -223,7 +218,7 @@ const IndividualSignUp = () => {
             <div className="absolute inset-0 w-full h-full [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
             <motion.p
               variants={primaryVariants}
-              className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5 left-56"
+              className="mb-8 text-center text-sm md:text-[15px] text-white absolute top-5  left-56"
             >
               Register to start your career
             </motion.p>
@@ -233,7 +228,7 @@ const IndividualSignUp = () => {
           {/* First Name */}
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="text-input"
@@ -244,7 +239,7 @@ const IndividualSignUp = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdPerson className="absolute top-5 right-5 size-5 text-white" />
+            <MdPerson className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name}</p>
             )}
@@ -253,7 +248,7 @@ const IndividualSignUp = () => {
           {/* Last Name */}
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="text-input"
@@ -264,7 +259,7 @@ const IndividualSignUp = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdPerson className="absolute top-5 right-5 size-5 text-white" />
+            <MdPerson className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.lastname && (
               <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>
             )}
@@ -273,7 +268,7 @@ const IndividualSignUp = () => {
           {/* Industry Select */}
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Select
               id="industry-select"
@@ -284,7 +279,7 @@ const IndividualSignUp = () => {
               placeholder={"Select Your Industry"}
               required
             />
-            <MdDomain className="absolute top-5 right-6 size-5 text-white" />
+            <MdDomain className="absolute 4xl:top-4 top-5 right-6 size-5 text-white" />
             {errors.industry && (
               <p className="text-red-500 text-sm mt-1">{errors.industry}</p>
             )}
@@ -292,7 +287,7 @@ const IndividualSignUp = () => {
 
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Select
               id="designation-select"
@@ -303,7 +298,7 @@ const IndividualSignUp = () => {
               placeholder={"Select Your Designation"}
               required
             />
-            <MdWork className="absolute top-5 right-6 size-5 text-white" />
+            <MdWork className="absolute 4xl:top-4 top-5 right-6 size-5 text-white" />
             {errors.designation && (
               <p className="text-red-500 text-sm mt-1">{errors.designation}</p>
             )}
@@ -312,7 +307,7 @@ const IndividualSignUp = () => {
           {/* Email */}
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="email-input"
@@ -323,7 +318,7 @@ const IndividualSignUp = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdEmail className="absolute top-5 right-5 size-5 text-white" />
+            <MdEmail className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
@@ -332,13 +327,13 @@ const IndividualSignUp = () => {
           {/* Phone */}
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <CustomPhoneInput
               value={phone}
               onChange={(phone) => setPhone(phone)}
             />
-            <MdPhone className="absolute top-5 right-5 size-5 text-white" />
+            <MdPhone className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.phone && (
               <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
             )}
@@ -347,7 +342,7 @@ const IndividualSignUp = () => {
           {/* Password */}
           <motion.div
             variants={primaryVariants}
-            className="mb-2 w-full relative"
+            className="mb-2 4xl:mb-1 w-full relative"
           >
             <Input
               id="password-input"
@@ -358,7 +353,7 @@ const IndividualSignUp = () => {
               className="bg-black border-2 border-[#b74b279d] text-white"
               required
             />
-            <MdLock className="absolute top-5 right-5 size-5 text-white" />
+            <MdLock className="absolute 4xl:top-4 top-5 right-5 size-5 text-white" />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
@@ -387,7 +382,7 @@ const IndividualSignUp = () => {
           <motion.div className="text-center text-white">
             <h1 className="text-xl py-0">OR</h1>
             <div className="flex justify-center gap-4">
-              <motion.button className="w-12 mx-4 sm:w-16">
+              <motion.button className="w-12  mx-4 sm:w-16">
                 <Image
                   src="/assets/FbIcon.png"
                   alt="Facebook"
@@ -395,7 +390,7 @@ const IndividualSignUp = () => {
                   height={55}
                 />
               </motion.button>
-              <motion.button className="w-12 sm:w-16">
+              <motion.button className="w-12  sm:w-16">
                 <Image
                   src="/assets/GoogleIcon.png"
                   alt="Google"

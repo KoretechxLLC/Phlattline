@@ -185,7 +185,7 @@ const DailyDose = () => {
 
     return (
       <div
-        className={`w-full flex flex-col justify-between gap-y-7 h-full px-14 py-5 4xl:py-4 lg:mx-6 4xl:mx-1 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor} ${futureEvents}`}
+        className={`w-full flex flex-col justify-between gap-y-7 h-full px-14 py-5 4xl:py-4 lg:mx-6 4xl:mx-2 5xl:mx-5 rounded-lg text-white border-l-4 ${borderColor} ${futureEvents}`}
         style={{
           backgroundColor,
           minHeight: "80px", // Set a fixed minimum height

@@ -36,8 +36,9 @@ function Calendar({
       )}
       classNames={{
         months:
-          "w-full border-default-200 px-4 space-y-2 space-x-2 sm:gap-x-2 sm:space-y-0",
-        month: "w-full -mx-2 p-1 mt-2 h-[100px] overflow-hidden",
+          "w-full border-default-200 4xl:text-sm 4xl:px-1 px-4 space-y-2 space-x-2 sm:gap-x-2 sm:space-y-0",
+        month:
+          "w-full 4xl:-mx-3 -mx-2 p-1 mt-2 4xl:h-[80px] h-[100px] overflow-hidden",
         caption: "flex justify-center py-1 relative items-center",
         caption_label: "text-base border-b border-gray-400 font-medium",
         table: "w-full border-collapse",
