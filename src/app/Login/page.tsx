@@ -13,8 +13,6 @@ import StackedNotifications from "../components/Stackednotification";
 import Image from "next/image";
 import { SparklesCore } from "../components/sparkles";
 
-const World = dynamic(() => import("../components/GlobeWorld"), { ssr: false });
-
 const LoginScreen = () => {
   return (
     <section className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr,_600px] 2xl:grid-cols-[1fr,_900px] gap-4 p-4">
@@ -68,7 +66,6 @@ const Login = () => {
       dispatch(login({ email: email, password: password }));
     }
   };
-
 
   useEffect(() => {
     if (loginSuccess) {

@@ -61,12 +61,7 @@ const TalentRetentions = () => {
           employees={highPotentialEmployees}
         />
       </div>
-      <div>
-        <EmployeeDataTab />
-      </div>
-      <div>
-        <EmployeesListTab />
-      </div>
+
       <div>
         <EmployeesTab
           title="Exit Interview Tab"
@@ -80,6 +75,12 @@ const TalentRetentions = () => {
           employees={triageEmployees}
           showReason={true}
         />
+      </div>
+      <div>
+        <EmployeesListTab />
+      </div>
+      <div className="col-span-2">
+        <EmployeeDataTab />
       </div>
     </div>
   );

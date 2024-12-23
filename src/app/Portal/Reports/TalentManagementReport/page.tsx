@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/Card";
-import { Progress } from "@/app/components/progress";
 
 const riskEmployees = [
   {
@@ -25,10 +24,12 @@ const riskEmployees = [
     designation: "Team Lead",
   },
 ];
-import SuccessionPlanningTab from "@/app/components/successionPlanning";
 
+import SuccessionPlanningTab from "@/app/components/successionPlanning";
 import EmployeesTab from "@/app/components/employeesTab";
 import EmployeesCountChart from "@/app/components/employeesCountChart";
+import Icon from "@/app/components/utility-icon";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const TalentManagementReport = () => {
   return (
@@ -48,30 +49,47 @@ const TalentManagementReport = () => {
         </Card>
 
         {/* Gender Ratio Card */}
-        <div className="border border-[#62626280] rounded-3xl ">
+        <div className="border border-[#62626280] rounded-3xl">
           <CardHeader className="rounded-3xl bg-gradient-to-b from-[#62626280] to-[#2D2C2C80]">
-            <CardTitle>Performance Reviews</CardTitle>
+            <CardTitle>Gender Ratio</CardTitle>
           </CardHeader>
-          <ul className="space-y-2 p-5">
-            <li className="flex items-center justify-between">
-              <span>Male</span>
-              <Progress
-                value={100}
-                color="warning"
-                size="md"
-                className="flex-1 ml-4"
-              />
-            </li>
-            <li className="flex items-center justify-between">
-              <span>Female</span>
-              <Progress
-                value={12}
-                color="info"
-                size="md"
-                className="flex-1 ml-4"
-              />
-            </li>
-          </ul>
+          <CardContent>
+            <div className="flex flex-col gap-4 p-2">
+              <div className="flex items-center gap-4 w-full">
+                <Icon icon="ic:round-male" className="text-3xl text-blue-600" />
+                <span>Male</span>
+                <div className="flex-grow">
+                  <ProgressBar
+                    completed={50}
+                    bgColor="#FDF53F"
+                    baseBgColor="#e0e0e0"
+                    isLabelVisible={false}
+                    height="10px"
+                    width="100%"
+                  />
+                </div>
+                <span>86</span>
+              </div>
+              <div className="flex items-center gap-4 w-full">
+                <Icon
+                  icon="mingcute:female-line"
+                  className="text-3xl text-pink-500"
+                />
+                <span>Female</span>
+                <div className="flex-grow">
+                  <ProgressBar
+                    completed={50}
+                    bgColor="#FF0700"
+                    baseBgColor="#e0e0e0"
+                    isLabelVisible={false}
+                    height="10px"
+                    width="100%"
+                  />
+                </div>
+                <span>56</span>
+              </div>
+            </div>
+          </CardContent>
         </div>
       </div>
 
