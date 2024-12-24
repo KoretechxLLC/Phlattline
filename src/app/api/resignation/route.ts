@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "required fields are missing",
+          message: "Required Fields are missing",
         },
         { status: 400 }
       );
@@ -75,6 +75,7 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -138,6 +139,7 @@ export async function GET(req: NextRequest) {
     console.error("Error getting resignation");
   }
 }
+
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   try {
