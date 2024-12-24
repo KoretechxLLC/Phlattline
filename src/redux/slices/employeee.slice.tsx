@@ -8,8 +8,12 @@ interface EmployeeReviewState {
   loading: boolean;
   error: string | null;
   assigngoal: any;
-  success: string | null; 
+  success: string | null;
+  resignationssucess: string | null;
+  resignationserror : string | null;
   departmentCounts: any[] | null; // Add this for storing department counts
+  resignationsuccess: string | null;
+  resignations: any[] | null;
 }
 
 const initialState: EmployeeReviewState = {
@@ -19,7 +23,11 @@ const initialState: EmployeeReviewState = {
   error: null,
   assigngoal: null,
   success: null,
+  resignationssucess: null,
+  resignationserror: null,
   departmentCounts: null, // Initialize as null
+  resignationsuccess: null,
+  resignations: null,
 };
 
 // Async thunk for fetching all employee reviews by organization_id
@@ -36,13 +44,57 @@ export const fetchEmployeeReviews = createAsyncThunk(
 );
 
 
+// Async thunk for Submit Resignation of employee
+export const submitResignation = createAsyncThunk(
+  "employee/submitResignation",
+  async ({ employee_id, organization_id, reason }: { employee_id: number; organization_id: number; reason: string }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`/api/resignation`, {
+        employee_id,
+        organization_id,
+        reason,
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to submit resignation"
+      );
+    }
+  }
+);
+
+
+// Async thunk for fetching resignations
+export const fetchResignations = createAsyncThunk(
+  "resignation/fetchResignations",
+  async (
+    {
+      organization_id,employee_id,id,page = 1,size = 10,}: {
+      organization_id: number;employee_id?: number;id?: number;page?: number;size?: number;},
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(`/api/resignation`, {
+        params: { organization_id, employee_id, id, page, size },
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch resignations"
+      );
+    }
+  }
+);
+
+
+
 export const assigngoalemployee = createAsyncThunk(
   "employee/assigngoalemployee",
-  async (payload:any, { rejectWithValue }) => {
+  async (payload: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`/api/organization/assignGoal`, payload);
       return response.data; // Return the API response if successful
-    } catch (error:any) {
+    } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to assign goal to employees"
       );
@@ -112,7 +164,7 @@ const employeeSlice = createSlice({
     resetSuccess(state) {
       state.assigngoal = null;
     },
-   
+
   },
   extraReducers: (builder) => {
     // Fetch all reviews
@@ -129,34 +181,34 @@ const employeeSlice = createSlice({
       state.error = action.payload as string;
     })
 
-    //Assign Goal API 
-    .addCase(assigngoalemployee.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(assigngoalemployee.fulfilled, (state, action) => {
-      state.loading = false;
-      state.assigngoal = action.payload.message;
-    })
-    .addCase(assigngoalemployee.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    })
+      //Assign Goal API 
+      .addCase(assigngoalemployee.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(assigngoalemployee.fulfilled, (state, action) => {
+        state.loading = false;
+        state.assigngoal = action.payload.message;
+      })
+      .addCase(assigngoalemployee.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
 
 
-    //Updated Assign Goal
-    .addCase(updategoalemployee.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(updategoalemployee.fulfilled, (state, action) => {
-      state.loading = false;
-      state.success = action.payload;
-    })
-    .addCase(updategoalemployee.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
+      //Updated Assign Goal
+      .addCase(updategoalemployee.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updategoalemployee.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload;
+      })
+      .addCase(updategoalemployee.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
 
 
 
@@ -173,7 +225,7 @@ const employeeSlice = createSlice({
     builder.addCase(fetchEmployeeReviewById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-    })
+    });
 
     // Fetech Department Count
     builder.addCase(fetchDepartmentsWithCounts.pending, (state) => {
@@ -189,9 +241,46 @@ const employeeSlice = createSlice({
       state.error = action.payload as string; // Store error message
     });
 
+    //Submit Resigination
+    builder.addCase(submitResignation.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+
+    builder.addCase(submitResignation.fulfilled, (state, action) => {
+      state.loading = false;
+      state.resignationsuccess = action.payload.message; // Capture success message
+    });
+
+    builder.addCase(submitResignation.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string; // Capture error message
+    });
+
+    //Fetch Resignation Data
+
+    // Fetch Resignations - Pending
+    builder.addCase(fetchResignations.pending, (state) => {
+      state.loading = true;
+      state.resignationserror = null;
+    });
+
+    // Fetch Resignations - Fulfilled
+    builder.addCase(fetchResignations.fulfilled, (state, action) => {
+      state.loading = false;
+      state.resignations = action.payload.data;
+      state.resignationssucess = action.payload.message;
+    });
+
+    // Fetch Resignations - Rejected
+    builder.addCase(fetchResignations.rejected, (state, action) => {
+      state.loading = false;
+      state.resignationserror = action.payload as string;
+    });
+
 
   },
 });
 
-export const { resetError,resetSuccess } = employeeSlice.actions;
+export const { resetError, resetSuccess } = employeeSlice.actions;
 export default employeeSlice.reducer;

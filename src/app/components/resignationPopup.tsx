@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "./button-sidebar";
 import Spinner from "@/app/components/Spinner"; // Assuming this is where the Spinner component is imported
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Avatar, AvatarImage } from "./avatar";
+import { resetSuccess, resetError, fetchResignations } from "@/redux/slices/employeee.slice";
+import { submitResignation } from "@/redux/slices/employeee.slice";
+import StackedNotifications, { NotificationType } from "./Stackednotification";
 
 const ResignationPopup = ({
   show,
@@ -17,29 +20,75 @@ const ResignationPopup = ({
     message: string;
   };
 }) => {
+  const dispatch = useDispatch<any>();
   const [loading, setLoading] = useState(true); // Loading state to show the loader initially
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resignationMessage, setResignationMessage] = useState(""); // State for textarea input
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null
+  );
   const { userData } = useSelector((state: RootState) => state.auth);
+  const { resignationsuccess, error } = useSelector((state: RootState) => state.employee);
   const userType = userData?.user_type_id;
+  const employeeid = userData?.employee_id;
+  const organizationid = userData?.organization_id;
 
-  // Simulate loading of employee data with a timeout (replace with actual data fetching logic)
+
   useEffect(() => {
-    if (show) {
-      setLoading(true); // Set loading to true when the popup is shown
-      setTimeout(() => {
-        setLoading(false); // Set loading to false after 2 seconds (simulating data load)
-      }, 2000); // Simulate loading for 2 seconds
+    if (resignationsuccess) {
+      setNotification({
+        id: Date.now(),
+        text: "Application Has Been Submit",
+        type: "success",
+      });
+      dispatch(resetSuccess());
+      
+    
     }
-  }, [show]);
+    if (error) {
+      setNotification({
+        id: Date.now(),
+        text: error,
+        type: "error",
+      });
+      dispatch(resetError());
+    }
+  }, [resignationsuccess, error, dispatch, onClose]);
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission
+  
+    // Dispatch submitResignation
+    dispatch(
+      submitResignation({
+        employee_id: employeeid,
+        organization_id: organizationid,
+        reason: resignationMessage,
+      }))
+      .then(() => {
+        // After submitResignation is fulfilled, dispatch fetchResignations
+        if (organizationid) {
+          dispatch(fetchResignations({ organization_id: organizationid }));
+        }
+      })
+      .catch((error:any) => {
+        // Handle error if needed
+        console.error("Error during resignation submission:", error);
+      });
   };
+  
+
+
 
   if (!show) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <StackedNotifications
+        notification={notification}
+        setNotification={setNotification}
+      />
       <div className="bg-white rounded-xl shadow-lg p-8 w-[90%] max-w-6xl">
         {/* Popup Header */}
         <div className="flex justify-between items-center mb-6">
@@ -57,11 +106,7 @@ const ResignationPopup = ({
         </div>
 
         {/* Conditionally render loader or content */}
-        {loading ? (
-          <div className="flex justify-center items-center py-10">
-            <Spinner height="30px" width="30px" />
-          </div>
-        ) : (
+      
           <form onSubmit={handleSubmit}>
             <div>
               {/* Employee Details */}
@@ -88,9 +133,9 @@ const ResignationPopup = ({
                   placeholder={
                     userType === 2 ? "Matter" : "Reason for Resignation"
                   }
-                  value={userType === 2 ? employee?.message : ""} // Editable for userType !== 2
-                  readOnly={userType === 2} // Makes it readonly for userType === 2
-                  onChange={(e) => {}} // You can handle changes for employees
+                  value={resignationMessage} // Controlled by state
+                  readOnly={userType === 2} // Editable only for userType !== 2
+                  onChange={(e) => setResignationMessage(e.target.value)} // Update state on change
                   className="w-full p-10 rounded-md border bg-white text-black border-gray-300 placeholder-gray-400 resize-none"
                 />
               </div>
@@ -131,7 +176,7 @@ const ResignationPopup = ({
               </div>
             </div>
           </form>
-        )}
+       
       </div>
     </div>
   );

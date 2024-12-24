@@ -21,6 +21,7 @@ import { CustomDatePicker } from "./customDatePicker";
 import { Button } from "./button-sidebar";
 import "react-datepicker/dist/react-datepicker.css";
 import ResignationPopup from "./resignationPopup";
+import { fetchResignations } from "@/redux/slices/employeee.slice";
 
 interface PageProps {
   employeeId?: number;
@@ -51,6 +52,9 @@ const Profile = ({ profileImage }: any) => {
   const { userData, success, error } = useSelector(
     (state: RootState) => state.auth
   );
+  const { resignations } = useSelector((state: RootState) => state.employee)
+
+  const [resignationData, setResignationData] = useState<any[]>([]);
   const [notification, setNotification] = useState<NotificationType | null>(
     null
   );
@@ -79,6 +83,8 @@ const Profile = ({ profileImage }: any) => {
   sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
   const userType = userData?.user_type_id;
   const organizationName = userData?.organizations?.organization_name;
+  const organizationid = userData?.organization_id;
+  const isPending = resignationData?.some((item) => item?.status === "pending");
 
   const [data, setData] = useState<any>();
 
@@ -143,6 +149,22 @@ const Profile = ({ profileImage }: any) => {
       dispatch(setError());
     }
   }, [success, error, dispatch]);
+
+
+  useEffect(() => {
+    if (organizationid) {
+      dispatch(fetchResignations({ organization_id: organizationid }));
+    }
+  }, [dispatch, organizationid]);
+
+
+  useEffect(() => {
+    if (resignations) {
+      setResignationData(resignations); 
+    }
+  }, [resignations]);
+
+
 
   return (
     <form className="flex flex-col justify-center space-y-10">
@@ -251,11 +273,19 @@ const Profile = ({ profileImage }: any) => {
             <Button
               color="primary"
               size="lg"
-              className="text-lg rounded-xl my-2 mx-12 "
+              className="text-lg rounded-xl my-2 mx-8 gap-1 "
               onClick={handleLeaveOrganizationClick} // Trigger popup when clicked
+              disabled={isPending} // Disable button if "status" is "pending"
             >
-              Leave Organization
+              
+              Leave Organization 
+              {isPending && (
+              
+              <p>( Pending )</p>
+            
+           )}
             </Button>
+           
           </div>
           <ResignationPopup
             show={showResignationPopup}
