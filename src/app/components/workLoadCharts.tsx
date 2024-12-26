@@ -4,40 +4,73 @@ import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { colors } from "@/app/lib/colors";
 import { useTheme } from "next-themes";
-
 import { useConfig } from "@/app/hooks/use-config";
 import { getGridConfig, getYAxisConfig } from "@/app/lib/appex-chart-options";
-import Spinner from "./Spinner"; // Assuming you have a spinner component
+import Spinner from "./Spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { fetchWorkLoad } from "@/redux/slices/organization.slice";
 
 const WorkLoadBar = ({ height = 180 }) => {
   const [config] = useConfig();
   const { theme: mode } = useTheme();
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
-  const [series, setSeries] = useState<any[]>([]); // Data state for the chart
+  const [loading, setLoading] = useState<boolean>(true);
+  const [series, setSeries] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [completedGoals, setCompletedGoals] = useState<string[]>([]);
+  const [remainingGoals, setRemainingGoals] = useState<string[]>([]);
+  const [overDue, setOverDue] = useState<string[]>([]);
+
+  const dispatch: any = useDispatch();
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const { workLoadLoading, workLoadSuccess, workLoad } = useSelector(
+    (state: RootState) => state.organization
+  );
+  const userId = userData?.id;
+  useEffect(() => {
+    dispatch(fetchWorkLoad({ userId }));
+  }, []);
 
   useEffect(() => {
-    // Simulate data fetching or processing delay
-    const loadData = setTimeout(() => {
-      // Simulate empty or available data
+    if (workLoad && workLoad?.length > 0) {
+      let completedGoalsData: any = [];
+      let dueGoalsData: any = [];
+      let remainingGoalsData: any = [];
+      let allCategories: any = [];
+      workLoad.forEach((item: any) => {
+        allCategories.push(item?.name || null);
+        completedGoalsData.push(item?.completedGoals || 0);
+        dueGoalsData.push(item?.dueGoals || 0);
+        remainingGoalsData.push(item?.remainingGoals || 0);
+      });
+
+      setCategories(allCategories);
+      setCompletedGoals(completedGoalsData);
+      setOverDue(dueGoalsData);
+      setRemainingGoals(remainingGoalsData);
+
       setSeries([
         {
           name: "Completed",
-          data: [44, 55, 41, 37, 22, 43, 21],
+          data: completedGoalsData || completedGoals,
         },
         {
           name: "Remaining",
-          data: [53, 32, 33, 52, 13, 43, 32],
+          data: remainingGoalsData || remainingGoals,
         },
         {
           name: "Overdue",
-          data: [12, 17, 11, 9, 15, 11, 20],
+          data: dueGoalsData || overDue,
         },
-      ]); // Replace this with an empty array `[]` to simulate no data
-      setLoading(false); // Set loading to false after data is set
-    }, 2000); // Simulate 2 seconds delay
+      ]);
+    }
 
-    return () => clearTimeout(loadData); // Cleanup on unmount
-  }, []);
+    const loadData = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(loadData);
+  }, [workLoad, workLoadSuccess]);
 
   const options: any = {
     chart: {
@@ -82,7 +115,7 @@ const WorkLoadBar = ({ height = 180 }) => {
       mode === "light" ? colors["default-600"] : colors["default-300"]
     ),
     xaxis: {
-      categories: ["Mike", "John", "Jennifer", "Brandon", "Sam"],
+      categories: categories,
       axisBorder: {
         show: false,
       },
@@ -126,7 +159,7 @@ const WorkLoadBar = ({ height = 180 }) => {
 
   return (
     <div>
-      {loading ? (
+      {workLoadLoading || loading ? (
         // Show spinner while loading
         <div className="flex justify-center items-center h-[180px]">
           <Spinner height="30px" width="30px" />

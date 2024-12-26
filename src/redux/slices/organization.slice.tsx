@@ -61,6 +61,10 @@ interface organizationResponseState {
   organizationResignationCountLoader: boolean;
   organizationResignationCountError: any;
   organizationResignationCountSuccess: any;
+  workLoad: any;
+  workLoadLoading: boolean;
+  workLoadSuccess: any;
+  workLoadError: any;
 }
 
 const initialState: organizationResponseState = {
@@ -122,6 +126,10 @@ const initialState: organizationResponseState = {
   organizationResignationCountLoader: false,
   organizationResignationCountError: null,
   organizationResignationCountSuccess: null,
+  workLoad: null,
+  workLoadSuccess: null,
+  workLoadError: null,
+  workLoadLoading: false,
 };
 
 export const fetchAllEmployee = createAsyncThunk<any, any>(
@@ -505,13 +513,32 @@ export const getResignationCount = createAsyncThunk<any, any>(
       const response = await axiosInstance.get(
         `/api/organization/totalResignationCount?organization_id=${organization_id}`
       );
-    
+
       return response.data;
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
         "Failed to Change User Status";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchWorkLoad = createAsyncThunk<any, any>(
+  "organization/fetchWorkLoad",
+  async ({ userId }: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/organization/employeeWorkLoad?userId=${userId}`
+      );
+
+      return response?.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response.data.error ||
+        error.message ||
+        "Failed to fetch Work Load";
       return rejectWithValue(errorMessage);
     }
   }
@@ -534,6 +561,7 @@ const organizationSlice = createSlice({
       state.departmentDeletionsuccess = null;
       state.employeesCountByOrganizationIdSuccess = null;
       state.resignationActionSuccess = null;
+      state.workLoadSuccess = null;
     },
     resetError(state) {
       state.responseError = null;
@@ -548,6 +576,7 @@ const organizationSlice = createSlice({
       state.departmentDeletionerror = null;
       state.employeesCountByOrganizationIdError = null;
       state.resignationActionError = null;
+      state.workLoadError = null;
     },
   },
   extraReducers: (builder) => {
@@ -944,19 +973,17 @@ const organizationSlice = createSlice({
         state.resignationActionLoading = false;
         state.resignationAction = action.payload;
         state.resignationActionSuccess = action.payload.message;
-        
 
         const acceptedResignation = action.payload.data;
         const updatedResignation: any = state.allResignation;
         const updatedAllResignation = updatedResignation?.filter(
           (resignation: any) => {
-       
             if (resignation.id != acceptedResignation.id) {
               return acceptedResignation;
             }
           }
         );
- 
+
         state.allResignation = updatedAllResignation;
       })
 
@@ -977,6 +1004,21 @@ const organizationSlice = createSlice({
         state.organizationResignationCountLoader = false;
         state.organizationResignationCountError =
           action.payload || "unknown error";
+      })
+      .addCase(fetchWorkLoad.pending, (state) => {
+        state.workLoadLoading = true;
+        state.workLoad = null;
+      })
+      .addCase(fetchWorkLoad.fulfilled, (state, action) => {
+        state.workLoadLoading = false;
+        state.workLoad = action.payload.data;
+        state.workLoadSuccess = action.payload.message;
+      })
+      .addCase(fetchWorkLoad.rejected, (state, action) => {
+        state.workLoadLoading = false;
+        state.workLoad = null;
+       
+        state.workLoadError = action.payload || "unknown Error";
       });
   },
 });
