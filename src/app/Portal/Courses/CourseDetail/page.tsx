@@ -112,7 +112,6 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
   }, [fetchSingleCourse, fetchSingleCourse?.id]);
 
 
-
 const handleStateManage=(message:string,type:any)=>{
   setNotification({
     id: Date.now(),

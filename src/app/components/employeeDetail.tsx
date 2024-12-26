@@ -95,7 +95,7 @@ const EmployeeDetail: React.FC<PageProps> = ({
 
     // Find the relevant department
     const selectedDepartment = departments.find(
-      (dept) => dept.id === departmentId
+      (dept:any) => dept.id === departmentId
     );
     setDepartment(selectedDepartment || null);
 

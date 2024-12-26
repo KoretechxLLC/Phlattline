@@ -15,16 +15,25 @@ const CustomerCard = ({ item }: any) => {
       className={`relative z-[1] text-center my-1 rounded before:w-full before:h-[calc(100%-60px)] before:absolute before:left-0 before:top-[60px] before:rounded before:z-[-1] before:bg-opacity-[0.1]`}
     >
       <div className={"h-[60px] w-[60px] rounded-full mx-auto mb-4 relative"}>
-        <Image
-          src={item.profile_image || "/assets/DummyImg.png"}
-          alt={item.first_name}
-          width={100}
-          height={100}
-          className="w-full h-full rounded-full"
-          priority
-        />
+        {item.profile_image ? (
+          <Image
+            src={`/api/images?filename=${item.profile_image}&folder=profileImage`}
+            alt={item.first_name}
+            width={100}
+            height={100}
+            className="w-full h-full rounded-full"
+            priority
+          />
+        ) : (
+          <div className="w-10 h-10 ring-1 ring-white flex items-center justify-center bg-gradient-to-b from-[#BAA716] to-[#B50D34] rounded-full">
+            <span className="text-white text-sm font-bold">
+              {item.first_name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+           )}
       </div>
-      <h4 className="text-sm text-default-600 font-semibold mb-4">
+   
+      <h4 className="text-sm text-default-600 font-semibold mb-4 capitalize">
         {item.first_name} {item.last_name}
       </h4>
       <h4 className="text-sm text-yellow-500 font-semibold mb-4">
@@ -37,9 +46,9 @@ const CustomerCard = ({ item }: any) => {
             icon="ph:star-fill"
             className={
               index <
-              (item?.employee_review?.[0]?.no_of_stars
-                ? item?.employee_review?.[0]?.no_of_stars
-                : item?.employee_review?.no_of_stars || 0)
+                (item?.employee_review?.[0]?.no_of_stars
+                  ? item?.employee_review?.[0]?.no_of_stars
+                  : item?.employee_review?.no_of_stars || 0)
                 ? "text-[#dac73b]"
                 : "text-gray-400"
             }

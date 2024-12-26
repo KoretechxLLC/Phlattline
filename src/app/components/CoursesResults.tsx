@@ -12,7 +12,6 @@ const CoursesResults = ({ height = 280 }) => {
   const [config] = useConfig();
   const dispatch: any = useDispatch();
   const { usercourses } = useSelector((state: RootState) => state.courses);
-
   const { userData } = useSelector((state: RootState) => state.auth);
   const { theme: mode } = useTheme();
 
@@ -23,7 +22,7 @@ const CoursesResults = ({ height = 280 }) => {
     inProgress: 0,
     completed: 0,
   };
-
+  
   usercourses?.forEach((course: any) => {
     if (course.status === "notStarted") courseStatusCounts.notStarted++;
     else if (course.status === "inprogress") courseStatusCounts.inProgress++;

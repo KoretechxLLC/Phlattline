@@ -19,8 +19,10 @@ interface CoursesState {
   videoProgressSuccess: string | null;
   videoProgress: any; // Assuming you want to store video progress
   usercourses: any;
+  usercoursesresult: any;
   responses: any;
   count: number;
+  Assignedcoursescount: number;
   coursesAssign: any;
   recommendedCourses: any | null;
   purchaseCourse: any | null;
@@ -46,6 +48,7 @@ const initialState: CoursesState = {
   success: null,
   courses: [],
   count: 0,
+  Assignedcoursescount:0,
   coursesSuccess: false,
   coursesCount: null,
   coursesCountLoading: false,
@@ -59,6 +62,7 @@ const initialState: CoursesState = {
   videoProgress: [],
   coursesAssign: [],
   usercourses: [],
+  usercoursesresult: [],
   responses: null,
   purchaseCourse: null,
   purchaseCourseLoader: false,
@@ -89,6 +93,31 @@ export const fetchcoursesCount = createAsyncThunk<
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
+
+
+// Async thunk to fetch the count of assigned courses
+export const fetchAssignedCoursesCount = createAsyncThunk<
+  number, // Return type (just the count)
+  void, // No parameters needed
+  { rejectValue: string } // Error type
+>("courses/fetchAssignedCoursesCount", async (_, { rejectWithValue }) => {
+  try {
+    // Call the API to fetch the count
+    const response = await axiosInstance.get("/api/organization/assigncourseCount");
+
+    // Assuming response.data contains the required count value
+    const { count } = response.data;
+
+    if (count === undefined) {
+      throw new Error("Failed to fetch count");
+    }
+
+    return count; // Return the count value
+  } catch (error: any) {
+    return rejectWithValue(error.message || "An unknown error occurred");
+  }
+});
+
 
 // Thunk for fetching courses
 export const fetchcourses = createAsyncThunk<any, any>(
@@ -201,8 +230,7 @@ export const fetchusercourses = createAsyncThunk<any, any>(
   async ({ userId, filter }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/usercourses?userId=${userId}&page=${filter?.page ?? 0}&size=${
-          filter?.size ?? 0
+        `/api/usercourses?userId=${userId}&page=${filter?.page ?? 0}&size=${filter?.size ?? 0
         }`
       );
       return response.data.data;
@@ -215,6 +243,40 @@ export const fetchusercourses = createAsyncThunk<any, any>(
     }
   }
 );
+
+
+// Thunk for fetching user-specific or all user_courses
+export const fetchusercoursesresult = createAsyncThunk<
+  any,
+  { userId?: number },
+  { rejectValue: string }
+>(
+  "courses/fetchusercoursesresult",
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      // Construct query parameters dynamically (if userId is provided)
+      const queryParams = new URLSearchParams({
+        ...(userId && { userId: userId.toString() }),
+      }).toString();
+
+      // Make the API request
+      const response = await axiosInstance.get(
+        `/api/organization/usercoursesresult?${queryParams}`
+      );
+
+      return response.data.data; // Return the fetched data
+    } catch (error: any) {
+      // Extract and return a meaningful error message
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch user courses result";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
 
 export const coursesAssessmentResponses = createAsyncThunk<
   any,
@@ -400,6 +462,20 @@ const coursesSlice = createSlice({
         state.error = action.payload as string;
       })
 
+      // Fetch User Courses Results
+      .addCase(fetchusercoursesresult.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchusercoursesresult.fulfilled, (state, action) => {
+        state.loading = false;
+        state.usercoursesresult = action.payload;
+      })
+      .addCase(fetchusercoursesresult.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
       // Fetch Recommended Courses
       .addCase(getRecommendedCourses.pending, (state) => {
         state.loading = true;
@@ -530,7 +606,23 @@ const coursesSlice = createSlice({
       .addCase(getCourseById.rejected, (state, action) => {
         state.fetchSingleCourseLoading = false;
         state.fetchSingleCourseError = action.payload ?? "unknown Error";
+      })
+
+      //Fetch Assign Courses
+      .addCase(fetchAssignedCoursesCount.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Reset error state
+      })
+      .addCase(fetchAssignedCoursesCount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.Assignedcoursescount = action.payload; // Store the count value in state
+      })
+      .addCase(fetchAssignedCoursesCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch count"; // Handle errors
       });
+
+
   },
 });
 
