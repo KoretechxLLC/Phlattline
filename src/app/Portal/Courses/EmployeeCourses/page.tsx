@@ -1,85 +1,44 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchAssignedCoursesCount, fetchCoursesAssign } from "@/redux/slices/courses.slice";
 import CoursesTab from "@/app/components/CoursesTab";
-import { Button } from "@/app/components/button-sidebar";
-import {
-  fetchcourses,
-  fetchCoursesAssign,
-  fetchcoursesCount,
-  fetchusercourses,
-} from "@/redux/slices/courses.slice";
 import Spinner from "@/app/components/Spinner";
+import { Button } from "@/app/components/button-sidebar";
 import { RootState } from "@/redux/store";
 
 const EmployeeCourses = () => {
-  const router = useRouter();
-  const dispatch: any = useDispatch();
+  const dispatch = useDispatch<any>();
 
-  const [coursesData, setCoursesData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [showAll, setShowAll] = useState(false); // State to toggle between showing all courses or just 6
-  const coursesPerPage = showAll ? 9 : 6; // When showAll is true, show all courses, otherwise 6 per page
-
-  const {
-    courses,
-    loading,
-    error,
-    count,
-    coursesSuccess,
-    usercourses,
-    coursesAssign,
-    coursesCount,
-    coursesCountLoading,
-    coursesCountSuccess,
-  } = useSelector((state: any) => state.courses);
-
+  const [showPagination, setShowPagination] = useState(false); // State to toggle pagination visibility
+  const coursesPerPage = 6; // Number of courses per page
+  const { coursesAssign, loading, Assignedcoursescount } = useSelector((state: RootState) => state.courses);
   const { userData } = useSelector((state: RootState) => state.auth);
-  const userId: any = userData?.id;
   const employee_id = userData?.employee_id;
 
-  // Fetch the total count of courses once
-  useEffect(() => {
-    dispatch(fetchcoursesCount({}));
-  }, [dispatch]);
-
-  // Calculate total pages based on the courses count
-  useEffect(() => {
-    if (coursesCountSuccess) {
-      const pages = Math.ceil(count / coursesPerPage);
-      setTotalPage(pages);
-    }
-  }, [coursesCountSuccess, count, coursesPerPage]);
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchusercourses(userId));
-    }
-  }, [dispatch, userId]);
-
+  // Fetch assigned courses for the employee
   useEffect(() => {
     if (employee_id) {
-      dispatch(fetchCoursesAssign(employee_id));
+      dispatch(fetchCoursesAssign({ employee_id })); // Fetch courses assigned to the employee
     }
   }, [employee_id, dispatch]);
 
-  // Update `coursesData` when `coursesSuccess` changes
   useEffect(() => {
-    if (coursesSuccess) {
-      const categoryCourses =
-        courses &&
-        courses.length > 0 &&
-        courses.filter(
-          (course: any) => course.categoryId === userData?.categoryId
-        );
-      setCoursesData(categoryCourses);
-    }
-  }, [coursesSuccess, courses, userData]);
+    dispatch(fetchAssignedCoursesCount());
+  }, [dispatch]);
+
+
+  // Calculate total pages based on the number of assigned courses
+  const totalPages = coursesAssign ? Math.ceil(coursesAssign.length / coursesPerPage) : 1;
+
+  // Calculate paginated courses based on the current page
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const displayedCourses = coursesAssign?.slice(indexOfFirstCourse, indexOfLastCourse);
 
   const handleNextPage = () => {
-    if (currentPage < totalPage) {
+    if (currentPage < totalPages) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -90,59 +49,77 @@ const EmployeeCourses = () => {
     }
   };
 
-  // Display only a subset of the courses based on the current state
-  let displayedCourses: any = [];
-  if (coursesAssign && coursesAssign.length > 0) {
-    displayedCourses = showAll ? [...coursesAssign] : coursesAssign.slice(0, 6); // Show first 6 if not "showAll", otherwise show all
-  }
+  const handleViewAllClick = () => {
+    setShowPagination(true); // Show pagination when the button is clicked
+  };
 
   return (
     <div>
       <div className="p-3 grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 w-full h-full space-y-3 md:space-y-0">
         {/* Left side: Courses List */}
         <div className="space-y-4 md:space-y-2 ml-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4  mb-8">
             {loading ? (
               <div className="text-center text-gray-300 py-20">
                 <Spinner height="30px" width="30px" />
               </div>
             ) : displayedCourses && displayedCourses.length > 0 ? (
-              <>
-                {displayedCourses.map((coursesAssign: any) => (
-                  <CoursesTab
-                    id={coursesAssign.course_id}
-                    title={coursesAssign.courses.course_name}
-                    description={coursesAssign.courses.description}
-                    price={coursesAssign.courses.price}
-                    videos={coursesAssign.courses.videos}
-                    assessments={coursesAssign.courses.assessments}
-                    key={coursesAssign.courses.course_id}
-                  />
-                ))}
-              </>
+              displayedCourses.map((courseAssign: any) => (
+                <CoursesTab
+                  id={courseAssign.course_id}
+                  title={courseAssign.courses?.course_name}
+                  description={courseAssign.courses?.description}
+                  price={courseAssign.courses?.price}
+                  videos={courseAssign.courses?.videos}
+                  assessments={courseAssign.courses?.assessments}
+                  key={courseAssign.course_id} // Use a unique key
+                />
+              ))
             ) : (
               <div className="flex items-center justify-center col-span-3">
                 <div className="text-center text-gray-300 h-full w-full flex justify-center items-center py-60">
-                  No Courses Available!
+                  No Courses Assigned!
                 </div>
               </div>
             )}
           </div>
 
-          <div>
-            {!showAll && !loading && courses.length === 0 && (
-              <Button
-                className="text-white px-5 text-sm md:text-base lg:text-base flex w-full h-10 justify-center items-center rounded-3xl my-2"
-                size="default"
-                variant="default"
-                color="primary"
-                style={{ fontFamily: "Sansation" }}
-                onClick={() => setShowAll(true)} // Toggles the showAll state
-              >
-                View All Courses
-              </Button>
-            )}
-          </div>
+          {/* View All Button */}
+          {!showPagination && (
+            <Button
+              className="text-white rounded-3xl px-4 py-2 w-full"
+              size="md"
+              color="primary"
+              onClick={handleViewAllClick}
+            >
+              View All
+            </Button>
+          )}
+
+          {/* Pagination Controls */}
+          {showPagination && (
+            <div>
+              <div className="flex justify-between items-center border-t-[1px] border-slate-800 pt-[1em]">
+                <Button
+                  className="text-white px-4 py-2 rounded-lg bg-gradient-to-b from-[#BAA716] to-[#B50D34]"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-gray-500">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  className="text-white px-4 py-2 rounded-lg bg-gradient-to-b from-[#BAA716] to-[#B50D34]"
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ interface EmployeeReviewState {
   departmentCounts: any[] | null; // Add this for storing department counts
   resignationsuccess: string | null;
   resignations: any[] | null;
+  usersbyorganization: any[] | null;
 }
 
 const initialState: EmployeeReviewState = {
@@ -28,6 +29,7 @@ const initialState: EmployeeReviewState = {
   departmentCounts: null, // Initialize as null
   resignationsuccess: null,
   resignations: null,
+  usersbyorganization : null,
 };
 
 // Async thunk for fetching all employee reviews by organization_id
@@ -43,6 +45,22 @@ export const fetchEmployeeReviews = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching users by organization_id
+export const fetchUsersByOrganizationId = createAsyncThunk(
+  "employee/fetchUsersByOrganizationId",
+  async (organization_id: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/getusersorganization?organization_id=${organization_id}`
+      );
+      return response.data.data; // Extract the users data
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch users"
+      );
+    }
+  }
+);
 
 // Async thunk for Submit Resignation of employee
 export const submitResignation = createAsyncThunk(
@@ -276,6 +294,20 @@ const employeeSlice = createSlice({
     builder.addCase(fetchResignations.rejected, (state, action) => {
       state.loading = false;
       state.resignationserror = action.payload as string;
+    });
+
+     // Fetch users by organization_id
+     builder.addCase(fetchUsersByOrganizationId.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchUsersByOrganizationId.fulfilled, (state, action) => {
+      state.loading = false;
+      state.usersbyorganization = action.payload; // Store fetched users data
+    });
+    builder.addCase(fetchUsersByOrganizationId.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string; // Store error message
     });
 
 
