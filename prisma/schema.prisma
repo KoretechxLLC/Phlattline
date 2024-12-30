@@ -49,29 +49,31 @@ model users {
   organizations             organizations?              @relation(fields: [organization_id], references: [id], onUpdate: NoAction)
   user_types                user_types                  @relation(fields: [user_type_id], references: [id], onDelete: NoAction)
   interviewSchedule         interviewSchedule[]
+  workShop                  workShop[]
+  enrolledUserWorkshop      enrolledUserWorkshop[]
 }
 
 model organizations {
-  id                 Int                  @id @default(autoincrement())
-  organization_name  String               @db.VarChar(255)
-  organization_code  String               @unique @db.VarChar(255)
-  email              String               @unique @db.VarChar(255)
-  phone_number       String               @db.VarChar(50)
-  created_at         DateTime             @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime             @updatedAt
-  categoryId         Int
-  no_of_employees    Int
-  assignedAssessment assignedAssessment[]
-  assignedCourses    assignedCourses[]
-  department         department[]
-  employee_review    employee_review[]
-  employees          employees[]
-  leaderFeedback     leaderFeedback[]
-  resignation        resignation[]
-  talent             talent[]
-  users              users[]
-  interviewSchedule  interviewSchedule[]
-  assessment_category assessment_category @relation(fields: [categoryId], references:[id])
+  id                  Int                  @id @default(autoincrement())
+  organization_name   String               @db.VarChar(255)
+  organization_code   String               @unique @db.VarChar(255)
+  email               String               @unique @db.VarChar(255)
+  phone_number        String               @db.VarChar(50)
+  created_at          DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime             @updatedAt
+  categoryId          Int
+  no_of_employees     Int
+  assignedAssessment  assignedAssessment[]
+  assignedCourses     assignedCourses[]
+  department          department[]
+  employee_review     employee_review[]
+  employees           employees[]
+  leaderFeedback      leaderFeedback[]
+  resignation         resignation[]
+  talent              talent[]
+  users               users[]
+  interviewSchedule   interviewSchedule[]
+  assessment_category assessment_category  @relation(fields: [categoryId], references: [id])
 }
 
 model employees {
@@ -468,6 +470,33 @@ model employee_review {
   updated_at      DateTime      @updatedAt
   employees       employees     @relation(fields: [employee_id], references: [id], onDelete: Cascade)
   organizations   organizations @relation(fields: [organization_id], references: [id])
+}
+
+model workShop {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String
+  Date                 String
+  start_time           String
+  end_time             String
+  userId               Int
+  Objective            String[]
+  users                users                  @relation(fields: [userId], references: [id])
+  image                String
+  videoUrl             String?
+  created_at           DateTime               @default(now()) @db.Timestamp(6)
+  updated_at           DateTime               @updatedAt
+  enrolledUserWorkshop enrolledUserWorkshop[]
+}
+
+model enrolledUserWorkshop {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  workshopId Int
+  users      users    @relation(fields: [userId], references: [id])
+  workShop   workShop @relation(fields: [workshopId], references: [id])
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt
 }
 
 enum resignation_status {
