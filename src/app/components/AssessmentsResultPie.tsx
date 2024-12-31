@@ -4,8 +4,9 @@ import { useConfig } from "@/app/hooks/use-config";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 import Spinner from "./Spinner";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { fetchAssessmentsResponse } from "@/redux/slices/individualAssessmentResponse.slice";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -16,7 +17,7 @@ const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
       assessments,
     });
     return [];
-  }  
+  }
 
   return assessments
     .map((index: any) => {
@@ -66,6 +67,7 @@ const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
 };
 
 const AssessmentResultPie = ({ height = 280 }) => {
+  const dispatch: any = useDispatch();
   const [config] = useConfig();
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
   const { assessments, loading } = useSelector(
@@ -81,11 +83,21 @@ const AssessmentResultPie = ({ height = 280 }) => {
   const [improvePer, setImprovePer] = useState<number>(0);
   const [isClient, setIsClient] = useState(false);
 
+  const { userData } = useSelector((state: RootState) => state.auth);
+  const userId: any = userData?.id;
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
+    if (!assessmentsResponse || assessmentsResponse.length == 0) {
+      dispatch(fetchAssessmentsResponse({ userId }));
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("useeffect is running");
     if (assessmentsResponse && assessments) {
       // Call the calculatePercentages function instead of inline logic
       const percentages = calculatePercentages(
@@ -126,12 +138,17 @@ const AssessmentResultPie = ({ height = 280 }) => {
       markers: { width: 12, height: 12, radius: 12 },
     },
   };
+  console.log(
+    options,
+
+    "correct data is fetching"
+  );
 
   return (
     <div className="relative h-[280px]">
       {isLoading ? (
         <Spinner height="30px" width="30px" />
-      ) : isClient && improvePer ? (
+      ) : series && series.length > 0 ? (
         <Chart
           options={options}
           series={series}
@@ -140,7 +157,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
           width="100%"
         />
       ) : (
-        <div>No data found</div>
+        <div className="items-center justify-center">No data found</div>
       )}
     </div>
   );

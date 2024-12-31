@@ -81,8 +81,7 @@ const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
   return calculatedGraph;
 };
 
-const 
-InitialAssessmentsReport = ({
+const InitialAssessmentsReport = ({
   height = 170,
   chartType = "bar",
 }: AssessmentTrackerProps) => {
@@ -129,6 +128,8 @@ InitialAssessmentsReport = ({
   useEffect(() => {
     dispatch(fetchAssessmentsResponse({ userId }));
   }, [dispatch, userId]);
+
+
 
   useEffect(() => {
     if (responseSuccess) {
@@ -194,7 +195,7 @@ InitialAssessmentsReport = ({
     plotOptions: {
       bar: {
         horizontal: false,
-        endingShape:"rounded-full",
+        endingShape: "rounded-full",
         columnWidth: "20%",
       },
     },
@@ -305,10 +306,7 @@ InitialAssessmentsReport = ({
         <div className="text-center text-gray-300">
           <Spinner height="30px" width="30px" />
         </div>
-      ) : data &&
-        data.length > 0 ||
-        improveResult ||
-        improveResult?.length > 0 ? (
+      ) : data && data.length > 0 ? (
         <div className="w-full max-h-[350px] sm:h-[150px] md:h-[180px] lg:h-[250px] ">
           <Chart
             options={options}
