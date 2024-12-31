@@ -15,27 +15,37 @@ const initialState: EmployeeMyAssessmentState = {
     getemployeeaseesments: [],
 };
 
+
 // Thunk for fetching Employee Assessments
 export const fetchEmployeeAssessments = createAsyncThunk<
-    any[],
-    { employee_id: number },
-    { rejectValue: string }>
-    ("employeemyassessment/fetchEmployeeAssessments",
-        async ({ employee_id }, { rejectWithValue }) => {
-            try {
-                const response = await axiosInstance.get(
-                    `/api/organization/assignAssessment/?employee_id=${employee_id}`
-                );
-                return response.data.data; // Assuming the API returns this structure
-            } catch (error: any) {
-                const errorMessage =
-                    error.response?.data?.error ||
-                    error.message ||
-                    "Failed to fetch employee assessments";
-                return rejectWithValue(errorMessage);
-            }
-        }
-    );
+  any[],
+  { employee_id?: number; organization_id?: number },
+  { rejectValue: string }
+>(
+  "employeemyassessment/fetchEmployeeAssessments",
+  async ({ employee_id, organization_id }, { rejectWithValue }) => {
+    try {
+      // Construct query parameters dynamically
+      const params = new URLSearchParams();
+      if (employee_id) params.append("employee_id", employee_id.toString());
+      if (organization_id) params.append("organization_id", organization_id.toString());
+
+      // Make the API request with query parameters
+      const response = await axiosInstance.get(
+        `/api/organization/assignAssessment/?${params.toString()}`
+      );
+
+      return response.data.data; // Assuming the API returns this structure
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch employee assessments";
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 
 // Employee My Assessment slice
 const employeemyassessmentSlice = createSlice({
