@@ -51,6 +51,7 @@ export const ImprovementAssessmentResult = createAsyncThunk<any, any>(
       const response = await axiosInstance.get(
         `/api/getImprovementResult?userId=${userId}`
       );
+
       return response?.data?.data;
     } catch (error: any) {
       const errorMessage =

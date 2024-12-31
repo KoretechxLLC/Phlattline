@@ -97,9 +97,9 @@ const AssessmentResultPie = ({ height = 280 }) => {
   }, []);
 
   useEffect(() => {
-    console.log("useeffect is running");
+
     if (assessmentsResponse && assessments) {
-      // Call the calculatePercentages function instead of inline logic
+    
       const percentages = calculatePercentages(
         assessmentsResponse,
         assessments
@@ -138,11 +138,7 @@ const AssessmentResultPie = ({ height = 280 }) => {
       markers: { width: 12, height: 12, radius: 12 },
     },
   };
-  console.log(
-    options,
 
-    "correct data is fetching"
-  );
 
   return (
     <div className="relative h-[280px]">
