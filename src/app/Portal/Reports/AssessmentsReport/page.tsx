@@ -13,6 +13,7 @@ import {
 
 import InitialAssessmentsReport from "@/app/components/InitialAssessmentsReport";
 import AssessmentsReport from "@/app/components/InitialAssessmentsReport";
+import PreviousResultsTracker from "@/app/components/PreviousResultsTracker";
 
 const AssessmentReport = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
@@ -92,7 +93,8 @@ const AssessmentReport = () => {
               </div>
             </CardHeader>
             <CardContent className="p-2">
-              <InitialAssessmentsReport />
+              {/* <InitialAssessmentsReport /> */}
+              <PreviousResultsTracker />
             </CardContent>
           </Card>
           {/* Second component taking full width on small screens and half on medium screens */}

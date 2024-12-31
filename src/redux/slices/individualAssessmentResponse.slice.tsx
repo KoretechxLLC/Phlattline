@@ -23,6 +23,8 @@ export const fetchAssessmentsResponse = createAsyncThunk<any, any>(
         `/api/getAssessmentResponse?userId=${userId}`
       );
 
+      console.log(response.data.data, "hello this is for fetching response");
+
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -56,6 +58,7 @@ const assessmentSlice = createSlice({
       .addCase(fetchAssessmentsResponse.fulfilled, (state, action) => {
         state.responseLoading = false;
         state.assessmentsResponse = action.payload;
+        console.log(state.assessmentsResponse,"is data setting perfectly");
         state.responseSuccess = true;
       })
       .addCase(fetchAssessmentsResponse.rejected, (state, action) => {
