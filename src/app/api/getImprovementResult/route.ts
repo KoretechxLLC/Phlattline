@@ -1,6 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { boolean } from "zod";
 
 export async function GET(req: NextRequest) {
   try {
@@ -42,22 +41,25 @@ export async function GET(req: NextRequest) {
       },
     });
 
+
+
     // Process the data to extract percentages
     const results = await Promise.all(
       assessments
-        .map(async (assessment : any) => {
+        .map(async (assessment: any) => {
           const percentages: number[] = [];
 
           // Process user responses
           for (const response of assessment.user_assessment_responses) {
             const question = assessment.individual_assessment_questions.find(
-              (q : any) => q.id === response.question_id
+              (q: any) => q.id === response.question_id
             );
 
             if (question) {
               const matchingOption =
                 question.individual_assessment_options.find(
-                  (option : any) => option.option_text === response.selected_option
+                  (option: any) =>
+                    option.option_text === response.selected_option
                 );
 
               if (matchingOption) {
@@ -71,10 +73,11 @@ export async function GET(req: NextRequest) {
             percentages.reduce((prev, curr) => prev + curr, 0) /
             (assessment.individual_assessment_questions.length || 1);
 
+         
           let coursesData: any;
 
           if (percentageThreshold > 0 && percentageThreshold < 90) {
-            // Fetch relevant courses
+ 
             const courses = await prisma.user_courses.findMany({
               where: {
                 user_id: Number(userId),
@@ -96,9 +99,11 @@ export async function GET(req: NextRequest) {
               },
             });
 
-            // Process course data
+
+
+
             coursesData = await Promise.all(
-              courses.map(async (course : any) => {
+              courses.map(async (course: any) => {
                 const courseResponses =
                   await prisma.coursesAssessmentResponse.findMany({
                     where: {
@@ -111,9 +116,9 @@ export async function GET(req: NextRequest) {
                   course.courses.assessments?.[0]?.questions || [];
 
                 const finalData = questions
-                  .map((question : any) => {
+                  .map((question: any) => {
                     const response = courseResponses.find(
-                      (resp : any) => resp.questionId === question.id
+                      (resp: any) => resp.questionId === question.id
                     );
 
                     return response?.answer === question.correct_answer

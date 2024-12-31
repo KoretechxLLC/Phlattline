@@ -98,10 +98,13 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = searchParams.get("page") || 1;
-  const size = searchParams.get("size") || 10;
+  const size = searchParams.get("size") || 3;
   const skip = (Number(page) - 1) * Number(size);
   try {
     const workShops = await prisma.workShop.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
       skip,
       take: Number(size),
     });
