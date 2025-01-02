@@ -90,7 +90,7 @@ const ManagingChange = () => {
       </div>
 
       {/* Second Row: Task Monitoring */}
-      <div className=" flex space-x-2 border border-[#62626280] rounded-3xl">
+      <div className=" flex space-x-2 border border-[#62626280] rounded-3xl py-10">
         <TaskMonitoring />
       </div>
 
