@@ -25,7 +25,7 @@ const EmployeeCourses = () => {
   }, [employee_id, dispatch]);
 
   useEffect(() => {
-    dispatch(fetchAssignedCoursesCount());
+    dispatch(fetchAssignedCoursesCount({}));
   }, [dispatch]);
 
 

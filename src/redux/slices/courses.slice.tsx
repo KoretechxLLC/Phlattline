@@ -1,12 +1,10 @@
 import axiosInstance from "@/app/utils/privateAxios";
-import { identity } from "@fullcalendar/core/internal";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { create } from "domain";
-import { any } from "zod";
+
 
 interface CoursesState {
   loading: boolean;
-  error: string | null;
+  error: any | null;
   courses: any[];
   success: string | null;
   coursesSuccess: any | null;
@@ -48,7 +46,7 @@ const initialState: CoursesState = {
   success: null,
   courses: [],
   count: 0,
-  Assignedcoursescount:0,
+  Assignedcoursescount: 0,
   coursesSuccess: false,
   coursesCount: null,
   coursesCountLoading: false,
@@ -94,30 +92,28 @@ export const fetchcoursesCount = createAsyncThunk<
   }
 });
 
-
 // Async thunk to fetch the count of assigned courses
-export const fetchAssignedCoursesCount = createAsyncThunk<
-  number, // Return type (just the count)
-  void, // No parameters needed
-  { rejectValue: string } // Error type
->("courses/fetchAssignedCoursesCount", async (_, { rejectWithValue }) => {
-  try {
-    // Call the API to fetch the count
-    const response = await axiosInstance.get("/api/organization/assigncourseCount");
+export const fetchAssignedCoursesCount = createAsyncThunk<any, any>(
+  "courses/fetchAssignedCoursesCount",
+  async ({ organization_id }, { rejectWithValue }) => {
+    try {
+      const url = organization_id
+        ? `/api/organization/assigncourseCount?organization_id=${organization_id}`
+        : "/api/organization/assigncourseCount";
 
-    // Assuming response.data contains the required count value
-    const { count } = response.data;
+      const response = await axiosInstance.get(url);
+      const { count } = response.data;
 
-    if (count === undefined) {
-      throw new Error("Failed to fetch count");
+      if (count === undefined) {
+        throw new Error("Failed to fetch count");
+      }
+
+      return count;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "An unknown error occurred");
     }
-
-    return count; // Return the count value
-  } catch (error: any) {
-    return rejectWithValue(error.message || "An unknown error occurred");
   }
-});
-
+);
 
 // Thunk for fetching courses
 export const fetchcourses = createAsyncThunk<any, any>(
@@ -158,7 +154,6 @@ export const getRecommendedCourses = createAsyncThunk<any, { userId: number }>(
     }
   }
 );
-
 
 export const getCourseById = createAsyncThunk<any, { courseId: number }>(
   "courses/getCourseById",
@@ -230,7 +225,8 @@ export const fetchusercourses = createAsyncThunk<any, any>(
   async ({ userId, filter }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/usercourses?userId=${userId}&page=${filter?.page ?? 0}&size=${filter?.size ?? 0
+        `/api/usercourses?userId=${userId}&page=${filter?.page ?? 0}&size=${
+          filter?.size ?? 0
         }`
       );
       return response.data.data;
@@ -244,39 +240,33 @@ export const fetchusercourses = createAsyncThunk<any, any>(
   }
 );
 
-
 // Thunk for fetching user-specific or all user_courses
 export const fetchusercoursesresult = createAsyncThunk<
   any,
   { userId?: number },
   { rejectValue: string }
->(
-  "courses/fetchusercoursesresult",
-  async ({ userId }, { rejectWithValue }) => {
-    try {
-      // Construct query parameters dynamically (if userId is provided)
-      const queryParams = new URLSearchParams({
-        ...(userId && { userId: userId.toString() }),
-      }).toString();
+>("courses/fetchusercoursesresult", async ({ userId }, { rejectWithValue }) => {
+  try {
+    // Construct query parameters dynamically (if userId is provided)
+    const queryParams = new URLSearchParams({
+      ...(userId && { userId: userId.toString() }),
+    }).toString();
 
-      // Make the API request
-      const response = await axiosInstance.get(
-        `/api/organization/usercoursesresult?${queryParams}`
-      );
+    // Make the API request
+    const response = await axiosInstance.get(
+      `/api/organization/usercoursesresult?${queryParams}`
+    );
 
-      return response.data.data; // Return the fetched data
-    } catch (error: any) {
-      // Extract and return a meaningful error message
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to fetch user courses result";
-      return rejectWithValue(errorMessage);
-    }
+    return response.data.data; // Return the fetched data
+  } catch (error: any) {
+    // Extract and return a meaningful error message
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch user courses result";
+    return rejectWithValue(errorMessage);
   }
-);
-
-
+});
 
 export const coursesAssessmentResponses = createAsyncThunk<
   any,
@@ -401,7 +391,6 @@ const coursesSlice = createSlice({
       })
 
       //Assigned Courses Cases
-
 
       .addCase(fetchCoursesAssign.pending, (state) => {
         state.loading = true;
@@ -621,8 +610,6 @@ const coursesSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Failed to fetch count"; // Handle errors
       });
-
-
   },
 });
 

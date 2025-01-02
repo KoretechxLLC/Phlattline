@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     });
 
     const existingEmployeeIds = new Set(
-      existingAssignments.map((assignment : any) => assignment.employee_id)
+      existingAssignments.map((assignment: any) => assignment.employee_id)
     );
 
     if (
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
       if (employees.length !== employeesToAssign.length) {
         const unmatchedEmployees = employeesToAssign.filter(
-          (id) => !employees.some((emp : any) => emp.id === id)
+          (id) => !employees.some((emp: any) => emp.id === id)
         );
         return NextResponse.json(
           {
@@ -145,6 +145,10 @@ export async function GET(request: NextRequest) {
     const organization_id = searchParams.get("organization_id");
     const employee_id = searchParams.get("employee_id");
     const course_id = searchParams.get("course_id");
+    const page = searchParams.get("page");
+    const size = searchParams.get("size");
+
+    const skip = (Number(page) - 1) * Number(size);
 
     const filter: any = {};
 
@@ -158,16 +162,33 @@ export async function GET(request: NextRequest) {
       filter.course_id = Number(course_id);
     }
 
-    const assignedCourses = await prisma.assignedCourses.findMany({
-      where: filter,
-      include: {
-        courses: {
-          include:{
-            videos : true
-          }
+    let assignedCourses: any = {};
+
+    if (page || size) {
+      assignedCourses = await prisma.assignedCourses.findMany({
+        where: filter,
+        skip,
+        take: Number(size),
+        include: {
+          courses: {
+            include: {
+              videos: true,
+            },
+          },
         },
-      }, 
-    });
+      });
+    } else {
+      assignedCourses = await prisma.assignedCourses.findMany({
+        where: filter,
+        include: {
+          courses: {
+            include: {
+              videos: true,
+            },
+          },
+        },
+      });
+    }
 
     return NextResponse.json({
       message: "Fetched assigned courses successfully.",
@@ -182,3 +203,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+

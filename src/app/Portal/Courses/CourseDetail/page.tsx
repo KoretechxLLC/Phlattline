@@ -62,7 +62,7 @@ const CourseDetail: React.FC<CourseDetailsProps> = ({ params: { id } }) => {
     }
   }, [organization_id, dispatch]);
 
-
+  
   useEffect(() => {
     if (courseId && usercourses?.length > 0) {
       const getCourse = async () => {
