@@ -43,13 +43,11 @@ export async function GET(req: NextRequest) {
 
 
 
-    // Process the data to extract percentages
     const results = await Promise.all(
       assessments
         .map(async (assessment: any) => {
           const percentages: number[] = [];
 
-          // Process user responses
           for (const response of assessment.user_assessment_responses) {
             const question = assessment.individual_assessment_questions.find(
               (q: any) => q.id === response.question_id
@@ -68,16 +66,13 @@ export async function GET(req: NextRequest) {
             }
           }
 
-          // Calculate total threshold
           const percentageThreshold =
             percentages.reduce((prev, curr) => prev + curr, 0) /
             (assessment.individual_assessment_questions.length || 1);
 
-         
           let coursesData: any;
 
           if (percentageThreshold > 0 && percentageThreshold < 90) {
- 
             const courses = await prisma.user_courses.findMany({
               where: {
                 user_id: Number(userId),
@@ -99,8 +94,7 @@ export async function GET(req: NextRequest) {
               },
             });
 
-
-
+   
 
             coursesData = await Promise.all(
               courses.map(async (course: any) => {
@@ -131,6 +125,7 @@ export async function GET(req: NextRequest) {
                   (prev: any, curr: any) => prev + curr,
                   0
                 );
+        
 
                 return {
                   courseId: course.course_id,

@@ -40,9 +40,7 @@ const calculatePercentages = (assessmentsResponse: any, assessments: any) => {
       .map((index: any) => {
         let responseData = assessmentsResponse
           ?.map((e: any) => {
-            
             if (e?.question?.individual_assessment_id == index?.id) {
-             
               let assessementTrack = e?.question?.individual_assessment_options
                 .map((option: any) => {
                   if (e?.selected_option == option?.option_text) {
@@ -132,7 +130,6 @@ const InitialAssessmentsReport = ({
     dispatch(fetchAssessmentsResponse({ userId }));
   }, [dispatch, userId]);
 
-  
   useEffect(() => {
     if (responseSuccess) {
       dispatch(resetSuccess());
