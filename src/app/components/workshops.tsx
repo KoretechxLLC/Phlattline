@@ -10,47 +10,56 @@ import { Button } from "./button-sidebar";
 import Image from "next/image";
 import Spinner from "./Spinner";
 import WorkshopModal from "./workshopModal";
+import { fetchWorkshopCount, fetchWorkshops } from "@/redux/slices/workshops.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Workshops = () => {
-  const [workshops, setWorkshops] = useState<
+  const [workshopList, setWorkshopList] = useState<
     { id: number; image: string; title: string; description: string }[]
-  >([]);
+  >([]); // New state to hold workshop data
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const workshopsPerPage = 3; // Number of workshops per page
+
+  const { workshops, totalCount } = useSelector((state: RootState) => state.workshop);
+  const dispatch: any = useDispatch();
+
+  const totalPages = Math.ceil((totalCount || 0) / workshopsPerPage); // Calculate total pages dynamically
 
   useEffect(() => {
-    const fetchWorkshops = async () => {
+    // Fetch workshops from API
+    const fetchWorkshopsData = async () => {
       setLoading(true);
-      setTimeout(() => {
-        const data = [
-          {
-            id: 1,
-            image: "/assets/WorkshopImage.png",
-            title: "AI and Virtual",
-            description: "Explore AI-driven innovation and virtual solutions.",
-          },
-          {
-            id: 2,
-            image: "/assets/WorkshopImage.png",
-            title: "Leadership Development",
-            description: "Develop key leadership skills for success.",
-          },
-          {
-            id: 3,
-            image: "/assets/WorkshopImage.png",
-            title: "Team Building",
-            description: "Learn strategies for fostering team collaboration.",
-          },
-        ];
-
-        setWorkshops(data);
-        setLoading(false);
-      }, 2000);
+      await dispatch(fetchWorkshops({ page: currentPage, size: workshopsPerPage }));
+      setLoading(false);
     };
 
-    fetchWorkshops();
-  }, []);
+    fetchWorkshopsData();
+  }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    // Fetch total workshop count for pagination
+    dispatch(fetchWorkshopCount());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Set workshops data to local state when fetched
+    setWorkshopList(
+      workshops.map((workshop: any) => ({
+        id: workshop.id,
+        image: workshop.image || "/defaultImage.png", // Fallback image
+        title: workshop.name,
+        description: workshop.description,
+        Objective: workshop.Objective,
+        end_time: workshop.end_time,
+        start_time: workshop.start_time,
+        Date: workshop.Date,
+      }))
+    );
+  }, [workshops]);
 
   const handleViewClick = (workshop: any) => {
     setSelectedWorkshop(workshop);
@@ -61,6 +70,20 @@ const Workshops = () => {
     setIsModalOpen(false);
     setSelectedWorkshop(null);
   };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+
 
   return (
     <div className="px-1 ">
@@ -75,15 +98,15 @@ const Workshops = () => {
             <div className="flex justify-center items-center py-20">
               <Spinner height="40px" width="40px" />
             </div>
-          ) : workshops.length > 0 ? (
+          ) : workshopList.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 4xl:gap-3 gap-6">
-              {workshops.map((workshop) => (
+              {workshopList.map((workshop) => (
                 <div
                   key={workshop.id}
-                  className="border border-gray-400 rounded-2xl 4xl:p-2 p-5  shadow-md hover:shadow-lg transition-shadow"
+                  className="border border-gray-400 rounded-2xl 4xl:p-2 p-5 shadow-md hover:shadow-lg transition-shadow"
                 >
                   <Image
-                    src={workshop.image}
+                    src={`/api/images?filename=${workshop.image}&folder=workShops`}
                     width={1000}
                     height={1000}
                     alt={workshop.title}
@@ -113,11 +136,31 @@ const Workshops = () => {
               <p className="text-lg font-medium">No Workshops Found</p>
             </div>
           )}
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <Button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="py-2 px-4 text-sm bg-gradient-to-b from-[#BAA716] to-[#B50D34]"
+            >
+              Previous
+            </Button>
+            <p className="text-white text-sm">
+              Page {currentPage} of {totalPages}
+            </p>
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="py-2 px-4 text-sm bg-gradient-to-b from-[#BAA716] to-[#B50D34]"
+            >
+              Next
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
       {isModalOpen && (
-        <WorkshopModal open={isModalOpen} onClose={handleCloseModal} />
+        <WorkshopModal open={isModalOpen} onClose={handleCloseModal} workshop={selectedWorkshop} />
       )}
     </div>
   );
