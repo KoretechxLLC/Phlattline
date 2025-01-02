@@ -138,6 +138,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const workShopId = searchParams.get("workShopId");

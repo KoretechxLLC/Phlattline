@@ -21,6 +21,7 @@ import {
 } from "@/redux/slices/organization.slice";
 import StackedNotifications from "@/app/components/Stackednotification";
 import CoursesResults from "@/app/components/CoursesResults";
+import { fetchWorkshops } from "@/redux/slices/workshops.slice";
 
 export type NotificationType = {
   id: number;
@@ -30,6 +31,7 @@ export type NotificationType = {
 
 const ManagingChange = () => {
   const { userData } = useSelector((state: RootState) => state.auth);
+  const {workshops} = useSelector((state:RootState)=>state.workshop);
   const {
     employee,
     assignCoursesSuccess,
@@ -43,6 +45,8 @@ const ManagingChange = () => {
   useEffect(() => {
     dispatch(fetchAllEmployee({ organizationId: userData.organization_id }));
   }, []);
+
+  // Fetch workshops on component mount
 
   useEffect(() => {
     if (assignCoursesSuccess) {

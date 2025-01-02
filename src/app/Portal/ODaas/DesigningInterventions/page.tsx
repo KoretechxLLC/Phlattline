@@ -81,10 +81,13 @@ const DesigningInterventions = () => {
   }, [dispatch, userData]);
 
   useEffect(() => {
-    // Set the assessments data to the new state whenever it updates
-    setAssessmentData(assessments);
-
+    if (assessments && assessments.length > 0) {
+      // Set only the first two assessments
+      setAssessmentData(assessments.slice(0, 2));
+    }
   }, [assessments]);
+
+
 
   useEffect(() => {
     // Filter courses with status "notStarted"
@@ -92,7 +95,6 @@ const DesigningInterventions = () => {
       (course: any) => course.status === "notStarted"
     );
 
-    // Extract only the `courses` property and limit to 2
     const limitedCourses = notStartedCourses.slice(0, 2).map((item: any) => item.courses);
 
     setFilteredCourses(limitedCourses);

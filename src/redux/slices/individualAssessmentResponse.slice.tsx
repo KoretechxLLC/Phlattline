@@ -22,9 +22,6 @@ export const fetchAssessmentsResponse = createAsyncThunk<any, any>(
       const response = await axiosInstance.get(
         `/api/getAssessmentResponse?userId=${userId}`
       );
-
-
-
       return response.data.data;
     } catch (error: any) {
       const errorMessage =
@@ -58,7 +55,6 @@ const assessmentSlice = createSlice({
       .addCase(fetchAssessmentsResponse.fulfilled, (state, action) => {
         state.responseLoading = false;
         state.assessmentsResponse = action.payload;
-
         state.responseSuccess = true;
       })
       .addCase(fetchAssessmentsResponse.rejected, (state, action) => {
